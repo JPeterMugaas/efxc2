@@ -417,32 +417,32 @@ int main(int argc, const char* argv[])
   // Output (or errors)
 
   if (FAILED(hr)) {
-   if (errors) {
-    char* error = (char*)errors->GetBufferPointer();
-    printf("Got an error (%li) while compiling:\n%s\n", hr, error);
-    errors->Release();
-   } else {
-     printf("Got an error (%li) while compiling, but no error message from the function.\n", hr);
+    if (errors) {
+      char* error = (char*)errors->GetBufferPointer();
+      printf("Got an error (%li) while compiling:\n%s\n", hr, error);
+      errors->Release();
+    } else {
+      printf("Got an error (%li) while compiling, but no error message from the function.\n", hr);
 
-     LPSTR messageBuffer = nullptr;
-     size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+      LPSTR messageBuffer = nullptr;
+      size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                                  NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
-     std::string message(messageBuffer, size);
-     LocalFree(messageBuffer);
-     printf("Windows Error Message: %s\n", messageBuffer);
-   }
+      std::string message(messageBuffer, size);
+      LocalFree(messageBuffer);
+      printf("Windows Error Message: %s\n", messageBuffer);
+    }
 
-   if (output)
-     output->Release();
+     if (output)
+       output->Release();
 
-   return hr;
+     return 1;
   } else {
-    char * outString = (char*)output->GetBufferPointer();
-    size_t len = output->GetBufferSize();
+     char * outString = (char*)output->GetBufferPointer();
+     size_t len = output->GetBufferSize();
 
-    FILE* f;
-    errno_t err = fopen_s(&f, outputFile, "w");
-    if (err != 0) {
+     FILE* f;
+     errno_t err = fopen_s(&f, outputFile, "w");
+     if (err != 0) {
         char errmsg[ERR_SIZE];
         strerror_s(errmsg, ERR_SIZE, errno);
 		printf("File open failed: err (%s)\n", errmsg);
