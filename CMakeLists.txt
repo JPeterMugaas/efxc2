@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.20)
 
-set(EFXC2_VERSION 0.0.0.4)
+set(EFXC2_VERSION 0.0.0.5)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced version of fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -53,17 +53,17 @@ enable_testing()
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tests)
  
-add_test(NAME BC7Encode_TryMode456CS
+add_test(NAME long_cmd_BC7Encode_TryMode456CS
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS "/Fh${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.inc" "/Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb" /VnBC7Encode_TryMode456CS)
-add_test(NAME BC7Encode_TryMode456CS_cs40
+add_test(NAME long_cmd_BC7Encode_TryMode456CS_cs40
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_4_0 /ETryMode456CS "/Fh${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS_cs40.inc" "/Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb" /VnBC7Encode_TryMode456CS)
   
 add_test(NAME short_cmd_BC7Encode_TryMode456CS
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
-  COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS "/FhCompiled/BC7Encode_TryMode456CS.inc" "/Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb" /VnBC7Encode_TryMode456CS)
+  COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS "/FhCompiled/BC7Encode_TryMode456CS.inc" "/FdCompiled/BC7Encode_TryMode456CS.pdb" /VnBC7Encode_TryMode456CS)
 add_test(NAME short_cmd_BC7Encode_TryMode456CS_cs40
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests 
-  COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_4_0 /ETryMode456CS "/FhCompiled/BC7Encode_TryMode456CS_cs40.inc" "/Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb" /VnBC7Encode_TryMode456CS)
+  COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_4_0 /ETryMode456CS "/FhCompiled/BC7Encode_TryMode456CS_cs40.inc" "/FdCompiled/BC7Encode_TryMode456CS.pdb" /VnBC7Encode_TryMode456CS)
   

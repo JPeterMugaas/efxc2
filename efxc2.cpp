@@ -382,7 +382,14 @@ int main(int argc, const char* argv[])
 
     printf("\t %s,\n", model);
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4477)
+#endif
     printf("\t 0x%" PRIx64 ",\n", flags1);
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
     printf("\t 0,\n");
     printf("\t &output,\n");
     printf("\t &errors);\n");
