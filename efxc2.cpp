@@ -282,10 +282,10 @@ int main(int argc, const char* argv[])
         print_usage_arg();
         continue;
     } else if (parseOpt("Qstrip_reflect", argc, argv, &index, NULL)) {
-        printf("option -Qstrip_reflect ignored");
+        printf("option -Qstrip_reflect ignored\n");
         continue;
     } else if (parseOpt("Qstrip_debug", argc, argv, &index, NULL)) {
-        printf("option -Qstrip_debug ignored");
+        printf("option -Qstrip_debug ignored\n");
         continue;
     } else if (parseOpt("version", argc, argv, &index, NULL)) {
         print_version();
@@ -293,6 +293,7 @@ int main(int argc, const char* argv[])
     } else {
       if (!inputFile)
       {
+		printf("Parse input file name/n");
         inputFile = new wchar_t[strlen(argv[index])+1];
         mbstowcs_s(&dummy, inputFile, strlen(argv[index]) + 1, argv[index], strlen(argv[index]) + 1);
         if(verbose) {
@@ -347,7 +348,6 @@ int main(int argc, const char* argv[])
       memset(dllPath + bytes, '\0', MAX_PATH - bytes);
       //Copy the dll location over top efxc2.exe
       wcscpy_s(dllPath + bytes, MAX_PATH, DLL_NAME);
-/*      wcscpy(wcsrchr(dllPath, '\\') + 1, DLL_NAME); */
 
       HMODULE h = LoadLibrary(dllPath);
       if (h == NULL) {
@@ -382,7 +382,7 @@ int main(int argc, const char* argv[])
 
     printf("\t %s,\n", model);
 
-    printf("\t " PRIx64 ",\n", flags1);
+    printf("\t 0x%" PRIx64 ",\n", flags1);
     printf("\t 0,\n");
     printf("\t &output,\n");
     printf("\t &errors);\n");
