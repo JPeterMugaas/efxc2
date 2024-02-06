@@ -1,4 +1,4 @@
-efxc2 is an enhanced version of fxc2.  THe original fxc program 
+efxc2 is an enhanced version of fxc2.  THe original fxc2 program 
 is A wine-runnable version of Microsofts Shader Compiler fxc and 
 is available at https://github.com/mozilla/fxc2 .  Unfortunately,
 fxc2 does not appear to be maintianed and I have encountered

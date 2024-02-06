@@ -11,6 +11,19 @@
 #ifdef __MINGW32__
 #define __USE_MINGW_ANSI_STDIO 1
 #endif
+
+#ifdef  _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4005)
+#endif
+#define WIN32_LEAN_AND_MEAN
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifdef  _MSC_VER
+#pragma warning(pop)
+#endif
+
 #include "config.h"
 #include <d3dcompiler.h>
 #include <d3dcommon.h>
@@ -21,6 +34,8 @@
 #include <wchar.h>
 #include <inttypes.h>
 #include <io.h>
+#include <stdio.h>
+
 
 #define DLL_NAME L"d3dcompiler_47.dll"
 
