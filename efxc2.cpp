@@ -615,7 +615,7 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
         }
         if (verbose) {
 #ifdef _WIN64
-            printf("Wrote " PRIu64 " bytes of shader output\n", len);
+            printf("Wrote %" PRIu64 " bytes of shader output\n", len);
 #else
             printf("Wrote %u bytes of shader output\n", len);
 #endif
