@@ -4,7 +4,8 @@ is available at https://github.com/mozilla/fxc2 .  Unfortunately,
 fxc2 does not appear to be maintianed and I have encountered
 quite a few issues using that program. I needed a fxc compiler that
 was open-source and would adiquately fullfill my needs.  So I decided
-to make my own modifications to the fxc2 source-code into my own enhnaced
+to make my own modifications to the fxc2 source-code including a pull 
+request ( https://github.com/mozilla/fxc2/pull/3 ) into my own enhnaced
 program (efxc2).
 
 This program works by using the d3dcompiler_47.dll available included
