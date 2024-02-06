@@ -118,35 +118,21 @@ bool parseOpt(const wchar_t* option, int argc, wchar_t* argv[1], int* index, wch
 }
 
 char* wcharToChar(const wchar_t* w) {
-    /*from https://stackoverflow.com/questions/3019977/convert-wchar-t-to-char */
-    size_t len = wcslen(w) + 1;
-    size_t i = 0;
+    size_t len = wcslen(w);
     char* c = NULL;
-    wchar_t code;
-    if (len == 0) {
-        return NULL;
-    }
-
     c = (char*)malloc(len + 1);
+    memset(c, 0, len + 1);
     if (c == NULL) {
         printf("malloc failed/n");
         print_errno();
         exit(1);
     }
-
-    while (w[i] != '\0' && i < (len)) {
-        code = w[i];
-        if (code < 128)
-            c[i] = char(code);
-        else {
-            c[i] = '?';
-            if (code >= 0xD800 && code <= 0xD8FF)
-                // lead surrogate, skip the next code unit, which is the trail
-                i++;
-        }
-        i++;
+    wcstombs(c, w, len);
+    if (errno != 0) {
+        printf("malloc failed/n");
+        print_errno();
+        exit(1);
     }
-    c[i] = '\0';
     return c; 
 }
 
