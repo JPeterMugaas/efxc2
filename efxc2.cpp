@@ -167,447 +167,490 @@ void FixupFileName(wchar_t* FileName) {
 }
 
 int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
-  // ====================================================================================
-  // Process Command Line Arguments
+    // ====================================================================================
+    // Process Command Line Arguments
 
-  
-  wchar_t* inputFile = NULL;
-  wchar_t* outputFile = NULL;
 
-  wchar_t* w_temp = NULL;
+    wchar_t* inputFile = NULL;
+    wchar_t* outputFile = NULL;
 
-  char* defineOption = NULL;
-  char* entryPoint = NULL;
-  char* model = NULL;
-  char* variableName = NULL;
+    wchar_t* w_temp = NULL;
 
-  UINT flags1 = 0;
-  int verbose = 1;
+    char* defineOption = NULL;
+    char* entryPoint = NULL;
+    char* model = NULL;
+    char* variableName = NULL;
 
-  BYTE cmd = 0;
+    UINT flags1 = 0;
+    int verbose = 1;
 
-  int numDefines = 1;
-  D3D_SHADER_MACRO* defines = new D3D_SHADER_MACRO[numDefines];
-  defines[numDefines-1].Name = NULL;
-  defines[numDefines-1].Definition = NULL;
+    BYTE cmd = 0;
 
-  wchar_t*  ptr_cmd = (wchar_t*) argv;
+    int numDefines = 1;
+    D3D_SHADER_MACRO* defines = new D3D_SHADER_MACRO[numDefines];
+    defines[numDefines - 1].Name = NULL;
+    defines[numDefines - 1].Definition = NULL;
 
-  int index = 1;
+    wchar_t* ptr_cmd = (wchar_t*)argv;
 
-  while (1) {
-    D3D_SHADER_MACRO* newDefines;
-    
-    /* Detect the end of the options. */
-    if (index >= argc)
-      break;
+    int index = 1;
 
-    if (parseOpt(L"nologo", argc, argv, &index, NULL)) {
-      continue;
-    } else if (parseOpt(L"T", argc, argv, &index, &w_temp)) {
-        model = wcharToChar(w_temp);
-        delete[] w_temp;
-        if(verbose) {
-           printf ("option -T (Shader Model/Profile) with arg '%s'\n", model);
+    while (1) {
+        D3D_SHADER_MACRO* newDefines;
+
+        /* Detect the end of the options. */
+        if (index >= argc)
+            break;
+
+        if (parseOpt(L"nologo", argc, argv, &index, NULL)) {
+            continue;
         }
-      continue;
-    } else if (parseOpt(L"E", argc, argv, &index, &w_temp)) {
-        entryPoint = wcharToChar(w_temp);
-        delete[] w_temp;
-      if(verbose) {
-        printf ("option -E (Entry Point) with arg '%s'\n", entryPoint);
-      }
-      continue;
-    } else if (parseOpt(L"D", argc, argv, &index, &w_temp)) {
-        defineOption = wcharToChar(w_temp);
-        assert(defineOption == NULL);
-        numDefines++;
-        //Copy the old array into the new array, but put the new definition at the beginning
-        newDefines = new D3D_SHADER_MACRO[numDefines];
-        for(int i=1; i<numDefines; i++)
-          newDefines[i] = defines[i-1];
-        delete[] defines;
-        defines = newDefines;
-        defines[0].Name = defineOption;
-        defines[0].Definition = "1";
-        if(verbose) {
-          printf ("option -D with arg %s\n", defineOption);
+        else if (parseOpt(L"T", argc, argv, &index, &w_temp)) {
+            model = wcharToChar(w_temp);
+            delete[] w_temp;
+            if (verbose) {
+                printf("option -T (Shader Model/Profile) with arg '%s'\n", model);
+            }
+            continue;
         }
-        continue;
-    } else if (parseOpt(L"Vn", argc, argv, &index, &w_temp)) {
-        variableName = wcharToChar(w_temp);
-        delete[] w_temp;
-        if(verbose) {
-          printf ("option -Vn (Variable Name) with arg '%s'\n", variableName);
+        else if (parseOpt(L"E", argc, argv, &index, &w_temp)) {
+            entryPoint = wcharToChar(w_temp);
+            delete[] w_temp;
+            if (verbose) {
+                printf("option -E (Entry Point) with arg '%s'\n", entryPoint);
+            }
+            continue;
         }
-        continue;
-    } else if (parseOpt(L"Vi", argc, argv, &index, NULL)) {
-      if(verbose) {
-        printf("option -Vi (Output include process details) acknowledged but ignored.\n");
-      }
-      continue;
-    }  else if (parseOpt(L"Fh", argc, argv, &index, &outputFile)) {
-        FixupFileName(outputFile);
-        if (cmd != 0) {
-            printf("You cannot specify both an object and header");
-            return 1;
+        else if (parseOpt(L"D", argc, argv, &index, &w_temp)) {
+            defineOption = wcharToChar(w_temp);
+            assert(defineOption == NULL);
+            numDefines++;
+            //Copy the old array into the new array, but put the new definition at the beginning
+            newDefines = new D3D_SHADER_MACRO[numDefines];
+            for (int i = 1; i < numDefines; i++)
+                newDefines[i] = defines[i - 1];
+            delete[] defines;
+            defines = newDefines;
+            defines[0].Name = defineOption;
+            defines[0].Definition = "1";
+            if (verbose) {
+                printf("option -D with arg %s\n", defineOption);
+            }
+            continue;
         }
-        cmd = CMD_WRITE_HEADER;
-        if (verbose) {
-            printf("option -Fh (Output File) with arg %ls\n", outputFile);
+        else if (parseOpt(L"Vn", argc, argv, &index, &w_temp)) {
+            variableName = wcharToChar(w_temp);
+            delete[] w_temp;
+            if (verbose) {
+                printf("option -Vn (Variable Name) with arg '%s'\n", variableName);
+            }
+            continue;
         }
-        continue;
-    } else if (parseOpt(L"Fo", argc, argv, &index, NULL)) {
-        if (cmd != 0) {
-            printf("You cannot specify both an object and header");
-            return 1;
+        else if (parseOpt(L"Vi", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Vi (Output include process details) acknowledged but ignored.\n");
+            }
+            continue;
         }
-        cmd = CMD_WRITE_OBJECT;
-    } else if (parseOpt(L"Fd", argc, argv, &index, NULL)) {
-        printf("option -Fd ignored\n");
-        continue;
-    } else if (parseOpt(L"Zi", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Zi D3DCOMPILE_DEBUG\n");
+        else if (parseOpt(L"Fh", argc, argv, &index, &outputFile)) {
+            FixupFileName(outputFile);
+            if (cmd != 0) {
+                printf("You cannot specify both an object and header");
+                return 1;
+            }
+            cmd = CMD_WRITE_HEADER;
+            if (verbose) {
+                printf("option -Fh (Output File) with arg %ls\n", outputFile);
+            }
+            continue;
         }
-        flags1 = flags1 | D3DCOMPILE_DEBUG;
-        continue;
-    } else if (parseOpt(L"Vd", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Zi D3DCOMPILE_SKIP_VALIDATION\n");
+        else if (parseOpt(L"Fo", argc, argv, &index, NULL)) {
+            if (cmd != 0) {
+                printf("You cannot specify both an object and header");
+                return 1;
+            }
+            cmd = CMD_WRITE_OBJECT;
         }
-        flags1 = flags1 | D3DCOMPILE_SKIP_VALIDATION;
-        continue;
-    } else if (parseOpt(L"Vd", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Zi D3DCOMPILE_SKIP_OPTIMIZATION\n");
+        else if (parseOpt(L"Fd", argc, argv, &index, NULL)) {
+            printf("option -Fd ignored\n");
+            continue;
         }
-        flags1 = flags1 | D3DCOMPILE_SKIP_OPTIMIZATION;
-        continue;
-    } else if (parseOpt(L"Zpr", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Zpc D3DCOMPILE_PACK_MATRIX_ROW_MAJOR\n");
+        else if (parseOpt(L"Zi", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Zi D3DCOMPILE_DEBUG\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_DEBUG;
+            continue;
         }
-        flags1 = flags1 | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
-        continue;
-    } else if (parseOpt(L"Zpc", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Zpc D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR\n");
+        else if (parseOpt(L"Vd", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Zi D3DCOMPILE_SKIP_VALIDATION\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_SKIP_VALIDATION;
+            continue;
         }
-        flags1 = flags1 | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
-        continue;
-    } else if (parseOpt(L"Gpp", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Gpp D3DCOMPILE_PARTIAL_PRECISION\n");
+        else if (parseOpt(L"Vd", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Zi D3DCOMPILE_SKIP_OPTIMIZATION\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_SKIP_OPTIMIZATION;
+            continue;
         }
-        flags1 = flags1 | D3DCOMPILE_PARTIAL_PRECISION;
-        continue;
+        else if (parseOpt(L"Zpr", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Zpc D3DCOMPILE_PACK_MATRIX_ROW_MAJOR\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
+            continue;
+        }
+        else if (parseOpt(L"Zpc", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Zpc D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
+            continue;
+        }
+        else if (parseOpt(L"Gpp", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Gpp D3DCOMPILE_PARTIAL_PRECISION\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_PARTIAL_PRECISION;
+            continue;
+        }
+        else if (parseOpt(L"Op", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Op D3DCOMPILE_NO_PRESHADER\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_NO_PRESHADER;
+            continue;
+        }
+        else if (parseOpt(L"Gfa", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Gfa D3DCOMPILE_AVOID_FLOW_CONTROL\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_AVOID_FLOW_CONTROL;
+            continue;
+        }
+        else if (parseOpt(L"WX", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -WX D3DCOMPILE_WARNINGS_ARE_ERRORS\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_WARNINGS_ARE_ERRORS;
+            continue;
+        }
+        else if (parseOpt(L"Ges", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Ges D3DCOMPILE_ENABLE_STRICTNESS\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_ENABLE_STRICTNESS;
+            continue;
+        }
+        else if (parseOpt(L"Gis", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Gis D3DCOMPILE_IEEE_STRICTNESS\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_IEEE_STRICTNESS;
+            continue;
+        }
+        else if (parseOpt(L"Gec", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Gec D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
+            continue;
+        }
+        else if (parseOpt(L"O0", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -O0 D3DCOMPILE_OPTIMIZATION_LEVEL0\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+            continue;
+        }
+        else if (parseOpt(L"O1", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL1\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_OPTIMIZATION_LEVEL1;
+            continue;
+        }
+        else if (parseOpt(L"O2", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL2\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_OPTIMIZATION_LEVEL2;
+            continue;
+        }
+        else if (parseOpt(L"O2", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL3\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+            continue;
+        }
+        else if (parseOpt(L"res_may_alias", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -res_may_alias D3DCOMPILE_RESOURCES_MAY_ALIAS\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_RESOURCES_MAY_ALIAS;
+            continue;
+        }
+        else if (parseOpt(L"enable_unbounded_descriptor_tables", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -enable_unbounded_descriptor_tables D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES;
+            continue;
+        }
+        else if (parseOpt(L"all_resources_bound", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -all_resources_bound D3DCOMPILE_ALL_RESOURCES_BOUND\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_ALL_RESOURCES_BOUND;
+            continue;
+        }
+        else if (parseOpt(L"Zss", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Zss D3DCOMPILE_DEBUG_NAME_FOR_SOURCE\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_DEBUG_NAME_FOR_SOURCE;
+            continue;
+        }
+        else if (parseOpt(L"Zsb", argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Zsb D3DCOMPILE_DEBUG_NAME_FOR_BINARY\n");
+            }
+            flags1 = flags1 | D3DCOMPILE_DEBUG_NAME_FOR_BINARY;
+            continue;
+        }
+        else if (parseOpt(L"?", argc, argv, &index, NULL)) {
+            print_usage_arg();
+            continue;
+        }
+        else if (parseOpt(L"Qstrip_reflect", argc, argv, &index, NULL)) {
+            printf("option -Qstrip_reflect ignored\n");
+            continue;
+        }
+        else if (parseOpt(L"Qstrip_debug", argc, argv, &index, NULL)) {
+            printf("option -Qstrip_debug ignored\n");
+            continue;
+        }
+        else if (parseOpt(L"version", argc, argv, &index, NULL)) {
+            print_version();
+            return 0;
+        }
+        else {
+            if (!inputFile)
+            {
+                printf("Parse input file name\n");
+                inputFile = new wchar_t[wcslen(argv[index]) + 1];
+                wcscpy_s(inputFile, wcslen(argv[index]) + 1, argv[index]);
+                FixupFileName(inputFile);
+
+                if (verbose) {
+                    wprintf(L"input file: %ls\n", inputFile);
+                }
+                index += 1;
+            }
+            else {
+                print_usage_toomany();
+                return 1;
+            }
+        }
     }
-    else if (parseOpt(L"Op", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Op D3DCOMPILE_NO_PRESHADER\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_NO_PRESHADER;
-        continue;
-    } else if (parseOpt(L"Gfa", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Gfa D3DCOMPILE_AVOID_FLOW_CONTROL\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_AVOID_FLOW_CONTROL;
-        continue;
-    } else if (parseOpt(L"WX", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -WX D3DCOMPILE_WARNINGS_ARE_ERRORS\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_WARNINGS_ARE_ERRORS;
-        continue;
-    } else if (parseOpt(L"Ges", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Ges D3DCOMPILE_ENABLE_STRICTNESS\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_ENABLE_STRICTNESS;
-        continue;
-    } else if (parseOpt(L"Gis", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Gis D3DCOMPILE_IEEE_STRICTNESS\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_IEEE_STRICTNESS;
-        continue;
-    } else if (parseOpt(L"Gec", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Gec D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
-        continue;
-    } else if (parseOpt(L"O0", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -O0 D3DCOMPILE_OPTIMIZATION_LEVEL0\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_OPTIMIZATION_LEVEL0;
-        continue;
-    } else if (parseOpt(L"O1", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL1\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_OPTIMIZATION_LEVEL1;
-        continue;
-    } else if (parseOpt(L"O2", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL2\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_OPTIMIZATION_LEVEL2;
-        continue;
-    } else if (parseOpt(L"O2", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL3\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_OPTIMIZATION_LEVEL3;
-        continue;
-    } else if (parseOpt(L"res_may_alias", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -res_may_alias D3DCOMPILE_RESOURCES_MAY_ALIAS\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_RESOURCES_MAY_ALIAS;
-        continue;
-    } else if (parseOpt(L"enable_unbounded_descriptor_tables", argc,  argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -enable_unbounded_descriptor_tables D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES;
-        continue;
-    } else if (parseOpt(L"all_resources_bound", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -all_resources_bound D3DCOMPILE_ALL_RESOURCES_BOUND\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_ALL_RESOURCES_BOUND;
-        continue;
-    }  else if (parseOpt(L"Zss", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Zss D3DCOMPILE_DEBUG_NAME_FOR_SOURCE\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_DEBUG_NAME_FOR_SOURCE;
-        continue;
-    } else if (parseOpt(L"Zsb", argc, argv, &index, NULL)) {
-        if (verbose) {
-            printf("option -Zsb D3DCOMPILE_DEBUG_NAME_FOR_BINARY\n");
-        }
-        flags1 = flags1 | D3DCOMPILE_DEBUG_NAME_FOR_BINARY;
-        continue;
-    } else if (parseOpt(L"?", argc, argv, &index, NULL)) {
-        print_usage_arg();
-        continue;
-    } else if (parseOpt(L"Qstrip_reflect", argc, argv, &index, NULL)) {
-        printf("option -Qstrip_reflect ignored\n");
-        continue;
-    } else if (parseOpt(L"Qstrip_debug", argc, argv, &index, NULL)) {
-        printf("option -Qstrip_debug ignored\n");
-        continue;
-    } else if (parseOpt(L"version", argc, argv, &index, NULL)) {
-        print_version();
-        return 0;
-    } else {
-      if (!inputFile)
-      {
-		printf("Parse input file name\n");
-        inputFile = new wchar_t[wcslen(argv[index]) + 1];
-        wcscpy_s(inputFile, wcslen(argv[index]) + 1, argv[index]);
-        FixupFileName(inputFile);
 
-        if(verbose) {
-          wprintf(L"input file: %ls\n", inputFile);
+    if (inputFile == NULL)
+        print_usage_missing("inputFile");
+    if (model == NULL)
+        print_usage_missing("model");
+    if (entryPoint == NULL)
+        print_usage_missing("entryPoint");
+    if (defines == NULL)
+        print_usage_missing("defines");
+    if (outputFile == NULL)
+        print_usage_missing("outputFile");
+
+    //Default output variable name
+    if (variableName == NULL) {
+        const char* prefix = "g";
+        for (int i = 0; g_profilePrefixTable[i].name != NULL; i++) {
+            if (strcmp(g_profilePrefixTable[i].name, model) == 0) {
+                prefix = g_profilePrefixTable[i].prefix;
+                break;
+            }
         }
-        index += 1;
-      } else {
-        print_usage_toomany();
-        return 1;
-      }
+        variableName = (char*)malloc(strlen(prefix) + strlen(entryPoint) + 2);
+        sprintf_s(variableName, strlen(prefix) + strlen(entryPoint) + 2, "%s_%s", prefix, entryPoint);
     }
-  }
 
-  if(inputFile == NULL)
-    print_usage_missing("inputFile");
-  if(model == NULL)
-    print_usage_missing("model");
-  if(entryPoint == NULL)
-    print_usage_missing("entryPoint");
-  if(defines == NULL)
-    print_usage_missing("defines");
-  if(outputFile == NULL)
-    print_usage_missing("outputFile");
+    // ====================================================================================
+    // Shader Compilation
 
-  //Default output variable name
-  if (variableName == NULL) {
-      const char* prefix = "g";
-      for (int i = 0; g_profilePrefixTable[i].name != NULL; i++) {
-          if (strcmp(g_profilePrefixTable[i].name, model) == 0) {
-              prefix = g_profilePrefixTable[i].prefix;
-              break;
-          }
-      }
-      variableName = (char*)malloc(strlen(prefix) + strlen(entryPoint) + 2);
-      sprintf_s(variableName, strlen(prefix) + strlen(entryPoint) + 2, "%s_%s", prefix, entryPoint);
-  }
+    HMODULE h = LoadLibrary(DLL_NAME);
+    if (h == NULL) {
 
-  // ====================================================================================
-  // Shader Compilation
+        //Find the WINDOWS dll
+        wchar_t dllPath[MAX_PATH];
+        size_t bytes = GetModuleFileName(NULL, dllPath, MAX_PATH);
+        if (bytes == 0) {
+            fprintf(stderr, "Could not retrieve the directory of the running executable.\n");
+            print_windows_error();
+        }
+        //Fill rest of the buffer with NULLs
+        memset(dllPath + bytes, '\0', MAX_PATH - bytes);
+        //Copy the dll location over top efxc2.exe
+        wcscpy_s(dllPath + bytes, MAX_PATH, DLL_NAME);
 
-  HMODULE h = LoadLibrary(DLL_NAME);
-  if (h == NULL) {
+        HMODULE h = LoadLibrary(dllPath);
+        if (h == NULL) {
+            wprintf("Error: could not load " DLL_NAME " from %s\n", dllPath);
+            print_windows_error();
+        }
+    }
 
-      //Find the WINDOWS dll
-      wchar_t dllPath[MAX_PATH];
-      size_t bytes = GetModuleFileName(NULL, dllPath, MAX_PATH);
-      if (bytes == 0) {
-         fprintf(stderr,"Could not retrieve the directory of the running executable.\n");
-         print_windows_error();
-      }
-      //Fill rest of the buffer with NULLs
-      memset(dllPath + bytes, '\0', MAX_PATH - bytes);
-      //Copy the dll location over top efxc2.exe
-      wcscpy_s(dllPath + bytes, MAX_PATH, DLL_NAME);
+    pCompileFromFileg ptr = (pCompileFromFileg)GetProcAddress(h, "D3DCompileFromFile");
+    if (ptr == NULL) {
+        printf("Error: could not get the address of D3DCompileFromFile.\n");
+        print_windows_error();
+    }
 
-      HMODULE h = LoadLibrary(dllPath);
-      if (h == NULL) {
-         wprintf("Error: could not load " DLL_NAME " from %s\n", dllPath);
-         print_windows_error();
-      }
-  }
+    HRESULT hr;
+    ID3DBlob* output = NULL;
+    ID3DBlob* errors = NULL;
 
-  pCompileFromFileg ptr = (pCompileFromFileg)GetProcAddress(h, "D3DCompileFromFile");
-  if(ptr == NULL) {
-    printf("Error: could not get the address of D3DCompileFromFile.\n");
-    print_windows_error();
-  }
+    if (verbose) {
+        printf("Calling D3DCompileFromFile(\n");
 
-  HRESULT hr;
-  ID3DBlob* output = NULL;
-  ID3DBlob* errors = NULL;
-
-  if(verbose) {
-    printf("Calling D3DCompileFromFile(\n");
-
-    wprintf(L"\t %ls,\n", inputFile);
-    printf("\t");
-    for(int i=0; i<numDefines-1; i++)
-      printf(" %s=%s", defines[i].Name, defines[i].Definition);
-    printf(",\n");
-    printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");
-    printf("\t %s,\n", entryPoint);
-    printf("\t %s,\n", model);
+        wprintf(L"\t %ls,\n", inputFile);
+        printf("\t");
+        for (int i = 0; i < numDefines - 1; i++)
+            printf(" %s=%s", defines[i].Name, defines[i].Definition);
+        printf(",\n");
+        printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");
+        printf("\t %s,\n", entryPoint);
+        printf("\t %s,\n", model);
 #if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable:4477)
 #endif
-    printf("\t 0x%016" PRIx64 ", \n", flags1);
+        printf("\t 0x%016" PRIx64 ", \n", flags1);
 #if defined(_MSC_VER)
 # pragma warning(pop)
 #endif
-    printf("\t 0,\n");
-    printf("\t &output,\n");
-    printf("\t &errors);\n");
-  }
+        printf("\t 0,\n");
+        printf("\t &output,\n");
+        printf("\t &errors);\n");
+    }
 
-  /*
-  HRESULT WINAPI D3DCompileFromFile(
-  in      LPCWSTR pFileName,
-  in_opt  const D3D_SHADER_MACRO pDefines,
-  in_opt  ID3DInclude pInclude,
-  in      LPCSTR pEntrypoint,
-  in      LPCSTR pTarget,
-  in      UINT Flags1,
-  in      UINT Flags2,
-  out     ID3DBlob ppCode,
-  out_opt ID3DBlob ppErrorMsgs
-  );
-  */
-  hr = ptr(
-    inputFile,
-    defines,
-    D3D_COMPILE_STANDARD_FILE_INCLUDE,
-    entryPoint,
-    model,
-    flags1,
-    0,
-    &output,
-    &errors
+    /*
+    HRESULT WINAPI D3DCompileFromFile(
+    in      LPCWSTR pFileName,
+    in_opt  const D3D_SHADER_MACRO pDefines,
+    in_opt  ID3DInclude pInclude,
+    in      LPCSTR pEntrypoint,
+    in      LPCSTR pTarget,
+    in      UINT Flags1,
+    in      UINT Flags2,
+    out     ID3DBlob ppCode,
+    out_opt ID3DBlob ppErrorMsgs
+    );
+    */
+    hr = ptr(
+        inputFile,
+        defines,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        entryPoint,
+        model,
+        flags1,
+        0,
+        &output,
+        &errors
     );
 
-  // ====================================================================================
-  // Output (or errors)
+    // ====================================================================================
+    // Output (or errors)
 
-  if (FAILED(hr)) {
-    if (errors) {
-      char* error = (char*)errors->GetBufferPointer();
-      fprintf(stderr,"Got an error (%li) while compiling:\n%s\n", hr, error);
-      errors->Release();
-    } else {
-      fprintf(stderr, "Got an error (%li) while compiling, but no error message from the function.\n", hr);
-      print_hresult_error(hr);
-      return 1;
+    if (FAILED(hr)) {
+        if (errors) {
+            char* error = (char*)errors->GetBufferPointer();
+            fprintf(stderr, "Got an error (%li) while compiling:\n%s\n", hr, error);
+            errors->Release();
+        }
+        else {
+            fprintf(stderr, "Got an error (%li) while compiling, but no error message from the function.\n", hr);
+            print_hresult_error(hr);
+            return 1;
+        }
+
+        if (output)
+            output->Release();
+
+        return 1;
     }
+    else {
+        unsigned char* outString = (unsigned char*)output->GetBufferPointer();
+        size_t len = output->GetBufferSize();
 
-     if (output)
-       output->Release();
-
-     return 1;
-  }
-  else {
-     unsigned char* outString = (unsigned char*)output->GetBufferPointer();
-     size_t len = output->GetBufferSize();
-
-     FILE* f;
+        FILE* f;
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif
-     errno_t err = _wfopen_s(&f, outputFile, L"w");
+        errno_t err = _wfopen_s(&f, outputFile, L"w");
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
-     if (errno != 0) {
-         print_errno();
-     }
-    if (cmd == CMD_WRITE_HEADER) {
-      fprintf(f, "const BYTE %s[] =\n{\n", variableName);
-      for (int i = 0; i < len; i++) {
-          fprintf(f, "%4" PRIu8, outString[i]);
-        if (i != len - 1)
-          fprintf(f, ",");
-        if (i % 6 == 5)
-          fprintf(f, "\n");
-      }
-      fprintf(f, "\n};\n");
-    }
-    if (cmd == CMD_WRITE_OBJECT) {
-        fwrite(outString, len, 1, f);
-    }
+        if (errno != 0) {
+            print_errno();
+        }
+        if (cmd == CMD_WRITE_HEADER) {
+            fprintf(f, "const BYTE %s[] =\n{\n", variableName);
+            for (int i = 0; i < len; i++) {
+                fprintf(f, "%4" PRIu8, outString[i]);
+                if (i != len - 1)
+                    fprintf(f, ",");
+                if (i % 6 == 5)
+                    fprintf(f, "\n");
+            }
+            fprintf(f, "\n};\n");
+        }
+        if (cmd == CMD_WRITE_OBJECT) {
+            fwrite(outString, len, 1, f);
+        }
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif
-    fclose(f);
+        fclose(f);
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
-    if (errno != 0) {
-        print_errno();
-    }
-    if(verbose) {
+        if (errno != 0) {
+            print_errno();
+        }
+        if (verbose) {
 #ifdef _WIN64
-      printf("Wrote " PRIu64 " bytes of shader output to %ls\n", len, outputFile);
+            printf("Wrote " PRIu64 " bytes of shader output\n", len);
 #else
-      printf("Wrote %u bytes of shader output to %ls\n", len, outputFile);
+            printf("Wrote %u bytes of shader output\n", len);
 #endif
+        }
     }
-  }
 
-  delete[] inputFile;
-  delete[] outputFile;
+    delete[] inputFile;
+    delete[] outputFile;
 
-  free( defineOption );
-  free( entryPoint );
-  free( model );
-  free( variableName );
+    if (defineOption != NULL) {
+        free(defineOption);
+    }
+    if (entryPoint != NULL) {
+       free(entryPoint);
+    }
+    if (model != NULL) {
+       free( model );
+    }
+    if (variableName) {
+       free(variableName);
+    }
 
   return 0;
 }
