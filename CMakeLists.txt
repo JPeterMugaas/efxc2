@@ -75,3 +75,8 @@ add_test(NAME long_cmd_BC7Encode_TryMode456CS
 add_test(NAME long_cmd_BC7Encode_TryMode456CS_cs40
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_4_0 /ETryMode456CS /Fh${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS_cs40.inc /Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)
+
+add_test(NAME short_cmd_BC7Encode_no_vn
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
+  COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /FhCompiled/BC7Encode_no_vn.inc)
+  
