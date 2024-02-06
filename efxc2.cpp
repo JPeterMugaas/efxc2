@@ -123,13 +123,13 @@ char* wcharToChar(const wchar_t* w) {
     c = (char*)malloc(len + 1);
     memset(c, 0, len + 1);
     if (c == NULL) {
-        printf("malloc failed/n");
+        fprintf(stderr, "malloc failed/n");
         print_errno();
         exit(1);
     }
     wcstombs(c, w, len);
     if (errno != 0) {
-        printf("malloc failed/n");
+        fprintf(stderr, "wcstombs failed/n");
         print_errno();
         exit(1);
     }
