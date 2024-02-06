@@ -617,7 +617,7 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 #ifdef _WIN64
             wprintf(L"Wrote %" PRIu64 " bytes of shader output to %ls\n", len, outputFile);
 #else
-            printf(L"Wrote %u bytes of shader output tp %ls\n", len, outputFile);
+            wprintf(L"Wrote %u bytes of shader output tp %ls\n", len, outputFile);
 #endif
         }
     }
