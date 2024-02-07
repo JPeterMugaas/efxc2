@@ -514,14 +514,8 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
         printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");
         printf("\t %s,\n", entryPoint);
         printf("\t %s,\n", model);
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable:4477)
-#endif
-        printf("\t 0x%016" PRIx64 ", \n", flags1);
-#if defined(_MSC_VER)
-# pragma warning(pop)
-#endif
+        printf("\t 0x%016" PRIx64 ", \n",(INT64) flags1);
+
         printf("\t 0,\n");
         printf("\t &output,\n");
         printf("\t &errors);\n");
@@ -634,7 +628,7 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
     if (model != NULL) {
        free( model );
     }
-    if (variableName) {
+    if (variableName != NULL) {
        free(variableName);
     }
 
