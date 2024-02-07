@@ -27,7 +27,9 @@
 #include "config.h"
 #include <d3dcompiler.h>
 #include <d3dcommon.h>
+#ifdef _WIN32
 #include <direct.h>
+#endif
 #include <stdio.h>
 #include <string>
 #include <cassert>
@@ -147,9 +149,88 @@ static const ProfilePrefix g_profilePrefixTable[] = {
   { NULL, NULL}
 };
 
+/* helper macros for functions */
+#ifdef _WIN32
+#define M_WCSDUP _wcsdup
+#else
+#define M_WCSDUP wcsdup
+#endif
+
 /* command codes for internal use */
 #define CMD_WRITE_HEADER 1
 #define CMD_WRITE_OBJECT 2
 
 /* a good size for an error message */
 #define ERR_SIZE 128
+
+/* Parameter constants since we need both
+   Unicode and ASCII versions depending
+   upon platform.*/
+
+#ifdef _WIN32
+#define M_NOLOGO L"nologo"
+#define M_T L"T"
+#define M_E L"E"
+#define M_D L"D"
+#define M_VN L"Vn"
+#define M_VI L"Vi"
+#define M_FH L"Fh"
+#define M_FD L"Fo"
+#define M_ZI L"Zi"
+#define M_ZD L"Vd"
+#define M_VD L"Vd"
+#define M_ZPC L"Zpr"
+#define M_GPP L"Gpp"
+#define M_OP L"Op"
+#define M_GFA L"Gfa"
+#define M_WX L"WX"
+#define M_GES L"Ges"
+#define M_GIS L"Gis"
+#define M_GEC L"Gec"
+#define M_O0 L"O0"
+#define M_O1 L"O1"
+#define M_O2 L"O2"
+#define M_O3 L"O3"
+#define M_RES_MAY_ALIAS L"res_may_alias"
+#define M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES L"enable_unbounded_descriptor_tables"
+#define M_ALL_RESOURCES_BOUND L"all_resources_bound"
+#define M_ZSS L"Zss"
+#define M_ZSB L"Zsb"
+#define M_QUESTION_MARK L"?"
+#define M_QSTRIP_REFLECT L"Qstrip_reflect"
+#define M_QSTRIP_DEBUG L"Qstrip_debug"
+#define M_VERSION L"version"
+#else
+#define M_NOLOGO "nologo"
+#define M_T "T"
+#define M_E "E"
+#define M_D "D"
+#define M_VN "Vn"
+#define M_VI "Vi"
+#define M_FH "Fh"
+#define M_FD "Fo"
+#define M_ZI "Zi"
+#define M_ZD "Vd"
+#define M_VD "Vd"
+#define M_ZPC "Zpr"
+#define M_GPP "Gpp"
+#define M_OP "Op"
+#define M_GFA "Gfa"
+#define M_WX "WX"
+#define M_GES "Ges"
+#define M_GIS "Gis"
+#define M_GEC "Gec"
+#define M_O0 "O0"
+#define M_O1 "O1"
+#define M_O2 "O2"
+#define M_O3 "O3"
+#define M_RES_MAY_ALIAS "res_may_alias"
+#define M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES "enable_unbounded_descriptor_tables"
+#define M_ALL_RESOURCES_BOUND "all_resources_bound"
+#define M_ZSS "Zss"
+#define M_ZSB "Zsb"
+#define M_QUESTION_MARK "?"
+#define M_QSTRIP_REFLECT "Qstrip_reflect"
+#define M_QSTRIP_DEBUG "Qstrip_debug"
+#define M_VERSION "version"
+#endif
