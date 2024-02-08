@@ -22,8 +22,9 @@ void print_usage_arg() {
 
 void print_invalid_arg() {
     fprintf(stderr, "You have specified an argument that is not handled by efxc2\n");
-    printf("This isn't a sign of disaster, odds are it will be very easy to add support for this argument.\n");
-    printf("Review the meaning of the argument in the real fxc program, and then add it into efxc2.\n");
+    printf("This isn't a sign of disaster, odds are it will be very easy to add support for\n");
+    printf("this argument.  Review the meaning of the argument in the real fxc program, and\n");
+    printf("then add it into efxc2.\n");
     printf("\n");
     print_usage_arg();
     exit(1);
@@ -31,16 +32,16 @@ void print_invalid_arg() {
 
 void print_usage_missing(const char* arg) {
     fprintf(stderr, "efxc2 is missing the %s argument.\n", arg);
-    printf("We expected to receive this, and it's likely things will not work correctly without it. Review\n");
-    printf("efxc2 and make sure things will work.\n");
+    printf("We expected to receive this, and it's likely things will not work correctly\n");
+    printf("without it.Review efxc2 and make sure things will work.\n");
     printf("\n");
     print_usage_arg();
     exit(1);
 }
 void print_usage_toomany() {
     fprintf(stderr, "You specified multiple input files.\n");
-    printf("We did not expect to receive this, and aren't prepared to handle multiple input files. ");
-    printf("You'll have to edit the source to behave the way you want.\n");
+    printf("We did not expect to receive this, and aren't prepared to handle multiple input\n"); 
+    printf("files. You'll have to edit the source to behave the way you want.\n");
     printf("\n");
     print_usage_arg();
     exit(1);
@@ -234,6 +235,7 @@ int main(int argc, char* argv[]) {
             break;
 
         if (parseOpt(M_NOLOGO, argc, argv, &index, NULL)) {
+            verbose = false;
             continue;
         }
 #ifdef _WIN32
@@ -479,11 +481,15 @@ int main(int argc, char* argv[]) {
             return 0;
         }
         else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, NULL)) {
-            printf("option -Qstrip_reflect ignored\n");
+            if (verbose) {
+                printf("option -Qstrip_reflect ignored\n");
+            }
             continue;
         }
         else if (parseOpt(M_QSTRIP_DEBUG, argc, argv, &index, NULL)) {
-            printf("option -Qstrip_debug ignored\n");
+            if (verbose) {
+                printf("option -Qstrip_debug ignored\n");
+            }
             continue;
         }
         else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
@@ -493,8 +499,9 @@ int main(int argc, char* argv[]) {
         else {
             if (!inputFile)
             {
-                printf("Parse input file name\n");
-
+                if (verbose) {
+                    printf("Parse input file name\n");
+                }
 #ifdef _WIN32
                 inputFile = new wchar_t[wcslen(argv[index]) + 1];
                 wcscpy_s(inputFile, wcslen(argv[index]) + 1, argv[index]);

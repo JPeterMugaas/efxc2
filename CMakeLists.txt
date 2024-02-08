@@ -8,7 +8,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #--------------------------------------------------------------------------------------
 
-cmake_minimum_required (VERSION 3.20)
+cmake_minimum_required (VERSION 3.21)
 
 set(EFXC2_VERSION 0.0.0.20)
 project (efxc2 VERSION ${EFXC2_VERSION}
@@ -69,7 +69,10 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl DESTINATION ${CMAKE_C
  
 add_test(NAME help
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
-  COMMAND fxc --help
+  COMMAND fxc --help)
+add_test(NAME nologo 
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
+  COMMAND fxc /nologo BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /FhCompiled/BC7Encode_TryMode456CS.inc  /VnBC7Encode_TryMode456CS
 )
 
 add_test(NAME short_cmd_BC7Encode_TryMode456CS
