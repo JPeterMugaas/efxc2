@@ -15,7 +15,9 @@ project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced version of fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
   LANGUAGES CXX)
-  
+
+include(GNUInstallDirs)
+
 set(PROJECT_COMPANY "J. Peter Mugaas")
 set(PROJECT_COPYRIGHT "Copyright (c) ${PROJECT_COMPANY}")
 
@@ -44,7 +46,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(fxc ${EXEC_SOURCES})
 target_compile_definitions(fxc PRIVATE _UNICODE UNICODE)
-#target_link_libraries(fxc PRIVATE ole32.lib version.lib)
 
 if(MINGW)
    target_link_options(fxc PRIVATE -municode)
@@ -57,6 +58,10 @@ if(MSVC)
   target_link_options(fxc PUBLIC "/INCREMENTAL")
 endif()
 
+install(FILES 
+  ${CMAKE_CURRENT_SOURCE_DIR}/README.txt
+  ${CMAKE_CURRENT_SOURCE_DIR}/license_MPL_2_0.txt
+  DESTINATION ${CMAKE_INSTALL_DOCDIR})
 enable_testing()
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled)
