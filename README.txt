@@ -8,8 +8,8 @@ to make my own modifications to the fxc2 source-code including a pull
 request ( https://github.com/mozilla/fxc2/pull/3 ) into my own enhnaced
 program (efxc2).
 
-This program works by using the d3dcompiler_47.dll available included
-in Windows using the API as desribed by:
+This program works by using the d3dcompiler_47.dll included in Windows 
+using the API as desribed by:
 
 https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/ .
 
