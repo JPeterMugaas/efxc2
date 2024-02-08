@@ -77,7 +77,7 @@ void print_windows_error() {
 #pragma warning(push)
 #pragma warning(disable:4477)
 #endif
-    fprintf(stderr, "Windows error %s /n", strErrorMessage);
+    fprintf(stderr, "Windows error %s/n", strErrorMessage);
 #if defined(_MSC_VER)
 # pragma warning(pop)
 #endif
@@ -524,7 +524,11 @@ int main(int argc, char* argv[]) {
             }
         }
         variableName = (char*)malloc(strlen(prefix) + strlen(entryPoint) + 2);
+#ifdef _WIN32
         sprintf_s(variableName, strlen(prefix) + strlen(entryPoint) + 2, "%s_%s", prefix, entryPoint);
+#else
+        sprintf(variableName, "%s_%s", prefix, entryPoint);
+#endif
     }
 
     // ====================================================================================
@@ -677,10 +681,14 @@ int main(int argc, char* argv[]) {
             print_errno();
         }
         if (verbose) {
+#ifdef _WIN32
 #ifdef _WIN64
             wprintf(L"Wrote %" PRIu64 " bytes of shader output to %ls\n", len, outputFile);
 #else
             wprintf(L"Wrote %u bytes of shader output tp %ls\n", len, outputFile);
+#endif
+#else
+            printf("Wrote %u bytes of shader output tp %ls\n", len, outputFile);
 #endif
         }
     }

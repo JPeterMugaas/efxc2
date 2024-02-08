@@ -44,7 +44,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(fxc ${EXEC_SOURCES})
 target_compile_definitions(fxc PRIVATE _UNICODE UNICODE)
-target_link_libraries(fxc PRIVATE ole32.lib version.lib)
+#target_link_libraries(fxc PRIVATE ole32.lib version.lib)
 
 if(MINGW)
    target_link_options(fxc PRIVATE -municode)
