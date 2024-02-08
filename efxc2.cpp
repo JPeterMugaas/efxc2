@@ -505,7 +505,11 @@ int main(int argc, char* argv[]) {
 #endif
 
                 if (verbose) {
+#ifdef _WIN32
                     wprintf(L"input file: %ls\n", inputFile);
+#else
+                    printf("input file: %ls\n", inputFile);
+#endif
                 }
                 index += 1;
             }
@@ -584,7 +588,11 @@ int main(int argc, char* argv[]) {
     if (verbose) {
         printf("Calling D3DCompileFromFile(\n");
 
+#ifdef _WIN32
         wprintf(L"\t %ls,\n", inputFile);
+#else
+        printf("\t %ls,\n", inputFile);
+#endif
         printf("\t");
         for (int i = 0; i < numDefines - 1; i++)
             printf(" %s=%s", defines[i].Name, defines[i].Definition);
@@ -663,7 +671,7 @@ int main(int argc, char* argv[]) {
         }
 #else
         f = fopen(outputFile, "w");
-        if (f != NULL) {
+        if (f = NULL) {
             print_errno();
         }
 #endif
