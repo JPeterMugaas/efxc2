@@ -15,25 +15,34 @@ void print_version() {
     exit(0);
 }
 void print_usage_arg() {
-    fprintf(stderr,"You have specified an argument that is not handled by efxc2\n");
+    printf("More information about valid parameters is available at Microsoft's website \n");
+    printf("\n");
+    printf("https://msdn.microsoft.com/en-us/library/windows/desktop/bb509709(v=vs.85).aspx\n");
+}
+
+void print_invalid_arg() {
+    fprintf(stderr, "You have specified an argument that is not handled by efxc2\n");
     printf("This isn't a sign of disaster, odds are it will be very easy to add support for this argument.\n");
     printf("Review the meaning of the argument in the real fxc program, and then add it into efxc2.\n");
     printf("\n");
-    printf("More information about valid parameters is available at Microsoft's website \n");
-    printf("\n");
-    printf("https://msdn.microsoft.com/en-us/library/windows/desktop/bb509709(v=vs.85).aspx");
+    print_usage_arg();
     exit(1);
 }
+
 void print_usage_missing(const char* arg) {
     fprintf(stderr, "efxc2 is missing the %s argument.\n", arg);
     printf("We expected to receive this, and it's likely things will not work correctly without it. Review\n");
     printf("efxc2 and make sure things will work.\n");
+    printf("\n");
+    print_usage_arg();
     exit(1);
 }
 void print_usage_toomany() {
     fprintf(stderr, "You specified multiple input files.\n");
     printf("We did not expect to receive this, and aren't prepared to handle multiple input files. ");
     printf("You'll have to edit the source to behave the way you want.\n");
+    printf("\n");
+    print_usage_arg();
     exit(1);
 }
 
@@ -463,7 +472,11 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, NULL)) {
             print_usage_arg();
-            continue;
+            return 0;
+        }
+        else if (parseOpt(M_HELP, argc, argv, &index, NULL)) {
+            print_usage_arg();
+            return 0;
         }
         else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, NULL)) {
             printf("option -Qstrip_reflect ignored\n");
