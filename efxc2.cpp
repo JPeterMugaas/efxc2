@@ -25,13 +25,13 @@ void print_usage_arg() {
     exit(1);
 }
 void print_usage_missing(const char* arg) {
-    fprintf(stderr, "efxc2 is missing the %s argument.", arg);
+    fprintf(stderr, "efxc2 is missing the %s argument.\n", arg);
     printf("We expected to receive this, and it's likely things will not work correctly without it. Review\n");
     printf("efxc2 and make sure things will work.\n");
     exit(1);
 }
 void print_usage_toomany() {
-    fprintf(stderr, "You specified multiple input files./n");
+    fprintf(stderr, "You specified multiple input files.\n");
     printf("We did not expect to receive this, and aren't prepared to handle multiple input files. ");
     printf("You'll have to edit the source to behave the way you want.\n");
     exit(1);
@@ -39,7 +39,12 @@ void print_usage_toomany() {
 
 void print_errno() {
     char errmsg[ERR_SIZE];
+#ifdef _WIN32
     strerror_s(errmsg, ERR_SIZE, errno);
+#else
+    /*int strerror_r(int errnum, char *buf, size_t buflen);*/
+    strerror_r(errno, errmsg, ERR_SIZE);
+#endif
     fprintf(stderr, "%s\n", errmsg);
     exit(1);
 }
@@ -158,6 +163,7 @@ char* wcharToChar(const wchar_t* w) {
     return c; 
 }
 
+#ifdef _WIN32
 void FixupFileName(wchar_t* FileName) {
   size_t i;
   if (FileName == NULL) {
@@ -174,7 +180,6 @@ void FixupFileName(wchar_t* FileName) {
   return;
 }
 
-#ifdef _WIN32
 int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 #else
 int main(int argc, char* argv[]) {
@@ -184,9 +189,14 @@ int main(int argc, char* argv[]) {
 
 
     wchar_t* inputFile = NULL;
+#ifdef _WIN32
     wchar_t* outputFile = NULL;
-
+#else
+    char* outputFile = NULL;
+#endif
+#ifdef _WIN32
     wchar_t* w_temp = NULL;
+#endif
 
     char* defineOption = NULL;
     char* entryPoint = NULL;
@@ -217,25 +227,37 @@ int main(int argc, char* argv[]) {
         if (parseOpt(M_NOLOGO, argc, argv, &index, NULL)) {
             continue;
         }
+#ifdef _WIN32
         else if (parseOpt(M_T, argc, argv, &index, &w_temp)) {
             model = wcharToChar(w_temp);
             delete[] w_temp;
+#else
+        else if (parseOpt(M_T, argc, argv, &index, &model)) {
+#endif
             if (verbose) {
                 printf("option -T (Shader Model/Profile) with arg '%s'\n", model);
             }
             continue;
         }
+#ifdef _WIN32
         else if (parseOpt(M_E, argc, argv, &index, &w_temp)) {
             entryPoint = wcharToChar(w_temp);
             delete[] w_temp;
+#else
+        else if (parseOpt(M_E, argc, argv, &index, &entryPoint)) {
+#endif
             if (verbose) {
                 printf("option -E (Entry Point) with arg '%s'\n", entryPoint);
             }
             continue;
         }
+#ifdef _WIN32
         else if (parseOpt(M_D, argc, argv, &index, &w_temp)) {
             defineOption = wcharToChar(w_temp);
             assert(defineOption == NULL);
+#else
+        else if (parseOpt(M_D, argc, argv, &index, &defineOption)) {
+#endif
             numDefines++;
             //Copy the old array into the new array, but put the new definition at the beginning
             newDefines = new D3D_SHADER_MACRO[numDefines];
@@ -250,9 +272,13 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
+#ifdef _WIN32
         else if (parseOpt(M_VN, argc, argv, &index, &w_temp)) {
             variableName = wcharToChar(w_temp);
             delete[] w_temp;
+#else
+        else if (parseOpt(M_VN, argc, argv, &index, &variableName)) {
+#endif
             if (verbose) {
                 printf("option -Vn (Variable Name) with arg '%s'\n", variableName);
             }
@@ -265,7 +291,9 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_FH, argc, argv, &index, &outputFile)) {
+#ifdef _WIN32
             FixupFileName(outputFile);
+#endif
             if (cmd != 0) {
                 printf("You cannot specify both an object and header");
                 return 1;
@@ -276,14 +304,20 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
-        else if (parseOpt(M_FD, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_FO, argc, argv, &index, NULL)) {
             if (cmd != 0) {
-               fprintf(stderr, "You cannot specify both an object and header");
+                fprintf(stderr, "You cannot specify both an object and header");
                 return 1;
             }
             cmd = CMD_WRITE_OBJECT;
             if (verbose) {
-                printf("option -Fd (Output File) with arg %ls\n", outputFile);
+                printf("option -FO (Output File) with arg %ls\n", outputFile);
+            }
+            continue;
+        }
+        else if (parseOpt(M_FD, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Fd ignored\n");
             }
             continue;
         }
@@ -447,9 +481,15 @@ int main(int argc, char* argv[]) {
             if (!inputFile)
             {
                 printf("Parse input file name\n");
+
+#ifdef _WIN32
                 inputFile = new wchar_t[wcslen(argv[index]) + 1];
                 wcscpy_s(inputFile, wcslen(argv[index]) + 1, argv[index]);
                 FixupFileName(inputFile);
+#else
+                inputFile = new wchar_t[strlen(argv[index]) + 1];
+                mbstowcs(inputFile, argv[index], strlen(argv[index]) + 1);
+#endif
 
                 if (verbose) {
                     wprintf(L"input file: %ls\n", inputFile);
@@ -492,7 +532,7 @@ int main(int argc, char* argv[]) {
 
     HMODULE h = LoadLibrary(DLL_NAME);
     if (h == NULL) {
-
+#ifdef _WIN32
         //Find the WINDOWS dll
         wchar_t dllPath[MAX_PATH];
         size_t bytes = GetModuleFileName(NULL, dllPath, MAX_PATH);
@@ -510,8 +550,10 @@ int main(int argc, char* argv[]) {
             wprintf("Error: could not load " DLL_NAME " from %s\n", dllPath);
             print_windows_error();
         }
-    }
-
+#else
+        print_windows_error();
+#endif
+     }
     pCompileFromFileg ptr = (pCompileFromFileg)GetProcAddress(h, "D3DCompileFromFile");
     if (ptr == NULL) {
         printf("Error: could not get the address of D3DCompileFromFile.\n");
@@ -590,6 +632,7 @@ int main(int argc, char* argv[]) {
         size_t len = output->GetBufferSize();
 
         FILE* f;
+#ifdef _WIN32
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 6387)
@@ -601,6 +644,13 @@ int main(int argc, char* argv[]) {
         if (errno != 0) {
             print_errno();
         }
+#else
+        f = fopen(outputFile, "w");
+        if (f != NULL) {
+            print_errno();
+        }
+#endif
+
         if (cmd == CMD_WRITE_HEADER) {
             fprintf(f, "const BYTE %s[] =\n{\n", variableName);
             for (int i = 0; i < len; i++) {

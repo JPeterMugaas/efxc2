@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.20)
 
-set(EFXC2_VERSION 0.0.0.15)
+set(EFXC2_VERSION 0.0.0.16)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced version of fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
