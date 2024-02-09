@@ -689,7 +689,7 @@ int main(int argc, char* argv[]) {
                 fprintf(f, "%4" PRIu8, outString[i]);
                 if (i != len - 1)
                     fprintf(f, ",");
-                if (i % 6 == 5)
+                if ((i % 6 == 5) && (i != len -1))
                     fprintf(f, "\n");
             }
             fprintf(f, "\n};\n");

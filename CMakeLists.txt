@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.0.20)
+set(EFXC2_VERSION 0.0.0.21)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced version of fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -62,6 +62,8 @@ install(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/README.txt
   ${CMAKE_CURRENT_SOURCE_DIR}/license_MPL_2_0.txt
   DESTINATION ${CMAKE_INSTALL_DOCDIR})
+
+include(CPack)
 enable_testing()
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled)
