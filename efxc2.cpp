@@ -158,12 +158,12 @@ char* wcharToChar(const wchar_t* w) {
     size_t len = wcslen(w);
     char* c = NULL;
     c = (char*)malloc(len + 1);
-    memset(c, 0, len + 1);
     if (c == NULL) {
         fprintf(stderr, "malloc failed/n");
         print_errno();
         exit(1);
     }
+    memset(c, 0, len + 1);
     wcstombs(c, w, len);
     if (errno != 0) {
         fprintf(stderr, "wcstombs failed/n");
@@ -189,14 +189,40 @@ void FixupFileName(wchar_t* FileName) {
   }
   return;
 }
+#endif
 
+#define M_TAREDOWN_PROG \
+    delete[] inputFile; \
+    delete[] outputFile; \
+\
+    if (defineOption != NULL) { \
+       free(defineOption); \
+    } \
+    if (entryPoint != NULL) { \
+       free(entryPoint); \
+     } \
+     if (model != NULL) { \
+       free(model); \
+     } \
+     if (variableName != NULL) { \
+       free(variableName); \
+     }
+
+#define M_WINDOWS_ERROR \
+   print_windows_error(); \
+   M_TAREDOWN_PROG \
+   return 1;
+
+/*Cygwin and MSYS2 compilers amd linkers don't support 
+the wmain -Municode entry-point*/
+
+#ifdef _WIN32
 int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 #else
 int main(int argc, char* argv[]) {
 #endif
     // ====================================================================================
     // Process Command Line Arguments
-
 
     wchar_t* inputFile = NULL;
 #ifdef _WIN32
@@ -318,6 +344,7 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_FO, argc, argv, &index, NULL)) {
             if (cmd != 0) {
                 fprintf(stderr, "You cannot specify both an object and header");
+                M_TAREDOWN_PROG
                 return 1;
             }
             cmd = CMD_WRITE_OBJECT;
@@ -474,10 +501,12 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, NULL)) {
             print_usage_arg();
+            M_TAREDOWN_PROG
             return 0;
         }
         else if (parseOpt(M_HELP, argc, argv, &index, NULL)) {
             print_usage_arg();
+            M_TAREDOWN_PROG
             return 0;
         }
         else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, NULL)) {
@@ -494,6 +523,7 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
             print_version();
+            M_TAREDOWN_PROG
             return 0;
         }
         else {
@@ -521,6 +551,7 @@ int main(int argc, char* argv[]) {
                 index += 1;
             }
             else {
+                M_TAREDOWN_PROG
                 print_usage_toomany();
                 return 1;
             }
@@ -567,6 +598,7 @@ int main(int argc, char* argv[]) {
         if (bytes == 0) {
             fprintf(stderr, "Could not retrieve the directory of the running executable.\n");
             print_windows_error();
+            M_TAREDOWN_PROG
         }
         //Fill rest of the buffer with NULLs
         memset(dllPath + bytes, '\0', MAX_PATH - bytes);
@@ -576,16 +608,16 @@ int main(int argc, char* argv[]) {
         HMODULE h = LoadLibrary(dllPath);
         if (h == NULL) {
             wprintf("Error: could not load " DLL_NAME " from %s\n", dllPath);
-            print_windows_error();
+        M_WINDOWS_ERROR
         }
 #else
-        print_windows_error();
+        M_WINDOWS_ERROR
 #endif
      }
     pCompileFromFileg ptr = (pCompileFromFileg)GetProcAddress(h, "D3DCompileFromFile");
     if (ptr == NULL) {
         printf("Error: could not get the address of D3DCompileFromFile.\n");
-        print_windows_error();
+        M_WINDOWS_ERROR
     }
 
     HRESULT hr;
@@ -647,16 +679,16 @@ int main(int argc, char* argv[]) {
             char* error = (char*)errors->GetBufferPointer();
             fprintf(stderr, "Got an error (%li) while compiling:\n%s\n", hr, error);
             errors->Release();
+            
         }
         else {
             fprintf(stderr, "Got an error (%li) while compiling, but no error message from the function.\n", hr);
             print_hresult_error(hr);
-            return 1;
         }
 
         if (output)
             output->Release();
-
+        M_TAREDOWN_PROG
         return 1;
     }
     else {
@@ -720,22 +752,6 @@ int main(int argc, char* argv[]) {
 #endif
         }
     }
-
-    delete[] inputFile;
-    delete[] outputFile;
-
-    if (defineOption != NULL) {
-        free(defineOption);
-    }
-    if (entryPoint != NULL) {
-       free(entryPoint);
-    }
-    if (model != NULL) {
-       free( model );
-    }
-    if (variableName != NULL) {
-       free(variableName);
-    }
-
+    M_TAREDOWN_PROG
   return 0;
 }
