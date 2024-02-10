@@ -19,7 +19,7 @@ project (efxc2 VERSION ${EFXC2_VERSION}
 include(GNUInstallDirs)
 
 set(PROJECT_COMPANY "J. Peter Mugaas")
-set(PROJECT_COPYRIGHT "Copyright (c) ${PROJECT_COMPANY}")
+set(PROJECT_COPYRIGHT "Copyright (c) 2024 ${PROJECT_COMPANY}")
 
 set(EXEC_SOURCES efxc2.cpp
                  efxc2.h)

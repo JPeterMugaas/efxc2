@@ -10,11 +10,18 @@
 #include "efxc2.h"
 
 void print_version() {
-    printf(PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n");
-    printf(PROGRAM_COPYRIGHT "\n");
+    printf(PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "/n");
+    printf(PROGRAM_COPYRIGHT "/n");
     exit(0);
 }
+
+void print_copyright() {
+    printf(PROGRAM_DESCRIPTION " " PROGRAM_VERSION "\n");
+    printf(PROGRAM_COPYRIGHT "  This program is licensed under the Mozilla Public License, v. 2.0.\n");
+}
+
 void print_usage_arg() {
+    printf("\n");
     printf("More information about valid parameters is available at Microsoft's website \n");
     printf("\n");
     printf("https://msdn.microsoft.com/en-us/library/windows/desktop/bb509709(v=vs.85).aspx\n");
@@ -66,6 +73,7 @@ void print_hresult_error(const HRESULT hr) {
     std::string message(messageBuffer, size);
     LocalFree(messageBuffer);
     fprintf(stderr, "Windows Error Message: %s\n", messageBuffer);
+    printf("Error Code: 0x%x", hr);
     exit(1);
 }
 
@@ -515,11 +523,13 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, NULL)) {
+            print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
             return 0;
         }
         else if (parseOpt(M_HELP, argc, argv, &index, NULL)) {
+            print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
             return 0;
@@ -692,12 +702,12 @@ int main(int argc, char* argv[]) {
     if (FAILED(hr)) {
         if (errors) {
             char* error = (char*)errors->GetBufferPointer();
-            fprintf(stderr, "Got an error (%li) while compiling:\n%s\n", hr, error);
+            fprintf(stderr, "Got an error while compiling:\n%s\n", error);
             errors->Release();
-            
+            printf("Error Code: 0x%x", hr);
         }
         else {
-            fprintf(stderr, "Got an error (%li) while compiling, but no error message from the function.\n", hr);
+            fprintf(stderr, "Got an error (%x) while compiling, but no error message from the function.\n", hr);
             print_hresult_error(hr);
         }
 
