@@ -251,8 +251,24 @@ int main(int argc, char* argv[]) {
 
     wchar_t* ptr_cmd = (wchar_t*)argv;
 
+    /*first scan specifically for the nologo argument so no output
+    is given regardless of parameter order*/
     int index = 1;
+    while (1) {
+        /* Detect the end of the options. */
+        if (index >= argc)
+            break;
+        if (parseOpt(M_NOLOGO, argc, argv, &index, NULL)) {
+            verbose = false;
+            break;
+        }
+        else {
+            index++;
+        }
+    }
 
+    /*now scan for all arguments and input file name*/
+    index = 1;
     while (1) {
         D3D_SHADER_MACRO* newDefines;
 
@@ -261,7 +277,6 @@ int main(int argc, char* argv[]) {
             break;
 
         if (parseOpt(M_NOLOGO, argc, argv, &index, NULL)) {
-            verbose = false;
             continue;
         }
 #ifdef _WIN32
