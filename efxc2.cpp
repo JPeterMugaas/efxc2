@@ -248,6 +248,7 @@ int main(int argc, char* argv[]) {
     char* variableName = NULL;
 
     UINT flags1 = 0;
+    UINT flags2 = 0;
     int verbose = 1;
 
     BYTE cmd = 0;
@@ -415,6 +416,20 @@ int main(int argc, char* argv[]) {
                 printf("option -Gpp D3DCOMPILE_PARTIAL_PRECISION\n");
             }
             flags1 = flags1 | D3DCOMPILE_PARTIAL_PRECISION;
+            continue;
+        }
+        else if (parseOpt(M_GCH, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Gch D3DCOMPILE_EFFECT_CHILD_EFFECT");
+            }
+            flags2 = flags2 | D3DCOMPILE_EFFECT_CHILD_EFFECT;
+            continue;
+        }
+        else if (parseOpt(M_GDP, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Gdp D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS");
+            }
+            flags2 = flags2 | D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS;
             continue;
         }
         else if (parseOpt(M_OP, argc, argv, &index, NULL)) {
@@ -666,7 +681,7 @@ int main(int argc, char* argv[]) {
         printf("\t %s,\n", model);
         printf("\t 0x%016" PRIx64 ", \n",(INT64) flags1);
 
-        printf("\t 0,\n");
+        printf("\t 0x%016" PRIx64 ", \n", (INT64)flags2);
         printf("\t &output,\n");
         printf("\t &errors);\n");
     }
@@ -691,7 +706,7 @@ int main(int argc, char* argv[]) {
         entryPoint,
         model,
         flags1,
-        0,
+        flags2,
         &output,
         &errors
     );

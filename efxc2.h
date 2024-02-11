@@ -45,7 +45,7 @@
 #define D3D_COMPILE_STANDARD_FILE_INCLUDE ((ID3DInclude*)(UINT_PTR)1)
 #endif
 
-// D3DCOMPILE flags:
+// D3DCOMPILE flags1 parameters:
 #ifndef D3DCOMPILE_DEBUG
 #define D3DCOMPILE_DEBUG (1 << 0)
 #endif
@@ -128,6 +128,24 @@
 #define D3DCOMPILE_DEBUG_NAME_FOR_BINARY (1 << 23)
 #endif
 
+/* flags2 parameters */
+#ifndef D3DCOMPILE_EFFECT_CHILD_EFFECT
+#define D3DCOMPILE_EFFECT_CHILD_EFFECT   (1 << 0)
+#endif
+#ifndef D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS 
+#define D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS  (1 << 1)
+#endif
+#ifndef D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_LATEST
+#define D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_LATEST 0
+#endif
+#ifndef D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_0
+#define D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_0 (1 << 4)
+#endif
+#ifndef D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_1
+#define D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_1 (1 << 5)
+#endif
+
+
 typedef HRESULT(__stdcall *pCompileFromFileg)(LPCWSTR,
                           const D3D_SHADER_MACRO[],
                           ID3DInclude*,
@@ -196,9 +214,11 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_GPP                                L"Gpp"
 #define M_OP                                 L"Op"
 #define M_GFA                                L"Gfa"
+#define M_GDP                                L"Gdp"
 #define M_WX                                 L"WX"
 #define M_GES                                L"Ges"
 #define M_GIS                                L"Gis"
+#define M_GCH                                L"Gch"
 #define M_GEC                                L"Gec"
 #define M_O0                                 L"O0"
 #define M_O1                                 L"O1"
@@ -232,9 +252,11 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_GPP                                "Gpp"
 #define M_OP                                 "Op"
 #define M_GFA                                "Gfa"
+#define M_GDP                                "Gdp"
 #define M_WX                                 "WX"
 #define M_GES                                "Ges"
 #define M_GIS                                "Gis"
+#define M_GCH                                "Gch"
 #define M_GEC                                "Gec"
 #define M_O0                                 "O0"
 #define M_O1                                 "O1"
