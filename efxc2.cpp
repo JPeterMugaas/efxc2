@@ -250,6 +250,7 @@ int main(int argc, char* argv[]) {
     UINT flags1 = 0;
     UINT flags2 = 0;
     int verbose = 1;
+    int outputHex = 0;
 
     BYTE cmd = 0;
 
@@ -561,6 +562,13 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
+        else if (parseOpt(M_LX, argc, argv, &index, NULL)) {
+            outputHex = 1;
+            if (verbose) {
+                printf("option -Lx - output hexidecimal litterals\n");
+            }
+            continue;
+            }
         else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
             print_version();
             M_TAREDOWN_PROG
@@ -758,11 +766,17 @@ int main(int argc, char* argv[]) {
         if (cmd == CMD_WRITE_HEADER) {
             fprintf(f, "const BYTE %s[] =\n{\n", variableName);
             for (int i = 0; i < len; i++) {
-                fprintf(f, "%4" PRIu8, outString[i]);
-                if (i != len - 1)
+                if (outputHex) {
+                    fprintf(f, " 0x%02" PRIx8, outString[i]);
+                } else {
+                    fprintf(f, "%4" PRIu8, outString[i]);
+                }
+                if (i != len - 1) {
                     fprintf(f, ",");
-                if ((i % 6 == 5) && (i != len -1))
+                }
+                if ((i % 6 == 5) && (i != len - 1)) {
                     fprintf(f, "\n");
+                }
             }
             fprintf(f, "\n};\n");
         }
