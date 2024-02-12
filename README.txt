@@ -11,12 +11,12 @@ program (efxc2).
 This program works by using the d3dcompiler_47.dll included in Windows 
 using the API as desribed by:
 
-https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/ .
+https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/
 
 Usage:
 
-This program aims to emulate the syntax used by Microsoft's Shader Compiler (fxc). 
-That program is documented at:
+This program aims to be compatible with the syntax used by Microsoft's 
+Shader Compiler (fxc).  That program is documented at:
 
 https://learn.microsoft.com/en-us/windows/win32/direct3dtools/fxc
 
