@@ -27,20 +27,24 @@ void print_usage_arg() {
     printf("https://msdn.microsoft.com/en-us/library/windows/desktop/bb509709(v=vs.85).aspx\n");
 }
 
-void print_invalid_arg() {
-    fprintf(stderr, "You have specified an argument that is not handled by efxc2\n");
+void print_unsupported_arg_help() {
     printf("This isn't a sign of disaster, odds are it will be very easy to add support for\n");
     printf("this argument.  Review the meaning of the argument in the real fxc program, and\n");
     printf("then add it into efxc2.\n");
     printf("\n");
     print_usage_arg();
+}
+
+void print_invalid_arg() {
+    fprintf(stderr, "You have specified an argument that is not handled by efxc2\n");
+    print_unsupported_arg_help();
     exit(1);
 }
 
 void print_usage_missing(const char* arg) {
     fprintf(stderr, "efxc2 is missing the %s argument.\n", arg);
     printf("We expected to receive this, and it's likely things will not work correctly\n");
-    printf("without it.Review efxc2 and make sure things will work.\n");
+    printf("without it.  Review efxc2 and make sure things will work.\n");
     printf("\n");
     print_usage_arg();
     exit(1);
@@ -286,7 +290,8 @@ int main(int argc, char* argv[]) {
         if (index >= argc)
             break;
         else if (parseOpt(M_AT_SYMBOL, argc, argv, &index, NULL)) {
-            fprintf(stderr, "option -@ not supproted");
+            fprintf(stderr, "option -@ not supported");
+            print_unsupported_arg_help();
             M_TAREDOWN_PROG
             return 1;
         }
@@ -311,6 +316,7 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_COMPRESS, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -compress not supported");
+            print_unsupported_arg_help();
             M_TAREDOWN_PROG
             return 1;
         }
@@ -337,6 +343,13 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_DECOMPRESS, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -decompress not supported");
+            print_unsupported_arg_help();
+            M_TAREDOWN_PROG
+            return 1;
+        }
+        else if (parseOpt(M_DUMPBIN, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -dumpbin not supported");
+            print_unsupported_arg_help();
             M_TAREDOWN_PROG
                 return 1;
         }
@@ -388,6 +401,7 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_FL, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -Fl not supported");
+            print_unsupported_arg_help();
             M_TAREDOWN_PROG
             return 1;
         }
@@ -411,6 +425,7 @@ int main(int argc, char* argv[]) {
             }
         else if (parseOpt(M_FX, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -Fx not supported");
+            print_unsupported_arg_help();
             M_TAREDOWN_PROG
             return 1;
         }
@@ -444,6 +459,7 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_GETPRIVATE, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -getprivate not supported");
+            print_unsupported_arg_help();
             M_TAREDOWN_PROG
             return 1;
         }
@@ -460,7 +476,7 @@ int main(int argc, char* argv[]) {
             }
             flags1 = flags1 | D3DCOMPILE_IEEE_STRICTNESS;
             continue;
-            }
+        }
         else if (parseOpt(M_GPP, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Gpp D3DCOMPILE_PARTIAL_PRECISION\n");
@@ -475,40 +491,42 @@ int main(int argc, char* argv[]) {
             return 0;
          }
         else if (parseOpt(M_I, argc, argv, &index, NULL)) {
-             if (verbose) {
+            if (verbose) {
                  printf("option -I ignored\n");
-             }
-             continue;
-             }
+            }
+            continue;
+        }
         else if (parseOpt(M_LX, argc, argv, &index, NULL)) {
             outputHex = 1;
             if (verbose) {
                 printf("option -Lx - output hexidecimal litterals\n");
             }
             continue;
-            }
+        }
         else if (parseOpt(M_MATCHUAVS, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -matchUAVs not supported");
+            print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
          }
         else if (parseOpt(M_MERGEUAVS, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -mergeUAVs not supported");
+            print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
-         }
+            return 1;
+        }
         else if (parseOpt(M_NI, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Ni ignored\n");
             }
             continue;
-             }
+        }
         else if (parseOpt(M_NO, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -No ignored\n");
             }
             continue;
-             }
+        }
         else if (parseOpt(M_NOLOGO, argc, argv, &index, NULL)) {
             continue;
         }
@@ -552,7 +570,7 @@ int main(int argc, char* argv[]) {
                 printf("option -P ignored\n");
             }
             continue;
-            }
+        }
         else if (parseOpt(M_QSTRIP_DEBUG, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Qstrip_debug ignored\n");
@@ -586,6 +604,7 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_SETPRIVATE, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -setprivate not supported");
+            print_unsupported_arg_help();
             M_TAREDOWN_PROG
             return 1;
         }
@@ -611,7 +630,7 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
             print_version();
             M_TAREDOWN_PROG
-                return 0;
+            return 0;
         }
         else if (parseOpt(M_VI, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -637,7 +656,7 @@ int main(int argc, char* argv[]) {
             }
             flags1 = flags1 | D3DCOMPILE_WARNINGS_ARE_ERRORS;
             continue;
-            }
+        }
         else if (parseOpt(M_ZD, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Zd D3DCOMPILE_SKIP_VALIDATION\n");
@@ -665,7 +684,7 @@ int main(int argc, char* argv[]) {
             }
             flags1 = flags1 | D3DCOMPILE_DEBUG_NAME_FOR_BINARY;
             continue;
-            }
+        }
         else if (parseOpt(M_ZSS, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Zss D3DCOMPILE_DEBUG_NAME_FOR_SOURCE\n");
