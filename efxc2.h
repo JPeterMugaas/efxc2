@@ -67,10 +67,10 @@
 #ifndef D3DCOMPILE_PARTIAL_PRECISION
 #define D3DCOMPILE_PARTIAL_PRECISION (1 << 5)
 #endif
-#ifdef D3DCOMPILE_FORCE_VS_SOFTWARE_NO_OPT
+#ifndef D3DCOMPILE_FORCE_VS_SOFTWARE_NO_OPT
 #define D3DCOMPILE_FORCE_VS_SOFTWARE_NO_OPT (1 << 6)
 #endif
-#ifdef D3DCOMPILE_FORCE_PS_SOFTWARE_NO_OPT
+#ifndef D3DCOMPILE_FORCE_PS_SOFTWARE_NO_OPT
 #define D3DCOMPILE_FORCE_PS_SOFTWARE_NO_OPT (1 << 7)
 #endif
 #ifndef D3DCOMPILE_NO_PRESHADER
@@ -103,10 +103,10 @@
 #ifndef D3DCOMPILE_OPTIMIZATION_LEVEL3
 #define D3DCOMPILE_OPTIMIZATION_LEVEL3 (1 << 15)
 #endif
-#ifdef D3DCOMPILE_RESERVED16
+#ifndef D3DCOMPILE_RESERVED16
 #define D3DCOMPILE_RESERVED16 (1 << 16)
 #endif
-#ifdef D3DCOMPILE_RESERVED17
+#ifndef D3DCOMPILE_RESERVED17
 #define D3DCOMPILE_RESERVED17 (1 << 17)
 #endif
 #ifndef D3DCOMPILE_WARNINGS_ARE_ERRORS
@@ -200,12 +200,16 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #ifdef _WIN32
 #define M_QUESTION_MARK                      L"?"
 #define M_ALL_RESOURCES_BOUND                L"all_resources_bound"
+#define M_CC                                 L"Cc"
 #define M_D                                  L"D"
 #define M_E                                  L"E"
 #define M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES L"enable_unbounded_descriptor_tables"
 #define M_FD                                 L"Fd"
+#define M_FE                                 L"Fe"
 #define M_FH                                 L"Fh"
+#define M_FL                                 L"Fl"
 #define M_FO                                 L"Fo"
+#define M_FX                                 L"Fx"
 #define M_GCH                                L"Gch"
 #define M_GDP                                L"Gdp"
 #define M_GEC                                L"Gec"
@@ -214,15 +218,21 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_GIS                                L"Gis"
 #define M_GPP                                L"Gpp"
 #define M_HELP                               L"help"
+#define M_I                                  L"I"
 #define M_LX                                 L"Lx"
+#define M_NI                                 L"Ni"
+#define M_NO                                 L"No"
 #define M_NOLOGO                             L"nologo"
 #define M_O0                                 L"O0"
 #define M_O1                                 L"O1"
 #define M_O2                                 L"O2"
 #define M_O3                                 L"O3"
 #define M_OP                                 L"Op"
+#define M_P                                  L"P"
 #define M_QSTRIP_DEBUG                       L"Qstrip_debug"
+#define M_QSTRIP_PRIV                        L"Qstrip_priv"
 #define M_QSTRIP_REFLECT                     L"Qstrip_reflect"
+#define M_QSTRIP_ROOTSIGNATURE               L"Qstrip_rootsignature"
 #define M_RES_MAY_ALIAS                      L"res_may_alias"
 #define M_T                                  L"T"
 #define M_VD                                 L"Vd"
@@ -238,12 +248,16 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #else
 #define M_QUESTION_MARK                      "?"
 #define M_ALL_RESOURCES_BOUND                "all_resources_bound"
+#define M_CC                                 "Cc"
 #define M_D                                  "D"
 #define M_E                                  "E"
 #define M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES "enable_unbounded_descriptor_tables"
 #define M_FD                                 "Fd"
+#define M_FE                                 "Fe"
 #define M_FH                                 "Fh"
+#define M_FL                                 "Fl"
 #define M_FO                                 "Fo"
+#define M_FX                                 "Fx"
 #define M_GCH                                "Gch"
 #define M_GDP                                "Gdp"
 #define M_GEC                                "Gec"
@@ -252,15 +266,21 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_GIS                                "Gis"
 #define M_GPP                                "Gpp"
 #define M_HELP                               "help"
+#define M_I                                  "I"
 #define M_LX                                 "Lx"
+#define M_NI                                 "Ni"
+#define M_NO                                 "No"
 #define M_NOLOGO                             "nologo"
 #define M_O0                                 "O0"
 #define M_O1                                 "O1"
 #define M_O2                                 "O2"
 #define M_O3                                 "O3"
 #define M_OP                                 "Op"
+#define M_P                                  "P"
 #define M_QSTRIP_DEBUG                       "Qstrip_debug"
+#define M_QSTRIP_PRIV                        "Qstrip_priv"
 #define M_QSTRIP_REFLECT                     "Qstrip_reflect"
+#define M_QSTRIP_ROOTSIGNATURE               "Qstrip_rootsignature"
 #define M_RES_MAY_ALIAS                      "res_may_alias"
 #define M_T                                  "T"
 #define M_VD                                 "Vd"

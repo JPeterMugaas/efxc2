@@ -290,13 +290,19 @@ int main(int argc, char* argv[]) {
             print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
-            return 0;
+                return 0;
         }
         else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -all_resources_bound D3DCOMPILE_ALL_RESOURCES_BOUND\n");
             }
             flags1 = flags1 | D3DCOMPILE_ALL_RESOURCES_BOUND;
+            continue;
+        }
+        else if (parseOpt(M_CC, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Cc ignored\n");
+            }
             continue;
         }
 #ifdef _WIN32
@@ -346,19 +352,31 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
+        else if (parseOpt(M_FE, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Fe ignored\n");
+            }
+            continue;
+        }
         else if (parseOpt(M_FH, argc, argv, &index, &outputFile)) {
 #ifdef _WIN32
             FixupFileName(outputFile);
 #endif
             if (cmd != 0) {
                 printf("You cannot specify both an object and header");
-                return 1;
+                M_TAREDOWN_PROG
+                    return 1;
             }
             cmd = CMD_WRITE_HEADER;
             if (verbose) {
                 printf("option -Fh (Output File) with arg %ls\n", outputFile);
             }
             continue;
+        }
+        else if (parseOpt(M_FL, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -Fl not supported");
+            M_TAREDOWN_PROG
+            return 1;
         }
         else if (parseOpt(M_FO, argc, argv, &index, NULL)) {
             if (cmd != 0) {
@@ -371,6 +389,11 @@ int main(int argc, char* argv[]) {
                 printf("option -FO (Output File) with arg %ls\n", outputFile);
             }
             continue;
+        }
+        else if (parseOpt(M_FX, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -Fx not supported");
+            M_TAREDOWN_PROG
+                return 1;
         }
         else if (parseOpt(M_GCH, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -427,6 +450,12 @@ int main(int argc, char* argv[]) {
             M_TAREDOWN_PROG
             return 0;
          }
+        else if (parseOpt(M_I, argc, argv, &index, NULL)) {
+             if (verbose) {
+                 printf("option -I ignored\n");
+             }
+             continue;
+             }
         else if (parseOpt(M_LX, argc, argv, &index, NULL)) {
             outputHex = 1;
             if (verbose) {
@@ -434,6 +463,18 @@ int main(int argc, char* argv[]) {
             }
             continue;
             }
+        else if (parseOpt(M_NI, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Ni ignored\n");
+            }
+            continue;
+             }
+        else if (parseOpt(M_NO, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -No ignored\n");
+            }
+            continue;
+             }
         else if (parseOpt(M_NOLOGO, argc, argv, &index, NULL)) {
             continue;
         }
@@ -472,15 +513,33 @@ int main(int argc, char* argv[]) {
             flags1 = flags1 | D3DCOMPILE_NO_PRESHADER;
             continue;
         }
+        else if (parseOpt(M_P, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -P ignored\n");
+            }
+            continue;
+            }
         else if (parseOpt(M_QSTRIP_DEBUG, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Qstrip_debug ignored\n");
             }
             continue;
         }
+        else if (parseOpt(M_QSTRIP_PRIV, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Qstrip_priv ignored\n");
+            }
+            continue;
+        }
         else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Qstrip_reflect ignored\n");
+            }
+            continue;
+        }
+        else if (parseOpt(M_QSTRIP_ROOTSIGNATURE, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Qstrip_rootsignature ignored\n");
             }
             continue;
         }
