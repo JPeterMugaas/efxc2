@@ -285,12 +285,16 @@ int main(int argc, char* argv[]) {
         /* Detect the end of the options. */
         if (index >= argc)
             break;
-
+        else if (parseOpt(M_AT_SYMBOL, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -@ not supproted");
+            M_TAREDOWN_PROG
+            return 1;
+        }
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, NULL)) {
             print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
-                return 0;
+            return 0;
         }
         else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -304,6 +308,11 @@ int main(int argc, char* argv[]) {
                 printf("option -Cc ignored\n");
             }
             continue;
+        }
+        else if (parseOpt(M_COMPRESS, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -compress not supported");
+            M_TAREDOWN_PROG
+            return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_D, argc, argv, &index, &w_temp)) {
@@ -326,7 +335,11 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
-
+        else if (parseOpt(M_DECOMPRESS, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -decompress not supported");
+            M_TAREDOWN_PROG
+                return 1;
+        }
 #ifdef _WIN32
         else if (parseOpt(M_E, argc, argv, &index, &w_temp)) {
             entryPoint = wcharToChar(w_temp);
@@ -390,10 +403,16 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
+        else if (parseOpt(M_FORCE_ROOTSIG_VER, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -force_rootsig_ver ignored");
+            }
+            continue;
+            }
         else if (parseOpt(M_FX, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -Fx not supported");
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
         else if (parseOpt(M_GCH, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -422,6 +441,11 @@ int main(int argc, char* argv[]) {
             }
             flags1 = flags1 | D3DCOMPILE_ENABLE_STRICTNESS;
             continue;
+        }
+        else if (parseOpt(M_GETPRIVATE, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -getprivate not supported");
+            M_TAREDOWN_PROG
+            return 1;
         }
         else if (parseOpt(M_GFA, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -463,6 +487,16 @@ int main(int argc, char* argv[]) {
             }
             continue;
             }
+        else if (parseOpt(M_MATCHUAVS, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -matchUAVs not supported");
+            M_TAREDOWN_PROG
+                return 1;
+         }
+        else if (parseOpt(M_MERGEUAVS, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -mergeUAVs not supported");
+            M_TAREDOWN_PROG
+                return 1;
+         }
         else if (parseOpt(M_NI, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Ni ignored\n");
@@ -549,6 +583,11 @@ int main(int argc, char* argv[]) {
             }
             flags1 = flags1 | D3DCOMPILE_RESOURCES_MAY_ALIAS;
             continue;
+        }
+        else if (parseOpt(M_SETPRIVATE, argc, argv, &index, NULL)) {
+            fprintf(stderr, "option -setprivate not supported");
+            M_TAREDOWN_PROG
+            return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_T, argc, argv, &index, &w_temp)) {
