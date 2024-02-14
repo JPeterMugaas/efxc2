@@ -7,7 +7,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //--------------------------------------------------------------------------------------
-
+#pragma once
 #ifdef __MINGW32__
 #define __USE_MINGW_ANSI_STDIO 1
 #endif
@@ -155,6 +155,22 @@ typedef HRESULT(__stdcall *pCompileFromFileg)(LPCWSTR,
                           UINT,
                           ID3DBlob**,
                           ID3DBlob**);
+
+typedef HRESULT(__stdcall *pD3DCompile2g)(
+                          const void* data,
+                          SIZE_T data_size,
+                          const char* filename,
+                          const D3D_SHADER_MACRO* defines,
+                          ID3DInclude* include, 
+                          const char* entrypoint,
+                          const char* target, 
+                          UINT sflags, 
+                          UINT eflags, 
+                          UINT secondary_flags,
+                          const void* secondary_data, 
+                          SIZE_T secondary_data_size, 
+                          ID3DBlob** shader,
+                          ID3DBlob** error_messages);
 
 struct ProfilePrefix {
   const char* name;
