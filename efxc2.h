@@ -47,114 +47,114 @@
 
 // D3DCOMPILE flags1 parameters:
 #ifndef D3DCOMPILE_DEBUG
-#define D3DCOMPILE_DEBUG (1 << 0)
+#define D3DCOMPILE_DEBUG                             (1 << 0)
 #endif
 #ifndef D3DCOMPILE_SKIP_VALIDATION
-#define D3DCOMPILE_SKIP_VALIDATION (1 << 1)
+#define D3DCOMPILE_SKIP_VALIDATION                   (1 << 1)
 #endif
 #ifndef D3DCOMPILE_SKIP_OPTIMIZATION
-#define D3DCOMPILE_SKIP_OPTIMIZATION (1 << 2)
+#define D3DCOMPILE_SKIP_OPTIMIZATION                 (1 << 2)
 #endif
 #ifndef D3DCOMPILE_PACK_MATRIX_ROW_MAJOR
-#define D3DCOMPILE_PACK_MATRIX_ROW_MAJOR (1 << 3)
+#define D3DCOMPILE_PACK_MATRIX_ROW_MAJOR             (1 << 3)
 #endif
 #ifndef D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR
-#define D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR (1 << 4)
+#define D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR          (1 << 4)
 #endif
 #ifndef D3DCOMPILE_PARTIAL_PRECISION
-#define D3DCOMPILE_PARTIAL_PRECISION (1 << 5)
+#define D3DCOMPILE_PARTIAL_PRECISION                 (1 << 5)
 #endif
 #ifndef D3DCOMPILE_PARTIAL_PRECISION
-#define D3DCOMPILE_PARTIAL_PRECISION (1 << 5)
+#define D3DCOMPILE_PARTIAL_PRECISION                 (1 << 5)
 #endif
 #ifndef D3DCOMPILE_FORCE_VS_SOFTWARE_NO_OPT
-#define D3DCOMPILE_FORCE_VS_SOFTWARE_NO_OPT (1 << 6)
+#define D3DCOMPILE_FORCE_VS_SOFTWARE_NO_OPT          (1 << 6)
 #endif
 #ifndef D3DCOMPILE_FORCE_PS_SOFTWARE_NO_OPT
-#define D3DCOMPILE_FORCE_PS_SOFTWARE_NO_OPT (1 << 7)
+#define D3DCOMPILE_FORCE_PS_SOFTWARE_NO_OPT          (1 << 7)
 #endif
 #ifndef D3DCOMPILE_NO_PRESHADER
-#define D3DCOMPILE_NO_PRESHADER (1 << 8)
+#define D3DCOMPILE_NO_PRESHADER                      (1 << 8)
 #endif
 #ifndef D3DCOMPILE_AVOID_FLOW_CONTROL
-#define D3DCOMPILE_AVOID_FLOW_CONTROL (1 << 9)
+#define D3DCOMPILE_AVOID_FLOW_CONTROL                (1 << 9)
 #endif
 #ifndef D3DCOMPILE_WARNINGS_ARE_ERRORS
-#define D3DCOMPILE_WARNINGS_ARE_ERRORS (1 << 18)
+#define D3DCOMPILE_WARNINGS_ARE_ERRORS               (1 << 18)
 #endif
 #ifndef D3DCOMPILE_ENABLE_STRICTNESS
-#define D3DCOMPILE_ENABLE_STRICTNESS (1 << 11)
+#define D3DCOMPILE_ENABLE_STRICTNESS                  (1 << 11)
 #endif
 #ifndef D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY
-#define D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY (1 << 12)
+#define D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY     (1 << 12)
 #endif
 #ifndef D3DCOMPILE_IEEE_STRICTNESS
-#define D3DCOMPILE_IEEE_STRICTNESS (1 << 13)
+#define D3DCOMPILE_IEEE_STRICTNESS                    (1 << 13)
 #endif
 #ifndef D3DCOMPILE_OPTIMIZATION_LEVEL0
-#define D3DCOMPILE_OPTIMIZATION_LEVEL0 (1 << 14)
+#define D3DCOMPILE_OPTIMIZATION_LEVEL0                (1 << 14)
 #endif
 #ifndef D3DCOMPILE_OPTIMIZATION_LEVEL1
-#define D3DCOMPILE_OPTIMIZATION_LEVEL1 0 
+#define D3DCOMPILE_OPTIMIZATION_LEVEL1                0 
 #endif
 #ifndef D3DCOMPILE_OPTIMIZATION_LEVEL2 
-#define D3DCOMPILE_OPTIMIZATION_LEVEL2 ((1 << 14) | (1 << 15))
+#define D3DCOMPILE_OPTIMIZATION_LEVEL2                ((1 << 14) | (1 << 15))
 #endif
 #ifndef D3DCOMPILE_OPTIMIZATION_LEVEL3
-#define D3DCOMPILE_OPTIMIZATION_LEVEL3 (1 << 15)
+#define D3DCOMPILE_OPTIMIZATION_LEVEL3                (1 << 15)
 #endif
 #ifndef D3DCOMPILE_RESERVED16
-#define D3DCOMPILE_RESERVED16 (1 << 16)
+#define D3DCOMPILE_RESERVED16                         (1 << 16)
 #endif
 #ifndef D3DCOMPILE_RESERVED17
-#define D3DCOMPILE_RESERVED17 (1 << 17)
+#define D3DCOMPILE_RESERVED17                         (1 << 17)
 #endif
 #ifndef D3DCOMPILE_WARNINGS_ARE_ERRORS
-#define D3DCOMPILE_WARNINGS_ARE_ERRORS (1 << 18)
+#define D3DCOMPILE_WARNINGS_ARE_ERRORS                (1 << 18)
 #endif
 #ifndef D3DCOMPILE_RESOURCES_MAY_ALIAS
-#define D3DCOMPILE_RESOURCES_MAY_ALIAS (1 << 19)
+#define D3DCOMPILE_RESOURCES_MAY_ALIAS                (1 << 19)
 #endif
 #ifndef D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES
 #define D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES (1 << 20)
 #endif
 #ifndef D3DCOMPILE_ALL_RESOURCES_BOUND
-#define D3DCOMPILE_ALL_RESOURCES_BOUND (1 << 21)
+#define D3DCOMPILE_ALL_RESOURCES_BOUND                (1 << 21)
 #endif
 #ifndef D3DCOMPILE_DEBUG_NAME_FOR_SOURCE
-#define D3DCOMPILE_DEBUG_NAME_FOR_SOURCE (1 << 22)
+#define D3DCOMPILE_DEBUG_NAME_FOR_SOURCE              (1 << 22)
 #endif
 #ifndef D3DCOMPILE_DEBUG_NAME_FOR_BINARY
-#define D3DCOMPILE_DEBUG_NAME_FOR_BINARY (1 << 23)
+#define D3DCOMPILE_DEBUG_NAME_FOR_BINARY              (1 << 23)
 #endif
 
 /* flags2 parameters */
 #ifndef D3DCOMPILE_EFFECT_CHILD_EFFECT
-#define D3DCOMPILE_EFFECT_CHILD_EFFECT   (1 << 0)
+#define D3DCOMPILE_EFFECT_CHILD_EFFECT                (1 << 0)
 #endif
 #ifndef D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS 
-#define D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS  (1 << 1)
+#define D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS              (1 << 1)
 #endif
 #ifndef D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_LATEST
 #define D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_LATEST 0
 #endif
 #ifndef D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_0
-#define D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_0 (1 << 4)
+#define D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_0   (1 << 4)
 #endif
 #ifndef D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_1
-#define D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_1 (1 << 5)
+#define D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_1_1   (1 << 5)
 #endif
 
-
-typedef HRESULT(__stdcall *pCompileFromFileg)(LPCWSTR,
-                          const D3D_SHADER_MACRO[],
-                          ID3DInclude*,
-                          LPCSTR,
-                          LPCSTR,
-                          UINT,
-                          UINT,
-                          ID3DBlob**,
-                          ID3DBlob**);
+/*secondary data options*/
+#ifndef D3DCOMPILE_SECDATA_MERGE_UAV_SLOTS
+#define D3DCOMPILE_SECDATA_MERGE_UAV_SLOTS           0x00000001
+#endif
+#ifndef D3DCOMPILE_SECDATA_PRESERVE_TEMPLATE_SLOTS
+#define D3DCOMPILE_SECDATA_PRESERVE_TEMPLATE_SLOTS   0x00000002
+#endif
+#ifndef D3DCOMPILE_SECDATA_REQUIRE_TEMPLATE_MATCH
+#define D3DCOMPILE_SECDATA_REQUIRE_TEMPLATE_MATCH    0x00000004
+#endif
 
 typedef HRESULT(__stdcall *pD3DCompile2g)(
                           const void* data,
@@ -222,7 +222,7 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_D                                  L"D"
 #define M_DECOMPRESS                         L"decompress"
 #define M_DUMPBIN                            L"dumpbin"
-#define M_E                                  L"E"
+#define M_E_                                 L"E"
 #define M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES L"enable_unbounded_descriptor_tables"
 #define M_FD                                 L"Fd"
 #define M_FE                                 L"Fe"
@@ -280,14 +280,14 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_D                                  "D"
 #define M_DECOMPRESS                         "decompress"
 #define M_DUMPBIN                            "dumpbin"
-#define M_E                                  "E"
+#define M_E_                                 "E"
 #define M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES "enable_unbounded_descriptor_tables"
 #define M_FD                                 "Fd"
 #define M_FE                                 "Fe"
 #define M_FH                                 "Fh"
 #define M_FL                                 "Fl"
 #define M_FO                                 "Fo"
-#define M_FORCE_ROOTSIG_VER                  L"force_rootsig_ver"
+#define M_FORCE_ROOTSIG_VER                  "force_rootsig_ver"
 #define M_FX                                 "Fx"
 #define M_GCH                                "Gch"
 #define M_GDP                                "Gdp"

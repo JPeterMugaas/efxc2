@@ -133,7 +133,7 @@ static char* LoadSource(const wchar_t* filename, size_t* len) {
 static char* LoadSource(const char* filename, size_t * len) {
     FILE* f;
     f = fopen(filename, "r");
-#endif
+#endif  /* _WIN32*/
     char* source;
     readall(f, &source, len);
 #ifdef _MSC_VER
@@ -157,11 +157,12 @@ int main(int argc, char* argv[]) {
 #endif
     // ====================================================================================
     // Process Command Line Arguments
-
-    wchar_t* inputFile = NULL;
 #ifdef _WIN32
+    wchar_t* inputFile = NULL;
     wchar_t* outputFile = NULL;
+    char* c_inputFile = NULL;
 #else
+    char* inputFile = NULL;
     char* outputFile = NULL;
 #endif
 #ifdef _WIN32
@@ -277,11 +278,11 @@ int main(int argc, char* argv[]) {
                 return 1;
         }
 #ifdef _WIN32
-        else if (parseOpt(M_E, argc, argv, &index, &w_temp)) {
+        else if (parseOpt(M_E_, argc, argv, &index, &w_temp)) {
             entryPoint = wcharToChar(w_temp);
             delete[] w_temp;
 #else
-        else if (parseOpt(M_E, argc, argv, &index, &entryPoint)) {
+        else if (parseOpt(M_E_, argc, argv, &index, &entryPoint)) {
 #endif
             if (verbose) {
                 printf("option -E (Entry Point) with arg '%s'\n", entryPoint);
@@ -625,9 +626,10 @@ int main(int argc, char* argv[]) {
                 inputFile = new wchar_t[wcslen(argv[index]) + 1];
                 wcscpy_s(inputFile, wcslen(argv[index]) + 1, argv[index]);
                 FixupFileName(inputFile);
+                c_inputFile = wcharToChar(inputFile);
 #else
-                inputFile = new wchar_t[strlen(argv[index]) + 1];
-                mbstowcs(inputFile, argv[index], strlen(argv[index]) + 1);
+                inputFile = new char[strlen(argv[index]) + 1];
+                strncpy(inputFile, argv[index], strlen(argv[index]) + 1);
 #endif
 
                 if (verbose) {
@@ -703,7 +705,9 @@ int main(int argc, char* argv[]) {
         M_WINDOWS_ERROR
 #endif
      }
-    pCompileFromFileg ptr = (pCompileFromFileg)GetProcAddress(h, "D3DCompileFromFile");
+    size_t SourceLen;
+    char* SourceCode = LoadSource(inputFile, &SourceLen);
+    pD3DCompile2g ptr = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
     if (ptr == NULL) {
         printf("Error: could not get the address of D3DCompileFromFile.\n");
         M_WINDOWS_ERROR
@@ -714,48 +718,73 @@ int main(int argc, char* argv[]) {
     ID3DBlob* errors = NULL;
 
     if (verbose) {
-        printf("Calling D3DCompileFromFile(\n");
+        printf("Calling D3DCompile2(\n");
 
+        printf("\t SourceCode,\n");
 #ifdef _WIN32
-        wprintf(L"\t %ls,\n", inputFile);
-#else
-        printf("\t %ls,\n", inputFile);
-#endif
+#ifdef _WIN64
+        wprintf(L"\t %" PRIu64 ",\n", SourceLen);
+#else   /* _WIN64 */
+        wprintf(L"\t %u ,\n", SourceLen);
+#endif  /* _WIN64 */
+        printf("\t %s, \n", c_inputFile);
+#else   /* _WIN32 */
+        printf("\t %u ,\n", SourceLen);
+        printf("\t %s, \n", inputFile);
+#endif  /* _WIN32 */
+        /* print defines */
         printf("\t");
         for (int i = 0; i < numDefines - 1; i++)
             printf(" %s=%s", defines[i].Name, defines[i].Definition);
         printf(",\n");
+        /* done printing defines */
         printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");
         printf("\t %s,\n", entryPoint);
         printf("\t %s,\n", model);
         printf("\t 0x%016" PRIx64 ", \n",(INT64) sflags);
-
         printf("\t 0x%016" PRIx64 ", \n", (INT64)eflags);
+        printf("\t 0x%016" PRIx64 ", \n", (INT64)secondary_flags);
+        printf("\t NULL,\n");
+        printf("\t 0,\n");
         printf("\t &output,\n");
         printf("\t &errors);\n");
     }
 
     /*
-    HRESULT WINAPI D3DCompileFromFile(
-    in      LPCWSTR pFileName,
-    in_opt  const D3D_SHADER_MACRO pDefines,
-    in_opt  ID3DInclude pInclude,
-    in      LPCSTR pEntrypoint,
-    in      LPCSTR pTarget,
-    in      UINT sflags,
-    in      UINT eflags,
-    out     ID3DBlob ppCode,
-    out_opt ID3DBlob ppErrorMsgs
-    );
+    HRESULT D3DCompile2(
+       [in]            LPCVOID                pSrcData,
+       [in]            SIZE_T                 SrcDataSize,
+       [in, optional]  LPCSTR                 pSourceName,
+       [in, optional]  const D3D_SHADER_MACRO *pDefines,
+       [in, optional]  ID3DInclude            *pInclude,
+       [in]            LPCSTR                 pEntrypoint,
+       [in]            LPCSTR                 pTarget,
+       [in]            UINT                   Flags1,
+       [in]            UINT                   Flags2,
+       [in]            UINT                   SecondaryDataFlags,
+       [in, optional]  LPCVOID                pSecondaryData,
+       [in]            SIZE_T                 SecondaryDataSize,
+       [out]           ID3DBlob               **ppCode,
+       [out, optional] ID3DBlob               **ppErrorMsgs
+     );
     */
     hr = ptr(
+        SourceCode,
+        SourceLen,
+#ifdef _WIN32
+        c_inputFile,
+#else
         inputFile,
+#endif
         defines,
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
         entryPoint,
         model,
         sflags,
         eflags,
+        secondary_flags,
+        NULL,
+        0,
         &output,
         &errors
     );
@@ -777,6 +806,7 @@ int main(int argc, char* argv[]) {
 
         if (output)
             output->Release();
+        free(SourceCode);
         M_TAREDOWN_PROG
         return 1;
     }
@@ -795,11 +825,13 @@ int main(int argc, char* argv[]) {
 #pragma warning( pop )
 #endif
         if (errno != 0) {
+            free(SourceCode);
             print_errno();
         }
 #else
         f = fopen(outputFile, "w");
         if (f = NULL) {
+            free(SourceCode);
             print_errno();
         }
 #endif
@@ -847,6 +879,8 @@ int main(int argc, char* argv[]) {
 #endif
         }
     }
+    free(c_inputFile);
+    free(SourceCode);
     M_TAREDOWN_PROG
   return 0;
 }
