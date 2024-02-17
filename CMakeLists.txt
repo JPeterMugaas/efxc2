@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.1.32)
+set(EFXC2_VERSION 0.0.1.33)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced version of fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -101,3 +101,6 @@ add_test(NAME hex_BC7Encode_no_vn
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
   COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /Lx /FhCompiled/BC7Encode_hex.inc)
   
+add_test(NAME DGSLEffect.fx
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
+  COMMAND fxc "DGSLEffect.fx" /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tvs_4_0_level_9_1 /Emain4BonesVc "/FhCompiled/DGSLEffect_main4BonesVc.inc" "/FdCompiled/DGSLEffect_main4BonesVc.pdb" /VnDGSLEffect_main4BonesVc)

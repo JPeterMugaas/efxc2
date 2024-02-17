@@ -134,6 +134,10 @@ static char* LoadSource(const char* filename, size_t * len) {
     FILE* f;
     f = fopen(filename, "r");
 #endif  /* _WIN32*/
+    if (f == NULL) {
+        print_errno();
+        exit(1);
+    }
     char* source;
     readall(f, &source, len);
 #ifdef _MSC_VER
