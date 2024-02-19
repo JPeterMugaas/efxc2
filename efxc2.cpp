@@ -550,9 +550,9 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_VD, argc, argv, &index, NULL)) {
             if (verbose) {
-                printf("option -Zi D3DCOMPILE_SKIP_OPTIMIZATION\n");
+                printf("option -Zi D3DCOMPILE_DEBUG\n");
             }
-            sflags = sflags | D3DCOMPILE_SKIP_OPTIMIZATION;
+            sflags = sflags | D3DCOMPILE_DEBUG;
             continue;
          }
         else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
@@ -601,11 +601,18 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_ZPC, argc, argv, &index, NULL)) {
             if (verbose) {
-                printf("option -Zpc D3DCOMPILE_PACK_MATRIX_ROW_MAJOR\n");
+                printf("option -Zpc D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR\n");
+            }
+            sflags = sflags | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
+            continue;
+        }
+        else if (parseOpt(M_ZPR, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Zpr D3DCOMPILE_PACK_MATRIX_ROW_MAJOR\n");
             }
             sflags = sflags | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
             continue;
-        }
+            }
         else if (parseOpt(M_ZSB, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Zsb D3DCOMPILE_DEBUG_NAME_FOR_BINARY\n");

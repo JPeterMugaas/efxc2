@@ -278,6 +278,7 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_ZD                                 L"Vd"
 #define M_ZI                                 L"Zi"
 #define M_ZPC                                L"Zpc"
+#define M_ZPR                                L"Zpr"
 #define M_ZSB                                L"Zsb"
 #define M_ZSS                                L"Zss"
 #else
@@ -336,6 +337,7 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_ZD                                 "Vd"
 #define M_ZI                                 "Zi"
 #define M_ZPC                                "Zpc"
+#define M_ZPR                                "Zpr"
 #define M_ZSB                                "Zsb"
 #define M_ZSS                                "Zss"
 #endif
