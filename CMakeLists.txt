@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.1.33)
+set(EFXC2_VERSION 0.0.1.34)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced version of fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -22,9 +22,9 @@ set(PROJECT_COMPANY "J. Peter Mugaas")
 set(PROJECT_COPYRIGHT "Copyright (c) 2024 ${PROJECT_COMPANY}")
 
 set(EXEC_SOURCES efxc2.cpp
-                 efxc2Utils.h
-                 efxc2Utils.cpp
-                 efxc2.h)
+				 efxc2Utils.h
+				 efxc2Utils.cpp
+				 efxc2.h)
 
 #----resources for .exe
 
@@ -33,16 +33,16 @@ string(REPLACE "." "," _RC_VER ${PROJECT_VERSION})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/efxc2.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/settings.manifest" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/build/efxc2.rc.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc" @ONLY)
+	"${CMAKE_CURRENT_SOURCE_DIR}/build/efxc2.rc.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc" @ONLY)
 
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/build/config.h.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
+	"${CMAKE_CURRENT_SOURCE_DIR}/build/config.h.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 list(APPEND EXEC_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/config.h")
 	
 if(WIN32)
-    list(APPEND EXEC_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc")
+	list(APPEND EXEC_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc")
 endif()
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -79,21 +79,21 @@ add_test(NAME nologo
   COMMAND fxc /nologo BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /FhCompiled/BC7Encode_TryMode456CS.inc  /VnBC7Encode_TryMode456CS
 )
 
-add_test(NAME short_cmd_BC7Encode_TryMode456CS
+add_test(NAME short_cmd.BC7Encode_TryMode456CS
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
   COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /FhCompiled/BC7Encode_TryMode456CS.inc  /VnBC7Encode_TryMode456CS)
-add_test(NAME short_cmd_BC7Encode_TryMode456CS_cs40
+add_test(NAME short_cmd.BC7Encode_TryMode456CS_cs40
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests 
   COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_4_0 /ETryMode456CS /FhCompiled/BC7Encode_TryMode456CS_cs40.inc  /VnBC7Encode_TryMode456CS)
   
-add_test(NAME long_cmd_BC7Encode_TryMode456CS
+add_test(NAME long_cmd.BC7Encode_TryMode456CS
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /Fh${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.inc /Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)
-add_test(NAME long_cmd_BC7Encode_TryMode456CS_cs40
+add_test(NAME long_cmd.BC7Encode_TryMode456CS_cs40
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_4_0 /ETryMode456CS /Fh${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS_cs40.inc /Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)
 
-add_test(NAME short_cmd_BC7Encode_no_vn
+add_test(NAME short_cmd.BC7Encode_no_vn
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
   COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /FhCompiled/BC7Encode_no_vn.inc)
   

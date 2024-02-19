@@ -643,6 +643,10 @@ int main(int argc, char* argv[]) {
                     printf("input file: %ls\n", inputFile);
 #endif
                 }
+                if (IsFileType(inputFile, M_EFFECTFILE)) {
+                 /*I suspect that .fx files are given special treatment in the original
+                   fxc program but I don't know what that is.*/
+                }
                 index += 1;
             }
             else {
@@ -883,7 +887,9 @@ int main(int argc, char* argv[]) {
 #endif
         }
     }
+#ifdef _WIN32
     free(c_inputFile);
+#endif
     free(SourceCode);
     M_TAREDOWN_PROG
   return 0;
