@@ -835,7 +835,7 @@ int main(int argc, char* argv[]) {
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
-        if (errno != 0) {
+        if (err != 0) {
             free(SourceCode);
             print_errno();
         }
