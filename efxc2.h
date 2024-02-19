@@ -209,15 +209,6 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 /* a good size for an error message */
 #define ERR_SIZE 128
 
-/* File type constants since we need both
-   Unicode and ASCII versions depending
-   upon platform.*/
-#ifdef _WIN32
-#define M_EFFECTFILE                       L".fx"
-#else
-#define M_EFFECTFILE                       ".fx"
-#endif
-
 /* Parameter constants since we need both
    Unicode and ASCII versions depending
    upon platform.*/
