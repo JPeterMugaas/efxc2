@@ -10,8 +10,8 @@
 #include "efxc2Utils.h"
 
 static void print_version() {
-    printf(PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "/n");
-    printf(PROGRAM_COPYRIGHT "/n");
+    printf(PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n");
+    printf(PROGRAM_COPYRIGHT "\n");
     exit(0);
 }
 
@@ -74,7 +74,7 @@ static void print_windows_error() {
     DWORD dLastError = GetLastError();
     LPCTSTR strErrorMessage = NULL;
 
-    FormatMessage(
+    FormatMessageW(
         FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ARGUMENT_ARRAY | FORMAT_MESSAGE_ALLOCATE_BUFFER,
         NULL,
         dLastError,
@@ -87,13 +87,16 @@ static void print_windows_error() {
 #pragma warning(push)
 #pragma warning(disable:4477)
 #endif
-    fprintf(stderr, "Windows error %s/n", strErrorMessage);
+#ifdef _WIN32
+    fwprintf(stderr, L"Windows error: %ls\n", strErrorMessage);
+#else
+    fprintf(stderr, "Windows error: %ls\n", strErrorMessage);
+#endif
 #if defined(_MSC_VER)
 # pragma warning(pop)
 #endif
     exit(1);
 }
-
 
 #define M_WINDOWS_ERROR \
    print_windows_error(); \
@@ -710,7 +713,7 @@ int main(int argc, char* argv[]) {
         HMODULE h = LoadLibrary(dllPath);
         if (h == NULL) {
             wprintf("Error: could not load " DLL_NAME " from %s\n", dllPath);
-        M_WINDOWS_ERROR
+            M_WINDOWS_ERROR
         }
 #else
         M_WINDOWS_ERROR
@@ -720,7 +723,7 @@ int main(int argc, char* argv[]) {
     char* SourceCode = LoadSource(inputFile, &SourceLen);
     pD3DCompile2g ptr = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
     if (ptr == NULL) {
-        printf("Error: could not get the address of D3DCompileFromFile.\n");
+        printf("Error: could not get the address of D3DCompile2.\n");
         M_WINDOWS_ERROR
     }
 
