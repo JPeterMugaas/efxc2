@@ -86,15 +86,15 @@ static void print_windows_error() {
 #if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable:4477)
-#endif
+#endif /* _MSC_VER */
 #ifdef _WIN32
     fwprintf(stderr, L"Windows error: %ls\n", strErrorMessage);
-#else
+#else  /* _WIN32 */
     fprintf(stderr, "Windows error: %ls\n", strErrorMessage);
-#endif
+#endif /* _WIN32 */
 #if defined(_MSC_VER)
 # pragma warning(pop)
-#endif
+#endif /* _MSC_VER */
     exit(1);
 }
 
@@ -132,12 +132,13 @@ static char* LoadSource(const wchar_t* filename, size_t* len) {
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif  /* _MSC_VER */
+    if (err != 0) {
 #else   /* _WIN32 */
 static char* LoadSource(const char* filename, size_t * len) {
     FILE* f;
     f = fopen(filename, "r");
-#endif  /* _WIN32*/
     if (f == NULL) {
+#endif  /* _WIN32 */
         print_errno();
         exit(1);
     }
@@ -150,7 +151,7 @@ static char* LoadSource(const char* filename, size_t * len) {
     fclose(f);
 #ifdef _MSC_VER
 #pragma warning( pop )
-#endif /* _MSC_VER*/
+#endif /* _MSC_VER */
     return source;
 }
 
@@ -159,22 +160,22 @@ the wmain -Municode entry-point*/
 
 #ifdef _WIN32
 int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
-#else
+#else  /* _WIN32 */
 int main(int argc, char* argv[]) {
-#endif
+#endif /* _WIN32 */
     // ====================================================================================
     // Process Command Line Arguments
 #ifdef _WIN32
     wchar_t* inputFile = NULL;
     wchar_t* outputFile = NULL;
     char* c_inputFile = NULL;
-#else
+#else  /* _WIN32 */
     char* inputFile = NULL;
     char* outputFile = NULL;
-#endif
+#endif /* _WIN32 */
 #ifdef _WIN32
     wchar_t* w_temp = NULL;
-#endif
+#endif /* _WIN32 */
 
     char* defineOption = NULL;
     char* entryPoint = NULL;
@@ -255,9 +256,9 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_D, argc, argv, &index, &w_temp)) {
             defineOption = wcharToChar(w_temp);
             assert(defineOption == NULL);
-#else
+#else  /* _WIN32 */
         else if (parseOpt(M_D, argc, argv, &index, &defineOption)) {
-#endif
+#endif /* _WIN32 */
             numDefines++;
             //Copy the old array into the new array, but put the new definition at the beginning
             newDefines = new D3D_SHADER_MACRO[numDefines];
@@ -288,9 +289,9 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_E_, argc, argv, &index, &w_temp)) {
             entryPoint = wcharToChar(w_temp);
             delete[] w_temp;
-#else
+#else  /* _WIN32 */
         else if (parseOpt(M_E_, argc, argv, &index, &entryPoint)) {
-#endif
+#endif /* _WIN32 */
             if (verbose) {
                 printf("option -E (Entry Point) with arg '%s'\n", entryPoint);
             }
@@ -318,7 +319,7 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_FH, argc, argv, &index, &outputFile)) {
 #ifdef _WIN32
             FixupFileName(outputFile);
-#endif
+#endif /* _WIN32 */
             if (cmd != 0) {
                 printf("You cannot specify both an object and header");
                 M_TAREDOWN_PROG
@@ -543,9 +544,9 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_T, argc, argv, &index, &w_temp)) {
             model = wcharToChar(w_temp);
             delete[] w_temp;
-#else
+#else  /* _WIN32 */
         else if (parseOpt(M_T, argc, argv, &index, &model)) {
-#endif
+#endif /* _WIN32 */
             if (verbose) {
                 printf("option -T (Shader Model/Profile) with arg '%s'\n", model);
             }
@@ -573,9 +574,9 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_VN, argc, argv, &index, &w_temp)) {
             variableName = wcharToChar(w_temp);
             delete[] w_temp;
-#else
+#else  /* _WIN32 */
         else if (parseOpt(M_VN, argc, argv, &index, &variableName)) {
-#endif
+#endif /* _WIN32 */
             if (verbose) {
                 printf("option -Vn (Variable Name) with arg '%s'\n", variableName);
             }
@@ -641,17 +642,17 @@ int main(int argc, char* argv[]) {
                 wcscpy_s(inputFile, wcslen(argv[index]) + 1, argv[index]);
                 FixupFileName(inputFile);
                 c_inputFile = wcharToChar(inputFile);
-#else
+#else  /* _WIN32 */
                 inputFile = new char[strlen(argv[index]) + 1];
                 strncpy(inputFile, argv[index], strlen(argv[index]) + 1);
-#endif
+#endif /* _WIN32 */
 
                 if (verbose) {
 #ifdef _WIN32
                     wprintf(L"input file: %ls\n", inputFile);
-#else
+#else  /* _WIN32 */
                     printf("input file: %ls\n", inputFile);
-#endif
+#endif /* _WIN32 */
                 }
                 index += 1;
             }
@@ -686,9 +687,9 @@ int main(int argc, char* argv[]) {
         variableName = (char*)malloc(strlen(prefix) + strlen(entryPoint) + 2);
 #ifdef _WIN32
         sprintf_s(variableName, strlen(prefix) + strlen(entryPoint) + 2, "%s_%s", prefix, entryPoint);
-#else
+#else  /* _WIN32 */
         sprintf(variableName, "%s_%s", prefix, entryPoint);
-#endif
+#endif /* _WIN32 */
     }
 
     // ====================================================================================
@@ -715,9 +716,9 @@ int main(int argc, char* argv[]) {
             wprintf("Error: could not load " DLL_NAME " from %s\n", dllPath);
             M_WINDOWS_ERROR
         }
-#else
+#else  /* _WIN32 */
         M_WINDOWS_ERROR
-#endif
+#endif /* _WIN32 */
      }
     size_t SourceLen;
     char* SourceCode = LoadSource(inputFile, &SourceLen);
@@ -739,11 +740,11 @@ int main(int argc, char* argv[]) {
 #ifdef _WIN64
         wprintf(L"\t %" PRIu64 ",\n", SourceLen);
 #else   /* _WIN64 */
-        wprintf(L"\t %u ,\n", SourceLen);
+        wprintf(L"\t %u,\n", SourceLen);
 #endif  /* _WIN64 */
         printf("\t %s, \n", c_inputFile);
 #else   /* _WIN32 */
-        printf("\t %u ,\n", SourceLen);
+        printf("\t %u,\n", SourceLen);
         printf("\t %s, \n", inputFile);
 #endif  /* _WIN32 */
         /* print defines */
@@ -787,9 +788,9 @@ int main(int argc, char* argv[]) {
         SourceLen,
 #ifdef _WIN32
         c_inputFile,
-#else
+#else  /* _WIN32 */
         inputFile,
-#endif
+#endif /* _WIN32 */
         defines,
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
         entryPoint,
@@ -833,22 +834,22 @@ int main(int argc, char* argv[]) {
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 6387)
-#endif
+#endif /* _MSC_VER */
         errno_t err = _wfopen_s(&f, outputFile, L"w");
 #ifdef _MSC_VER
 #pragma warning( pop )
-#endif
+#endif /* _MSC_VER */
         if (err != 0) {
             free(SourceCode);
             print_errno();
         }
-#else
+#else  /*_WIN32 */
         f = fopen(outputFile, "w");
         if (f == NULL) {
             free(SourceCode);
             print_errno();
         }
-#endif
+#endif /* _WIN32 */
 
         if (cmd == CMD_WRITE_HEADER) {
             fprintf(f, "const BYTE %s[] =\n{\n", variableName);
@@ -873,11 +874,11 @@ int main(int argc, char* argv[]) {
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 6387)
-#endif
+#endif /* _MSC_VER */
         fclose(f);
 #ifdef _MSC_VER
 #pragma warning( pop )
-#endif
+#endif /* _MSC_VER */
         if (errno != 0) {
             print_errno();
         }
@@ -885,17 +886,17 @@ int main(int argc, char* argv[]) {
 #ifdef _WIN32
 #ifdef _WIN64
             wprintf(L"Wrote %" PRIu64 " bytes of shader output to %ls\n", len, outputFile);
-#else
-            wprintf(L"Wrote %u bytes of shader output tp %ls\n", len, outputFile);
-#endif
-#else
-            printf("Wrote %u bytes of shader output tp %ls\n", len, outputFile);
-#endif
+#else  /* _WIN64 */
+            wprintf(L"Wrote %u bytes of shader output to %ls\n", len, outputFile);
+#endif  /* _WIN64 */
+#else   /* _WIN32 */
+            printf("Wrote %u bytes of shader output to %ls\n", len, outputFile);
+#endif  /* WIN32 */
         }
     }
 #ifdef _WIN32
     free(c_inputFile);
-#endif
+#endif /* _WIN32 */
     free(SourceCode);
     M_TAREDOWN_PROG
   return 0;

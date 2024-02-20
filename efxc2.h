@@ -15,21 +15,21 @@
 #ifdef  _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4005)
-#endif
+#endif /* _MSC_VER */
 #define WIN32_LEAN_AND_MEAN
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
 #ifdef  _MSC_VER
 #pragma warning(pop)
-#endif
+#endif /* _MSC_VER */
 
 #include "config.h"
 #include <d3dcompiler.h>
 #include <d3dcommon.h>
 #ifdef _WIN32
 #include <direct.h>
-#endif
+#endif /* _WIN32 */
 #include <stdio.h>
 #include <string>
 #include <cassert>
@@ -37,7 +37,6 @@
 #include <inttypes.h>
 #include <io.h>
 #include <stdio.h>
-
 
 #define DLL_NAME L"d3dcompiler_47.dll"
 
@@ -198,9 +197,9 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 /* helper macros for functions */
 #ifdef _WIN32
 #define M_WCSDUP _wcsdup
-#else
+#else  /* _WIN32 */
 #define M_WCSDUP wcsdup
-#endif
+#endif /* _WIN32 */
 
 /* command codes for internal use */
 #define CMD_WRITE_HEADER 1
@@ -272,7 +271,7 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_ZPR                                L"Zpr"
 #define M_ZSB                                L"Zsb"
 #define M_ZSS                                L"Zss"
-#else
+#else  /* _WIN32 */
 #define M_AT_SYMBOL                          "@"
 #define M_QUESTION_MARK                      "?"
 #define M_ALL_RESOURCES_BOUND                "all_resources_bound"
@@ -331,4 +330,4 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #define M_ZPR                                "Zpr"
 #define M_ZSB                                "Zsb"
 #define M_ZSS                                "Zss"
-#endif
+#endif /* _WIN32 */

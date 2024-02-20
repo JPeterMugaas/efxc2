@@ -14,10 +14,10 @@ void print_errno() {
 	char errmsg[ERR_SIZE];
 #ifdef _WIN32
 	strerror_s(errmsg, ERR_SIZE, errno);
-#else
+#else  /* _WIN32 */
 	/*int strerror_r(int errnum, char *buf, size_t buflen);*/
 	strerror_r(errno, errmsg, ERR_SIZE);
-#endif
+#endif /* _WIN32 */
 	fprintf(stderr, "%s\n", errmsg);
 	exit(1);
 }
@@ -78,9 +78,9 @@ int readall(FILE* in, char** dataptr, size_t* sizeptr)
 		}
 
 		n = fread(data + used, 1, READALL_CHUNK, in);
-		if (n == 0)
+		if (n == 0) {
 			break;
-
+		}
 		used += n;
 	}
 
@@ -105,62 +105,60 @@ int readall(FILE* in, char** dataptr, size_t* sizeptr)
 
 #ifdef _WIN32
 bool parseOpt(const wchar_t* option, int argc, wchar_t* argv[1], int* index, wchar_t** argumentOption) {
-#else
+#else  /* _WIN32 */
 bool parseOpt(const char* option, int argc, char* argv[1], int* index, char** argumentOption) {
-#endif
+#endif /* _WIN32 */
 	assert(option != NULL);
 	if (!index || *index >= argc) {
 		return false;
 	}
 #ifdef _WIN32
-	const wchar_t*
-#else
-	const char*
-#endif
-		argument = argv[*index];
-		if (argument[0] == '-' || argument[0] == '/') {
+	const wchar_t* argument = argv[*index];
+#else  /* _WIN32 */
+	const char* argument = argv[*index];
+#endif /* _WIN32 */
+	if (argument[0] == '-' || argument[0] == '/') {
+		argument++;
+		if (argument[0] == '-') {
 			argument++;
-			if (argument[0] == '-') {
-				argument++;
-			}
 		}
-		else
-			return false;
+	} else {
+		return false;
+	}
 
 #ifdef _WIN32
-		size_t optionSize = wcslen(option);
-		if (wcsncmp(argument, option, optionSize) != 0) {
-#else
-		size_t optionSize = strlen(option);
-		if (strncmp(argument, option, optionSize) != 0) {
-#endif
-			return false;
-		}
+	size_t optionSize = wcslen(option);
+	if (wcsncmp(argument, option, optionSize) != 0) {
+#else  /* _WIN32 */
+	size_t optionSize = strlen(option);
+	if (strncmp(argument, option, optionSize) != 0) {
+#endif /* _WIN32 */
+		return false;
+	}
 
-		if (argumentOption) {
-			argument += optionSize;
-			if (*argument == '\0') {
-				*index += 1;
-				if (*index >= argc) {
-					fprintf(stderr, "Error: missing required argument for option %ls\n", option);
-					return false;
-				}
-#ifdef _WIN32
-				* argumentOption = M_WCSDUP(argv[*index]);
-#else
-				* argumentOption = strdup(argv[*index]);
-#endif
+	if (argumentOption) {
+		argument += optionSize;
+		if (*argument == '\0') {
+			*index += 1;
+			if (*index >= argc) {
+				fprintf(stderr, "Error: missing required argument for option %ls\n", option);
+				return false;
 			}
-			else {
 #ifdef _WIN32
-				* argumentOption = M_WCSDUP(argument);
-#else
-				* argumentOption = strdup(argument);
-#endif
-			}
+			* argumentOption = M_WCSDUP(argv[*index]);
+#else  /*_WIN32 */
+			* argumentOption = strdup(argv[*index]);
+#endif /* _WIN32 */
+		} else {
+#ifdef _WIN32
+			* argumentOption = M_WCSDUP(argument);
+#else  /* _WIN32 */
+			* argumentOption = strdup(argument);
+#endif /* _WIN32 */
 		}
-		*index += 1;
-		return true;
+	}
+	*index += 1;
+	return true;
 }
 
 char* wcharToChar(const wchar_t* w) {
@@ -192,9 +190,9 @@ void FixupFileName(wchar_t* FileName) {
 	{
 		if (FileName[i] == '/') {
 			FileName[i] = '\\';
-		}
-		else
+		} else {
 			continue;
+		}
 	}
 	return;
 }
