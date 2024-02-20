@@ -844,7 +844,7 @@ int main(int argc, char* argv[]) {
         }
 #else
         f = fopen(outputFile, "w");
-        if (f = NULL) {
+        if (f == NULL) {
             free(SourceCode);
             print_errno();
         }
