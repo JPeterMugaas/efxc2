@@ -19,4 +19,6 @@ bool parseOpt(const char* option, int argc, char* argv[1], int* index, char** ar
 #endif /* _WIN32 */
 void print_errno();
 int readall(FILE* in, char** dataptr, size_t* sizeptr);
+#ifdef _WIN32
 char* wcharToChar(const wchar_t* w);
+#endif

@@ -135,8 +135,7 @@ static char* LoadSource(const wchar_t* filename, size_t* len) {
     if (err != 0) {
 #else   /* _WIN32 */
 static char* LoadSource(const char* filename, size_t * len) {
-    FILE* f;
-    f = fopen(filename, "r");
+    FILE* f = fopen(filename, "r");
     if (f == NULL) {
 #endif  /* _WIN32 */
         print_errno();
@@ -168,13 +167,11 @@ int main(int argc, char* argv[]) {
 #ifdef _WIN32
     wchar_t* inputFile = NULL;
     wchar_t* outputFile = NULL;
+    wchar_t* w_temp = NULL;
     char* c_inputFile = NULL;
 #else  /* _WIN32 */
     char* inputFile = NULL;
     char* outputFile = NULL;
-#endif /* _WIN32 */
-#ifdef _WIN32
-    wchar_t* w_temp = NULL;
 #endif /* _WIN32 */
 
     char* defineOption = NULL;

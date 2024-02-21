@@ -161,6 +161,7 @@ bool parseOpt(const char* option, int argc, char* argv[1], int* index, char** ar
 	return true;
 }
 
+#ifdef _WIN32
 char* wcharToChar(const wchar_t* w) {
 	size_t len = wcslen(w);
 	char* c = NULL;
@@ -180,7 +181,6 @@ char* wcharToChar(const wchar_t* w) {
 	return c;
 }
 
-#ifdef _WIN32
 void FixupFileName(wchar_t* FileName) {
 	size_t i;
 	if (FileName == NULL) {
@@ -196,4 +196,4 @@ void FixupFileName(wchar_t* FileName) {
 	}
 	return;
 }
-#endif
+#endif /* _WIN32 */
