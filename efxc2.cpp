@@ -487,6 +487,13 @@ int main(int argc, char* argv[]) {
             sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL3;
             continue;
         }
+        else if (parseOpt(M_OD, argc, argv, &index, NULL)) {
+            if (verbose) {
+                printf("option -Od D3DCOMPILE_SKIP_OPTIMIZATION\n");
+            }
+            sflags = sflags | D3DCOMPILE_SKIP_OPTIMIZATION;
+            continue;
+            }
         else if (parseOpt(M_OP, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Op D3DCOMPILE_NO_PRESHADER\n");
@@ -551,9 +558,9 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_VD, argc, argv, &index, NULL)) {
             if (verbose) {
-                printf("option -Zi D3DCOMPILE_DEBUG\n");
+                printf("option -Vd D3DCOMPILE_SKIP_VALIDATION\n");
             }
-            sflags = sflags | D3DCOMPILE_DEBUG;
+            sflags = sflags | D3DCOMPILE_SKIP_VALIDATION;
             continue;
          }
         else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
@@ -586,13 +593,6 @@ int main(int argc, char* argv[]) {
             sflags = sflags | D3DCOMPILE_WARNINGS_ARE_ERRORS;
             continue;
         }
-        else if (parseOpt(M_ZD, argc, argv, &index, NULL)) {
-            if (verbose) {
-                printf("option -Zd D3DCOMPILE_SKIP_VALIDATION\n");
-            }
-            sflags = sflags | D3DCOMPILE_SKIP_VALIDATION;
-            continue;
-         }
         else if (parseOpt(M_ZI, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Zi D3DCOMPILE_DEBUG\n");
