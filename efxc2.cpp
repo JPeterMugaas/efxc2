@@ -17,7 +17,8 @@ static void print_version() {
 
 static void print_copyright() {
     printf(PROGRAM_DESCRIPTION " " PROGRAM_VERSION "\n");
-    printf(PROGRAM_COPYRIGHT "  This program is licensed under the Mozilla Public License, v. 2.0.\n");
+    printf(PROGRAM_COPYRIGHT "\n");
+    printf("This program is licensed under the Mozilla Public License, v. 2.0.\n");
 }
 
 static void print_usage_arg() {
