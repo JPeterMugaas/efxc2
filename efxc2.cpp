@@ -52,7 +52,7 @@ static void print_usage_missing(const char* arg) {
 }
 static void print_usage_toomany() {
     fprintf(stderr, "You specified multiple input files.\n");
-    printf("We did not expect to receive this, and aren't prepared to handle multiple input\n"); 
+    printf("We did not expect to receive this, and aren't prepared to handle multiple input\n");
     printf("files. You'll have to edit the source to behave the way you want.\n");
     printf("\n");
     print_usage_arg();
@@ -71,7 +71,7 @@ static void print_hresult_error(const HRESULT hr) {
 }
 
 static void print_windows_error() {
-/*from: https://gist.github.com/Aaronontheweb/7461004#file-getlasterror-cpp */
+    /*from: https://gist.github.com/Aaronontheweb/7461004#file-getlasterror-cpp */
     DWORD dLastError = GetLastError();
     LPCTSTR strErrorMessage = NULL;
 
@@ -121,7 +121,6 @@ static void print_windows_error() {
        free(variableName); \
      }
 
-
 #ifdef _WIN32
 static char* LoadSource(const wchar_t* filename, size_t* len) {
 #ifdef _MSC_VER
@@ -155,7 +154,7 @@ static char* LoadSource(const char* filename, size_t * len) {
     return source;
 }
 
-/*Cygwin and MSYS2 compilers amd linkers don't support 
+/*Cygwin and MSYS2 compilers amd linkers don't support
 the wmain -Municode entry-point*/
 
 #ifdef _WIN32
@@ -223,13 +222,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -@ not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, NULL)) {
             print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
-            return 0;
+                return 0;
         }
         else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -248,7 +247,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -compress not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_D, argc, argv, &index, &w_temp)) {
@@ -275,7 +274,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -decompress not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_DUMPBIN, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -dumpbin not supported");
@@ -333,7 +332,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -Fl not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_FO, argc, argv, &index, NULL)) {
             if (cmd != 0) {
@@ -352,12 +351,12 @@ int main(int argc, char* argv[]) {
                 printf("option -force_rootsig_ver ignored");
             }
             continue;
-            }
+        }
         else if (parseOpt(M_FX, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -Fx not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_GCH, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -391,7 +390,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -getprivate not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_GFA, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -418,11 +417,11 @@ int main(int argc, char* argv[]) {
             print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
-            return 0;
-         }
+                return 0;
+        }
         else if (parseOpt(M_I, argc, argv, &index, NULL)) {
             if (verbose) {
-                 printf("option -I ignored\n");
+                printf("option -I ignored\n");
             }
             continue;
         }
@@ -437,13 +436,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -matchUAVs not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
-         }
+                return 1;
+        }
         else if (parseOpt(M_MERGEUAVS, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -mergeUAVs not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_NI, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -484,7 +483,7 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_O3, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL3\n");
-             }
+            }
             sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL3;
             continue;
         }
@@ -494,7 +493,7 @@ int main(int argc, char* argv[]) {
             }
             sflags = sflags | D3DCOMPILE_SKIP_OPTIMIZATION;
             continue;
-            }
+        }
         else if (parseOpt(M_OP, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Op D3DCOMPILE_NO_PRESHADER\n");
@@ -543,7 +542,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -setprivate not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_T, argc, argv, &index, &w_temp)) {
@@ -563,11 +562,11 @@ int main(int argc, char* argv[]) {
             }
             sflags = sflags | D3DCOMPILE_SKIP_VALIDATION;
             continue;
-         }
+        }
         else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
             print_version();
             M_TAREDOWN_PROG
-            return 0;
+                return 0;
         }
         else if (parseOpt(M_VI, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -614,7 +613,7 @@ int main(int argc, char* argv[]) {
             }
             sflags = sflags | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
             continue;
-            }
+        }
         else if (parseOpt(M_ZSB, argc, argv, &index, NULL)) {
             if (verbose) {
                 printf("option -Zsb D3DCOMPILE_DEBUG_NAME_FOR_BINARY\n");
@@ -656,7 +655,7 @@ int main(int argc, char* argv[]) {
             }
             else {
                 M_TAREDOWN_PROG
-                print_usage_toomany();
+                    print_usage_toomany();
                 return 1;
             }
         }
@@ -717,7 +716,7 @@ int main(int argc, char* argv[]) {
 #else  /* _WIN32 */
         M_WINDOWS_ERROR
 #endif /* _WIN32 */
-     }
+    }
     size_t SourceLen;
     char* SourceCode = LoadSource(inputFile, &SourceLen);
     pD3DCompile2g ptr = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
@@ -754,7 +753,7 @@ int main(int argc, char* argv[]) {
         printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");
         printf("\t %s,\n", entryPoint);
         printf("\t %s,\n", model);
-        printf("\t 0x%016" PRIx64 ", \n",(INT64) sflags);
+        printf("\t 0x%016" PRIx64 ", \n", (INT64)sflags);
         printf("\t 0x%016" PRIx64 ", \n", (INT64)eflags);
         printf("\t 0x%016" PRIx64 ", \n", (INT64)secondary_flags);
         printf("\t NULL,\n");
@@ -821,7 +820,7 @@ int main(int argc, char* argv[]) {
             output->Release();
         free(SourceCode);
         M_TAREDOWN_PROG
-        return 1;
+            return 1;
     }
     else {
         unsigned char* outString = (unsigned char*)output->GetBufferPointer();
@@ -854,7 +853,8 @@ int main(int argc, char* argv[]) {
             for (int i = 0; i < len; i++) {
                 if (outputHex) {
                     fprintf(f, " 0x%02" PRIx8, outString[i]);
-                } else {
+                }
+                else {
                     fprintf(f, "%4" PRIu8, outString[i]);
                 }
                 if (i != len - 1) {
@@ -897,5 +897,5 @@ int main(int argc, char* argv[]) {
 #endif /* _WIN32 */
     free(SourceCode);
     M_TAREDOWN_PROG
-  return 0;
+        return 0;
 }

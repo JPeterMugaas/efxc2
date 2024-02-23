@@ -94,9 +94,9 @@
 #define D3DCOMPILE_OPTIMIZATION_LEVEL0                (1 << 14)
 #endif
 #ifndef D3DCOMPILE_OPTIMIZATION_LEVEL1
-#define D3DCOMPILE_OPTIMIZATION_LEVEL1                0 
+#define D3DCOMPILE_OPTIMIZATION_LEVEL1                0
 #endif
-#ifndef D3DCOMPILE_OPTIMIZATION_LEVEL2 
+#ifndef D3DCOMPILE_OPTIMIZATION_LEVEL2
 #define D3DCOMPILE_OPTIMIZATION_LEVEL2                ((1 << 14) | (1 << 15))
 #endif
 #ifndef D3DCOMPILE_OPTIMIZATION_LEVEL3
@@ -131,7 +131,7 @@
 #ifndef D3DCOMPILE_EFFECT_CHILD_EFFECT
 #define D3DCOMPILE_EFFECT_CHILD_EFFECT                (1 << 0)
 #endif
-#ifndef D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS 
+#ifndef D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS
 #define D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS              (1 << 1)
 #endif
 #ifndef D3DCOMPILE_FLAGS2_FORCE_ROOT_SIGNATURE_LATEST
@@ -155,25 +155,25 @@
 #define D3DCOMPILE_SECDATA_REQUIRE_TEMPLATE_MATCH    0x00000004
 #endif
 
-typedef HRESULT(__stdcall *pD3DCompile2g)(
-                          const void* data,
-                          SIZE_T data_size,
-                          const char* filename,
-                          const D3D_SHADER_MACRO* defines,
-                          ID3DInclude* include, 
-                          const char* entrypoint,
-                          const char* target, 
-                          UINT sflags, 
-                          UINT eflags, 
-                          UINT secondary_flags,
-                          const void* secondary_data, 
-                          SIZE_T secondary_data_size, 
-                          ID3DBlob** shader,
-                          ID3DBlob** error_messages);
+typedef HRESULT(__stdcall* pD3DCompile2g)(
+	const void* data,
+	SIZE_T data_size,
+	const char* filename,
+	const D3D_SHADER_MACRO* defines,
+	ID3DInclude* include,
+	const char* entrypoint,
+	const char* target,
+	UINT sflags,
+	UINT eflags,
+	UINT secondary_flags,
+	const void* secondary_data,
+	SIZE_T secondary_data_size,
+	ID3DBlob** shader,
+	ID3DBlob** error_messages);
 
 struct ProfilePrefix {
-  const char* name;
-  const char* prefix;
+	const char* name;
+	const char* prefix;
 };
 
 static const ProfilePrefix g_profilePrefixTable[] = {
