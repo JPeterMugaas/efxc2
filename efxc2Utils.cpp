@@ -172,7 +172,8 @@ char* wcharToChar(const wchar_t* w) {
 		exit(1);
 	}
 	memset(c, 0, len + 1);
-	wcstombs(c, w, len);
+	size_t dummy = len;
+	wcstombs_s(&dummy, c,  len + 1, w, len);
 	if (errno != 0) {
 		fprintf(stderr, "wcstombs failed/n");
 		print_errno();
