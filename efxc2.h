@@ -37,6 +37,7 @@
 #include <inttypes.h>
 #include <io.h>
 #include <stdio.h>
+#include <sal.h>
 
 #define DLL_NAME L"d3dcompiler_47.dll"
 

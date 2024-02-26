@@ -12,13 +12,13 @@
 #include "efxc2.h"
 
 #ifdef _WIN32
-void FixupFileName(wchar_t* FileName);
-bool parseOpt(const wchar_t* option, int argc, wchar_t* argv[1], int* index, wchar_t** argumentOption);
+void FixupFileName(_Inout_ wchar_t* FileName);
+bool parseOpt(_In_ const wchar_t* option, _In_ int argc, _In_ wchar_t* argv[1], _Inout_ int* index, _Inout_opt_ wchar_t** argumentOption);
 #else  /* _WIN32 */
-bool parseOpt(const char* option, int argc, char* argv[1], int* index, char** argumentOption);
+bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout_ int* index, _Inout_opt_ char** argumentOption);
 #endif /* _WIN32 */
 void print_errno();
-int readall(FILE* in, char** dataptr, size_t* sizeptr);
+int readall(_In_ FILE* in, _Out_writes_bytes_(*sizeptr) char** dataptr, _Out_opt_ size_t* sizeptr);
 #ifdef _WIN32
-char* wcharToChar(const wchar_t* w);
+char* wcharToChar(_In_ LPCWSTR w);
 #endif

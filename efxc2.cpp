@@ -122,19 +122,19 @@ static void print_windows_error() {
      }
 
 #ifdef _WIN32
-static char* LoadSource(const wchar_t* filename, size_t* len) {
+static char* LoadSource(_In_ const wchar_t* filename, _Out_ size_t* len) {
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif  /* _MSC_VER */
-    FILE* f;
+    FILE* f = 0;
     errno_t err = _wfopen_s(&f, filename, L"r");
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif  /* _MSC_VER */
     if (err != 0) {
 #else   /* _WIN32 */
-static char* LoadSource(const char* filename, size_t * len) {
+static char* LoadSource(_In_ const char* filename, _Out_ size_t * len) {
     FILE* f = fopen(filename, "r");
     if (f == NULL) {
 #endif  /* _WIN32 */
@@ -142,11 +142,12 @@ static char* LoadSource(const char* filename, size_t * len) {
         exit(1);
     }
     char* source;
-    readall(f, &source, len);
 #ifdef _MSC_VER
 #pragma warning( push )
+#pragma warning( disable : 6001)
 #pragma warning( disable : 6387)
 #endif /* _MSC_VER */
+    readall(f, &source, len);
     fclose(f);
 #ifdef _MSC_VER
 #pragma warning( pop )
@@ -681,12 +682,19 @@ int main(int argc, char* argv[]) {
                 break;
             }
         }
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( suppress : 6387 )
+#endif /* _MSC_VER */
         variableName = (char*)malloc(strlen(prefix) + strlen(entryPoint) + 2);
 #ifdef _WIN32
         sprintf_s(variableName, strlen(prefix) + strlen(entryPoint) + 2, "%s_%s", prefix, entryPoint);
 #else  /* _WIN32 */
         sprintf(variableName, "%s_%s", prefix, entryPoint);
 #endif /* _WIN32 */
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif /* _MSC_VER */
     }
 
     // ====================================================================================
@@ -717,9 +725,17 @@ int main(int argc, char* argv[]) {
         M_WINDOWS_ERROR
 #endif /* _WIN32 */
     }
-    size_t SourceLen;
+    size_t SourceLen = 0;
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6001 )
+#pragma warning( disable : 6387 )
+#endif /* _MSC_VER */
     char* SourceCode = LoadSource(inputFile, &SourceLen);
     pD3DCompile2g ptr = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif /* _MSC_VER */
     if (ptr == NULL) {
         printf("Error: could not get the address of D3DCompile2.\n");
         M_WINDOWS_ERROR
@@ -830,7 +846,8 @@ int main(int argc, char* argv[]) {
 #ifdef _WIN32
 #ifdef _MSC_VER
 #pragma warning( push )
-#pragma warning( disable : 6387)
+#pragma warning( disable : 6001 )
+#pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
         errno_t err = _wfopen_s(&f, outputFile, L"w");
 #ifdef _MSC_VER
@@ -892,10 +909,22 @@ int main(int argc, char* argv[]) {
 #endif  /* WIN32 */
         }
     }
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6001 )
+#pragma warning( disable : 6387 )
+#endif /* _MSC_VER */
 #ifdef _WIN32
-    free(c_inputFile);
+    if (c_inputFile != NULL) {
+      free(c_inputFile);
+    }
 #endif /* _WIN32 */
-    free(SourceCode);
+    if (SourceCode != NULL) {
+       free(SourceCode);
+    }
     M_TAREDOWN_PROG
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif /* _MSC_VER */
         return 0;
 }
