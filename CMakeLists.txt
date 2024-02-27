@@ -71,7 +71,8 @@ enable_testing()
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tests)
- 
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/tests/Empty_file.hlsl "")
+
 add_test(NAME help
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
   COMMAND fxc --help)
@@ -111,6 +112,11 @@ add_test(NAME error.output_file_not_found
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_4_0 /ETryMode456CS /Fh${CMAKE_CURRENT_BINARY_DIR}/not_found/Compiled/BC7Encode_TryMode456CS_cs40.inc /Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)
 set_tests_properties(error.output_file_not_found PROPERTIES WILL_FAIL true)
+
+add_test(NAME error.output_file_empty
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
+  COMMAND fxc ${CMAKE_CURRENT_BINARY_DIR}/tests/Empty_file.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_4_0 /ETryMode456CS /Fh${CMAKE_CURRENT_BINARY_DIR}/not_found/Compiled/BC7Encode_TryMode456CS_cs40.inc /Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)
+set_tests_properties(error.output_file_empty PROPERTIES WILL_FAIL true)
 
 add_test(NAME invalid_parameters_will_fail.DGSLEffect_fx
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
