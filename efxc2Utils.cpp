@@ -10,16 +10,20 @@
 
 #include "efxc2Utils.h"
 
-void print_errno() {
+void print_errno(errno_t _errno) {
 	char errmsg[ERR_SIZE];
 #ifdef _WIN32
-	strerror_s(errmsg, ERR_SIZE, errno);
+	strerror_s(errmsg, ERR_SIZE, _errno);
 #else  /* _WIN32 */
 	/*int strerror_r(int errnum, char *buf, size_t buflen);*/
 	strerror_r(errno, errmsg, ERR_SIZE);
 #endif /* _WIN32 */
 	fprintf(stderr, "%s\n", errmsg);
 	exit(1);
+}
+
+void print_errno(void) {
+	print_errno(errno);
 }
 
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */

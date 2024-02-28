@@ -133,13 +133,13 @@ static char* LoadSource(_In_ const wchar_t* filename, _Out_ size_t* len) {
 #pragma warning( pop )
 #endif  /* _MSC_VER */
     if (err != 0) {
+        print_errno(err);
 #else   /* _WIN32 */
 static char* LoadSource(_In_ const char* filename, _Out_ size_t * len) {
     FILE* f = fopen(filename, "r");
     if (f == NULL) {
-#endif  /* _WIN32 */
         print_errno();
-        exit(1);
+#endif  /* _WIN32 */
     }
     char* source;
 #ifdef _MSC_VER
@@ -855,7 +855,7 @@ int main(int argc, char* argv[]) {
 #endif /* _MSC_VER */
         if (err != 0) {
             free(SourceCode);
-            print_errno();
+            print_errno(err);
         }
 #else  /*_WIN32 */
         f = fopen(outputFile, "w");
