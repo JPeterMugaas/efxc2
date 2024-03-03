@@ -36,12 +36,6 @@ static void print_unsupported_arg_help() {
     print_usage_arg();
 }
 
-static void print_invalid_arg() {
-    fprintf(stderr, "You have specified an argument that is not handled by efxc2\n");
-    print_unsupported_arg_help();
-    exit(1);
-}
-
 static void print_usage_missing(const char* arg) {
     fprintf(stderr, "efxc2 is missing the %s argument.\n", arg);
     printf("We expected to receive this, and it's likely things will not work correctly\n");
@@ -66,7 +60,7 @@ static void print_hresult_error(const HRESULT hr) {
     std::string message(messageBuffer, size);
     LocalFree(messageBuffer);
     fprintf(stderr, "Windows Error Message: %s\n", messageBuffer);
-    printf("Error Code: 0x%x", hr);
+    printf("Error Code: 0x%lx", hr);
     exit(1);
 }
 
@@ -193,8 +187,6 @@ int main(int argc, char* argv[]) {
     defines[numDefines - 1].Name = NULL;
     defines[numDefines - 1].Definition = NULL;
 
-    wchar_t* ptr_cmd = (wchar_t*)argv;
-
     /*first scan specifically for the nologo argument so no output
     is given regardless of parameter order*/
     int index = 1;
@@ -223,13 +215,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -@ not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, NULL)) {
             print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
-                return 0;
+            return 0;
         }
         else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -248,7 +240,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -compress not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_D, argc, argv, &index, &w_temp)) {
@@ -275,13 +267,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -decompress not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
         else if (parseOpt(M_DUMPBIN, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -dumpbin not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_E_, argc, argv, &index, &w_temp)) {
@@ -333,13 +325,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -Fl not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
         else if (parseOpt(M_FO, argc, argv, &index, NULL)) {
             if (cmd != 0) {
                 fprintf(stderr, "You cannot specify both an object and header");
                 M_TAREDOWN_PROG
-                    return 1;
+                return 1;
             }
             cmd = CMD_WRITE_OBJECT;
             if (verbose) {
@@ -357,7 +349,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -Fx not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
         else if (parseOpt(M_GCH, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -391,7 +383,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -getprivate not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
         else if (parseOpt(M_GFA, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -418,7 +410,7 @@ int main(int argc, char* argv[]) {
             print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
-                return 0;
+            return 0;
         }
         else if (parseOpt(M_I, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -437,13 +429,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -matchUAVs not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
         else if (parseOpt(M_MERGEUAVS, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -mergeUAVs not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
         else if (parseOpt(M_NI, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -543,7 +535,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -setprivate not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-                return 1;
+            return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_T, argc, argv, &index, &w_temp)) {
@@ -567,7 +559,7 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
             print_version();
             M_TAREDOWN_PROG
-                return 0;
+            return 0;
         }
         else if (parseOpt(M_VI, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -656,7 +648,7 @@ int main(int argc, char* argv[]) {
             }
             else {
                 M_TAREDOWN_PROG
-                    print_usage_toomany();
+                print_usage_toomany();
                 return 1;
             }
         }
@@ -825,10 +817,10 @@ int main(int argc, char* argv[]) {
             char* error = (char*)errors->GetBufferPointer();
             fprintf(stderr, "Got an error while compiling:\n%s\n", error);
             errors->Release();
-            printf("Error Code: 0x%x", hr);
+            printf("Error Code: 0x%lx", hr);
         }
         else {
-            fprintf(stderr, "Got an error (%x) while compiling, but no error message from the function.\n", hr);
+            fprintf(stderr, "Got an error (%lx) while compiling, but no error message from the function.\n", hr);
             print_hresult_error(hr);
         }
 
