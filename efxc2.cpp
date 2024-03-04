@@ -93,6 +93,26 @@ static void print_windows_error() {
     exit(1);
 }
 
+static void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, _In_ const size_t len, _In_z_ const char* variableName, _In_ const int outputHex)  {
+  fprintf(f, "const BYTE %s[] =\n{\n", variableName);
+  for (size_t i = 0; i < len; i++) {
+     if (outputHex) {
+         fprintf(f, " 0x%02" PRIx8, outString[i]);
+     }
+     else {
+         fprintf(f, "%4" PRIu8, outString[i]);
+     }
+     if (i != len - 1) {
+         fprintf(f, ",");
+     }
+     if ((i % 6 == 5) && (i != len - 1)) {
+         fprintf(f, "\n");
+     }
+  }
+  fprintf(f, "\n};\n");
+}
+
+
 #define M_WINDOWS_ERROR \
    print_windows_error(); \
    M_TAREDOWN_PROG \
@@ -724,11 +744,11 @@ int main(int argc, char* argv[]) {
 #pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
     char* SourceCode = LoadSource(inputFile, &SourceLen);
-    pD3DCompile2g ptr = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
+    pD3DCompile2g ptp_D3DCompile2 = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif /* _MSC_VER */
-    if (ptr == NULL) {
+    if (ptp_D3DCompile2 == NULL) {
         printf("Error: could not get the address of D3DCompile2.\n");
         M_WINDOWS_ERROR
     }
@@ -788,7 +808,7 @@ int main(int argc, char* argv[]) {
        [out, optional] ID3DBlob               **ppErrorMsgs
      );
     */
-    hr = ptr(
+    hr = ptp_D3DCompile2(
         SourceCode,
         SourceLen,
 #ifdef _WIN32
@@ -831,8 +851,8 @@ int main(int argc, char* argv[]) {
             return 1;
     }
     else {
-        unsigned char* outString = (unsigned char*)output->GetBufferPointer();
-        size_t len = output->GetBufferSize();
+        unsigned char* compiledString = (unsigned char*)output->GetBufferPointer();
+        size_t compiledLen = output->GetBufferSize();
 
         FILE* f;
 #ifdef _WIN32
@@ -858,25 +878,10 @@ int main(int argc, char* argv[]) {
 #endif /* _WIN32 */
 
         if (cmd == CMD_WRITE_HEADER) {
-            fprintf(f, "const BYTE %s[] =\n{\n", variableName);
-            for (int i = 0; i < len; i++) {
-                if (outputHex) {
-                    fprintf(f, " 0x%02" PRIx8, outString[i]);
-                }
-                else {
-                    fprintf(f, "%4" PRIu8, outString[i]);
-                }
-                if (i != len - 1) {
-                    fprintf(f, ",");
-                }
-                if ((i % 6 == 5) && (i != len - 1)) {
-                    fprintf(f, "\n");
-                }
-            }
-            fprintf(f, "\n};\n");
+            WriteByteArrayConst(f, compiledString, compiledLen, variableName, outputHex);
         }
         if (cmd == CMD_WRITE_OBJECT) {
-            fwrite(outString, len, 1, f);
+            fwrite(compiledString, compiledLen, 1, f);
         }
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -892,12 +897,12 @@ int main(int argc, char* argv[]) {
         if (verbose) {
 #ifdef _WIN32
 #ifdef _WIN64
-            wprintf(L"Wrote %" PRIu64 " bytes of shader output to %ls\n", len, outputFile);
+            wprintf(L"Wrote %" PRIu64 " bytes of shader output to %ls\n", compiledLen, outputFile);
 #else  /* _WIN64 */
-            wprintf(L"Wrote %u bytes of shader output to %ls\n", len, outputFile);
+            wprintf(L"Wrote %u bytes of shader output to %ls\n", compiledLen, outputFile);
 #endif  /* _WIN64 */
 #else   /* _WIN32 */
-            printf("Wrote %u bytes of shader output to %ls\n", len, outputFile);
+            printf("Wrote %u bytes of shader output to %ls\n", compiledLen, outputFile);
 #endif  /* WIN32 */
         }
     }
