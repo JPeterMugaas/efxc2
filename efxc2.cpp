@@ -197,6 +197,7 @@ int main(int argc, char* argv[]) {
     UINT sflags = 0;
     UINT eflags = 0;
     UINT secondary_flags = 0;
+    UINT strip_flags = 0;
     int verbose = 1;
     int outputHex = 0;
 
@@ -521,26 +522,30 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_QSTRIP_DEBUG, argc, argv, &index, NULL)) {
+            strip_flags = strip_flags | D3DCOMPILER_STRIP_DEBUG_INFO;
             if (verbose) {
-                printf("option -Qstrip_debug ignored\n");
+                printf("option -Qstrip_debug D3DCOMPILER_STRIP_DEBUG_INFO\n");
             }
             continue;
         }
         else if (parseOpt(M_QSTRIP_PRIV, argc, argv, &index, NULL)) {
+            strip_flags = strip_flags | D3DCOMPILER_STRIP_PRIVATE_DATA;
             if (verbose) {
-                printf("option -Qstrip_priv ignored\n");
+                printf("option -Qstrip_priv D3DCOMPILER_STRIP_PRIVATE_DATA\n");
             }
             continue;
         }
         else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, NULL)) {
+            strip_flags = strip_flags | D3DCOMPILER_STRIP_REFLECTION_DATA;
             if (verbose) {
-                printf("option -Qstrip_reflect ignored\n");
+                printf("option -Qstrip_reflect D3DCOMPILER_STRIP_REFLECTION_DATA\n");
             }
             continue;
         }
         else if (parseOpt(M_QSTRIP_ROOTSIGNATURE, argc, argv, &index, NULL)) {
+            strip_flags = strip_flags | D3DCOMPILER_STRIP_ROOT_SIGNATURE;
             if (verbose) {
-                printf("option -Qstrip_rootsignature ignored\n");
+                printf("option -Qstrip_rootsignature D3DCOMPILER_STRIP_ROOT_SIGNATURE\n");
             }
             continue;
         }
@@ -752,6 +757,11 @@ int main(int argc, char* argv[]) {
         printf("Error: could not get the address of D3DCompile2.\n");
         M_WINDOWS_ERROR
     }
+    pD3DStripShaderg ptr_D3DStripShader = (pD3DStripShaderg)GetProcAddress(h, "D3DStripShader");
+    if (ptp_D3DCompile2 == NULL) {
+        printf("Error: could not get the address of D3DStripShader.\n");
+        M_WINDOWS_ERROR
+    }
 
     HRESULT hr;
     ID3DBlob* output = NULL;
@@ -848,12 +858,55 @@ int main(int argc, char* argv[]) {
             output->Release();
         free(SourceCode);
         M_TAREDOWN_PROG
-            return 1;
+        return 1;
     }
     else {
         unsigned char* compiledString = (unsigned char*)output->GetBufferPointer();
         size_t compiledLen = output->GetBufferSize();
+        unsigned char* outputString = compiledString;
+        size_t outputLen = compiledLen;
 
+        if (strip_flags != 0) {
+            ID3DBlob* strippedBlob = NULL;
+            if (verbose) {
+                printf("Calling D3DCompile2(\n");
+                printf("\t compiledString,\n");
+#ifdef _WIN32
+#ifdef _WIN64
+                wprintf(L"\t %" PRIu64 ",\n", compiledLen);
+#else   /* _WIN64 */
+                wprintf(L"\t %u,\n", compiledLen);
+#endif  /* _WIN64 */
+#else   /* _WIN32 */
+                printf("\t %u,\n", compiledLen);
+#endif  /* _WIN32 */
+                printf("\t 0x%016" PRIx64 ", \n", (INT64)strip_flags);
+                printf("\t &strippedBlob);\n");
+            }
+            /*
+            HRESULT D3DStripShader(
+              [in]  LPCVOID  pShaderBytecode,
+              [in]  SIZE_T   BytecodeLength,
+              [in]  UINT     uStripFlags,
+              [out] ID3DBlob **ppStrippedBlob
+            ); 
+            */     
+            hr = ptr_D3DStripShader(compiledString, compiledLen, strip_flags, &strippedBlob);
+            if (FAILED(hr)) {
+                print_hresult_error(hr);
+                if (output)
+                    output->Release();
+                if (strippedBlob)
+                    strippedBlob->Release();
+                free(SourceCode);
+                M_TAREDOWN_PROG
+                return 1;
+            }
+            unsigned char* strippedString = (unsigned char*)strippedBlob->GetBufferPointer();
+            size_t strippedLen = strippedBlob->GetBufferSize();
+            outputString = strippedString;
+            outputLen = strippedLen;
+        }
         FILE* f;
 #ifdef _WIN32
 #ifdef _MSC_VER
@@ -878,10 +931,10 @@ int main(int argc, char* argv[]) {
 #endif /* _WIN32 */
 
         if (cmd == CMD_WRITE_HEADER) {
-            WriteByteArrayConst(f, compiledString, compiledLen, variableName, outputHex);
+            WriteByteArrayConst(f, outputString, outputLen, variableName, outputHex);
         }
         if (cmd == CMD_WRITE_OBJECT) {
-            fwrite(compiledString, compiledLen, 1, f);
+            fwrite(outputString, outputLen, 1, f);
         }
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -897,12 +950,12 @@ int main(int argc, char* argv[]) {
         if (verbose) {
 #ifdef _WIN32
 #ifdef _WIN64
-            wprintf(L"Wrote %" PRIu64 " bytes of shader output to %ls\n", compiledLen, outputFile);
+            wprintf(L"Wrote %" PRIu64 " bytes of shader output to %ls\n", outputLen, outputFile);
 #else  /* _WIN64 */
-            wprintf(L"Wrote %u bytes of shader output to %ls\n", compiledLen, outputFile);
+            wprintf(L"Wrote %u bytes of shader output to %ls\n", outputLen, outputFile);
 #endif  /* _WIN64 */
 #else   /* _WIN32 */
-            printf("Wrote %u bytes of shader output to %ls\n", compiledLen, outputFile);
+            printf("Wrote %u bytes of shader output to %ls\n", outputLen, outputFile);
 #endif  /* WIN32 */
         }
     }

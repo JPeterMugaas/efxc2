@@ -172,6 +172,24 @@ typedef HRESULT(__stdcall* pD3DCompile2g)(
 	ID3DBlob** shader,
 	ID3DBlob** error_messages);
 
+#ifdef D3DCOMPILER_STRIP_FLAGS
+typedef enum D3DCOMPILER_STRIP_FLAGS
+{
+	D3DCOMPILER_STRIP_REFLECTION_DATA = 0x00000001,
+	D3DCOMPILER_STRIP_DEBUG_INFO = 0x00000002,
+	D3DCOMPILER_STRIP_TEST_BLOBS = 0x00000004,
+	D3DCOMPILER_STRIP_PRIVATE_DATA = 0x00000008,
+	D3DCOMPILER_STRIP_ROOT_SIGNATURE = 0x00000010,
+	D3DCOMPILER_STRIP_FORCE_DWORD = 0x7fffffff,
+} D3DCOMPILER_STRIP_FLAGS;
+#endif
+
+typedef HRESULT(__stdcall* pD3DStripShaderg) (
+	LPCVOID  pShaderBytecode,
+	SIZE_T   BytecodeLength,
+	UINT     uStripFlags,
+	ID3DBlob** ppStrippedBlob);
+
 struct ProfilePrefix {
 	const char* name;
 	const char* prefix;
