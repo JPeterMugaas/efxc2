@@ -768,11 +768,11 @@ int main(int argc, char* argv[]) {
         printf("Error: could not get the address of D3DStripShader.\n");
         M_WINDOWS_ERROR
     }
-    pD3DGetBlobPartg ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart");
+/*    pD3DGetBlobPartg ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart");
     if (ptp_D3DCompile2 == NULL) {
         printf("Error: could not get the address of D3DGetBlobPart.\n");
         M_WINDOWS_ERROR
-    }
+    } */
 
     HRESULT hr;
     ID3DBlob* output = NULL;
@@ -877,93 +877,6 @@ int main(int argc, char* argv[]) {
         size_t compiledLen = output->GetBufferSize();
         unsigned char* outputString = compiledString;
         size_t outputLen = compiledLen;
-
-        /*PDB File*/
-        if (pdbFile != NULL) {
-            if (verbose) {
-                printf("Calling D3DGetBlobPart(\n");
-                printf("\t compiledString,\n");
-#ifdef _WIN32
-#ifdef _WIN64
-                wprintf(L"\t %" PRIu64 ",\n", compiledLen);
-#else   /* _WIN64 */
-                wprintf(L"\t %u,\n", compiledLen);
-#endif  /* _WIN64 */
-#else   /* _WIN32 */
-                printf("\t %u,\n", compiledLen);
-#endif  /* _WIN32 */
-                printf("\t D3D_BLOB_PDB,\n");
-                printf("\t 0,\n");
-                printf("\t &PDBdata);\n");
-            }
-/*
-HRESULT D3DGetBlobPart(
-  [in]  LPCVOID       pSrcData,
-  [in]  SIZE_T        SrcDataSize,
-  [in]  D3D_BLOB_PART Part,
-  [in]  UINT          Flags,
-  [out] ID3DBlob      **ppPart
-);
-*/
-            ID3DBlob* PDBdata = NULL;
-            hr = ptr_D3DGetBlobPart(compiledString, compiledLen, D3D_BLOB_PDB, 0, &PDBdata);
-            if (FAILED(hr)) {
-                print_hresult_error(hr);
-                if (output)
-                    output->Release();
-                if (PDBdata)
-                    PDBdata->Release();
-                free(SourceCode);
-                M_TAREDOWN_PROG
-                    return 1;
-            }
-            unsigned char* pdbString = (unsigned char*)PDBdata->GetBufferPointer();
-            size_t pdbLen = PDBdata->GetBufferSize();
-#ifdef _WIN32
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6001 )
-#pragma warning( disable : 6387 )
-#endif /* _MSC_VER */
-            errno_t err = _wfopen_s(&f, pdbFile, L"w");
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
-            if (err != 0) {
-                free(SourceCode);
-                print_errno(err);
-            }
-#else  /*_WIN32 */
-            f = fopen(pdbFile, "w");
-            if (f == NULL) {
-                free(SourceCode);
-                print_errno();
-            }
-#endif /* _WIN32 */
-            fwrite( pdbString, pdbLen, 1, f);
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6387)
-#endif /* _MSC_VER */
-            fclose(f);
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
-            if (errno != 0) {
-                print_errno();
-            }
-            if (verbose) {
-#ifdef _WIN32
-#ifdef _WIN64
-                wprintf(L"Wrote %" PRIu64 " bytes of .PDB output to %ls\n", pdbLen, pdbFile);
-#else  /* _WIN64 */
-                wprintf(L"Wrote %u bytes of .PDB output to %ls\n", pdbtLen, pdbFile);
-#endif  /* _WIN64 */
-#else   /* _WIN32 */
-                printf("Wrote %u bytes of .PDB output to %ls\n", pdbLen, pdbFile);
-#endif  /* WIN32 */
-            }
-        }
 
         /* strip compiled shader*/
         if (strip_flags != 0) {

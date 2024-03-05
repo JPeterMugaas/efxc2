@@ -190,6 +190,16 @@ struct ProfilePrefix {
 	const char* prefix;
 };
 
+// This struct represents the first four bytes of the name blob:
+struct ShaderDebugName
+{
+	uint16_t Flags;       // Reserved, must be set to zero.
+	uint16_t NameLength;  // Length of the debug name, without null terminator.
+	// Followed by NameLength bytes of the UTF-8-encoded name.
+	// Followed by a null terminator.
+	// Followed by [0-3] zero bytes to align to a 4-byte boundary.
+};
+
 static const ProfilePrefix g_profilePrefixTable[] = {
   { "ps_2_0", "g_ps20"},
   { "ps_2_a", "g_ps21"},
