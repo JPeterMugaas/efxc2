@@ -960,7 +960,7 @@ HRESULT D3DGetBlobPart(
                 wprintf(L"Wrote %u bytes of .PDB output to %ls\n", pdbtLen, pdbFile);
 #endif  /* _WIN64 */
 #else   /* _WIN32 */
-                printf("Wrote %u bytes of .PDB output to %ls\n", pdbLen, pdbtFile);
+                printf("Wrote %u bytes of .PDB output to %ls\n", pdbLen, pdbFile);
 #endif  /* WIN32 */
             }
         }
