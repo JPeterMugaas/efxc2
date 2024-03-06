@@ -119,9 +119,13 @@ static void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsign
    return 1;
 
 #define M_TAREDOWN_PROG \
-    delete[] inputFile; \
-    delete[] outputFile; \
-\
+    if (inputFile) { \
+       delete[] inputFile; \
+    } \
+    if (outputFile) { \
+      delete[] outputFile; \
+    } \
+    \
     if (defineOption != NULL) { \
        free(defineOption); \
     } \
@@ -448,7 +452,7 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_LX, argc, argv, &index, NULL)) {
             outputHex = 1;
             if (verbose) {
-                printf("option -Lx - output hexidecimal litterals\n");
+                printf("option -Lx - output hexidecimal literals\n");
             }
             continue;
         }
@@ -829,6 +833,10 @@ int main(int argc, char* argv[]) {
        [out, optional] ID3DBlob               **ppErrorMsgs
      );
     */
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6387)
+#endif
     hr = ptp_D3DCompile2(
         SourceCode,
         SourceLen,
@@ -849,7 +857,9 @@ int main(int argc, char* argv[]) {
         &output,
         &errors
     );
-
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif
     // ====================================================================================
     // Output (or errors)
 
@@ -865,10 +875,20 @@ int main(int argc, char* argv[]) {
             print_hresult_error(hr);
         }
 
-        if (output)
+        if (output) {
             output->Release();
-        free(SourceCode);
+        }
+        if (SourceCode) {
+            free(SourceCode);
+        }
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6001)
+#endif
         M_TAREDOWN_PROG
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif
         return 1;
     }
     else {
