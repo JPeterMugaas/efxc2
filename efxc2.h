@@ -157,26 +157,26 @@
 #endif
 
 typedef HRESULT(__stdcall* pD3DCompile2g)(
-	const void* data,
-	SIZE_T data_size,
-	const char* filename,
-	const D3D_SHADER_MACRO* defines,
-	ID3DInclude* include,
-	const char* entrypoint,
-	const char* target,
-	UINT sflags,
-	UINT eflags,
-	UINT secondary_flags,
-	const void* secondary_data,
-	SIZE_T secondary_data_size,
-	ID3DBlob** shader,
-	ID3DBlob** error_messages);
+	_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+	_In_ SIZE_T SrcDataSize,
+	_In_opt_ LPCSTR pSourceName,
+	_In_reads_opt_(_Inexpressible_(pDefines->Name != NULL)) CONST D3D_SHADER_MACRO* pDefines,
+	_In_opt_ ID3DInclude* pInclude,
+	_In_ LPCSTR pEntrypoint,
+	_In_ LPCSTR pTarget,
+	_In_ UINT Flags1,
+	_In_ UINT Flags2,
+	_In_ UINT SecondaryDataFlags,
+	_In_reads_bytes_opt_(SecondaryDataSize) LPCVOID pSecondaryData,
+	_In_ SIZE_T SecondaryDataSize,
+	_Out_ ID3DBlob** ppCode,
+	_Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorMsgs);
 
 typedef HRESULT(__stdcall* pD3DStripShaderg) (
-	LPCVOID  pShaderBytecode,
-	SIZE_T   BytecodeLength,
-	UINT     uStripFlags,
-	ID3DBlob** ppStrippedBlob);
+	_In_reads_bytes_(BytecodeLength) LPCVOID pShaderBytecode,
+	_In_ SIZE_T BytecodeLength,
+	_In_ UINT uStripFlags,
+	_Out_ ID3DBlob** ppStrippedBlob);
 
 typedef HRESULT(__stdcall* pD3DGetBlobPartg) (
 	_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
@@ -185,10 +185,14 @@ typedef HRESULT(__stdcall* pD3DGetBlobPartg) (
 	_In_ UINT Flags,
 	_Out_ ID3DBlob** ppPart);
 
-struct ProfilePrefix {
-	const char* name;
-	const char* prefix;
-};
+typedef HRESULT(__stdcall* pD3DSetBlobPartg) (
+	_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+	_In_ SIZE_T SrcDataSize,
+	_In_ D3D_BLOB_PART Part,
+	_In_ UINT Flags,
+	_In_reads_bytes_(PartSize) LPCVOID pPart,
+	_In_ SIZE_T PartSize,
+	_Out_ ID3DBlob** ppNewShader);
 
 // This struct represents the first four bytes of the name blob:
 struct ShaderDebugName
@@ -198,6 +202,11 @@ struct ShaderDebugName
 	// Followed by NameLength bytes of the UTF-8-encoded name.
 	// Followed by a null terminator.
 	// Followed by [0-3] zero bytes to align to a 4-byte boundary.
+};
+
+struct ProfilePrefix {
+	const char* name;
+	const char* prefix;
 };
 
 static const ProfilePrefix g_profilePrefixTable[] = {
@@ -224,6 +233,10 @@ static const ProfilePrefix g_profilePrefixTable[] = {
 #else  /* _WIN32 */
 #define M_WCSDUP wcsdup
 #endif /* _WIN32 */
+
+#ifndef _countof
+#define _countof(a) (sizeof(a)/sizeof(*(a)))
+#endif
 
 /* command codes for internal use */
 #define CMD_WRITE_HEADER 1
