@@ -93,51 +93,56 @@ static void print_windows_error() {
     exit(1);
 }
 
-static void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, _In_ const size_t len, _In_z_ const char* variableName, _In_ const int outputHex)  {
-  fprintf(f, "const BYTE %s[] =\n{\n", variableName);
-  for (size_t i = 0; i < len; i++) {
-     if (outputHex) {
-         fprintf(f, " 0x%02" PRIx8, outString[i]);
-     }
-     else {
-         fprintf(f, "%4" PRIu8, outString[i]);
-     }
-     if (i != len - 1) {
-         fprintf(f, ",");
-     }
-     if ((i % 6 == 5) && (i != len - 1)) {
-         fprintf(f, "\n");
-     }
-  }
-  fprintf(f, "\n};\n");
+static void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, _In_ const size_t len, _In_z_ const char* variableName, _In_ const int outputHex) {
+    fprintf(f, "const BYTE %s[] =\n{\n", variableName);
+    for (size_t i = 0; i < len; i++) {
+        if (outputHex) {
+            fprintf(f, " 0x%02" PRIx8, outString[i]);
+        }
+        else {
+            fprintf(f, "%4" PRIu8, outString[i]);
+        }
+        if (i != len - 1) {
+            fprintf(f, ",");
+        }
+        if ((i % 6 == 5) && (i != len - 1)) {
+            fprintf(f, "\n");
+        }
+    }
+    fprintf(f, "\n};\n");
 }
 
-
 #define M_WINDOWS_ERROR \
-   print_windows_error(); \
-   M_TAREDOWN_PROG \
-   return 1;
+    print_windows_error(); \
+    M_TAREDOWN_PROG \
+    return 1;
 
 #define M_TAREDOWN_PROG \
     if (inputFile) { \
-       delete[] inputFile; \
+        delete[] inputFile; \
+        inputFile = NULL; \
     } \
     if (outputFile) { \
-      delete[] outputFile; \
+        delete[] outputFile; \
+        outputFile = NULL; \
     } \
     \
     if (defineOption != NULL) { \
-       free(defineOption); \
+        free(defineOption); \
+        defineOption = NULL; \
     } \
-    if (entryPoint != NULL) { \
-       free(entryPoint); \
-     } \
-     if (model != NULL) { \
-       free(model); \
-     } \
-     if (variableName != NULL) { \
-       free(variableName); \
-     }
+    if (entryPoint != NULL) {  \
+        free(entryPoint); \
+        entryPoint = NULL; \
+    } \
+    if (model != NULL) { \
+        free(model); \
+        model = NULL; \
+    } \
+    if (variableName != NULL) { \
+        free(variableName); \
+        variableName = NULL; \
+    }
 
 #ifdef _WIN32
 static char* LoadSource(_In_ const wchar_t* filename, _Out_ size_t* len) {
@@ -242,13 +247,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -@ not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, NULL)) {
             print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
-            return 0;
+                return 0;
         }
         else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -267,7 +272,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -compress not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_D, argc, argv, &index, &w_temp)) {
@@ -294,13 +299,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -decompress not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_DUMPBIN, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -dumpbin not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_E_, argc, argv, &index, &w_temp)) {
@@ -356,13 +361,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -Fl not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_FO, argc, argv, &index, NULL)) {
             if (cmd != 0) {
                 fprintf(stderr, "You cannot specify both an object and header");
                 M_TAREDOWN_PROG
-                return 1;
+                    return 1;
             }
             cmd = CMD_WRITE_OBJECT;
             if (verbose) {
@@ -380,7 +385,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -Fx not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_GCH, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -414,7 +419,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -getprivate not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_GFA, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -441,7 +446,7 @@ int main(int argc, char* argv[]) {
             print_copyright();
             print_usage_arg();
             M_TAREDOWN_PROG
-            return 0;
+                return 0;
         }
         else if (parseOpt(M_I, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -460,13 +465,13 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -matchUAVs not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_MERGEUAVS, argc, argv, &index, NULL)) {
             fprintf(stderr, "option -mergeUAVs not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
         else if (parseOpt(M_NI, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -570,7 +575,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "option -setprivate not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
-            return 1;
+                return 1;
         }
 #ifdef _WIN32
         else if (parseOpt(M_T, argc, argv, &index, &w_temp)) {
@@ -594,7 +599,7 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
             print_version();
             M_TAREDOWN_PROG
-            return 0;
+                return 0;
         }
         else if (parseOpt(M_VI, argc, argv, &index, NULL)) {
             if (verbose) {
@@ -683,7 +688,7 @@ int main(int argc, char* argv[]) {
             }
             else {
                 M_TAREDOWN_PROG
-                print_usage_toomany();
+                    print_usage_toomany();
                 return 1;
             }
         }
@@ -772,11 +777,11 @@ int main(int argc, char* argv[]) {
         printf("Error: could not get the address of D3DStripShader.\n");
         M_WINDOWS_ERROR
     }
-/*    pD3DGetBlobPartg ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart");
-    if (ptp_D3DCompile2 == NULL) {
-        printf("Error: could not get the address of D3DGetBlobPart.\n");
-        M_WINDOWS_ERROR
-    } */
+    /*    pD3DGetBlobPartg ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart");
+        if (ptp_D3DCompile2 == NULL) {
+            printf("Error: could not get the address of D3DGetBlobPart.\n");
+            M_WINDOWS_ERROR
+        } */
 
     HRESULT hr;
     ID3DBlob* output = NULL;
@@ -889,7 +894,7 @@ int main(int argc, char* argv[]) {
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
-        return 1;
+            return 1;
     }
     else {
         FILE* f;
@@ -922,8 +927,8 @@ int main(int argc, char* argv[]) {
               [in]  SIZE_T   BytecodeLength,
               [in]  UINT     uStripFlags,
               [out] ID3DBlob **ppStrippedBlob
-            ); 
-            */     
+            );
+            */
             hr = ptr_D3DStripShader(compiledString, compiledLen, strip_flags, &strippedBlob);
             if (FAILED(hr)) {
                 print_hresult_error(hr);
@@ -933,7 +938,7 @@ int main(int argc, char* argv[]) {
                     strippedBlob->Release();
                 free(SourceCode);
                 M_TAREDOWN_PROG
-                return 1;
+                    return 1;
             }
             unsigned char* strippedString = (unsigned char*)strippedBlob->GetBufferPointer();
             size_t strippedLen = strippedBlob->GetBufferSize();
@@ -998,11 +1003,11 @@ int main(int argc, char* argv[]) {
 #endif /* _MSC_VER */
 #ifdef _WIN32
     if (c_inputFile != NULL) {
-      free(c_inputFile);
+        free(c_inputFile);
     }
 #endif /* _WIN32 */
     if (SourceCode != NULL) {
-       free(SourceCode);
+        free(SourceCode);
     }
     M_TAREDOWN_PROG
 #ifdef _MSC_VER
