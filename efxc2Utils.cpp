@@ -10,6 +10,100 @@
 
 #include "efxc2Utils.h"
 
+void print_copyright() {
+	printf(PROGRAM_DESCRIPTION " " PROGRAM_VERSION "\n");
+	printf(PROGRAM_COPYRIGHT "\n");
+	printf("This program is licensed under the Mozilla Public License, v. 2.0.\n");
+	return;
+}
+
+void print_usage_arg() {
+	printf("\n");
+	printf("More information about valid parameters is available at Microsoft's website \n");
+	printf("\n");
+	printf("https://msdn.microsoft.com/en-us/library/windows/desktop/bb509709(v=vs.85).aspx\n");
+	return;
+}
+
+void print_unsupported_arg_help() {
+	printf("This isn't a sign of disaster, odds are it will be very easy to add support for\n");
+	printf("this argument.  Review the meaning of the argument in the real fxc program, and\n");
+	printf("then add it into efxc2.\n");
+	printf("\n");
+	print_usage_arg();
+	return;
+}
+
+[[noreturn]] void print_version() {
+	printf(PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n");
+	printf(PROGRAM_COPYRIGHT "\n");
+	exit(0);
+}
+
+[[noreturn]] void print_usage_missing(const char* arg) {
+	fprintf(stderr, "efxc2 is missing the %s argument.\n", arg);
+	printf("We expected to receive this, and it's likely things will not work correctly\n");
+	printf("without it.  Review efxc2 and make sure things will work.\n");
+	printf("\n");
+	print_usage_arg();
+	exit(1);
+}
+
+[[noreturn]] void print_usage_toomany() {
+	fprintf(stderr, "You specified multiple input files.\n");
+	printf("We did not expect to receive this, and aren't prepared to handle multiple input\n");
+	printf("files. You'll have to edit the source to behave the way you want.\n");
+	printf("\n");
+	print_usage_arg();
+	exit(1);
+}
+
+[[noreturn]] void print_hresult_error(const HRESULT hr) {
+	LPSTR messageBuffer = nullptr;
+	size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
+	std::string message(messageBuffer, size);
+	LocalFree(messageBuffer);
+	fprintf(stderr, "Windows Error Message: %s\n", messageBuffer);
+	printf("Error Code: 0x%lx", hr);
+	exit(1);
+}
+
+[[noreturn]] void print_windows_error() {
+	/*from: https://gist.github.com/Aaronontheweb/7461004#file-getlasterror-cpp */
+	DWORD dLastError = GetLastError();
+	LPCTSTR strErrorMessage = nullptr;
+
+	FormatMessageW(
+		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ARGUMENT_ARRAY | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+		nullptr,
+		dLastError,
+		0,
+		(LPWSTR)&strErrorMessage,
+		0,
+		nullptr);
+
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable:4477)
+#endif /* _MSC_VER */
+#ifdef _WIN32
+	fwprintf(stderr, L"Windows error: %ls\n", strErrorMessage);
+#else  /* _WIN32 */
+	fprintf(stderr, "Windows error: %ls\n", strErrorMessage);
+#endif /* _WIN32 */
+#if defined(_MSC_VER)
+# pragma warning(pop)
+#endif /* _MSC_VER */
+	exit(1);
+}
+
+void print_help_screen() {
+	print_copyright();
+	print_usage_arg();
+	return;
+}
+
 [[noreturn]] void print_errno(errno_t _errno) {
 	char errmsg[ERR_SIZE];
 #ifdef _WIN32
@@ -48,6 +142,25 @@ char* GetFileName(_In_ char* path) {
 		}
 	}
 	return pFileName;
+}
+
+void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, _In_ const size_t len, _In_z_ const char* variableName, _In_ const int outputHex) {
+	fprintf(f, "const BYTE %s[] =\n{\n", variableName);
+	for (size_t i = 0; i < len; i++) {
+		if (outputHex) {
+			fprintf(f, " 0x%02" PRIx8, outString[i]);
+		}
+		else {
+			fprintf(f, "%4" PRIu8, outString[i]);
+		}
+		if (i != len - 1) {
+			fprintf(f, ",");
+		}
+		if ((i % 6 == 5) && (i != len - 1)) {
+			fprintf(f, "\n");
+		}
+	}
+	fprintf(f, "\n};\n");
 }
 
 #ifdef _WIN32
@@ -227,7 +340,6 @@ char* wcharToChar(_In_ LPCWSTR w) {
 	if (c == nullptr) {
 		fprintf(stderr, "malloc failed/n");
 		print_errno();
-		exit(1);
 	}
 	memset(c, 0, len + 1);
 	size_t dummy = len;
@@ -235,7 +347,6 @@ char* wcharToChar(_In_ LPCWSTR w) {
 	if (errno != 0) {
 		fprintf(stderr, "wcstombs failed/n");
 		print_errno();
-		exit(1);
 	}
 	return c;
 }
