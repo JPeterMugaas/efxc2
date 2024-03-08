@@ -756,7 +756,7 @@ int main(int argc, char* argv[]) {
 
         h = LoadLibrary(dllPath);
         if (h == nullptr) {
-            wprintf("Error: could not load " DLL_NAME " from %s\n", dllPath);
+            wprintf(L"Error: could not load " DLL_NAME L" from %s\n", dllPath);
             M_WINDOWS_ERROR
         }
 #else  /* _WIN32 */
@@ -798,14 +798,10 @@ int main(int argc, char* argv[]) {
 
         printf("\t SourceCode,\n");
 #ifdef _WIN32
-#ifdef _WIN64
-        wprintf(L"\t %" PRIu64 ",\n", SourceLen);
-#else   /* _WIN64 */
-        wprintf(L"\t %u,\n", SourceLen);
-#endif  /* _WIN64 */
+        wprintf(L"\t %zu,\n", SourceLen);
         printf("\t %s, \n", c_inputFile);
 #else   /* _WIN32 */
-        printf("\t %u,\n", SourceLen);
+        printf("\t %zu,\n", SourceLen);
         printf("\t %s, \n", inputFile);
 #endif  /* _WIN32 */
         /* print defines */
@@ -915,15 +911,7 @@ int main(int argc, char* argv[]) {
             if (verbose) {
                 printf("Calling D3DStripShader(\n");
                 printf("\t compiledString,\n");
-#ifdef _WIN32
-#ifdef _WIN64
-                wprintf(L"\t %" PRIu64 ", \n", compiledLen);
-#else   /* _WIN64 */
-                wprintf(L"\t %u,\n", compiledLen);
-#endif  /* _WIN64 */
-#else   /* _WIN32 */
-                printf("\t %u,\n", compiledLen);
-#endif  /* _WIN32 */
+                printf("\t %zu,\n", compiledLen);
                 printf("\t 0x%016" PRIx64 ", \n", (INT64)strip_flags);
                 printf("\t &strippedBlob);\n");
             }
@@ -992,13 +980,10 @@ int main(int argc, char* argv[]) {
         }
         if (verbose) {
 #ifdef _WIN32
-#ifdef _WIN64
-            wprintf(L"Wrote %" PRIu64 " bytes of shader output to %ls\n", outputLen, outputFile);
-#else  /* _WIN64 */
-            wprintf(L"Wrote %u bytes of shader output to %ls\n", outputLen, outputFile);
-#endif  /* _WIN64 */
+            wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, outputFile);
 #else   /* _WIN32 */
-            printf("Wrote %u bytes of shader output to %ls\n", outputLen, outputFile);
+            printf("Wrote %zu", outputLen);
+            printf(" bytes of shader output to %ls\n", outputFile);
 #endif  /* WIN32 */
         }
     }
