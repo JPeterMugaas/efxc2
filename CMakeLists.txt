@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.2.58)
+set(EFXC2_VERSION 0.0.2.59)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -22,9 +22,11 @@ set(PROJECT_COMPANY "J. Peter Mugaas")
 set(PROJECT_COPYRIGHT "Copyright (c) 2024 ${PROJECT_COMPANY}")
 
 set(EXEC_SOURCES efxc2.cpp
-				 efxc2Utils.h
-				 efxc2Utils.cpp
-				 efxc2.h)
+                 efxc2Cmds.h
+                 efxc2Cmds.cpp
+                 efxc2Utils.h
+                 efxc2Utils.cpp
+                 efxc2.h)
 
 #----resources for .exe
 
@@ -33,16 +35,16 @@ string(REPLACE "." "," _RC_VER ${PROJECT_VERSION})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/efxc2.ico" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/settings.manifest" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 configure_file(
-	"${CMAKE_CURRENT_SOURCE_DIR}/build/efxc2.rc.in"
-	"${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc" @ONLY)
+    "${CMAKE_CURRENT_SOURCE_DIR}/build/efxc2.rc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc" @ONLY)
 
 configure_file(
-	"${CMAKE_CURRENT_SOURCE_DIR}/build/config.h.in"
-	"${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
+    "${CMAKE_CURRENT_SOURCE_DIR}/build/config.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 list(APPEND EXEC_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/config.h")
-	
+    
 if(WIN32)
-	list(APPEND EXEC_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc")
+    list(APPEND EXEC_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc")
 endif()
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 

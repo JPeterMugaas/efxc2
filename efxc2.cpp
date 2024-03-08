@@ -8,6 +8,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //--------------------------------------------------------------------------------------
 #include "efxc2Utils.h"
+#include "efxc2Cmds.h"
 
 #define M_WINDOWS_ERROR \
     print_windows_error(); \
@@ -76,7 +77,7 @@ int main(int argc, char* argv[]) {
     int verbose = 1;
     int outputHex = 0;
 
-    BYTE cmd = 0;
+    UINT cmd = 0;
 
     int numDefines = 1;
     auto* defines = new D3D_SHADER_MACRO[numDefines];
@@ -117,16 +118,11 @@ int main(int argc, char* argv[]) {
                 return 0;
         }
         else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -all_resources_bound D3DCOMPILE_ALL_RESOURCES_BOUND\n");
-            }
-            sflags = sflags | D3DCOMPILE_ALL_RESOURCES_BOUND;
+            cmd_all_resources_bound(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_CC, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Cc ignored\n");
-            }
+            option_ignored(M_CC, verbose);
             continue;
         }
         else if (parseOpt(M_COMPRESS, argc, argv, &index, nullptr)) {
@@ -170,52 +166,28 @@ int main(int argc, char* argv[]) {
         }
 #ifdef _WIN32
         else if (parseOpt(M_E_, argc, argv, &index, &w_temp)) {
-            entryPoint = wcharToChar(w_temp);
+            cmd_E(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &entryPoint, w_temp);
             delete[] w_temp;
 #else  /* _WIN32 */
         else if (parseOpt(M_E_, argc, argv, &index, &entryPoint)) {
+            cmd_E(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, entryPoint);
 #endif /* _WIN32 */
-            if (verbose) {
-                printf("option -E (Entry Point) with arg '%s'\n", entryPoint);
-            }
             continue;
         }
         else if (parseOpt(M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -enable_unbounded_descriptor_tables D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES\n");
-            }
-            sflags = sflags | D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES;
+            cmd_enable_unbounded_descriptor_tables(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_FD, argc, argv, &index, &pdbFile)) {
-#ifdef _WIN32
-            FixupFileName(pdbFile);
-#endif /* _WIN32 */
-            if (verbose) {
-                printf("option -Fd (.PDB) with arg %ls\n", pdbFile);
-            }
-
+            cmd_Fd(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, pdbFile);
             continue;
         }
         else if (parseOpt(M_FE, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Fe ignored\n");
-            }
+            option_ignored(M_FE, verbose);
             continue;
         }
         else if (parseOpt(M_FH, argc, argv, &index, &outputFile)) {
-#ifdef _WIN32
-            FixupFileName(outputFile);
-#endif /* _WIN32 */
-            if (cmd != 0) {
-                printf("You cannot specify both an object and header");
-                M_TAREDOWN_PROG
-                    return 1;
-            }
-            cmd = CMD_WRITE_HEADER;
-            if (verbose) {
-                printf("option -Fh (Output File) with arg %ls\n", outputFile);
-            }
+            cmd_Fh(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &cmd, outputFile);
             continue;
         }
         else if (parseOpt(M_FL, argc, argv, &index, nullptr)) {
@@ -225,21 +197,11 @@ int main(int argc, char* argv[]) {
                 return 1;
         }
         else if (parseOpt(M_FO, argc, argv, &index, nullptr)) {
-            if (cmd != 0) {
-                fprintf(stderr, "You cannot specify both an object and header");
-                M_TAREDOWN_PROG
-                    return 1;
-            }
-            cmd = CMD_WRITE_OBJECT;
-            if (verbose) {
-                printf("option -FO (Output File) with arg %ls\n", outputFile);
-            }
+            cmd_Fo(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &cmd, outputFile);
             continue;
         }
         else if (parseOpt(M_FORCE_ROOTSIG_VER, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -force_rootsig_ver ignored");
-            }
+            option_ignored(argv[index], verbose);
             continue;
         }
         else if (parseOpt(M_FX, argc, argv, &index, nullptr)) {
@@ -249,31 +211,19 @@ int main(int argc, char* argv[]) {
                 return 1;
         }
         else if (parseOpt(M_GCH, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Gch D3DCOMPILE_EFFECT_CHILD_EFFECT");
-            }
-            eflags = eflags | D3DCOMPILE_EFFECT_CHILD_EFFECT;
+            cmd_Gch(&sflags, &eflags, &secondary_flags, &strip_flags,verbose);
             continue;
         }
         else if (parseOpt(M_GDP, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Gdp D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS");
-            }
-            eflags = eflags | D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS;
+            cmd_Gdp(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_GEC, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Gec D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY\n");
-            }
-            sflags = sflags | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
+            cmd_Gec(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_GES, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Ges D3DCOMPILE_ENABLE_STRICTNESS\n");
-            }
-            sflags = sflags | D3DCOMPILE_ENABLE_STRICTNESS;
+            cmd_Ges(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_GETPRIVATE, argc, argv, &index, nullptr)) {
@@ -283,24 +233,15 @@ int main(int argc, char* argv[]) {
                 return 1;
         }
         else if (parseOpt(M_GFA, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Gfa D3DCOMPILE_AVOID_FLOW_CONTROL\n");
-            }
-            sflags = sflags | D3DCOMPILE_AVOID_FLOW_CONTROL;
+            cmd_Gfa(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_GIS, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Gis D3DCOMPILE_IEEE_STRICTNESS\n");
-            }
-            sflags = sflags | D3DCOMPILE_IEEE_STRICTNESS;
+            cmd_Gis(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_GPP, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Gpp D3DCOMPILE_PARTIAL_PRECISION\n");
-            }
-            sflags = sflags | D3DCOMPILE_PARTIAL_PRECISION;
+            cmd_Gpp(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_HELP, argc, argv, &index, nullptr)) {
@@ -309,16 +250,11 @@ int main(int argc, char* argv[]) {
                 return 0;
         }
         else if (parseOpt(M_I, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -I ignored\n");
-            }
+            option_ignored(M_I, verbose);
             continue;
         }
         else if (parseOpt(M_LX, argc, argv, &index, nullptr)) {
-            outputHex = 1;
-            if (verbose) {
-                printf("option -Lx - output hexidecimal literals\n");
-            }
+            cmd_Lx(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &outputHex);
             continue;
         }
         else if (parseOpt(M_MATCHUAVS, argc, argv, &index, nullptr)) {
@@ -334,101 +270,62 @@ int main(int argc, char* argv[]) {
                 return 1;
         }
         else if (parseOpt(M_NI, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Ni ignored\n");
-            }
+            option_ignored(M_NI, verbose);
             continue;
         }
         else if (parseOpt(M_NO, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -No ignored\n");
-            }
+            option_ignored(M_NO, verbose);
             continue;
         }
         else if (parseOpt(M_NOLOGO, argc, argv, &index, nullptr)) {
             continue;
         }
         else if (parseOpt(M_O0, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -O0 D3DCOMPILE_OPTIMIZATION_LEVEL0\n");
-            }
-            sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+            cmd_O0(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_O1, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL1\n");
-            }
-            sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL1;
+            cmd_O1(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_O2, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL2\n");
-            }
-            sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL2;
+            cmd_O2(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_O3, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL3\n");
-            }
-            sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+            cmd_O3(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_OD, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Od D3DCOMPILE_SKIP_OPTIMIZATION\n");
-            }
-            sflags = sflags | D3DCOMPILE_SKIP_OPTIMIZATION;
+            cmd_Od(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_OP, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Op D3DCOMPILE_NO_PRESHADER\n");
-            }
-            sflags = sflags | D3DCOMPILE_NO_PRESHADER;
+            cmd_Op(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_P, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -P ignored\n");
-            }
+            option_ignored(M_P, verbose);
             continue;
         }
         else if (parseOpt(M_QSTRIP_DEBUG, argc, argv, &index, nullptr)) {
-            strip_flags = strip_flags | D3DCOMPILER_STRIP_DEBUG_INFO;
-            if (verbose) {
-                printf("option -Qstrip_debug D3DCOMPILER_STRIP_DEBUG_INFO\n");
-            }
+            cmd_Qstrip_debug(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_QSTRIP_PRIV, argc, argv, &index, nullptr)) {
-            strip_flags = strip_flags | D3DCOMPILER_STRIP_PRIVATE_DATA;
-            if (verbose) {
-                printf("option -Qstrip_priv D3DCOMPILER_STRIP_PRIVATE_DATA\n");
-            }
+            cmd_Qstrip_priv(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, nullptr)) {
-            strip_flags = strip_flags | D3DCOMPILER_STRIP_REFLECTION_DATA;
-            if (verbose) {
-                printf("option -Qstrip_reflect D3DCOMPILER_STRIP_REFLECTION_DATA\n");
-            }
+            cmd_Qstrip_reflect(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_QSTRIP_ROOTSIGNATURE, argc, argv, &index, nullptr)) {
-            strip_flags = strip_flags | D3DCOMPILER_STRIP_ROOT_SIGNATURE;
-            if (verbose) {
-                printf("option -Qstrip_rootsignature D3DCOMPILER_STRIP_ROOT_SIGNATURE\n");
-            }
+            cmd_Qstrip_rootsignature(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_RES_MAY_ALIAS, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -res_may_alias D3DCOMPILE_RESOURCES_MAY_ALIAS\n");
-            }
-            sflags = sflags | D3DCOMPILE_RESOURCES_MAY_ALIAS;
+            cmd_res_may_alias(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_SETPRIVATE, argc, argv, &index, nullptr)) {
@@ -439,21 +336,16 @@ int main(int argc, char* argv[]) {
         }
 #ifdef _WIN32
         else if (parseOpt(M_T, argc, argv, &index, &w_temp)) {
-            model = wcharToChar(w_temp);
+            cmd_T(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &model, w_temp);
             delete[] w_temp;
 #else  /* _WIN32 */
         else if (parseOpt(M_T, argc, argv, &index, &model)) {
+            cmd_T(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, model);
 #endif /* _WIN32 */
-            if (verbose) {
-                printf("option -T (Shader Model/Profile) with arg '%s'\n", model);
-            }
             continue;
         }
         else if (parseOpt(M_VD, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Vd D3DCOMPILE_SKIP_VALIDATION\n");
-            }
-            sflags = sflags | D3DCOMPILE_SKIP_VALIDATION;
+            cmd_Vd(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_VERSION, argc, argv, &index, nullptr)) {
@@ -462,63 +354,41 @@ int main(int argc, char* argv[]) {
                 return 0;
         }
         else if (parseOpt(M_VI, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Vi (Output include process details) acknowledged but ignored.\n");
-            }
+            option_ignored(M_VI, verbose);
             continue;
         }
 #ifdef _WIN32
         else if (parseOpt(M_VN, argc, argv, &index, &w_temp)) {
-            variableName = wcharToChar(w_temp);
+            cmd_Vn(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &variableName, w_temp);
             delete[] w_temp;
 #else  /* _WIN32 */
         else if (parseOpt(M_VN, argc, argv, &index, &variableName)) {
+            cmd_Vn(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, variableName);
 #endif /* _WIN32 */
-            if (verbose) {
-                printf("option -Vn (Variable Name) with arg '%s'\n", variableName);
-            }
             continue;
         }
         else if (parseOpt(M_WX, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -WX D3DCOMPILE_WARNINGS_ARE_ERRORS\n");
-            }
-            sflags = sflags | D3DCOMPILE_WARNINGS_ARE_ERRORS;
+            cmd_WX(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_ZI, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Zi D3DCOMPILE_DEBUG\n");
-            }
-            sflags = sflags | D3DCOMPILE_DEBUG;
+            cmd_Zi(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_ZPC, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Zpc D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR\n");
-            }
-            sflags = sflags | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
+            cmd_Zpc(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_ZPR, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Zpr D3DCOMPILE_PACK_MATRIX_ROW_MAJOR\n");
-            }
-            sflags = sflags | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
+            cmd_Zpr(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_ZSB, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Zsb D3DCOMPILE_DEBUG_NAME_FOR_BINARY\n");
-            }
-            sflags = sflags | D3DCOMPILE_DEBUG_NAME_FOR_BINARY;
+            cmd_Zsb(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_ZSS, argc, argv, &index, nullptr)) {
-            if (verbose) {
-                printf("option -Zss D3DCOMPILE_DEBUG_NAME_FOR_SOURCE\n");
-            }
-            sflags = sflags | D3DCOMPILE_DEBUG_NAME_FOR_SOURCE;
+            cmd_Zss(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
             continue;
         }
         else {
