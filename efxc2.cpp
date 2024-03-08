@@ -41,39 +41,6 @@
         variableName = nullptr; \
     }
 
-#ifdef _WIN32
-static char* LoadSource(_In_ const wchar_t* filename, _Out_ size_t* len) {
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6387)
-#endif  /* _MSC_VER */
-    FILE* f = nullptr;
-    errno_t err = _wfopen_s(&f, filename, L"r");
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif  /* _MSC_VER */
-    if (err != 0) {
-        print_errno(err);
-#else   /* _WIN32 */
-static char* LoadSource(_In_ const char* filename, _Out_ size_t * len) {
-    FILE* f = fopen(filename, "r");
-    if (f == nullptr) {
-        print_errno();
-#endif  /* _WIN32 */
-    }
-    char* source;
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6001)
-#pragma warning( disable : 6387)
-#endif /* _MSC_VER */
-    readall(f, &source, len);
-    fclose(f);
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
-    return source;
-}
 
 /*Cygwin and MSYS2 compilers amd linkers don't support
 the wmain -Municode entry-point*/

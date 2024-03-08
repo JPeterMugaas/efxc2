@@ -144,7 +144,10 @@ char* GetFileName(_In_ char* path) {
 	return pFileName;
 }
 
-void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, _In_ const size_t len, _In_z_ const char* variableName, _In_ const int outputHex) {
+void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, 
+	_In_ const size_t len, 
+	_In_z_ const char* variableName, 
+	_In_ const int outputHex) {
 	fprintf(f, "const BYTE %s[] =\n{\n", variableName);
 	for (size_t i = 0; i < len; i++) {
 		if (outputHex) {
@@ -190,16 +193,6 @@ wchar_t* GetFileName(_In_ wchar_t* path) {
 #endif
 
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
-/* Size of each input chunk to be
-   read and allocate for. */
-const size_t  READALL_CHUNK = 262144;
-
-const int  READALL_OK = 0;  /* Success */
-const int  READALL_INVALID = -1;  /* Invalid parameters */
-const int  READALL_ERROR  = -2;  /* Stream error */
-const int  READALL_TOOMUCH = -3;  /* Too much input */
-const int  READALL_NOMEM  = -4;  /* Out of memory */
-
    /* This function returns one of the READALL_ constants above.
 	  If the return value is zero == READALL_OK, then:
 		(*dataptr) points to a dynamically allocated buffer, with
@@ -208,7 +201,9 @@ const int  READALL_NOMEM  = -4;  /* Out of memory */
 		and automatically appended after the data.
 	  Initial values of (*dataptr) and (*sizeptr) are ignored.
    */
-int readall(_In_ FILE* in, _Out_writes_bytes_(*sizeptr) char** dataptr, _Out_opt_ size_t* sizeptr)
+int readall(_In_ FILE* in,
+	_Out_writes_bytes_(*sizeptr) char** dataptr,
+	_Out_opt_ size_t* sizeptr)
 {
 	char* data = nullptr;
 	char* temp;
@@ -368,3 +363,37 @@ void FixupFileName(_Inout_ wchar_t* FileName) {
 }
 
 #endif /* _WIN32 */
+
+#ifdef _WIN32
+char* LoadSource(_In_ const wchar_t* filename, _Out_ size_t* len) {
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6387)
+#endif  /* _MSC_VER */
+	FILE* f = nullptr;
+	errno_t err = _wfopen_s(&f, filename, L"r");
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif  /* _MSC_VER */
+	if (err != 0) {
+		print_errno(err);
+#else   /* _WIN32 */
+char* LoadSource(_In_ const char* filename, _Out_ size_t * len) {
+	FILE* f = fopen(filename, "r");
+	if (f == nullptr) {
+		print_errno();
+#endif  /* _WIN32 */
+	}
+	char* source = nullptr;
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6001)
+#pragma warning( disable : 6387)
+#endif /* _MSC_VER */
+	readall(f, &source, len);
+	fclose(f);
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif /* _MSC_VER */
+	return source;
+}
