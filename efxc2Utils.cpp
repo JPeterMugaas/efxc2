@@ -10,7 +10,7 @@
 
 #include "efxc2Utils.h"
 
-void print_errno(errno_t _errno) {
+[[noreturn]] void print_errno(errno_t _errno) {
 	char errmsg[ERR_SIZE];
 #ifdef _WIN32
 	strerror_s(errmsg, ERR_SIZE, _errno);
@@ -22,22 +22,70 @@ void print_errno(errno_t _errno) {
 	exit(1);
 }
 
-void print_errno(void) {
+[[noreturn]] void print_errno(void) {
 	print_errno(errno);
 }
+
+char* GetFileName(_In_ char* path) {
+	if (path == nullptr) {
+		return nullptr;
+	}
+	char* pCur = path;
+	char* pFileName = nullptr;
+
+	while (*pCur != '\0') {
+		if (*pCur == '/' || *pCur == '\\') {
+			pFileName = pCur + 1;
+		}
+		pCur++;
+	}
+	if (pFileName != nullptr) {
+		if (strcmp(pFileName, "..") == 0) {
+			return nullptr;
+		}
+		if (strcmp(pFileName, ".") == 0) {
+			return nullptr;
+		}
+	}
+	return pFileName;
+}
+
+#ifdef _WIN32
+wchar_t* GetFileName(_In_ wchar_t* path) {
+	if (path == nullptr) {
+		return nullptr;
+	}
+	wchar_t* pCur = path;
+	wchar_t* pFileName = nullptr;
+
+	while (*pCur != '\0') {
+		if (*pCur == '/' || *pCur == '\\') {
+			pFileName = pCur + 1;
+		}
+		pCur++;
+	}
+	if (pFileName != nullptr) {
+		if (wcscmp(pFileName, L"..") == 0) {
+			return nullptr;
+		}
+		if (wcscmp(pFileName, L".") == 0) {
+			return nullptr;
+		}
+	}
+	return pFileName;
+}
+#endif
 
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
 /* Size of each input chunk to be
    read and allocate for. */
-#ifndef  READALL_CHUNK
-#define  READALL_CHUNK  262144
-#endif
+const size_t  READALL_CHUNK = 262144;
 
-#define  READALL_OK          0  /* Success */
-#define  READALL_INVALID    -1  /* Invalid parameters */
-#define  READALL_ERROR      -2  /* Stream error */
-#define  READALL_TOOMUCH    -3  /* Too much input */
-#define  READALL_NOMEM      -4  /* Out of memory */
+const int  READALL_OK = 0;  /* Success */
+const int  READALL_INVALID = -1;  /* Invalid parameters */
+const int  READALL_ERROR  = -2;  /* Stream error */
+const int  READALL_TOOMUCH = -3;  /* Too much input */
+const int  READALL_NOMEM  = -4;  /* Out of memory */
 
    /* This function returns one of the READALL_ constants above.
 	  If the return value is zero == READALL_OK, then:
@@ -49,23 +97,24 @@ void print_errno(void) {
    */
 int readall(_In_ FILE* in, _Out_writes_bytes_(*sizeptr) char** dataptr, _Out_opt_ size_t* sizeptr)
 {
-	char* data = NULL, * temp;
+	char* data = nullptr;
+	char* temp;
 	size_t size = 0;
 	size_t used = 0;
 	size_t n;
 
 	/* None of the parameters can be NULL. */
-	 if (in == NULL || dataptr == NULL || sizeptr == NULL)
-		return READALL_INVALID; 
+	if (in == nullptr || dataptr == nullptr || sizeptr == nullptr)
+		return READALL_INVALID;
 
-	*dataptr = NULL;
+	*dataptr = nullptr;
 	*sizeptr = 0;
 
 	/* A read error already occurred? */
 	if (ferror(in))
 		return READALL_ERROR;
 
-	while (1) {
+	while (TRUE) {
 		if (used + READALL_CHUNK + 1 > size) {
 			size = used + READALL_CHUNK + 1;
 
@@ -77,7 +126,7 @@ int readall(_In_ FILE* in, _Out_writes_bytes_(*sizeptr) char** dataptr, _Out_opt
 			}
 
 			temp = (char*)realloc(data, size);
-			if (temp == NULL) {
+			if (temp == nullptr) {
 				free(data);
 				return READALL_NOMEM;
 			}
@@ -97,7 +146,7 @@ int readall(_In_ FILE* in, _Out_writes_bytes_(*sizeptr) char** dataptr, _Out_opt
 	}
 
 	temp = (char*)realloc(data, used + 1);
-	if (temp == NULL) {
+	if (temp == nullptr) {
 		free(data);
 		return READALL_NOMEM;
 	}
@@ -115,7 +164,7 @@ bool parseOpt(_In_ const wchar_t* option, _In_ int argc, _In_ wchar_t* argv[1], 
 #else  /* _WIN32 */
 bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout_ int* index, _Inout_opt_ char** argumentOption) {
 #endif /* _WIN32 */
-	assert(option != NULL);
+	assert(option != nullptr);
 	if (!index || *index >= argc) {
 		return false;
 	}
@@ -129,7 +178,8 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
 		if (argument[0] == '-') {
 			argument++;
 		}
-	} else {
+	}
+	else {
 		return false;
 	}
 
@@ -156,7 +206,8 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
 #else  /*_WIN32 */
 			* argumentOption = strdup(argv[*index]);
 #endif /* _WIN32 */
-		} else {
+		}
+		else {
 #ifdef _WIN32
 			* argumentOption = M_WCSDUP(argument);
 #else  /* _WIN32 */
@@ -171,16 +222,16 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
 #ifdef _WIN32
 char* wcharToChar(_In_ LPCWSTR w) {
 	size_t len = wcslen(w);
-	char* c = NULL;
+	char* c = nullptr;
 	c = (char*)malloc(len + 1);
-	if (c == NULL) {
+	if (c == nullptr) {
 		fprintf(stderr, "malloc failed/n");
 		print_errno();
 		exit(1);
 	}
 	memset(c, 0, len + 1);
 	size_t dummy = len;
-	wcstombs_s(&dummy, c,  len + 1, w, len);
+	wcstombs_s(&dummy, c, len + 1, w, len);
 	if (errno != 0) {
 		fprintf(stderr, "wcstombs failed/n");
 		print_errno();
@@ -190,15 +241,15 @@ char* wcharToChar(_In_ LPCWSTR w) {
 }
 
 void FixupFileName(_Inout_ wchar_t* FileName) {
-	size_t i;
-	if (FileName == NULL) {
+	if (FileName == nullptr) {
 		return;
 	}
-	for (i = 0; FileName[i] != '\0'; i++)
+	for (int i = 0; FileName[i] != '\0'; i++)
 	{
 		if (FileName[i] == '/') {
 			FileName[i] = '\\';
-		} else {
+		}
+		else {
 			continue;
 		}
 	}

@@ -9,16 +9,11 @@
 //--------------------------------------------------------------------------------------
 #include "efxc2Utils.h"
 
-static void print_version() {
-    printf(PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n");
-    printf(PROGRAM_COPYRIGHT "\n");
-    exit(0);
-}
-
 static void print_copyright() {
     printf(PROGRAM_DESCRIPTION " " PROGRAM_VERSION "\n");
     printf(PROGRAM_COPYRIGHT "\n");
     printf("This program is licensed under the Mozilla Public License, v. 2.0.\n");
+    return;
 }
 
 static void print_usage_arg() {
@@ -26,6 +21,7 @@ static void print_usage_arg() {
     printf("More information about valid parameters is available at Microsoft's website \n");
     printf("\n");
     printf("https://msdn.microsoft.com/en-us/library/windows/desktop/bb509709(v=vs.85).aspx\n");
+    return;
 }
 
 static void print_unsupported_arg_help() {
@@ -34,9 +30,16 @@ static void print_unsupported_arg_help() {
     printf("then add it into efxc2.\n");
     printf("\n");
     print_usage_arg();
+    return;
 }
 
-static void print_usage_missing(const char* arg) {
+[[noreturn]] static void print_version() {
+    printf(PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n");
+    printf(PROGRAM_COPYRIGHT "\n");
+    exit(0);
+}
+
+[[noreturn]]  static void print_usage_missing(const char* arg) {
     fprintf(stderr, "efxc2 is missing the %s argument.\n", arg);
     printf("We expected to receive this, and it's likely things will not work correctly\n");
     printf("without it.  Review efxc2 and make sure things will work.\n");
@@ -44,7 +47,8 @@ static void print_usage_missing(const char* arg) {
     print_usage_arg();
     exit(1);
 }
-static void print_usage_toomany() {
+
+[[noreturn]] static void print_usage_toomany() {
     fprintf(stderr, "You specified multiple input files.\n");
     printf("We did not expect to receive this, and aren't prepared to handle multiple input\n");
     printf("files. You'll have to edit the source to behave the way you want.\n");
@@ -53,10 +57,10 @@ static void print_usage_toomany() {
     exit(1);
 }
 
-static void print_hresult_error(const HRESULT hr) {
+[[noreturn]] static void print_hresult_error(const HRESULT hr) {
     LPSTR messageBuffer = nullptr;
     size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-        NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+        nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
     std::string message(messageBuffer, size);
     LocalFree(messageBuffer);
     fprintf(stderr, "Windows Error Message: %s\n", messageBuffer);
@@ -64,20 +68,20 @@ static void print_hresult_error(const HRESULT hr) {
     exit(1);
 }
 
-static void print_windows_error() {
+[[noreturn]] static void print_windows_error() {
     /*from: https://gist.github.com/Aaronontheweb/7461004#file-getlasterror-cpp */
     DWORD dLastError = GetLastError();
-    LPCTSTR strErrorMessage = NULL;
+    LPCTSTR strErrorMessage = nullptr;
 
     FormatMessageW(
         FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ARGUMENT_ARRAY | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-        NULL,
+        nullptr,
         dLastError,
         0,
         (LPWSTR)&strErrorMessage,
         0,
-        NULL);
-    ;
+        nullptr);
+
 #if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable:4477)
@@ -91,6 +95,12 @@ static void print_windows_error() {
 # pragma warning(pop)
 #endif /* _MSC_VER */
     exit(1);
+}
+
+static void print_help_screen() {
+    print_copyright();
+    print_usage_arg();
+    return;
 }
 
 static void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, _In_ const size_t len, _In_z_ const char* variableName, _In_ const int outputHex) {
@@ -120,28 +130,28 @@ static void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsign
 #define M_TAREDOWN_PROG \
     if (inputFile) { \
         delete[] inputFile; \
-        inputFile = NULL; \
+        inputFile = nullptr; \
     } \
     if (outputFile) { \
         delete[] outputFile; \
-        outputFile = NULL; \
+        outputFile = nullptr; \
     } \
     \
-    if (defineOption != NULL) { \
+    if (defineOption != nullptr) { \
         free(defineOption); \
-        defineOption = NULL; \
+        defineOption = nullptr; \
     } \
-    if (entryPoint != NULL) {  \
+    if (entryPoint != nullptr) {  \
         free(entryPoint); \
-        entryPoint = NULL; \
+        entryPoint = nullptr; \
     } \
-    if (model != NULL) { \
+    if (model != nullptr) { \
         free(model); \
-        model = NULL; \
+        model = nullptr; \
     } \
-    if (variableName != NULL) { \
+    if (variableName != nullptr) { \
         free(variableName); \
-        variableName = NULL; \
+        variableName = nullptr; \
     }
 
 #ifdef _WIN32
@@ -150,7 +160,7 @@ static char* LoadSource(_In_ const wchar_t* filename, _Out_ size_t* len) {
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif  /* _MSC_VER */
-    FILE* f = 0;
+    FILE* f = nullptr;
     errno_t err = _wfopen_s(&f, filename, L"r");
 #ifdef _MSC_VER
 #pragma warning( pop )
@@ -160,7 +170,7 @@ static char* LoadSource(_In_ const wchar_t* filename, _Out_ size_t* len) {
 #else   /* _WIN32 */
 static char* LoadSource(_In_ const char* filename, _Out_ size_t * len) {
     FILE* f = fopen(filename, "r");
-    if (f == NULL) {
+    if (f == nullptr) {
         print_errno();
 #endif  /* _WIN32 */
     }
@@ -189,21 +199,21 @@ int main(int argc, char* argv[]) {
     // ====================================================================================
     // Process Command Line Arguments
 #ifdef _WIN32
-    wchar_t* inputFile = NULL;
-    wchar_t* outputFile = NULL;
-    wchar_t* pdbFile = NULL;
-    wchar_t* w_temp = NULL;
-    char* c_inputFile = NULL;
+    wchar_t* inputFile = nullptr;
+    wchar_t* outputFile = nullptr;
+    wchar_t* pdbFile = nullptr;
+    wchar_t* w_temp = nullptr;
+    char* c_inputFile = nullptr;
 #else  /* _WIN32 */
-    char* inputFile = NULL;
-    char* outputFile = NULL;
-    char* pdbFile = NULL;
+    char* inputFile = nullptr;
+    char* outputFile = nullptr;
+    char* pdbFile = nullptr;
 #endif /* _WIN32 */
 
-    char* defineOption = NULL;
-    char* entryPoint = NULL;
-    char* model = NULL;
-    char* variableName = NULL;
+    char* defineOption = nullptr;
+    char* entryPoint = nullptr;
+    char* model = nullptr;
+    char* variableName = nullptr;
 
     UINT sflags = 0;
     UINT eflags = 0;
@@ -215,18 +225,16 @@ int main(int argc, char* argv[]) {
     BYTE cmd = 0;
 
     int numDefines = 1;
-    D3D_SHADER_MACRO* defines = new D3D_SHADER_MACRO[numDefines];
-    defines[numDefines - 1].Name = NULL;
-    defines[numDefines - 1].Definition = NULL;
+    auto* defines = new D3D_SHADER_MACRO[numDefines];
+    defines[numDefines - 1].Name = nullptr;
+    defines[numDefines - 1].Definition = nullptr;
 
     /*first scan specifically for the nologo argument so no output
     is given regardless of parameter order*/
     int index = 1;
-    while (1) {
+    while (index < argc) {
         /* Detect the end of the options. */
-        if (index >= argc)
-            break;
-        if (parseOpt(M_NOLOGO, argc, argv, &index, NULL)) {
+        if (parseOpt(M_NOLOGO, argc, argv, &index, nullptr)) {
             verbose = false;
             break;
         }
@@ -237,38 +245,37 @@ int main(int argc, char* argv[]) {
 
     /*now scan for all arguments and input file name*/
     index = 1;
-    while (1) {
+    while (TRUE) {
         D3D_SHADER_MACRO* newDefines;
 
         /* Detect the end of the options. */
         if (index >= argc)
             break;
-        else if (parseOpt(M_AT_SYMBOL, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_AT_SYMBOL, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -@ not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
                 return 1;
         }
-        else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, NULL)) {
-            print_copyright();
-            print_usage_arg();
+        else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, nullptr)) {
+            print_help_screen();
             M_TAREDOWN_PROG
                 return 0;
         }
-        else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -all_resources_bound D3DCOMPILE_ALL_RESOURCES_BOUND\n");
             }
             sflags = sflags | D3DCOMPILE_ALL_RESOURCES_BOUND;
             continue;
         }
-        else if (parseOpt(M_CC, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_CC, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Cc ignored\n");
             }
             continue;
         }
-        else if (parseOpt(M_COMPRESS, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_COMPRESS, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -compress not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
@@ -277,7 +284,7 @@ int main(int argc, char* argv[]) {
 #ifdef _WIN32
         else if (parseOpt(M_D, argc, argv, &index, &w_temp)) {
             defineOption = wcharToChar(w_temp);
-            assert(defineOption == NULL);
+            assert(defineOption == nullptr);
 #else  /* _WIN32 */
         else if (parseOpt(M_D, argc, argv, &index, &defineOption)) {
 #endif /* _WIN32 */
@@ -295,13 +302,13 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
-        else if (parseOpt(M_DECOMPRESS, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_DECOMPRESS, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -decompress not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
                 return 1;
         }
-        else if (parseOpt(M_DUMPBIN, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_DUMPBIN, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -dumpbin not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
@@ -319,7 +326,7 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
-        else if (parseOpt(M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -enable_unbounded_descriptor_tables D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES\n");
             }
@@ -336,7 +343,7 @@ int main(int argc, char* argv[]) {
 
             continue;
         }
-        else if (parseOpt(M_FE, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_FE, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Fe ignored\n");
             }
@@ -357,13 +364,13 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
-        else if (parseOpt(M_FL, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_FL, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -Fl not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
                 return 1;
         }
-        else if (parseOpt(M_FO, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_FO, argc, argv, &index, nullptr)) {
             if (cmd != 0) {
                 fprintf(stderr, "You cannot specify both an object and header");
                 M_TAREDOWN_PROG
@@ -375,203 +382,202 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
-        else if (parseOpt(M_FORCE_ROOTSIG_VER, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_FORCE_ROOTSIG_VER, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -force_rootsig_ver ignored");
             }
             continue;
         }
-        else if (parseOpt(M_FX, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_FX, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -Fx not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
                 return 1;
         }
-        else if (parseOpt(M_GCH, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_GCH, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Gch D3DCOMPILE_EFFECT_CHILD_EFFECT");
             }
             eflags = eflags | D3DCOMPILE_EFFECT_CHILD_EFFECT;
             continue;
         }
-        else if (parseOpt(M_GDP, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_GDP, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Gdp D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS");
             }
             eflags = eflags | D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS;
             continue;
         }
-        else if (parseOpt(M_GEC, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_GEC, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Gec D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY\n");
             }
             sflags = sflags | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
             continue;
         }
-        else if (parseOpt(M_GES, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_GES, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Ges D3DCOMPILE_ENABLE_STRICTNESS\n");
             }
             sflags = sflags | D3DCOMPILE_ENABLE_STRICTNESS;
             continue;
         }
-        else if (parseOpt(M_GETPRIVATE, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_GETPRIVATE, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -getprivate not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
                 return 1;
         }
-        else if (parseOpt(M_GFA, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_GFA, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Gfa D3DCOMPILE_AVOID_FLOW_CONTROL\n");
             }
             sflags = sflags | D3DCOMPILE_AVOID_FLOW_CONTROL;
             continue;
         }
-        else if (parseOpt(M_GIS, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_GIS, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Gis D3DCOMPILE_IEEE_STRICTNESS\n");
             }
             sflags = sflags | D3DCOMPILE_IEEE_STRICTNESS;
             continue;
         }
-        else if (parseOpt(M_GPP, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_GPP, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Gpp D3DCOMPILE_PARTIAL_PRECISION\n");
             }
             sflags = sflags | D3DCOMPILE_PARTIAL_PRECISION;
             continue;
         }
-        else if (parseOpt(M_HELP, argc, argv, &index, NULL)) {
-            print_copyright();
-            print_usage_arg();
+        else if (parseOpt(M_HELP, argc, argv, &index, nullptr)) {
+            print_help_screen();
             M_TAREDOWN_PROG
                 return 0;
         }
-        else if (parseOpt(M_I, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_I, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -I ignored\n");
             }
             continue;
         }
-        else if (parseOpt(M_LX, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_LX, argc, argv, &index, nullptr)) {
             outputHex = 1;
             if (verbose) {
                 printf("option -Lx - output hexidecimal literals\n");
             }
             continue;
         }
-        else if (parseOpt(M_MATCHUAVS, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_MATCHUAVS, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -matchUAVs not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
                 return 1;
         }
-        else if (parseOpt(M_MERGEUAVS, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_MERGEUAVS, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -mergeUAVs not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
                 return 1;
         }
-        else if (parseOpt(M_NI, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_NI, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Ni ignored\n");
             }
             continue;
         }
-        else if (parseOpt(M_NO, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_NO, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -No ignored\n");
             }
             continue;
         }
-        else if (parseOpt(M_NOLOGO, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_NOLOGO, argc, argv, &index, nullptr)) {
             continue;
         }
-        else if (parseOpt(M_O0, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_O0, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -O0 D3DCOMPILE_OPTIMIZATION_LEVEL0\n");
             }
             sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL0;
             continue;
         }
-        else if (parseOpt(M_O1, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_O1, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL1\n");
             }
             sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL1;
             continue;
         }
-        else if (parseOpt(M_O2, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_O2, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL2\n");
             }
             sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL2;
             continue;
         }
-        else if (parseOpt(M_O3, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_O3, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -O1 D3DCOMPILE_OPTIMIZATION_LEVEL3\n");
             }
             sflags = sflags | D3DCOMPILE_OPTIMIZATION_LEVEL3;
             continue;
         }
-        else if (parseOpt(M_OD, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_OD, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Od D3DCOMPILE_SKIP_OPTIMIZATION\n");
             }
             sflags = sflags | D3DCOMPILE_SKIP_OPTIMIZATION;
             continue;
         }
-        else if (parseOpt(M_OP, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_OP, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Op D3DCOMPILE_NO_PRESHADER\n");
             }
             sflags = sflags | D3DCOMPILE_NO_PRESHADER;
             continue;
         }
-        else if (parseOpt(M_P, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_P, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -P ignored\n");
             }
             continue;
         }
-        else if (parseOpt(M_QSTRIP_DEBUG, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_QSTRIP_DEBUG, argc, argv, &index, nullptr)) {
             strip_flags = strip_flags | D3DCOMPILER_STRIP_DEBUG_INFO;
             if (verbose) {
                 printf("option -Qstrip_debug D3DCOMPILER_STRIP_DEBUG_INFO\n");
             }
             continue;
         }
-        else if (parseOpt(M_QSTRIP_PRIV, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_QSTRIP_PRIV, argc, argv, &index, nullptr)) {
             strip_flags = strip_flags | D3DCOMPILER_STRIP_PRIVATE_DATA;
             if (verbose) {
                 printf("option -Qstrip_priv D3DCOMPILER_STRIP_PRIVATE_DATA\n");
             }
             continue;
         }
-        else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, nullptr)) {
             strip_flags = strip_flags | D3DCOMPILER_STRIP_REFLECTION_DATA;
             if (verbose) {
                 printf("option -Qstrip_reflect D3DCOMPILER_STRIP_REFLECTION_DATA\n");
             }
             continue;
         }
-        else if (parseOpt(M_QSTRIP_ROOTSIGNATURE, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_QSTRIP_ROOTSIGNATURE, argc, argv, &index, nullptr)) {
             strip_flags = strip_flags | D3DCOMPILER_STRIP_ROOT_SIGNATURE;
             if (verbose) {
                 printf("option -Qstrip_rootsignature D3DCOMPILER_STRIP_ROOT_SIGNATURE\n");
             }
             continue;
         }
-        else if (parseOpt(M_RES_MAY_ALIAS, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_RES_MAY_ALIAS, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -res_may_alias D3DCOMPILE_RESOURCES_MAY_ALIAS\n");
             }
             sflags = sflags | D3DCOMPILE_RESOURCES_MAY_ALIAS;
             continue;
         }
-        else if (parseOpt(M_SETPRIVATE, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_SETPRIVATE, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -setprivate not supported");
             print_unsupported_arg_help();
             M_TAREDOWN_PROG
@@ -589,19 +595,19 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
-        else if (parseOpt(M_VD, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_VD, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Vd D3DCOMPILE_SKIP_VALIDATION\n");
             }
             sflags = sflags | D3DCOMPILE_SKIP_VALIDATION;
             continue;
         }
-        else if (parseOpt(M_VERSION, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_VERSION, argc, argv, &index, nullptr)) {
             print_version();
             M_TAREDOWN_PROG
                 return 0;
         }
-        else if (parseOpt(M_VI, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_VI, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Vi (Output include process details) acknowledged but ignored.\n");
             }
@@ -619,42 +625,42 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
-        else if (parseOpt(M_WX, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_WX, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -WX D3DCOMPILE_WARNINGS_ARE_ERRORS\n");
             }
             sflags = sflags | D3DCOMPILE_WARNINGS_ARE_ERRORS;
             continue;
         }
-        else if (parseOpt(M_ZI, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_ZI, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Zi D3DCOMPILE_DEBUG\n");
             }
             sflags = sflags | D3DCOMPILE_DEBUG;
             continue;
         }
-        else if (parseOpt(M_ZPC, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_ZPC, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Zpc D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR\n");
             }
             sflags = sflags | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
             continue;
         }
-        else if (parseOpt(M_ZPR, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_ZPR, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Zpr D3DCOMPILE_PACK_MATRIX_ROW_MAJOR\n");
             }
             sflags = sflags | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
             continue;
         }
-        else if (parseOpt(M_ZSB, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_ZSB, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Zsb D3DCOMPILE_DEBUG_NAME_FOR_BINARY\n");
             }
             sflags = sflags | D3DCOMPILE_DEBUG_NAME_FOR_BINARY;
             continue;
         }
-        else if (parseOpt(M_ZSS, argc, argv, &index, NULL)) {
+        else if (parseOpt(M_ZSS, argc, argv, &index, nullptr)) {
             if (verbose) {
                 printf("option -Zss D3DCOMPILE_DEBUG_NAME_FOR_SOURCE\n");
             }
@@ -694,21 +700,21 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    if (inputFile == NULL)
+    if (inputFile == nullptr)
         print_usage_missing("inputFile");
-    if (model == NULL)
+    if (model == nullptr)
         print_usage_missing("model");
-    if (entryPoint == NULL)
+    if (entryPoint == nullptr)
         print_usage_missing("entryPoint");
-    if (defines == NULL)
+    if (defines == nullptr)
         print_usage_missing("defines");
-    if (outputFile == NULL)
+    if (outputFile == nullptr)
         print_usage_missing("outputFile");
 
     //Default output variable name
-    if (variableName == NULL) {
+    if (variableName == nullptr) {
         const char* prefix = "g";
-        for (int i = 0; g_profilePrefixTable[i].name != NULL; i++) {
+        for (int i = 0; g_profilePrefixTable[i].name != nullptr; i++) {
             if (strcmp(g_profilePrefixTable[i].name, model) == 0) {
                 prefix = g_profilePrefixTable[i].prefix;
                 break;
@@ -733,11 +739,11 @@ int main(int argc, char* argv[]) {
     // Shader Compilation
 
     HMODULE h = LoadLibrary(DLL_NAME);
-    if (h == NULL) {
+    if (h == nullptr) {
 #ifdef _WIN32
         //Find the WINDOWS dll
         wchar_t dllPath[MAX_PATH];
-        size_t bytes = GetModuleFileName(NULL, dllPath, MAX_PATH);
+        size_t bytes = GetModuleFileName(nullptr, dllPath, MAX_PATH);
         if (bytes == 0) {
             fprintf(stderr, "Could not retrieve the directory of the running executable.\n");
             print_windows_error();
@@ -748,8 +754,8 @@ int main(int argc, char* argv[]) {
         //Copy the dll location over top efxc2.exe
         wcscpy_s(dllPath + bytes, MAX_PATH, DLL_NAME);
 
-        HMODULE h = LoadLibrary(dllPath);
-        if (h == NULL) {
+        h = LoadLibrary(dllPath);
+        if (h == nullptr) {
             wprintf("Error: could not load " DLL_NAME " from %s\n", dllPath);
             M_WINDOWS_ERROR
         }
@@ -764,28 +770,28 @@ int main(int argc, char* argv[]) {
 #pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
     char* SourceCode = LoadSource(inputFile, &SourceLen);
-    pD3DCompile2g ptp_D3DCompile2 = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
+    auto ptp_D3DCompile2 = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif /* _MSC_VER */
-    if (ptp_D3DCompile2 == NULL) {
+    if (ptp_D3DCompile2 == nullptr) {
         printf("Error: could not get the address of D3DCompile2.\n");
         M_WINDOWS_ERROR
     }
-    pD3DStripShaderg ptr_D3DStripShader = (pD3DStripShaderg)GetProcAddress(h, "D3DStripShader");
-    if (ptp_D3DCompile2 == NULL) {
+    auto ptr_D3DStripShader = (pD3DStripShaderg)GetProcAddress(h, "D3DStripShader");
+    if (ptp_D3DCompile2 == nullptr) {
         printf("Error: could not get the address of D3DStripShader.\n");
         M_WINDOWS_ERROR
     }
-    /*    pD3DGetBlobPartg ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart");
-        if (ptp_D3DCompile2 == NULL) {
+    auto ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart");
+        if (ptr_D3DGetBlobPart == nullptr) {
             printf("Error: could not get the address of D3DGetBlobPart.\n");
             M_WINDOWS_ERROR
-        } */
+        }
 
     HRESULT hr;
-    ID3DBlob* output = NULL;
-    ID3DBlob* errors = NULL;
+    ID3DBlob* output = nullptr;
+    ID3DBlob* errors = nullptr;
 
     if (verbose) {
         printf("Calling D3DCompile2(\n");
@@ -814,7 +820,7 @@ int main(int argc, char* argv[]) {
         printf("\t 0x%016" PRIx64 ", \n", (INT64)sflags);
         printf("\t 0x%016" PRIx64 ", \n", (INT64)eflags);
         printf("\t 0x%016" PRIx64 ", \n", (INT64)secondary_flags);
-        printf("\t NULL,\n");
+        printf("\t nullptr,\n");
         printf("\t 0,\n");
         printf("\t &output,\n");
         printf("\t &errors);\n");
@@ -857,7 +863,7 @@ int main(int argc, char* argv[]) {
         sflags,
         eflags,
         secondary_flags,
-        NULL,
+        nullptr,
         0,
         &output,
         &errors
@@ -870,7 +876,7 @@ int main(int argc, char* argv[]) {
 
     if (FAILED(hr)) {
         if (errors) {
-            char* error = (char*)errors->GetBufferPointer();
+            auto* error = (char*)errors->GetBufferPointer();
             fprintf(stderr, "Got an error while compiling:\n%s\n", error);
             errors->Release();
             printf("Error Code: 0x%lx", hr);
@@ -898,20 +904,20 @@ int main(int argc, char* argv[]) {
     }
     else {
         FILE* f;
-        unsigned char* compiledString = (unsigned char*)output->GetBufferPointer();
+        const auto* compiledString = (unsigned char*)output->GetBufferPointer();
         size_t compiledLen = output->GetBufferSize();
-        unsigned char* outputString = compiledString;
+        auto* outputString = compiledString;
         size_t outputLen = compiledLen;
 
         /* strip compiled shader*/
         if (strip_flags != 0) {
-            ID3DBlob* strippedBlob = NULL;
+            ID3DBlob* strippedBlob = nullptr;
             if (verbose) {
                 printf("Calling D3DStripShader(\n");
                 printf("\t compiledString,\n");
 #ifdef _WIN32
 #ifdef _WIN64
-                wprintf(L"\t %" PRIu64 ",\n", compiledLen);
+                wprintf(L"\t %" PRIu64 ", \n", compiledLen);
 #else   /* _WIN64 */
                 wprintf(L"\t %u,\n", compiledLen);
 #endif  /* _WIN64 */
@@ -940,7 +946,7 @@ int main(int argc, char* argv[]) {
                 M_TAREDOWN_PROG
                     return 1;
             }
-            unsigned char* strippedString = (unsigned char*)strippedBlob->GetBufferPointer();
+            const auto* strippedString = (unsigned char*)strippedBlob->GetBufferPointer();
             size_t strippedLen = strippedBlob->GetBufferSize();
             outputString = strippedString;
             outputLen = strippedLen;
@@ -961,7 +967,7 @@ int main(int argc, char* argv[]) {
         }
 #else  /*_WIN32 */
         f = fopen(outputFile, "w");
-        if (f == NULL) {
+        if (f == nullptr) {
             free(SourceCode);
             print_errno();
         }
@@ -1002,11 +1008,11 @@ int main(int argc, char* argv[]) {
 #pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
 #ifdef _WIN32
-    if (c_inputFile != NULL) {
+    if (c_inputFile != nullptr) {
         free(c_inputFile);
     }
 #endif /* _WIN32 */
-    if (SourceCode != NULL) {
+    if (SourceCode != nullptr) {
         free(SourceCode);
     }
     M_TAREDOWN_PROG
