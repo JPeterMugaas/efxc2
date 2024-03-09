@@ -35,7 +35,7 @@ void cmd_D(_In_ int verbose,
 void cmd_E(_In_ int verbose,
 #ifdef _WIN32
 	_Out_ char** entryPoint,
-	_In_ wchar_t* w_entryPoint);
+	_In_ const wchar_t* w_entryPoint);
 #else
 	_In_ char* w_entryPoint);
 #endif

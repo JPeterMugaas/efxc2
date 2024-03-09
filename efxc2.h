@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <string>
 #include <cassert>
+#include <memory>
 #include <wchar.h>
 #include <inttypes.h>
 #include <io.h>
