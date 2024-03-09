@@ -112,8 +112,8 @@ int main(int argc, char* argv[]) {
             M_TAREDOWN_PROG
                 return 0;
         }
-        else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, nullptr)) {
-            cmd_all_resources_bound(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+        else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, nullptr)) {
+            cmd_all_resources_bound(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_CC, argc, argv, &index, nullptr)) {
@@ -128,23 +128,11 @@ int main(int argc, char* argv[]) {
         }
 #ifdef _WIN32
         else if (parseOpt(M_D, argc, argv, &index, &w_temp)) {
-            defineOption = wcharToChar(w_temp);
-            assert(defineOption == nullptr);
+            cmd_D(verbose, &numDefines, w_temp, defines);
 #else  /* _WIN32 */
         else if (parseOpt(M_D, argc, argv, &index, &defineOption)) {
+            cmd_D(verbose, &numdefines, defineOption, defines);
 #endif /* _WIN32 */
-            numDefines++;
-            //Copy the old array into the new array, but put the new definition at the beginning
-            newDefines = new D3D_SHADER_MACRO[numDefines];
-            for (int i = 1; i < numDefines; i++)
-                newDefines[i] = defines[i - 1];
-            delete[] defines;
-            defines = newDefines;
-            defines[0].Name = defineOption;
-            defines[0].Definition = "1";
-            if (verbose) {
-                printf("option -D with arg %s\n", defineOption);
-            }
             continue;
         }
         else if (parseOpt(M_DECOMPRESS, argc, argv, &index, nullptr)) {
@@ -161,20 +149,20 @@ int main(int argc, char* argv[]) {
         }
 #ifdef _WIN32
         else if (parseOpt(M_E_, argc, argv, &index, &w_temp)) {
-            cmd_E(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &entryPoint, w_temp);
+            cmd_E(verbose, &entryPoint, w_temp);
             delete[] w_temp;
 #else  /* _WIN32 */
         else if (parseOpt(M_E_, argc, argv, &index, &entryPoint)) {
-            cmd_E(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, entryPoint);
+            cmd_E(verbose, entryPoint);
 #endif /* _WIN32 */
             continue;
         }
         else if (parseOpt(M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES, argc, argv, &index, nullptr)) {
-            cmd_enable_unbounded_descriptor_tables(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_enable_unbounded_descriptor_tables(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_FD, argc, argv, &index, &pdbFile)) {
-            cmd_Fd(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, pdbFile);
+            cmd_Fd(verbose, pdbFile);
             continue;
         }
         else if (parseOpt(M_FE, argc, argv, &index, nullptr)) {
@@ -182,7 +170,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_FH, argc, argv, &index, &outputFile)) {
-            cmd_Fh(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &cmd, outputFile);
+            cmd_Fh(verbose, &cmd, outputFile);
             continue;
         }
         else if (parseOpt(M_FL, argc, argv, &index, nullptr)) {
@@ -192,7 +180,7 @@ int main(int argc, char* argv[]) {
                 return 1;
         }
         else if (parseOpt(M_FO, argc, argv, &index, nullptr)) {
-            cmd_Fo(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &cmd, outputFile);
+            cmd_Fo(verbose, &cmd, outputFile);
             continue;
         }
         else if (parseOpt(M_FORCE_ROOTSIG_VER, argc, argv, &index, nullptr)) {
@@ -206,19 +194,19 @@ int main(int argc, char* argv[]) {
                 return 1;
         }
         else if (parseOpt(M_GCH, argc, argv, &index, nullptr)) {
-            cmd_Gch(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Gch(&eflags, verbose);
             continue;
         }
         else if (parseOpt(M_GDP, argc, argv, &index, nullptr)) {
-            cmd_Gdp(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Gdp(&eflags, verbose);
             continue;
         }
         else if (parseOpt(M_GEC, argc, argv, &index, nullptr)) {
-            cmd_Gec(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Gec(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_GES, argc, argv, &index, nullptr)) {
-            cmd_Ges(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Ges(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_GETPRIVATE, argc, argv, &index, nullptr)) {
@@ -228,15 +216,15 @@ int main(int argc, char* argv[]) {
                 return 1;
         }
         else if (parseOpt(M_GFA, argc, argv, &index, nullptr)) {
-            cmd_Gfa(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Gfa(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_GIS, argc, argv, &index, nullptr)) {
-            cmd_Gis(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Gis(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_GPP, argc, argv, &index, nullptr)) {
-            cmd_Gpp(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Gpp(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_HELP, argc, argv, &index, nullptr)) {
@@ -249,7 +237,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_LX, argc, argv, &index, nullptr)) {
-            cmd_Lx(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &outputHex);
+            cmd_Lx(verbose, &outputHex);
             continue;
         }
         else if (parseOpt(M_MATCHUAVS, argc, argv, &index, nullptr)) {
@@ -276,27 +264,27 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_O0, argc, argv, &index, nullptr)) {
-            cmd_O0(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_O0(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_O1, argc, argv, &index, nullptr)) {
-            cmd_O1(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_O1(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_O2, argc, argv, &index, nullptr)) {
-            cmd_O2(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_O2(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_O3, argc, argv, &index, nullptr)) {
-            cmd_O3(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_O3(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_OD, argc, argv, &index, nullptr)) {
-            cmd_Od(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Od(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_OP, argc, argv, &index, nullptr)) {
-            cmd_Op(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Op(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_P, argc, argv, &index, nullptr)) {
@@ -304,23 +292,23 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_QSTRIP_DEBUG, argc, argv, &index, nullptr)) {
-            cmd_Qstrip_debug(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Qstrip_debug(&strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_QSTRIP_PRIV, argc, argv, &index, nullptr)) {
-            cmd_Qstrip_priv(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Qstrip_priv(&strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, nullptr)) {
-            cmd_Qstrip_reflect(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Qstrip_reflect(&strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_QSTRIP_ROOTSIGNATURE, argc, argv, &index, nullptr)) {
-            cmd_Qstrip_rootsignature(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Qstrip_rootsignature(&strip_flags, verbose);
             continue;
         }
         else if (parseOpt(M_RES_MAY_ALIAS, argc, argv, &index, nullptr)) {
-            cmd_res_may_alias(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_res_may_alias(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_SETPRIVATE, argc, argv, &index, nullptr)) {
@@ -331,16 +319,16 @@ int main(int argc, char* argv[]) {
         }
 #ifdef _WIN32
         else if (parseOpt(M_T, argc, argv, &index, &w_temp)) {
-            cmd_T(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &model, w_temp);
+            cmd_T(verbose, &model, w_temp);
             delete[] w_temp;
 #else  /* _WIN32 */
         else if (parseOpt(M_T, argc, argv, &index, &model)) {
-            cmd_T(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, model);
+            cmd_T(verbose, model);
 #endif /* _WIN32 */
             continue;
         }
         else if (parseOpt(M_VD, argc, argv, &index, nullptr)) {
-            cmd_Vd(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Vd(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_VERSION, argc, argv, &index, nullptr)) {
@@ -354,36 +342,36 @@ int main(int argc, char* argv[]) {
         }
 #ifdef _WIN32
         else if (parseOpt(M_VN, argc, argv, &index, &w_temp)) {
-            cmd_Vn(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, &variableName, w_temp);
+            cmd_Vn(verbose, &variableName, w_temp);
             delete[] w_temp;
 #else  /* _WIN32 */
         else if (parseOpt(M_VN, argc, argv, &index, &variableName)) {
-            cmd_Vn(&sflags, &eflags, &secondary_flags, &strip_flags, verbose, variableName);
+            cmd_Vn(verbose, variableName);
 #endif /* _WIN32 */
             continue;
         }
         else if (parseOpt(M_WX, argc, argv, &index, nullptr)) {
-            cmd_WX(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_WX(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_ZI, argc, argv, &index, nullptr)) {
-            cmd_Zi(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Zi(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_ZPC, argc, argv, &index, nullptr)) {
-            cmd_Zpc(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Zpc(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_ZPR, argc, argv, &index, nullptr)) {
-            cmd_Zpr(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Zpr(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_ZSB, argc, argv, &index, nullptr)) {
-            cmd_Zsb(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Zsb(&sflags, verbose);
             continue;
         }
         else if (parseOpt(M_ZSS, argc, argv, &index, nullptr)) {
-            cmd_Zss(&sflags, &eflags, &secondary_flags, &strip_flags, verbose);
+            cmd_Zss(&sflags, verbose);
             continue;
         }
         else {
@@ -435,11 +423,9 @@ int main(int argc, char* argv[]) {
     // Shader Compilation
     size_t SourceLen = 0;
     char* SourceCode = LoadSource(inputFile, &SourceLen);
-    Compiler compiler(verbose);
+    Compiler compiler;
 
-    HRESULT hr;
     ID3DBlob* output = nullptr;
-    ID3DBlob* errors = nullptr;
     compiler.set_sflags(sflags);
     compiler.set_eflags(eflags);
     compiler.set_secondary_flags(secondary_flags);

@@ -12,7 +12,7 @@
 
 class Compiler {
 public:
-	explicit Compiler(int _verbose);
+	explicit Compiler();
 	HMODULE get_h() const { return h; }
 	pD3DCompile2g get_ptr_D3DCompile2() const { return  ptr_D3DCompile2; }
 	pD3DStripShaderg get_ptr_D3DStripShader() const { return ptr_D3DStripShader; }

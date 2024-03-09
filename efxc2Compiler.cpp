@@ -10,7 +10,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 
-Compiler::Compiler(int _verbose) {
+Compiler::Compiler() {
     h = LoadLibrary(DLL_NAME);
     if (h == nullptr) {
 #ifdef _WIN32
