@@ -15,6 +15,11 @@ void option_ignored(_In_ const wchar_t* Opt, _In_ int verbose);
 #else
 void option_ignored(_In_ const char* Opt, _In_ int verbose);
 #endif
+#ifdef _WIN32
+void parseInputFile(_In_ const wchar_t* inputStr, _Out_ wchar_t** inputFile, _Out_ char** c_inputFile, _In_ int verbose);
+#else
+void parseInputFile(_In_ const char* inputStr, _Out_ char** inputFile, _In_ int verbose);
+#endif
 
 void cmd_all_resources_bound(_Inout_ UINT* sflags,
 	_Inout_ UINT* eflags,

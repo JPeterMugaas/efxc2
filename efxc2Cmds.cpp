@@ -26,6 +26,41 @@ void option_ignored(_In_ const char* Opt, _In_ int verbose) {
 }
 #endif
 
+#ifdef _WIN32
+void parseInputFile(_In_ const wchar_t* inputStr, _Out_ wchar_t** inputFile, _Out_ char** c_inputFile, _In_ int verbose) {
+#else
+void parseInputFile(_In_ const char* inputStr, _Out_ char** inputFile, _In_ int verbose) {
+#endif
+if (! *inputFile)
+{
+    if (verbose) {
+        printf("Parse input file name\n");
+    }
+#ifdef _WIN32
+    *inputFile = new wchar_t[wcslen(inputStr) + 1];
+    wcscpy_s(*inputFile, wcslen(inputStr) + 1, inputStr);
+    FixupFileName(*inputFile);
+    *c_inputFile = wcharToChar(*inputFile);
+#else  /* _WIN32 */
+    *inputFile = new char[strlen(inputStr) + 1];
+    strncpy(*inputFile, inputStr, strlen(inputStr) + 1);
+#endif /* _WIN32 */
+
+    if (verbose) {
+#ifdef _WIN32
+        wprintf(L"input file: %ls\n", *inputFile);
+#else  /* _WIN32 */
+        printf("input file: %ls\n", *inputFile);
+#endif /* _WIN32 */
+    }
+    
+}
+else {
+    print_usage_toomany();
+}
+
+}
+
 void cmd_all_resources_bound(_Inout_ UINT* sflags, 
     _Inout_ UINT* eflags, 
     _Inout_ UINT* secondary_flags, 
