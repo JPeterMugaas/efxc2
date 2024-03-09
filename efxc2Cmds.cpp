@@ -168,7 +168,7 @@ void cmd_Fo(
 #ifdef _WIN32
 	FixupFileName(outputFile);
 #endif /* _WIN32 */
-	if (cmd != 0) {
+	if (*cmd != 0) {
 		fprintf(stderr, "You cannot specify both an object and header");
 		exit(1);
 	}
