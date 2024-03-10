@@ -133,7 +133,7 @@ int main(int argc, char* argv[]) {
             cmd_D(verbose, &numDefines, w_temp, defines);
 #else  /* _WIN32 */
         else if (parseOpt(M_D, argc, argv, &index, &defineOption)) {
-            cmd_D(verbose, &numdefines, defineOption, defines);
+            cmd_D(verbose, &numDefines, defineOption, defines);
 #endif /* _WIN32 */
             continue;
         }
@@ -476,7 +476,6 @@ int main(int argc, char* argv[]) {
 #else   /* _WIN32 */
             printf("Wrote %zu", outputLen);
             printf(" bytes of shader output to %ls\n", ObjectFile);
-        }
 #endif
         }
     }

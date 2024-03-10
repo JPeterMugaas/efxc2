@@ -30,7 +30,7 @@ void cmd_D(_In_ int verbose,
 	_Inout_ D3D_SHADER_MACRO* defines);
 #else
 	_In_ char* defineOption,
-	Inout_ D3D_SHADER_MACRO* defines );
+	_Inout_ D3D_SHADER_MACRO* defines );
 #endif
 void cmd_E(_In_ int verbose,
 #ifdef _WIN32

@@ -75,7 +75,7 @@ void cmd_D(_In_ int verbose,
 	char* defineOption = wcharToChar(_defineOption);
 #else
 	_In_ char* defineOption,
-	Inout_ D3D_SHADER_MACRO* defines ) {
+	_Inout_ D3D_SHADER_MACRO* defines ) {
 #endif
 
 	assert(defineOption == nullptr);
