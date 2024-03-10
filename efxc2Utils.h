@@ -22,6 +22,50 @@ const int  READALL_ERROR = -2;  /* Stream error */
 const int  READALL_TOOMUCH = -3;  /* Too much input */
 const int  READALL_NOMEM = -4;  /* Out of memory */
 
+/* Helper D3D error lookup table*/
+struct ErrorTableEntry {
+    HRESULT ErrorCode;
+    const char* ErrorName;
+};
+
+static const ErrorTableEntry g_ErrorTable[] = {
+    { (HRESULT) 0x887C0002, "D3D11_ERROR_FILE_NOT_FOUND" },
+    { (HRESULT) 0x887C0001, "D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS" },
+    { (HRESULT) 0x887C0003, "D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS" },
+    { (HRESULT) 0x887C0004, "D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD" },
+    { (HRESULT) 0x887A0001, "D3DERR_INVALIDCALL (replaced with DXGI_ERROR_INVALID_CALL)" },
+    { (HRESULT) 0x887A000A, "D3DERR_WASSTILLDRAWING (replaced with DXGI_ERROR_WAS_STILL_DRAWING)" },
+    { (HRESULT) 0x80004005, "E_FAIL" },
+    { (HRESULT) 0x80070057, "E_INVALIDARG" },
+    { (HRESULT) 0x8007000E, "E_OUTOFMEMORY" },
+    { (HRESULT) 0x80004001, "E_NOTIMPL" },
+    { (HRESULT) 1L, "S_FALSE ((HRESULT)" },
+    { (HRESULT) 0, nullptr }
+};
+
+struct ProfilePrefix {
+    const char* name;
+    const char* prefix;
+};
+
+static const ProfilePrefix g_profilePrefixTable[] = {
+  { "ps_2_0", "g_ps20"},
+  { "ps_2_a", "g_ps21"},
+  { "ps_2_b", "g_ps21"},
+  { "ps_2_sw", "g_ps2ff"},
+  { "ps_3_0", "g_ps30"},
+  { "ps_3_sw", "g_ps3ff"},
+
+  { "vs_1_1", "g_vs11"},
+  { "vs_2_0", "g_vs20"},
+  { "vs_2_a", "g_vs21"},
+  { "vs_2_sw", "g_vs2ff"},
+  { "vs_3_0", "g_vs30"},
+  { "vs_3_sw", "g_vs3ff"},
+
+  { NULL, NULL}
+};
+
 char* GetFileName(_In_ char* path);
 #ifdef _WIN32
 wchar_t* GetFileName(_In_ wchar_t* path);
@@ -53,6 +97,8 @@ void print_unsupported_arg_help();
 int readall(_In_ FILE* in, 
     _Out_writes_bytes_(*sizeptr) char** dataptr, 
     _Out_opt_ size_t* sizeptr);
+char* setupVariableName(_In_ const char* model,
+    const _In_ char* entryPoint);
 #ifdef _WIN32
 char* wcharToChar(_In_ LPCWSTR w);
 #endif

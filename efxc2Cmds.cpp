@@ -146,11 +146,7 @@ void cmd_Fh(
 #ifdef _WIN32
 	FixupFileName(outputFile);
 #endif /* _WIN32 */
-	if (*cmd != 0) {
-		printf("You cannot specify both an object and header");
-		exit(1);
-	}
-	*cmd = CMD_WRITE_HEADER;
+	* cmd = *cmd | 1;
 	if (verbose) {
 		printf("option -Fh (Output File) with arg %ls\n", outputFile);
 	}
@@ -168,11 +164,7 @@ void cmd_Fo(
 #ifdef _WIN32
 	FixupFileName(outputFile);
 #endif /* _WIN32 */
-	if (*cmd != 0) {
-		fprintf(stderr, "You cannot specify both an object and header");
-		exit(1);
-	}
-	*cmd = CMD_WRITE_OBJECT;
+	* cmd = *cmd | 2;
 	if (verbose) {
 		printf("option -FO (Output File) with arg %ls\n", outputFile);
 	}

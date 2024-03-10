@@ -16,9 +16,9 @@
         delete[] inputFile; \
         inputFile = nullptr; \
     } \
-    if (outputFile) { \
-        delete[] outputFile; \
-        outputFile = nullptr; \
+    if (IncludeFile) { \
+        delete[] IncludeFile; \
+        IncludeFile = nullptr; \
     } \
     \
     if (defineOption != nullptr) { \
@@ -50,13 +50,15 @@ int main(int argc, char* argv[]) {
     // Process Command Line Arguments
 #ifdef _WIN32
     wchar_t* inputFile = nullptr;
-    wchar_t* outputFile = nullptr;
+    wchar_t* IncludeFile = nullptr;
+    wchar_t* ObjectFile = nullptr;
     wchar_t* pdbFile = nullptr;
     wchar_t* w_temp = nullptr;
     char* c_inputFile = nullptr;
 #else  /* _WIN32 */
     char* inputFile = nullptr;
-    char* outputFile = nullptr;
+    char* IncludeFile = nullptr;
+    char* ObjectFile = nullptr;
     char* pdbFile = nullptr;
 #endif /* _WIN32 */
 
@@ -169,8 +171,8 @@ int main(int argc, char* argv[]) {
             option_ignored(M_FE, verbose);
             continue;
         }
-        else if (parseOpt(M_FH, argc, argv, &index, &outputFile)) {
-            cmd_Fh(verbose, &cmd, outputFile);
+        else if (parseOpt(M_FH, argc, argv, &index, &IncludeFile)) {
+            cmd_Fh(verbose, &cmd, IncludeFile);
             continue;
         }
         else if (parseOpt(M_FL, argc, argv, &index, nullptr)) {
@@ -179,8 +181,8 @@ int main(int argc, char* argv[]) {
             M_TAREDOWN_PROG
                 return 1;
         }
-        else if (parseOpt(M_FO, argc, argv, &index, nullptr)) {
-            cmd_Fo(verbose, &cmd, outputFile);
+        else if (parseOpt(M_FO, argc, argv, &index, &ObjectFile)) {
+            cmd_Fo(verbose, &cmd, ObjectFile);
             continue;
         }
         else if (parseOpt(M_FORCE_ROOTSIG_VER, argc, argv, &index, nullptr)) {
@@ -392,112 +394,91 @@ int main(int argc, char* argv[]) {
         print_usage_missing("entryPoint");
     if (defines == nullptr)
         print_usage_missing("defines");
-    if (outputFile == nullptr)
-        print_usage_missing("outputFile");
-
-    //Default output variable name
-    if (variableName == nullptr) {
-        const char* prefix = "g";
-        for (int i = 0; g_profilePrefixTable[i].name != nullptr; i++) {
-            if (strcmp(g_profilePrefixTable[i].name, model) == 0) {
-                prefix = g_profilePrefixTable[i].prefix;
-                break;
-            }
-        }
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( suppress : 6387 )
-#endif /* _MSC_VER */
-        variableName = (char*)malloc(strlen(prefix) + strlen(entryPoint) + 2);
-#ifdef _WIN32
-        sprintf_s(variableName, strlen(prefix) + strlen(entryPoint) + 2, "%s_%s", prefix, entryPoint);
-#else  /* _WIN32 */
-        sprintf(variableName, "%s_%s", prefix, entryPoint);
-#endif /* _WIN32 */
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
-    }
+    if (IncludeFile == nullptr)
+        print_usage_missing("IncludeFile");
 
     // ====================================================================================
     // Shader Compilation
     size_t SourceLen = 0;
     char* SourceCode = LoadSource(inputFile, &SourceLen);
     Compiler compiler;
-
-    ID3DBlob* output = nullptr;
+    compiler.set_verbose(verbose);
+    compiler.set_outputHex(outputHex);
     compiler.set_sflags(sflags);
     compiler.set_eflags(eflags);
     compiler.set_secondary_flags(secondary_flags);
-
+    compiler.set_strip_flags(strip_flags);
+    compiler.set_entryPoint(entryPoint);
+    compiler.set_model(model);
+    ID3DBlob* output = nullptr;
 #ifdef _WIN32
-    compiler.Compile(SourceCode, SourceLen, c_inputFile, numDefines, defines, entryPoint, model, &output);
+    compiler.set_inputFile(c_inputFile);
 #else
-    compiler.Compile(SourceCode, SourceLen, inputFile, numDefines, defines, entryPoint, model, &output);
+    compiler.set_inputFile(inputFile);
 #endif
+    compiler.Compile(SourceCode, SourceLen, numDefines, defines);
     // ====================================================================================
     // Output (or errors)
     FILE* f;
-    auto* compiledString = (unsigned char*)output->GetBufferPointer();
-    size_t compiledLen = output->GetBufferSize();
-    auto* outputString = compiledString;
-    size_t outputLen = compiledLen;
+    size_t  outputLen = 0;
 
-    /* strip compiled shader*/
-    ID3DBlob* strippedBlob = nullptr;
-    compiler.StripShader(compiledString, compiledLen, &strippedBlob);
-    if (strippedBlob != nullptr) {
-        auto* strippedString = (unsigned char*)strippedBlob->GetBufferPointer();
-        size_t strippedLen = strippedBlob->GetBufferSize();
-        outputString = strippedString;
-        outputLen = strippedLen;
-    }
+    compiler.StripShader();
+    if ((cmd && CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {
 #ifdef _WIN32
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 6001 )
 #pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
-    errno_t err = _wfopen_s(&f, outputFile, L"w");
+        errno_t err = _wfopen_s(&f, IncludeFile, L"w");
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif /* _MSC_VER */
-    if (err != 0) {
-        free(SourceCode);
-        print_errno(err);
+#else
+        f = fopen(IncludeFile, "w");
+#endif
+        if (f == nullptr) {
+            print_errno();
+        }
+        outputLen = compiler.WriteIncludeFile(f);
+        fclose(f);
+        if (verbose) {
+#ifdef _WIN32
+            wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, IncludeFile);
+#else   /* _WIN32 */
+            printf("Wrote %zu", outputLen);
+            printf(" bytes of shader output to %ls\n", IncludeFile);
+#endif  /* WIN32 */
+        }
     }
-#else  /*_WIN32 */
-    f = fopen(outputFile, "w");
-    if (f == nullptr) {
-        free(SourceCode);
-        print_errno();
-    }
-#endif /* _WIN32 */
-
-    if (cmd == CMD_WRITE_HEADER) {
-        WriteByteArrayConst(f, outputString, outputLen, variableName, outputHex);
-    }
-    if (cmd == CMD_WRITE_OBJECT) {
-        fwrite(outputString, outputLen, 1, f);
-    }
+    if ((cmd && CMD_WRITE_OBJECT) == CMD_WRITE_OBJECT) {
+#ifdef _WIN32
 #ifdef _MSC_VER
 #pragma warning( push )
-#pragma warning( disable : 6387)
+#pragma warning( disable : 6001 )
+#pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
-    fclose(f);
+        errno_t err = _wfopen_s(&f, ObjectFile, L"w");
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif /* _MSC_VER */
-    if (errno != 0) {
-        print_errno();
-    }
-    if (verbose) {
+#else
+        f = fopen(ObjectFile, "w");
+#endif
+        if (f == nullptr) {
+            print_errno();
+        }
+        outputLen =
+            fclose(f);
+        if (verbose) {
 #ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, outputFile);
+            wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, ObjectFile);
 #else   /* _WIN32 */
-        printf("Wrote %zu", outputLen);
-        printf(" bytes of shader output to %ls\n", outputFile);
-#endif  /* WIN32 */
+            printf("Wrote %zu", outputLen);
+            printf(" bytes of shader output to %ls\n", ObjectFile);
+        }
+#endif
+        }
     }
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -512,9 +493,9 @@ int main(int argc, char* argv[]) {
     if (SourceCode != nullptr) {
         free(SourceCode);
     }
-    M_TAREDOWN_PROG
+M_TAREDOWN_PROG
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif /* _MSC_VER */
-        return 0;
+    return 0;
 }

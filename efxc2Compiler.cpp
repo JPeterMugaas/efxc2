@@ -35,7 +35,14 @@ Compiler::Compiler() {
         print_windows_error();
 #endif /* _WIN32 */
     }
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6387)
+#endif
     ptr_D3DCompile2 = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif
     if (ptr_D3DCompile2 == nullptr) {
         printf("Error: could not get the address of D3DCompile2.\n");
         print_windows_error();
@@ -60,13 +67,13 @@ Compiler::Compiler() {
 void Compiler::Compile(
     _In_ const char* SourceCode,
     _In_ const size_t SourceLen,
-    _In_opt_ char* inputFile,
     _In_ const size_t numDefines,
-    _In_reads_opt_(_Inexpressible_(defines->Name != NULL)) CONST D3D_SHADER_MACRO* defines,
-    _In_ const LPCSTR entryPoint,
-    _In_ const LPCSTR model,
-    _Out_ ID3DBlob** output) const {
-    HRESULT hr = 0;
+    _In_reads_opt_(_Inexpressible_(defines->Name != NULL)) CONST D3D_SHADER_MACRO* defines) {
+
+    //Default output variable name
+    if (variableName == nullptr) {
+        variableName = setupVariableName(model, entryPoint);
+    }
     ID3DBlob* errors = nullptr;
     if (verbose) {
         printf("Calling D3DCompile2(\n");
@@ -88,7 +95,7 @@ void Compiler::Compile(
         printf("\t 0x%016" PRIx64 ", \n", (INT64)secondary_flags);
         printf("\t nullptr,\n");
         printf("\t 0,\n");
-        printf("\t &output,\n");
+        printf("\t &CompilerOutput,\n");
         printf("\t &errors);\n");
     }
 
@@ -114,7 +121,7 @@ void Compiler::Compile(
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif
-    hr = ptr_D3DCompile2(
+    HRESULT hr = ptr_D3DCompile2(
         SourceCode,
         SourceLen,
         inputFile,
@@ -127,7 +134,7 @@ void Compiler::Compile(
         secondary_flags,
         nullptr,
         0,
-        output,
+        &compilerOutput,
         &errors
     );
 #ifdef _MSC_VER
@@ -148,10 +155,9 @@ void Compiler::Compile(
     }
 }
 
-void Compiler::StripShader(
-    _In_ unsigned char* compiledString,
-    _In_ size_t compiledLen,
-    _Out_ ID3DBlob** strippedBlob) const {
+void Compiler::StripShader() {
+    auto* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
+    size_t compiledLen = compilerOutput->GetBufferSize();
     HRESULT hr = 0;
     strippedBlob = nullptr;
     if (strip_flags != 0) {
@@ -174,7 +180,7 @@ void Compiler::StripShader(
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif
-        hr = ptr_D3DStripShader(compiledString, compiledLen, strip_flags, strippedBlob);
+        hr = ptr_D3DStripShader(compiledString, compiledLen, strip_flags, &strippedBlob);
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
@@ -185,4 +191,36 @@ void Compiler::StripShader(
     else {
         strippedBlob = nullptr;
     }
+}
+
+size_t Compiler::WriteIncludeFile(FILE* f) {
+    char* bytes;
+    unsigned char* outputString = nullptr;
+    size_t outputLen = 0;
+    if (strippedBlob == nullptr) {
+       outputString = (unsigned char*)compilerOutput->GetBufferPointer();
+       outputLen = compilerOutput->GetBufferSize();
+    }
+    else {
+       outputString = (unsigned char*)strippedBlob->GetBufferPointer();
+       outputLen = strippedBlob->GetBufferSize();
+    }
+    WriteByteArrayConst(f, outputString, outputLen, variableName, outputHex);
+    return outputLen;
+}
+
+size_t Compiler::WriteObjectFile(FILE* f) {
+    char* bytes;
+    unsigned char* outputString = nullptr;
+    size_t outputLen = 0;
+    if (strippedBlob == nullptr) {
+        outputString = (unsigned char*)compilerOutput->GetBufferPointer();
+        outputLen = compilerOutput->GetBufferSize();
+    }
+    else {
+        outputString = (unsigned char*)strippedBlob->GetBufferPointer();
+        outputLen = strippedBlob->GetBufferSize();
+    }
+    fwrite(outputString, outputLen, 1, f);
+    return outputLen;
 }

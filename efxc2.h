@@ -158,74 +158,51 @@
 #endif
 
 typedef HRESULT(__stdcall* pD3DCompile2g)(
-	_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
-	_In_ SIZE_T SrcDataSize,
-	_In_opt_ LPCSTR pSourceName,
-	_In_reads_opt_(_Inexpressible_(pDefines->Name != NULL)) CONST D3D_SHADER_MACRO* pDefines,
-	_In_opt_ ID3DInclude* pInclude,
-	_In_ LPCSTR pEntrypoint,
-	_In_ LPCSTR pTarget,
-	_In_ UINT Flags1,
-	_In_ UINT Flags2,
-	_In_ UINT SecondaryDataFlags,
-	_In_reads_bytes_opt_(SecondaryDataSize) LPCVOID pSecondaryData,
-	_In_ SIZE_T SecondaryDataSize,
-	_Out_ ID3DBlob** ppCode,
-	_Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorMsgs);
+    _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+    _In_ SIZE_T SrcDataSize,
+    _In_opt_ LPCSTR pSourceName,
+    _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL)) CONST D3D_SHADER_MACRO* pDefines,
+    _In_opt_ ID3DInclude* pInclude,
+    _In_ LPCSTR pEntrypoint,
+    _In_ LPCSTR pTarget,
+    _In_ UINT Flags1,
+    _In_ UINT Flags2,
+    _In_ UINT SecondaryDataFlags,
+    _In_reads_bytes_opt_(SecondaryDataSize) LPCVOID pSecondaryData,
+    _In_ SIZE_T SecondaryDataSize,
+    _Out_ ID3DBlob** ppCode,
+    _Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorMsgs);
 
 typedef HRESULT(__stdcall* pD3DStripShaderg) (
-	_In_reads_bytes_(BytecodeLength) LPCVOID pShaderBytecode,
-	_In_ SIZE_T BytecodeLength,
-	_In_ UINT uStripFlags,
-	_Out_ ID3DBlob** ppStrippedBlob);
+    _In_reads_bytes_(BytecodeLength) LPCVOID pShaderBytecode,
+    _In_ SIZE_T BytecodeLength,
+    _In_ UINT uStripFlags,
+    _Out_ ID3DBlob** ppStrippedBlob);
 
 typedef HRESULT(__stdcall* pD3DGetBlobPartg) (
-	_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
-	_In_ SIZE_T SrcDataSize,
-	_In_ D3D_BLOB_PART Part,
-	_In_ UINT Flags,
-	_Out_ ID3DBlob** ppPart);
+    _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+    _In_ SIZE_T SrcDataSize,
+    _In_ D3D_BLOB_PART Part,
+    _In_ UINT Flags,
+    _Out_ ID3DBlob** ppPart);
 
 typedef HRESULT(__stdcall* pD3DSetBlobPartg) (
-	_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
-	_In_ SIZE_T SrcDataSize,
-	_In_ D3D_BLOB_PART Part,
-	_In_ UINT Flags,
-	_In_reads_bytes_(PartSize) LPCVOID pPart,
-	_In_ SIZE_T PartSize,
-	_Out_ ID3DBlob** ppNewShader);
+    _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+    _In_ SIZE_T SrcDataSize,
+    _In_ D3D_BLOB_PART Part,
+    _In_ UINT Flags,
+    _In_reads_bytes_(PartSize) LPCVOID pPart,
+    _In_ SIZE_T PartSize,
+    _Out_ ID3DBlob** ppNewShader);
 
 // This struct represents the first four bytes of the name blob:
 struct ShaderDebugName
 {
-	uint16_t Flags;       // Reserved, must be set to zero.
-	uint16_t NameLength;  // Length of the debug name, without null terminator.
-	// Followed by NameLength bytes of the UTF-8-encoded name.
-	// Followed by a null terminator.
-	// Followed by [0-3] zero bytes to align to a 4-byte boundary.
-};
-
-struct ProfilePrefix {
-	const char* name;
-	const char* prefix;
-};
-
-static const ProfilePrefix g_profilePrefixTable[] = {
-  { "ps_2_0", "g_ps20"},
-  { "ps_2_a", "g_ps21"},
-  { "ps_2_b", "g_ps21"},
-  { "ps_2_sw", "g_ps2ff"},
-  { "ps_3_0", "g_ps30"},
-  { "ps_3_sw", "g_ps3ff"},
-
-  { "vs_1_1", "g_vs11"},
-  { "vs_2_0", "g_vs20"},
-  { "vs_2_a", "g_vs21"},
-  { "vs_2_sw", "g_vs2ff"},
-  { "vs_3_0", "g_vs30"},
-  { "vs_3_sw", "g_vs3ff"},
-
-  { NULL, NULL}
+    uint16_t Flags;       // Reserved, must be set to zero.
+    uint16_t NameLength;  // Length of the debug name, without null terminator.
+    // Followed by NameLength bytes of the UTF-8-encoded name.
+    // Followed by a null terminator.
+    // Followed by [0-3] zero bytes to align to a 4-byte boundary.
 };
 
 /* helper macros for functions */

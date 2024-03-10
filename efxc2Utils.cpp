@@ -10,6 +10,15 @@
 
 #include "efxc2Utils.h"
 
+static const char* HResultName(_In_ const HRESULT hr) {
+	for (int i = 0; g_ErrorTable[i].ErrorName != nullptr; i++) {
+		if (hr == g_ErrorTable[i].ErrorCode ) {
+			return  g_ErrorTable[i].ErrorName;
+		}
+	}
+	return "Unknown Error Name";
+}
+
 void print_copyright() {
 	printf(PROGRAM_DESCRIPTION " " PROGRAM_VERSION "\n");
 	printf(PROGRAM_COPYRIGHT "\n");
@@ -65,7 +74,9 @@ void print_unsupported_arg_help() {
 	std::string message(messageBuffer, size);
 	LocalFree(messageBuffer);
 	fprintf(stderr, "Windows Error Message: %s\n", messageBuffer);
-	printf("Error Code: 0x%lx", hr);
+	printf("Windows Error Message: %s\n", messageBuffer);
+	printf("Error Code: 0x%lx\n", hr);
+	printf("Error Name: %s\n", HResultName(hr));
 	exit(1);
 }
 
@@ -325,6 +336,33 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
 	}
 	*index += 1;
 	return true;
+}
+
+char* setupVariableName(_In_ const char* model, 
+	const _In_ char* entryPoint) {
+	char* variableName = nullptr;
+	//Default output variable name
+	const char* prefix = "g";
+	for (int i = 0; g_profilePrefixTable[i].name != nullptr; i++) {
+		if (strcmp(g_profilePrefixTable[i].name, model) == 0) {
+			prefix = g_profilePrefixTable[i].prefix;
+			break;
+		}
+	}
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( suppress : 6387 )
+#endif /* _MSC_VER */
+	variableName = (char*)malloc(strlen(prefix) + strlen(entryPoint) + 2);
+#ifdef _WIN32
+	sprintf_s(variableName, strlen(prefix) + strlen(entryPoint) + 2, "%s_%s", prefix, entryPoint);
+#else  /* _WIN32 */
+	sprintf(variableName, "%s_%s", prefix, entryPoint);
+#endif /* _WIN32 */
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif /* _MSC_VER */
+	return variableName;
 }
 
 #ifdef _WIN32
