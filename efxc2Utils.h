@@ -66,6 +66,10 @@ static const ProfilePrefix g_profilePrefixTable[] = {
   { NULL, NULL}
 };
 
+char* concat(const char* s1, const char* s2);
+#ifdef _WIN32
+wchar_t* concat(const wchar_t* s1, const wchar_t* s2);
+#endif
 char* GetFileName(_In_ char* path);
 #ifdef _WIN32
 wchar_t* GetFileName(_In_ wchar_t* path);
@@ -100,8 +104,8 @@ int readall(_In_ FILE* in,
 char* setupVariableName(_In_ const char* model,
     const _In_ char* entryPoint);
 #ifdef _WIN32
-wchar_t* utf8_decode(const char* str, int nbytes);
-char* utf8_encode(const wchar_t* wstr, int nchars);
+wchar_t* utf8_decode(const char* str, size_t nbytes);
+char* utf8_encode(const wchar_t* wstr, size_t nchars);
 #endif
 #ifdef _WIN32
 char* wcharToChar(_In_ LPCWSTR w);

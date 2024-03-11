@@ -216,8 +216,7 @@ size_t Compiler::WriteIncludeFile(FILE* f) {
 }
 
 size_t Compiler::WriteObjectFile(FILE* f) {
-    char* bytes;
-    unsigned char* outputString = nullptr;
+    unsigned char const* outputString;
     size_t outputLen = 0;
     if (strippedBlob == nullptr) {
         outputString = (unsigned char*)compilerOutput->GetBufferPointer();
@@ -313,7 +312,7 @@ size_t Compiler::WritePDBFile(FILE* f) {
     HRESULT hr = 0;
     if (f == nullptr) {
         ID3DBlob* PDBData = nullptr;
-        unsigned char* compiledString = nullptr;
+        unsigned char const* compiledString = nullptr;
         size_t compiledLen = 0;
         if (pShaderWithNewName == nullptr) {
             compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
@@ -343,7 +342,7 @@ size_t Compiler::WritePDBFile(FILE* f) {
         if (FAILED(hr)) {
             print_hresult_error(hr);
         }
-        unsigned char* outputString = (unsigned char*)PDBData->GetBufferPointer();
+        auto outputString = (unsigned char*)PDBData->GetBufferPointer();
         size_t outputLen = PDBData->GetBufferSize();
         fwrite(outputString, outputLen, 1, f);
         return compiledLen;

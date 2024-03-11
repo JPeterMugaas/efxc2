@@ -217,11 +217,11 @@ struct ShaderDebugName
 #endif
 
 /* command codes for internal use */
-#define CMD_WRITE_HEADER 1
-#define CMD_WRITE_OBJECT 2
+constexpr auto CMD_WRITE_HEADER = 1;
+constexpr auto CMD_WRITE_OBJECT = 2;
 
 /* a good size for an error message */
-#define ERR_SIZE 128
+constexpr auto ERR_SIZE = 128;
 
 /* Parameter constants since we need both
    Unicode and ASCII versions depending

@@ -151,31 +151,13 @@ char* GetFileName(_In_ char* path) {
 		if (strcmp(pFileName, ".") == 0) {
 			return nullptr;
 		}
+		if (strcmp(pFileName, "") == 0) {
+			return nullptr;
+		}
 	}
 	return pFileName;
 }
 
-void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, 
-	_In_ const size_t len, 
-	_In_z_ const char* variableName, 
-	_In_ const int outputHex) {
-	fprintf(f, "const BYTE %s[] =\n{\n", variableName);
-	for (size_t i = 0; i < len; i++) {
-		if (outputHex) {
-			fprintf(f, " 0x%02" PRIx8, outString[i]);
-		}
-		else {
-			fprintf(f, "%4" PRIu8, outString[i]);
-		}
-		if (i != len - 1) {
-			fprintf(f, ",");
-		}
-		if ((i % 6 == 5) && (i != len - 1)) {
-			fprintf(f, "\n");
-		}
-	}
-	fprintf(f, "\n};\n");
-}
 
 #ifdef _WIN32
 wchar_t* GetFileName(_In_ wchar_t* path) {
@@ -198,10 +180,35 @@ wchar_t* GetFileName(_In_ wchar_t* path) {
 		if (wcscmp(pFileName, L".") == 0) {
 			return nullptr;
 		}
+		if (wcscmp(pFileName, L"") == 0) {
+			return nullptr;
+		}
 	}
 	return pFileName;
 }
 #endif
+
+void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, 
+	_In_ const size_t len, 
+	_In_z_ const char* variableName, 
+	_In_ const int outputHex) {
+	fprintf(f, "const BYTE %s[] =\n{\n", variableName);
+	for (size_t i = 0; i < len; i++) {
+		if (outputHex) {
+			fprintf(f, " 0x%02" PRIx8, outString[i]);
+		}
+		else {
+			fprintf(f, "%4" PRIu8, outString[i]);
+		}
+		if (i != len - 1) {
+			fprintf(f, ",");
+		}
+		if ((i % 6 == 5) && (i != len - 1)) {
+			fprintf(f, "\n");
+		}
+	}
+	fprintf(f, "\n};\n");
+}
 
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
    /* This function returns one of the READALL_ constants above.
@@ -338,6 +345,32 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
 	return true;
 }
 
+#ifdef _WIN32
+wchar_t* concat(const wchar_t* s1, const wchar_t* s2)
+{
+	wchar_t* result = (wchar_t*)malloc(((wcslen(s1) + wcslen(s2)) * sizeof(wchar_t)) + sizeof(wchar_t)); // +1 for the null-terminator
+	if (result == nullptr) {
+		fprintf(stderr, "malloc failed/n");
+		print_errno();
+	}
+	wcscpy(result, s1);
+	wcscat(result, s2);
+	return result;
+}
+#endif
+
+char* concat(const char* s1, const char* s2)
+{
+	char* result = (char*)malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
+	if (result == nullptr) {
+		fprintf(stderr, "malloc failed/n");
+		print_errno();
+	}
+	strcpy(result, s1);
+	strcat(result, s2);
+	return result;
+}
+
 char* setupVariableName(_In_ const char* model,
 	const _In_ char* entryPoint) {
 	char* variableName = nullptr;
@@ -445,45 +478,45 @@ char* LoadSource(_In_ const char* filename, _Out_ size_t * len) {
   https://stackoverflow.com/questions/215963/how-do-you-properly-use-widechartomultibyte
 */
 
-wchar_t* utf8_decode(const char* str, int nbytes) {
+wchar_t* utf8_decode(const char* str, size_t nbytes) {
 	int nchars = 0;
 	if ((nchars = MultiByteToWideChar(CP_UTF8,
-		MB_ERR_INVALID_CHARS, str, nbytes, NULL, 0)) == 0) {
-		return NULL;
+		MB_ERR_INVALID_CHARS, str, (int) nbytes, nullptr, 0)) == 0) {
+		return nullptr;
 	}
 
-	wchar_t* wstr = NULL;
+	wchar_t* wstr = nullptr;
 	if (!(wstr = (wchar_t*)malloc(((size_t)nchars + 1) * sizeof(wchar_t)))) {
-		return NULL;
+		return nullptr;
 	}
 
 	wstr[nchars] = L'\0';
 	if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
-		str, nbytes, wstr, (size_t)nchars) == 0) {
+		str, (int)nbytes, wstr, nchars) == 0) {
 		free(wstr);
-		return NULL;
+		return nullptr;
 	}
 	return wstr;
 }
 
 
-char* utf8_encode(const wchar_t* wstr, int nchars) {
+char* utf8_encode(const wchar_t* wstr, size_t nchars) {
 	int nbytes = 0;
 	if ((nbytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-		wstr, nchars, NULL, 0, NULL, NULL)) == 0) {
-		return NULL;
+		wstr, nchars, nullptr, 0, nullptr, nullptr)) == 0) {
+		return nullptr;
 	}
 
-	char* str = NULL;
+	char* str = nullptr;
 	if (!(str = (char*)malloc((size_t)nbytes + 1))) {
-		return NULL;
+		return nullptr;
 	}
 
 	str[nbytes] = '\0';
 	if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-		wstr, nchars, str, nbytes, NULL, NULL) == 0) {
+		wstr, (int) nchars, str, nbytes, nullptr, nullptr) == 0) {
 		free(str);
-		return NULL;
+		return nullptr;
 	}
 	return str;
 }

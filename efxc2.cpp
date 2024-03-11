@@ -446,6 +446,14 @@ int main(int argc, char* argv[]) {
         if (pPDBFileName != nullptr) {
             compiler.SetPDBFileName(pPDBFileName);
         }
+        else {
+            /* if only a dir was specified, use the default
+            filename in the shader data. */
+            pPDBFileName = compiler.GetPDBFileName();
+            wchar_t* w_PDBFileName = utf8_decode(pPDBFileName,strlen(pPDBFileName));
+            pdbFile = concat(pdbFile, w_PDBFileName);
+            free(w_PDBFileName);
+        }
 #ifdef _WIN32
 #ifdef _MSC_VER
 #pragma warning( push )
