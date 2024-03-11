@@ -173,7 +173,11 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_FD, argc, argv, &index, &pdbFile)) {
-            cmd_Fd(verbose, pdbFile, c_pdbFile);
+#ifdef _WIN32
+            cmd_Fd(verbose, pdbFile, &c_pdbFile);
+#else
+            cmd_Fd(verbose, pdbFile);
+#endif
             continue;
         }
         else if (parseOpt(M_FE, argc, argv, &index, nullptr)) {
@@ -425,11 +429,53 @@ int main(int argc, char* argv[]) {
 #else
     compiler.set_inputFile(inputFile);
 #endif
-    compiler.Compile(SourceCode, SourceLen, numDefines, defines);
-    // ====================================================================================
-    // Output (or errors)
+    compiler.Compile(SourceCode, SourceLen, numDefines, defines);   
+#ifdef _WIN32
+    errno_t err = 0;
+#endif
     FILE* f;
     size_t  outputLen = 0;
+    /*write .PDB data if applicable*/
+#ifdef _WIN32 
+    if (c_pdbFile != nullptr) {
+        auto pPDBFileName = GetFileName(c_pdbFile);
+#else
+    if (pdbFile != nullptr) {
+        auto pPDBFileName = GetFileName(pdbFile);
+#endif
+        if (pPDBFileName != nullptr) {
+            compiler.SetPDBFileName(pPDBFileName);
+        }
+#ifdef _WIN32
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6001 )
+#pragma warning( disable : 6387 )
+#endif /* _MSC_VER */
+        err = _wfopen_s(&f, pdbFile, L"w");
+        if (err != 0) {
+            print_errno(err);
+        }
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif /* _MSC_VER */
+#else
+        f = fopen(IncludeFile, "w");
+        if (f == nullptr) {
+            print_errno();
+        }
+#endif
+        outputLen = compiler.WritePDBFile(f);
+        fclose(f);
+#ifdef _WIN32
+        wprintf(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile);
+#else   /* _WIN32 */
+        printf("Wrote %zu", outputLen);
+        printf(" bytes of .PDB data to %ls\n", pdbFile);
+#endif  /* WIN32 */
+    }
+    // ====================================================================================
+    // Output (or errors)
     compiler.StripShader();
     if ((cmd & CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {
 #ifdef _WIN32
@@ -438,16 +484,19 @@ int main(int argc, char* argv[]) {
 #pragma warning( disable : 6001 )
 #pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
-        errno_t err = _wfopen_s(&f, IncludeFile, L"w");
+        err = _wfopen_s(&f, IncludeFile, L"w");
+        if (err != 0) {
+            print_errno(err);
+        }
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif /* _MSC_VER */
 #else
         f = fopen(IncludeFile, "w");
-#endif
         if (f == nullptr) {
             print_errno();
         }
+#endif
         outputLen = compiler.WriteIncludeFile(f);
         fclose(f);
         if (verbose) {
@@ -466,18 +515,21 @@ int main(int argc, char* argv[]) {
 #pragma warning( disable : 6001 )
 #pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
-        errno_t err = _wfopen_s(&f, ObjectFile, L"w");
+        err = _wfopen_s(&f, ObjectFile, L"w");
+        if (err != 0) {
+            print_errno(err);
+        }
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif /* _MSC_VER */
 #else
         f = fopen(ObjectFile, "w");
-#endif
         if (f == nullptr) {
             print_errno();
-        }
-        outputLen =
-            fclose(f);
+         }
+#endif
+        outputLen = compiler.WriteObjectFile(f);
+        fclose(f);
         if (verbose) {
 #ifdef _WIN32
             wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, ObjectFile);

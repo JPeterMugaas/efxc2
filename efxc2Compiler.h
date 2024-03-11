@@ -47,7 +47,8 @@ public:
 	size_t WriteIncludeFile(FILE* f);
 	size_t WriteObjectFile(FILE* f);
 	char* GetPDBFileName();
-	void Compiler::SetPDBFileName(_In_ char* _fileName);
+	void SetPDBFileName(_In_ char* _fileName);
+	size_t WritePDBFile(FILE* f);
 private:
 	int              verbose = 1;
 	UINT             sflags = 0;
@@ -67,4 +68,5 @@ private:
 	ID3DBlob*        compilerOutput = nullptr;
 	ID3DBlob*        strippedBlob = nullptr;
 	ID3DBlob*        pPDBName = nullptr;
+	ID3DBlob*        pShaderWithNewName = nullptr;
 };

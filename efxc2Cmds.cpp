@@ -131,13 +131,13 @@ void cmd_Fd(
 	_In_ int verbose,
 #ifdef _WIN32
 	_In_ wchar_t* pdbFile,
-	_Out_ char* c_pdbFile) {
+	_Out_ char** c_pdbFile) {
 #else
 	_In_ char* pdbFile) {
 #endif
 #ifdef _WIN32
 	FixupFileName(pdbFile);
-	c_pdbFile = utf8_encode(pdbFile, wcslen(pdbFile));
+	*c_pdbFile = utf8_encode(pdbFile, wcslen(pdbFile));
 #endif /* _WIN32 */
 	if (verbose) {
 		printf("option -Fd (.PDB) with arg %ls\n", pdbFile);
