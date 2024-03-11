@@ -421,9 +421,8 @@ int main(int argc, char* argv[]) {
     // Output (or errors)
     FILE* f;
     size_t  outputLen = 0;
-
     compiler.StripShader();
-    if ((cmd && CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {
+    if ((cmd & CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {
 #ifdef _WIN32
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -451,7 +450,7 @@ int main(int argc, char* argv[]) {
 #endif  /* WIN32 */
         }
     }
-    if ((cmd && CMD_WRITE_OBJECT) == CMD_WRITE_OBJECT) {
+    if ((cmd & CMD_WRITE_OBJECT) == CMD_WRITE_OBJECT) {
 #ifdef _WIN32
 #ifdef _MSC_VER
 #pragma warning( push )
