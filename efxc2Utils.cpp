@@ -338,7 +338,7 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
 	return true;
 }
 
-char* setupVariableName(_In_ const char* model, 
+char* setupVariableName(_In_ const char* model,
 	const _In_ char* entryPoint) {
 	char* variableName = nullptr;
 	//Default output variable name
@@ -354,6 +354,10 @@ char* setupVariableName(_In_ const char* model,
 #pragma warning( suppress : 6387 )
 #endif /* _MSC_VER */
 	variableName = (char*)malloc(strlen(prefix) + strlen(entryPoint) + 2);
+	if (variableName == nullptr) {
+		fprintf(stderr, "malloc failed/n");
+		print_errno();
+	}
 #ifdef _WIN32
 	sprintf_s(variableName, strlen(prefix) + strlen(entryPoint) + 2, "%s_%s", prefix, entryPoint);
 #else  /* _WIN32 */

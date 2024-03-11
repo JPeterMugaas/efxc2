@@ -82,8 +82,16 @@ void Compiler::Compile(
 		printf("\t %s, \n", inputFile);
 		/* print defines */
 		printf("\t");
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 6001)
+#pragma warning(disable: 6011)
+#endif
 		for (size_t i = 0; i < numDefines - 1; i++)
 			printf(" %s=%s", defines[i].Name, defines[i].Definition);
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 		printf(",\n");
 		/* done printing defines */
 		printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");

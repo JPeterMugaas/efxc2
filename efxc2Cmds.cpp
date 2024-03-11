@@ -27,11 +27,19 @@ void option_ignored(_In_ const char* Opt, _In_ int verbose) {
 #endif
 
 #ifdef _WIN32
-void parseInputFile(_In_ const wchar_t* inputStr, _Out_ wchar_t** inputFile, _Out_ char** c_inputFile, _In_ int verbose) {
+void parseInputFile(_In_ const wchar_t* inputStr, _Out_opt_ wchar_t** inputFile, _Out_ char** c_inputFile, _In_ int verbose) {
 #else
-void parseInputFile(_In_ const char* inputStr, _Out_ char** inputFile, _In_ int verbose) {
+void parseInputFile(_In_ const char* inputStr, _Out_opt_ char** inputFile, _In_ int verbose) {
+#endif
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 6001)
+#pragma warning(disable: 6011)
 #endif
 	if (!*inputFile) {
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 		if (verbose) {
 			printf("Parse input file name\n");
 		}

@@ -129,8 +129,16 @@ int main(int argc, char* argv[]) {
                 return 1;
         }
 #ifdef _WIN32
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 6001)
+#pragma warning(disable: 6011)
+#endif /* _MSC_VER*/
         else if (parseOpt(M_D, argc, argv, &index, &w_temp)) {
             cmd_D(verbose, &numDefines, w_temp, defines);
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif /* _MSC_VER */
 #else  /* _WIN32 */
         else if (parseOpt(M_D, argc, argv, &index, &defineOption)) {
             cmd_D(verbose, &numDefines, defineOption, defines);
