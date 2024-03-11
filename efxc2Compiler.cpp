@@ -262,3 +262,16 @@ char* Compiler::GetPDBFileName() {
 	printf(".PDB Data Name: %s\n", pName);
 	return nullptr;
 }
+
+void Compiler::SetPDBFileName(_In_ char* _fileName) {
+	// Blobs are always a multiple of 4 bytes long. Since DxilShaderDebugName
+	// is itself 4 bytes, we pad the storage of the string (not the string itself)
+	// to 4 bytes also.
+	size_t fileNameLen = strlen(_fileName);
+	size_t lengthOfNameStorage = (fileNameLen + 0x3) & ~0x3;
+
+	auto* pNameBlobContent = (char*)malloc(lengthOfNameStorage);
+	// Ensure bytes after name are indeed zeroes:
+	memset(pNameBlobContent, 0, lengthOfNameStorage);
+
+}

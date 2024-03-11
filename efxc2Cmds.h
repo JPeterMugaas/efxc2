@@ -44,7 +44,8 @@ void cmd_enable_unbounded_descriptor_tables(_Inout_ UINT* sflags,
 void cmd_Fd(
 	_In_ int verbose,
 #ifdef _WIN32
-	_In_ wchar_t* pdbFile);
+	_In_ wchar_t* pdbFile,
+	_Out_ char* c_pdbFile);
 #else
 	_In_ char* pdbFile);
 #endif

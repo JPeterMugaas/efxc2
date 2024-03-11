@@ -47,6 +47,7 @@ public:
 	size_t WriteIncludeFile(FILE* f);
 	size_t WriteObjectFile(FILE* f);
 	char* GetPDBFileName();
+	void Compiler::SetPDBFileName(_In_ char* _fileName);
 private:
 	int              verbose = 1;
 	UINT             sflags = 0;

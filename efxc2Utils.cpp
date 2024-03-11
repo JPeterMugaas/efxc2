@@ -439,3 +439,53 @@ char* LoadSource(_In_ const char* filename, _Out_ size_t * len) {
 #endif /* _MSC_VER */
 	return source;
 }
+
+#ifdef _WIN32
+/*These functions are from:
+  https://stackoverflow.com/questions/215963/how-do-you-properly-use-widechartomultibyte
+*/
+
+wchar_t* utf8_decode(const char* str, int nbytes) {
+	int nchars = 0;
+	if ((nchars = MultiByteToWideChar(CP_UTF8,
+		MB_ERR_INVALID_CHARS, str, nbytes, NULL, 0)) == 0) {
+		return NULL;
+	}
+
+	wchar_t* wstr = NULL;
+	if (!(wstr = (wchar_t*)malloc(((size_t)nchars + 1) * sizeof(wchar_t)))) {
+		return NULL;
+	}
+
+	wstr[nchars] = L'\0';
+	if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+		str, nbytes, wstr, (size_t)nchars) == 0) {
+		free(wstr);
+		return NULL;
+	}
+	return wstr;
+}
+
+
+char* utf8_encode(const wchar_t* wstr, int nchars) {
+	int nbytes = 0;
+	if ((nbytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
+		wstr, nchars, NULL, 0, NULL, NULL)) == 0) {
+		return NULL;
+	}
+
+	char* str = NULL;
+	if (!(str = (char*)malloc((size_t)nbytes + 1))) {
+		return NULL;
+	}
+
+	str[nbytes] = '\0';
+	if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
+		wstr, nchars, str, nbytes, NULL, NULL) == 0) {
+		free(str);
+		return NULL;
+	}
+	return str;
+}
+
+#endif

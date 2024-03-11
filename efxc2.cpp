@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
     wchar_t* pdbFile = nullptr;
     wchar_t* w_temp = nullptr;
     char* c_inputFile = nullptr;
+    char* c_pdbFile = nullptr;
 #else  /* _WIN32 */
     char* inputFile = nullptr;
     char* IncludeFile = nullptr;
@@ -172,7 +173,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_FD, argc, argv, &index, &pdbFile)) {
-            cmd_Fd(verbose, pdbFile);
+            cmd_Fd(verbose, pdbFile, c_pdbFile);
             continue;
         }
         else if (parseOpt(M_FE, argc, argv, &index, nullptr)) {
