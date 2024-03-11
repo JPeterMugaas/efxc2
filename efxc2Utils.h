@@ -100,6 +100,10 @@ int readall(_In_ FILE* in,
 char* setupVariableName(_In_ const char* model,
     const _In_ char* entryPoint);
 #ifdef _WIN32
+wchar_t* utf8_decode(const char* str, int nbytes);
+char* utf8_encode(const wchar_t* wstr, int nchars);
+#endif
+#ifdef _WIN32
 char* wcharToChar(_In_ LPCWSTR w);
 #endif
 void WriteByteArrayConst(_In_ FILE* f, 

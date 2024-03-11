@@ -37,7 +37,7 @@ void cmd_E(_In_ int verbose,
 	_Out_ char** entryPoint,
 	_In_ const wchar_t* w_entryPoint);
 #else
-	_In_ char* w_entryPoint);
+_In_ char* w_entryPoint);
 #endif
 void cmd_enable_unbounded_descriptor_tables(_Inout_ UINT* sflags,
 	_In_ int verbose);

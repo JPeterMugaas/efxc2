@@ -46,6 +46,7 @@ public:
 	void StripShader();
 	size_t WriteIncludeFile(FILE* f);
 	size_t WriteObjectFile(FILE* f);
+	char* GetPDBFileName();
 private:
 	int              verbose = 1;
 	UINT             sflags = 0;
@@ -63,5 +64,6 @@ private:
 	pD3DGetBlobPartg ptr_D3DGetBlobPart;
 	pD3DSetBlobPartg ptr_D3DSetBlobPart;
 	ID3DBlob*        compilerOutput = nullptr;
-	ID3DBlob*        strippedBlob;
+	ID3DBlob*        strippedBlob = nullptr;
+	ID3DBlob*        pPDBName = nullptr;
 };
