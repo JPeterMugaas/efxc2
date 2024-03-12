@@ -472,7 +472,15 @@ int main(int argc, char* argv[]) {
 		}
 #endif
 		outputLen = compiler.WriteObjectFile(f);
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6001 )
+#pragma warning( disable : 6387 )
+#endif /* _MSC_VER */
 		fclose(f);
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif /* _MSC_VER */
 		if (compiler.get_verbose()) {
 #ifdef _WIN32
 			wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, ObjectFile);
@@ -482,13 +490,5 @@ int main(int argc, char* argv[]) {
 #endif
 		}
 	}
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6001 )
-#pragma warning( disable : 6387 )
-#endif /* _MSC_VER */
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
 	return 0;
 }
