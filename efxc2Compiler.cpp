@@ -276,7 +276,7 @@ void Compiler::SetPDBFileName(_In_ char* _fileName) {
 	memset(pNameBlobContent, 0, nameBlobPartSize);
 	pNameBlobContent->Flags = 0;
 	// declared length does not include the null terminator:
-	pNameBlobContent->NameLength = fileNameLen - 1;
+	pNameBlobContent->NameLength = (uint16_t)fileNameLen - 1;
 	// but the null terminator is expected to be present:
 	memcpy(pNameBlobContent + 1, _fileName, fileNameLen);
 
@@ -293,7 +293,7 @@ void Compiler::SetPDBFileName(_In_ char* _fileName) {
 		printf("\t %zu,\n", nameBlobPartSize);
 		printf("\t &pShaderWithNewName);\n");
 	}
-	HRESULT hr = 0;
+	HRESULT hr;
 	hr = ptr_D3DSetBlobPart(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, pNameBlobContent,
 		nameBlobPartSize, &pShaderWithNewName);
 	/*
@@ -306,6 +306,9 @@ void Compiler::SetPDBFileName(_In_ char* _fileName) {
 	[in]  SIZE_T        PartSize,
 	[out] ID3DBlob      **ppNewShader);
 	*/
+	if (FAILED(hr)) {
+		print_hresult_error(hr);
+	}
 }
 
 size_t Compiler::WritePDBFile(FILE* f) {
