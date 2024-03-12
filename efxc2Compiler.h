@@ -38,17 +38,19 @@ public:
 	void set_verbose(int _verbose) { verbose = _verbose; }
 	int get_outputHex() const { return outputHex; }
 	void set_outputHex(int _outputHex) { outputHex = _outputHex; }
-	void Compile(
-		_In_ const char* SourceCode,
-		_In_ const size_t SourceLen,
-		_In_ const size_t numDefines,
-		_In_reads_opt_(_Inexpressible_(defines->Name != NULL)) CONST D3D_SHADER_MACRO* defines);
+	UINT get_commands() const { return commands; }
+	void set_commands(UINT _commands) { commands = _commands; }
+	size_t get_numDefines() const { return numDefines;  }
+	void set_numDefines(size_t _numDefines) { numDefines = _numDefines;  }
+	void add_define(char* defineOption);
+	void Compile();
 	void StripShader();
 	size_t WriteIncludeFile(FILE* f);
 	size_t WriteObjectFile(FILE* f);
 	char* GetPDBFileName();
 	void SetPDBFileName(_In_ char* _fileName);
 	size_t WritePDBFile(FILE* f);
+	void LoadSourceCode(FILE* f);
 private:
 	int              verbose = 1;
 	UINT             sflags = 0;
@@ -60,6 +62,10 @@ private:
 	char*            inputFile = nullptr;
 	char*            variableName = nullptr;
 	int              outputHex = 0;
+	UINT             commands = 0;
+	size_t           SourceLen = 0;
+	char*            SourceCode = nullptr;
+	size_t           numDefines = 1;
 	HMODULE          h;
 	pD3DCompile2g    ptr_D3DCompile2;
 	pD3DStripShaderg ptr_D3DStripShader;
@@ -69,4 +75,5 @@ private:
 	ID3DBlob*        strippedBlob = nullptr;
 	ID3DBlob*        pPDBName = nullptr;
 	ID3DBlob*        pShaderWithNewName = nullptr;
+	D3D_SHADER_MACRO* defines;
 };

@@ -74,7 +74,6 @@ char* GetFileName(_In_ char* path);
 #ifdef _WIN32
 wchar_t* GetFileName(_In_ wchar_t* path);
 void FixupFileName(_Inout_ wchar_t* FileName);
-char* LoadSource(_In_ const wchar_t* filename, _Out_ size_t* len);
 bool parseOpt(_In_ const wchar_t* option, 
     _In_ int argc, 
     _In_ wchar_t* argv[1], 
@@ -91,7 +90,7 @@ bool parseOpt(_In_ const char* option,
 void print_copyright();
 [[noreturn]] void print_errno(errno_t _errno);
 [[noreturn]] void print_errno(void);
-void print_help_screen();
+[[noreturn]] void print_help_screen();
 [[noreturn]] void print_hresult_error(const HRESULT hr);
 void print_unsupported_arg_help();
 [[noreturn]] void print_usage_missing(const char* arg);

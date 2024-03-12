@@ -109,10 +109,10 @@ void print_unsupported_arg_help() {
 	exit(1);
 }
 
-void print_help_screen() {
+[[noreturn]] void print_help_screen() {
 	print_copyright();
 	print_usage_arg();
-	return;
+	exit(0);
 }
 
 [[noreturn]] void print_errno(errno_t _errno) {
@@ -348,7 +348,7 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
 #ifdef _WIN32
 wchar_t* concat(const wchar_t* s1, const wchar_t* s2)
 {
-	wchar_t* result = (wchar_t*)malloc(((wcslen(s1) + wcslen(s2)) * sizeof(wchar_t)) + sizeof(wchar_t)); // +1 for the null-terminator
+	auto* result = (wchar_t*)malloc(((wcslen(s1) + wcslen(s2)) * sizeof(wchar_t)) + sizeof(wchar_t)); // +1 for the null-terminator
 	if (result == nullptr) {
 		fprintf(stderr, "malloc failed/n");
 		print_errno();
@@ -361,7 +361,7 @@ wchar_t* concat(const wchar_t* s1, const wchar_t* s2)
 
 char* concat(const char* s1, const char* s2)
 {
-	char* result = (char*)malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
+	auto* result = (char*)malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
 	if (result == nullptr) {
 		fprintf(stderr, "malloc failed/n");
 		print_errno();
@@ -440,40 +440,6 @@ void FixupFileName(_Inout_ wchar_t* FileName) {
 #endif /* _WIN32 */
 
 #ifdef _WIN32
-char* LoadSource(_In_ const wchar_t* filename, _Out_ size_t* len) {
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6387)
-#endif  /* _MSC_VER */
-	FILE* f = nullptr;
-	errno_t err = _wfopen_s(&f, filename, L"r");
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif  /* _MSC_VER */
-	if (err != 0) {
-		print_errno(err);
-#else   /* _WIN32 */
-char* LoadSource(_In_ const char* filename, _Out_ size_t * len) {
-	FILE* f = fopen(filename, "r");
-	if (f == nullptr) {
-		print_errno();
-#endif  /* _WIN32 */
-	}
-	char* source = nullptr;
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6001)
-#pragma warning( disable : 6387)
-#endif /* _MSC_VER */
-	readall(f, &source, len);
-	fclose(f);
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
-	return source;
-}
-
-#ifdef _WIN32
 /*These functions are from:
   https://stackoverflow.com/questions/215963/how-do-you-properly-use-widechartomultibyte
 */
@@ -503,7 +469,7 @@ wchar_t* utf8_decode(const char* str, size_t nbytes) {
 char* utf8_encode(const wchar_t* wstr, size_t nchars) {
 	int nbytes = 0;
 	if ((nbytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-		wstr, nchars, nullptr, 0, nullptr, nullptr)) == 0) {
+		wstr, (int)nchars, nullptr, 0, nullptr, nullptr)) == 0) {
 		return nullptr;
 	}
 
