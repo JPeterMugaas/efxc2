@@ -257,8 +257,8 @@ char* Compiler::GetPDBFileName() {
     if (FAILED(hr)) {
         print_hresult_error(hr);
     }
-    auto pDebugNameData = reinterpret_cast<const ShaderDebugName*>(pPDBName->GetBufferPointer());
-    auto pName = reinterpret_cast<const char*>(pDebugNameData + 1);
+    auto pDebugNameData = (ShaderDebugName*)(pPDBName->GetBufferPointer());
+    auto pName = (char*)(pDebugNameData + 1);
     printf(".PDB Data Name: %s\n", pName);
     return (char*)pName;
 }
@@ -271,8 +271,12 @@ void Compiler::SetPDBFileName(_In_ char* _fileName) {
 
     size_t lengthOfNameStorage = (fileNameLen + 0x3) & ~0x3;
     size_t nameBlobPartSize = sizeof(ShaderDebugName) + lengthOfNameStorage;
-    auto pNameBlobContent = reinterpret_cast<ShaderDebugName*>(malloc(nameBlobPartSize));
+    auto pNameBlobContent = (ShaderDebugName*)(malloc(nameBlobPartSize));
 
+    if (pNameBlobContent == nullptr) {
+        fprintf(stderr, "malloc failed/n");
+        print_errno();
+    }
     // Ensure bytes after name are indeed zeroes:
     memset(pNameBlobContent, 0, nameBlobPartSize);
     pNameBlobContent->Flags = 0;
