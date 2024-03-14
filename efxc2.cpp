@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
             print_help_screen();
             return 0;
         }
-        else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, nullptr)) {
+        else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, nullptr)) {
             cmd_all_resources_bound(compiler);
             continue;
         }
@@ -75,7 +75,6 @@ int main(int argc, char* argv[]) {
             print_unsupported_arg_help();
             return 1;
         }
-#ifdef _WIN32
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 6001)
@@ -86,10 +85,6 @@ int main(int argc, char* argv[]) {
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif /* _MSC_VER */
-#else  /* _WIN32 */
-        else if (parseOpt(M_D, argc, argv, &index, &temp)) {
-            cmd_D(compiler, temp);
-#endif /* _WIN32 */
             continue;
         }
         else if (parseOpt(M_DECOMPRESS, argc, argv, &index, nullptr)) {
