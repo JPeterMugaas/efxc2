@@ -87,7 +87,7 @@ void cmd_Zsb(Compiler& compiler);
 void cmd_Zss(Compiler& compiler);
 
 typedef void (gCompilerp)(Compiler& compiler);
-struct CallTableEntry {
+struct CompilerOnlyEntry {
 #ifdef _WIN32
     const wchar_t* Param;
 #else
@@ -96,7 +96,7 @@ struct CallTableEntry {
     gCompilerp* method;
 };
 
-static const CallTableEntry g_CompilerOnlyCall[] = {
+static const CompilerOnlyEntry g_CompilerOnlyCall[] = {
     { M_ALL_RESOURCES_BOUND, cmd_all_resources_bound },
     { M_GCH, cmd_Gch },
     { M_GDP, cmd_Gdp },
