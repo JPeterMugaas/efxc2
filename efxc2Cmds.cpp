@@ -107,7 +107,7 @@ void cmd_D(Compiler & compiler,
 	_In_ const wchar_t* _defineOption) {
 	char* defineOption = wcharToChar(_defineOption);
 #else
-void cmd_D(Compiler compiler,
+void cmd_D(Compiler& compiler,
 	_In_ char* defineOption) {
 #endif
 	compiler.add_define(defineOption);
@@ -173,9 +173,9 @@ void cmd_Fh(Compiler & compiler, Files & files, _Inout_ char* outputFile) {
 }
 
 #ifdef _WIN32
-void cmd_Fo(Compiler & compiler, _Inout_ Files & files, wchar_t* outputFile) {
+void cmd_Fo(Compiler & compiler, Files & files, _Inout_ wchar_t* outputFile) {
 #else
-void cmd_Fo(Compiler & compiler, _Inout_ Files & files, char* outputFile) {
+void cmd_Fo(Compiler & compiler,  Files & files, _Inout_ char* outputFile) {
 #endif
 #ifdef _WIN32
 	FixupFileName(outputFile);

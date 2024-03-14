@@ -55,7 +55,6 @@ int main(int argc, char* argv[]) {
             break;
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, nullptr)) {
             print_help_screen();
-            return 0;
         }
         else if (parseCompilerOnlyCall(argc, argv, &index, compiler)) {
             continue;
@@ -99,7 +98,6 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_HELP, argc, argv, &index, nullptr)) {
             print_help_screen();
-            return 0;
         }
         else if (parseOpt(M_NOLOGO, argc, argv, &index, nullptr)) {
             continue;

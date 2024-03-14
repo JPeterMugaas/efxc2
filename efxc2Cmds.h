@@ -26,7 +26,7 @@ void cmd_all_resources_bound(Compiler& compiler);
 #ifdef _WIN32
 void cmd_D(Compiler& compiler, _In_ const wchar_t* _defineOption);
 #else
-void cmd_D(Compiler compiler, _In_ char* _defineOption);
+void cmd_D(Compiler& compiler, _In_ char* _defineOption);
 #endif
 #ifdef _WIN32
 void cmd_E(Compiler& compiler, _In_ const wchar_t* w_entryPoint);
