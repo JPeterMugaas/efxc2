@@ -199,6 +199,5 @@ static const char* g_NotSupportedArgs[]{
     { M_MATCHUAVS },
     { M_MERGEUAVS },
     { M_SETPRIVATE },
-    {  },
     { nullptr }
 };
