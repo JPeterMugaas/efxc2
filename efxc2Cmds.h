@@ -85,3 +85,57 @@ void cmd_Zpc(Compiler& compiler);
 void cmd_Zpr(Compiler& compiler);
 void cmd_Zsb(Compiler& compiler);
 void cmd_Zss(Compiler& compiler);
+
+typedef void (gCompilerp)(Compiler& compiler);
+struct CallTableEntry {
+#ifdef _WIN32
+    const wchar_t* Param;
+#else
+    const char* Param;
+#endif
+    gCompilerp* method;
+};
+
+static const CallTableEntry g_CompilerOnlyCall[] = {
+    { M_ALL_RESOURCES_BOUND, cmd_all_resources_bound },
+    { M_GCH, cmd_Gch },
+    { M_GDP, cmd_Gdp },
+    { M_GEC, cmd_Gec },
+    { M_GES, cmd_Ges },
+    { M_GFA, cmd_Gfa },
+    { M_GIS, cmd_Gis },
+    { M_GPP, cmd_Gpp },
+    { M_LX, cmd_Lx },
+    { M_O0, cmd_O0 },
+    { M_O1, cmd_O1 },
+    { M_O2, cmd_O2 },
+    { M_O3, cmd_O3 },
+    { M_OD, cmd_Od },
+    { M_OP, cmd_Op },
+    { M_QSTRIP_DEBUG, cmd_Qstrip_debug },
+    { M_QSTRIP_PRIV, cmd_Qstrip_priv },
+    { M_QSTRIP_REFLECT, cmd_Qstrip_reflect },
+    { M_QSTRIP_ROOTSIGNATURE, cmd_Qstrip_rootsignature },
+    { M_RES_MAY_ALIAS, cmd_res_may_alias },
+    { M_WX, cmd_WX },
+    { M_ZI, cmd_Zi },
+    { M_ZPC, cmd_Zpc },
+    { M_ZPR, cmd_Zpr },
+    { M_ZSB, cmd_Zsb },
+    { M_ZSS, cmd_Zss },
+    { nullptr, nullptr}
+};
+
+#ifdef _WIN32
+bool parseCompilerOnlyCall(
+    _In_ int argc,
+    _In_ wchar_t* argv[1],
+    _Inout_	int* index,
+    Compiler& compiler);
+#else
+bool parseCompilerOnlyCall(
+    _In_ int argc,
+    _In_ char* argv[1],
+    _Inout_	int* index,
+    Compiler& compiler);
+#endif

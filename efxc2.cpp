@@ -62,8 +62,7 @@ int main(int argc, char* argv[]) {
             print_help_screen();
             return 0;
         }
-        else if (parseOpt(M_ALL_RESOURCES_BOUND, argc, argv, &index, nullptr)) {
-            cmd_all_resources_bound(compiler);
+        else if (parseCompilerOnlyCall(argc, argv, &index, compiler)) {
             continue;
         }
         else if (parseOpt(M_CC, argc, argv, &index, nullptr)) {
@@ -105,10 +104,6 @@ int main(int argc, char* argv[]) {
 #endif
             continue;
         }
-        else if (parseOpt(M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES, argc, argv, &index, nullptr)) {
-            cmd_enable_unbounded_descriptor_tables(compiler);
-            continue;
-        }
         else if (parseOpt(M_FD, argc, argv, &index, &temp)) {
             cmd_Fd(compiler, files, temp);
             continue;
@@ -139,38 +134,10 @@ int main(int argc, char* argv[]) {
             print_unsupported_arg_help();
             return 1;
         }
-        else if (parseOpt(M_GCH, argc, argv, &index, nullptr)) {
-            cmd_Gch(compiler);
-            continue;
-        }
-        else if (parseOpt(M_GDP, argc, argv, &index, nullptr)) {
-            cmd_Gdp(compiler);
-            continue;
-        }
-        else if (parseOpt(M_GEC, argc, argv, &index, nullptr)) {
-            cmd_Gec(compiler);
-            continue;
-        }
-        else if (parseOpt(M_GES, argc, argv, &index, nullptr)) {
-            cmd_Ges(compiler);
-            continue;
-        }
         else if (parseOpt(M_GETPRIVATE, argc, argv, &index, nullptr)) {
             fprintf(stderr, "option -getprivate not supported");
             print_unsupported_arg_help();
             return 1;
-        }
-        else if (parseOpt(M_GFA, argc, argv, &index, nullptr)) {
-            cmd_Gfa(compiler);
-            continue;
-        }
-        else if (parseOpt(M_GIS, argc, argv, &index, nullptr)) {
-            cmd_Gis(compiler);
-            continue;
-        }
-        else if (parseOpt(M_GPP, argc, argv, &index, nullptr)) {
-            cmd_Gpp(compiler);
-            continue;
         }
         else if (parseOpt(M_HELP, argc, argv, &index, nullptr)) {
             print_help_screen();
@@ -178,10 +145,6 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_I, argc, argv, &index, nullptr)) {
             option_ignored(M_I, compiler);
-            continue;
-        }
-        else if (parseOpt(M_LX, argc, argv, &index, nullptr)) {
-            cmd_Lx(compiler);
             continue;
         }
         else if (parseOpt(M_MATCHUAVS, argc, argv, &index, nullptr)) {
@@ -205,52 +168,8 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_NOLOGO, argc, argv, &index, nullptr)) {
             continue;
         }
-        else if (parseOpt(M_O0, argc, argv, &index, nullptr)) {
-            cmd_O0(compiler);
-            continue;
-        }
-        else if (parseOpt(M_O1, argc, argv, &index, nullptr)) {
-            cmd_O1(compiler);
-            continue;
-        }
-        else if (parseOpt(M_O2, argc, argv, &index, nullptr)) {
-            cmd_O2(compiler);
-            continue;
-        }
-        else if (parseOpt(M_O3, argc, argv, &index, nullptr)) {
-            cmd_O3(compiler);
-            continue;
-        }
-        else if (parseOpt(M_OD, argc, argv, &index, nullptr)) {
-            cmd_Od(compiler);
-            continue;
-        }
-        else if (parseOpt(M_OP, argc, argv, &index, nullptr)) {
-            cmd_Op(compiler);
-            continue;
-        }
         else if (parseOpt(M_P, argc, argv, &index, nullptr)) {
             option_ignored(M_P, compiler);
-            continue;
-        }
-        else if (parseOpt(M_QSTRIP_DEBUG, argc, argv, &index, nullptr)) {
-            cmd_Qstrip_debug(compiler);
-            continue;
-        }
-        else if (parseOpt(M_QSTRIP_PRIV, argc, argv, &index, nullptr)) {
-            cmd_Qstrip_priv(compiler);
-            continue;
-        }
-        else if (parseOpt(M_QSTRIP_REFLECT, argc, argv, &index, nullptr)) {
-            cmd_Qstrip_reflect(compiler);
-            continue;
-        }
-        else if (parseOpt(M_QSTRIP_ROOTSIGNATURE, argc, argv, &index, nullptr)) {
-            cmd_Qstrip_rootsignature(compiler);
-            continue;
-        }
-        else if (parseOpt(M_RES_MAY_ALIAS, argc, argv, &index, nullptr)) {
-            cmd_res_may_alias(compiler);
             continue;
         }
         else if (parseOpt(M_SETPRIVATE, argc, argv, &index, nullptr)) {
@@ -258,16 +177,11 @@ int main(int argc, char* argv[]) {
             print_unsupported_arg_help();
             return 1;
         }
-
         else if (parseOpt(M_T, argc, argv, &index, &temp)) {
             cmd_T(compiler, temp);
 #ifdef _WIN32
             delete[] temp;
 #endif
-            continue;
-        }
-        else if (parseOpt(M_VD, argc, argv, &index, nullptr)) {
-            cmd_Vd(compiler);
             continue;
         }
         else if (parseOpt(M_VERSION, argc, argv, &index, nullptr)) {
@@ -282,30 +196,6 @@ int main(int argc, char* argv[]) {
 #ifdef _WIN32
             delete[] temp;
 #endif /* _WIN32 */
-            continue;
-        }
-        else if (parseOpt(M_WX, argc, argv, &index, nullptr)) {
-            cmd_WX(compiler);
-            continue;
-        }
-        else if (parseOpt(M_ZI, argc, argv, &index, nullptr)) {
-            cmd_Zi(compiler);
-            continue;
-        }
-        else if (parseOpt(M_ZPC, argc, argv, &index, nullptr)) {
-            cmd_Zpc(compiler);
-            continue;
-        }
-        else if (parseOpt(M_ZPR, argc, argv, &index, nullptr)) {
-            cmd_Zpr(compiler);
-            continue;
-        }
-        else if (parseOpt(M_ZSB, argc, argv, &index, nullptr)) {
-            cmd_Zsb(compiler);
-            continue;
-        }
-        else if (parseOpt(M_ZSS, argc, argv, &index, nullptr)) {
-            cmd_Zss(compiler);
             continue;
         }
         else {

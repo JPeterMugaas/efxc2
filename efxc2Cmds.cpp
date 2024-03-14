@@ -473,3 +473,46 @@ void cmd_Zss(Compiler & compiler) {
 	compiler.set_sflags(sflags);
 	return;
 }
+
+#ifdef _WIN32
+bool parseCompilerOnlyCall(
+	_In_ int argc,
+	_In_ wchar_t* argv[1],
+	_Inout_	int* index,
+	Compiler& compiler) {
+#else
+bool parseCompilerOnlyCall(
+	_In_ int argc,
+	_In_ char* argv[1],
+	_Inout_	int* index,
+	Compiler& compiler) {
+#endif
+#ifdef _WIN32
+	const wchar_t* argument = argv[*index];
+#else  /* _WIN32 */
+	const char* argument = argv[*index];
+#endif /* _WIN32 */
+	if (argument[0] == '-' || argument[0] == '/') {
+		argument++;
+		if (argument[0] == '-') {
+			argument++;
+		}
+	}
+	else {
+		return false;
+	}
+
+	for (int i = 0; g_CompilerOnlyCall[i].Param != nullptr; i++) {
+#ifdef _WIN32
+		if (wcscmp(g_CompilerOnlyCall[i].Param, argument) == 0) {
+#else
+		if (strcmp(g_CompilerOnlyCall[i].Param, argument) == 0) {
+#endif
+			auto ptr = (gCompilerp*)g_CompilerOnlyCall[i].method;
+			ptr(compiler);
+			* index += 1;
+			return true;
+		}
+	}
+	return false;
+}
