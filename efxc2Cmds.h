@@ -145,15 +145,15 @@ static const wchar_t* g_IgnoredOpts[]{
 #else
 static const char* g_IgnoredOpts[]{
 #endif
-    { M_CC },
-    { M_FE },
-    { M_FORCE_ROOTSIG_VER },
-    { M_I },
-    { M_NI },
-    { M_NO },
-    { M_P },
-    { M_VI },
-    { nullptr }
+    M_CC,
+    M_FE,
+    M_FORCE_ROOTSIG_VER,
+    M_I,
+    M_NI,
+    M_NO,
+    M_P,
+    M_VI,
+    nullptr
 };
 
 #ifdef _WIN32
@@ -189,15 +189,15 @@ static const wchar_t* g_NotSupportedArgs[]{
 #else
 static const char* g_NotSupportedArgs[]{
 #endif
-    { M_AT_SYMBOL },
-    { M_COMPRESS },
-    { M_DECOMPRESS },
-    { M_DUMPBIN },
-    { M_FL },
-    { M_FX },
-    { M_GETPRIVATE },
-    { M_MATCHUAVS },
-    { M_MERGEUAVS },
-    { M_SETPRIVATE },
-    { nullptr }
+    M_AT_SYMBOL,
+    M_COMPRESS,
+    M_DECOMPRESS,
+    M_DUMPBIN,
+    M_FL,
+    M_FX,
+    M_GETPRIVATE,
+    M_MATCHUAVS,
+    M_MERGEUAVS,
+    M_SETPRIVATE,
+    nullptr
 };
