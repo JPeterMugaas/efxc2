@@ -516,3 +516,85 @@ bool parseCompilerOnlyCall(
 	}
 	return false;
 }
+
+#ifdef _WIN32
+bool parseIgnoredOpts(
+	_In_ int argc,
+	_In_ wchar_t* argv[1],
+	_Inout_	int* index,
+	Compiler& compiler) {
+#else
+bool parseIgnoredOpts(
+	_In_ int argc,
+	_In_ char* argv[1],
+	_Inout_	int* index,
+	Compiler & compiler) {
+#endif
+#ifdef _WIN32
+	const wchar_t* argument = argv[*index];
+#else  /* _WIN32 */
+	const char* argument = argv[*index];
+#endif /* _WIN32 */
+	if (argument[0] == '-' || argument[0] == '/') {
+		argument++;
+		if (argument[0] == '-') {
+			argument++;
+		}
+	}
+	else {
+		return false;
+	}
+	for (int i = 0; g_IgnoredOpts[i] != nullptr; i++) {
+#ifdef _WIN32
+		if (wcscmp(g_IgnoredOpts[i], argument) == 0) {
+#else
+		if (strcmp(g_IgnoredOpts[i], argument) == 0) {
+#endif
+			option_ignored(argument, compiler);
+			return true;
+		}
+	}
+	return false;
+}
+
+#ifdef _WIN32
+bool parseNotSupportedOpts(
+	_In_ int argc,
+	_In_ wchar_t* argv[1],
+	_Inout_	int* index,
+	Compiler& compiler) {
+#else
+bool parseNotSupportedOpts(
+	_In_ int argc,
+	_In_ char* argv[1],
+	_Inout_	int* index,
+	Compiler& compiler) {
+#endif
+	#ifdef _WIN32
+	const wchar_t* argument = argv[*index];
+#else  /* _WIN32 */
+	const char* argument = argv[*index];
+#endif /* _WIN32 */
+	if (argument[0] == '-' || argument[0] == '/') {
+		argument++;
+		if (argument[0] == '-') {
+			argument++;
+		}
+	}
+	else {
+		return false;
+	}
+	for (int i = 0; g_NotSupportedArgs[i] != nullptr; i++) {
+#ifdef _WIN32
+		if (wcscmp(g_NotSupportedArgs[i], argument) == 0) {
+			fwprintf(stderr, L"option -%ls not supported", argument);
+#else
+		if (strcmp(g_NotSupportedArgs[i], argument) == 0) {
+			fprintf(stderr, "option -%s not supported", argument);
+#endif
+			print_unsupported_arg_help();
+			return true;
+		}
+	}
+	return false;
+}

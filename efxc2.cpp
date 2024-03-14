@@ -53,11 +53,6 @@ int main(int argc, char* argv[]) {
         /* Detect the end of the options. */
         if (index >= argc)
             break;
-        else if (parseOpt(M_AT_SYMBOL, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -@ not supported");
-            print_unsupported_arg_help();
-            return 1;
-        }
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, nullptr)) {
             print_help_screen();
             return 0;
@@ -65,14 +60,11 @@ int main(int argc, char* argv[]) {
         else if (parseCompilerOnlyCall(argc, argv, &index, compiler)) {
             continue;
         }
-        else if (parseOpt(M_CC, argc, argv, &index, nullptr)) {
-            option_ignored(M_CC, compiler);
+        else if (parseIgnoredOpts(argc, argv, &index, compiler)) {
             continue;
         }
-        else if (parseOpt(M_COMPRESS, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -compress not supported");
-            print_unsupported_arg_help();
-            return 1;
+        else if (parseNotSupportedOpts(argc, argv, &index, compiler)) {
+            ;
         }
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -86,17 +78,6 @@ int main(int argc, char* argv[]) {
 #endif /* _MSC_VER */
             continue;
         }
-        else if (parseOpt(M_DECOMPRESS, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -decompress not supported");
-            print_unsupported_arg_help();
-            return 1;
-        }
-        else if (parseOpt(M_DUMPBIN, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -dumpbin not supported");
-            print_unsupported_arg_help();
-            return 1;
-        }
-
         else if (parseOpt(M_E_, argc, argv, &index, &temp)) {
             cmd_E(compiler, temp);
 #ifdef _WIN32
@@ -108,74 +89,20 @@ int main(int argc, char* argv[]) {
             cmd_Fd(compiler, files, temp);
             continue;
         }
-        else if (parseOpt(M_FE, argc, argv, &index, nullptr)) {
-            option_ignored(M_FE, compiler);
-            continue;
-        }
         else if (parseOpt(M_FH, argc, argv, &index, &temp)) {
             cmd_Fh(compiler, files, temp);
             continue;
-        }
-        else if (parseOpt(M_FL, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -Fl not supported");
-            print_unsupported_arg_help();
-            return 1;
         }
         else if (parseOpt(M_FO, argc, argv, &index, &temp)) {
             cmd_Fo(compiler, files, temp);
             continue;
         }
-        else if (parseOpt(M_FORCE_ROOTSIG_VER, argc, argv, &index, nullptr)) {
-            option_ignored(argv[index], compiler);
-            continue;
-        }
-        else if (parseOpt(M_FX, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -Fx not supported");
-            print_unsupported_arg_help();
-            return 1;
-        }
-        else if (parseOpt(M_GETPRIVATE, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -getprivate not supported");
-            print_unsupported_arg_help();
-            return 1;
-        }
         else if (parseOpt(M_HELP, argc, argv, &index, nullptr)) {
             print_help_screen();
             return 0;
         }
-        else if (parseOpt(M_I, argc, argv, &index, nullptr)) {
-            option_ignored(M_I, compiler);
-            continue;
-        }
-        else if (parseOpt(M_MATCHUAVS, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -matchUAVs not supported");
-            print_unsupported_arg_help();
-            return 1;
-        }
-        else if (parseOpt(M_MERGEUAVS, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -mergeUAVs not supported");
-            print_unsupported_arg_help();
-            return 1;
-        }
-        else if (parseOpt(M_NI, argc, argv, &index, nullptr)) {
-            option_ignored(M_NI, compiler);
-            continue;
-        }
-        else if (parseOpt(M_NO, argc, argv, &index, nullptr)) {
-            option_ignored(M_NO, compiler);
-            continue;
-        }
         else if (parseOpt(M_NOLOGO, argc, argv, &index, nullptr)) {
             continue;
-        }
-        else if (parseOpt(M_P, argc, argv, &index, nullptr)) {
-            option_ignored(M_P, compiler);
-            continue;
-        }
-        else if (parseOpt(M_SETPRIVATE, argc, argv, &index, nullptr)) {
-            fprintf(stderr, "option -setprivate not supported");
-            print_unsupported_arg_help();
-            return 1;
         }
         else if (parseOpt(M_T, argc, argv, &index, &temp)) {
             cmd_T(compiler, temp);
@@ -186,10 +113,6 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_VERSION, argc, argv, &index, nullptr)) {
             print_version();
-        }
-        else if (parseOpt(M_VI, argc, argv, &index, nullptr)) {
-            option_ignored(M_VI, compiler);
-            continue;
         }
         else if (parseOpt(M_VN, argc, argv, &index, &temp)) {
             cmd_Vn(compiler, temp);
