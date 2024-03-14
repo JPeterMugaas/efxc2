@@ -10,6 +10,7 @@
 #pragma once
 #include "efxc2.h"
 #include "efxc2Compiler.h"
+#include "efxc2Files.h"
 
 #ifdef _WIN32
 void option_ignored(_In_ const wchar_t* Opt, Compiler& compiler);
@@ -17,9 +18,9 @@ void option_ignored(_In_ const wchar_t* Opt, Compiler& compiler);
 void option_ignored(_In_ const char* Opt, _In_ Compiler& compiler);
 #endif
 #ifdef _WIN32
-void parseInputFile(_In_ const wchar_t* parameter, _Out_opt_ wchar_t** inputFile, Compiler& compiler);
+void parseInputFile(_In_ const wchar_t* parameter, Compiler& compiler, Files& files);
 #else
-void parseInputFile(_In_ const char* parameter, _Out_opt_ char** inputFile, Compiler& compiler);
+void parseInputFile(_In_ const char* parameter, Compiler& compiler, Files& files);
 #endif
 void cmd_all_resources_bound(Compiler& compiler);
 #ifdef _WIN32
@@ -34,19 +35,19 @@ void cmd_E(Compiler& compiler, _In_ char* entryPoint);
 #endif
 void cmd_enable_unbounded_descriptor_tables(Compiler& compiler);
 #ifdef _WIN32
-void cmd_Fd(Compiler& compiler, _In_ wchar_t* pdbFile, _Out_ char** c_pdbFile);
+void cmd_Fd(Compiler& compiler, Files& files, _In_ wchar_t* pdbFile);
 #else
-void cmd_Fd(Compiler& compiler, _In_ char* pdbFile);
+void cmd_Fd(Compiler& compiler, Files& files, _In_ char* pdbFile);
 #endif
 #ifdef _WIN32
-void cmd_Fh(Compiler& compiler, _Inout_ wchar_t* outputFile);
+void cmd_Fh(Compiler& compiler, Files& files, _Inout_ wchar_t* outputFile);
 #else
-void cmd_Fh(Compiler& compiler, _Inout_ char* outputFile);
+void cmd_Fh(Compiler& compiler, Files& files, _Inout_ char* outputFile);
 #endif
 #ifdef _WIN32
-void cmd_Fo(Compiler& compiler, _Inout_ wchar_t* outputFile);
+void cmd_Fo(Compiler& compiler, Files& files, _Inout_ wchar_t* outputFile);
 #else
-void cmd_Fo(Compiler& compiler, _Inout_ char* outputFile);
+void cmd_Fo(Compiler& compiler, Files& files, _Inout_ char* outputFile);
 #endif
 void cmd_Gch(Compiler& compiler);
 void cmd_Gdp(Compiler& compiler);

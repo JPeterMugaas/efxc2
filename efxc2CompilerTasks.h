@@ -13,14 +13,7 @@
 #include "efxc2Compiler.h"
 
 #ifdef _WIN32
-void CompilerTasks(wchar_t* IncludeFile,
-    wchar_t* ObjectFile,
-    wchar_t* pdbFile,
-    char* c_pdbFile,
-    Compiler& compiler);
+void CompilerTasks(Compiler& compiler, Files files);
 #else
-void CompilerTasks(char* IncludeFile,
-    char* ObjectFile,
-    char* pdbFile,
-    Compiler & compiler);
+void CompilerTasks(Compiler & compiler, Files files);
 #endif

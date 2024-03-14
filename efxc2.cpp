@@ -11,6 +11,7 @@
 #include "efxc2Cmds.h"
 #include "efxc2Compiler.h"
 #include "efxc2CompilerTasks.h"
+#include "efxc2Files.h"
 
 /*Cygwin and MSYS2 compilers amd linkers don't support
 the wmain -Municode entry-point*/
@@ -23,22 +24,14 @@ int main(int argc, char* argv[]) {
     // ====================================================================================
     // Process Command Line Arguments
 #ifdef _WIN32
-    wchar_t* inputFile = nullptr;
-    wchar_t* IncludeFile = nullptr;
-    wchar_t* ObjectFile = nullptr;
-    wchar_t* pdbFile = nullptr;
     wchar_t* temp = nullptr;
-    char* c_pdbFile = nullptr;
-#else  /* _WIN32 */
-    char* inputFile = nullptr;
-    char* IncludeFile = nullptr;
-    char* ObjectFile = nullptr;
-    char* pdbFile = nullptr;
+#else
     char* temp = nullptr;
-#endif /* _WIN32 */
+#endif
     FILE* f;
 
     Compiler compiler;
+    Files files;
 
     /*first scan specifically for the nologo argument so no output
     is given regardless of parameter order*/
@@ -121,20 +114,16 @@ int main(int argc, char* argv[]) {
             cmd_enable_unbounded_descriptor_tables(compiler);
             continue;
         }
-        else if (parseOpt(M_FD, argc, argv, &index, &pdbFile)) {
-#ifdef _WIN32
-            cmd_Fd(compiler, pdbFile, &c_pdbFile);
-#else
-            cmd_Fd(compiler, pdbFile);
-#endif
+        else if (parseOpt(M_FD, argc, argv, &index, &temp)) {
+            cmd_Fd(compiler, files, temp);
             continue;
         }
         else if (parseOpt(M_FE, argc, argv, &index, nullptr)) {
             option_ignored(M_FE, compiler);
             continue;
         }
-        else if (parseOpt(M_FH, argc, argv, &index, &IncludeFile)) {
-            cmd_Fh(compiler, IncludeFile);
+        else if (parseOpt(M_FH, argc, argv, &index, &temp)) {
+            cmd_Fh(compiler, files, temp);
             continue;
         }
         else if (parseOpt(M_FL, argc, argv, &index, nullptr)) {
@@ -142,8 +131,8 @@ int main(int argc, char* argv[]) {
             print_unsupported_arg_help();
             return 1;
         }
-        else if (parseOpt(M_FO, argc, argv, &index, &ObjectFile)) {
-            cmd_Fo(compiler, ObjectFile);
+        else if (parseOpt(M_FO, argc, argv, &index, &temp)) {
+            cmd_Fo(compiler, files, temp);
             continue;
         }
         else if (parseOpt(M_FORCE_ROOTSIG_VER, argc, argv, &index, nullptr)) {
@@ -326,42 +315,18 @@ int main(int argc, char* argv[]) {
         }
         else {
 #ifdef _WIN32
-            parseInputFile(argv[index], &inputFile, compiler);
+            parseInputFile(argv[index], compiler, files);
 #else
-            parseInputFile(argv[index], &inputFile, compiler);
+            parseInputFile(argv[index], compiler, files);
 #endif
-#ifdef _WIN32
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6387)
-#endif  /* _MSC_VER */
-            errno_t err = _wfopen_s(&f, inputFile, L"r");
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif  /* _MSC_VER */
-            if (err != 0) {
-                print_errno(err);
-#else 
-            FILE* f = fopen(inputFile, "r");
-            if (f == nullptr) {
-                print_errno();
-#endif  /* _WIN32 */
-            }
-            compiler.LoadSourceCode(f);
-            fclose(f);
             index += 1;
         }
     }
 
-    if (inputFile == nullptr)
-        print_usage_missing("inputFile");
-    if (IncludeFile == nullptr)
-        print_usage_missing("IncludeFile");
-
 #ifdef _WIN32
-    CompilerTasks(IncludeFile, ObjectFile, pdbFile, c_pdbFile, compiler);
+    CompilerTasks(compiler, files);
 #else
-    CompilerTasks(IncludeFile, ObjectFile, pdbFile, compiler);
+    CompilerTasks(compiler, files);
 #endif
     return 0;
 }
