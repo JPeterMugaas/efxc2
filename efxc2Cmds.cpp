@@ -85,6 +85,7 @@ void parseInputFile(_In_ const char* parameter, Compiler & compiler, Files & fil
 #endif  /* _WIN32 */
 		}
 		compiler.LoadSourceCode(f);
+		_Analysis_assume_(f != NULL);
 		fclose(f);
 	}
 	else {

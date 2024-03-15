@@ -13,7 +13,7 @@
 
 class Compiler {
 public:
-	explicit Compiler(const CompilerAPIContainer& _api);
+	explicit Compiler(const CompilerAPIContainer& _api) : api(_api) { initializeDefines(); };
 	UINT get_sflags() const { return sflags; }
 	void set_sflags(UINT _sflags) { sflags = _sflags; }
 	UINT get_eflags() const { return eflags; }
@@ -69,4 +69,5 @@ private:
 	ID3DBlob*        pPDBName = nullptr;
 	ID3DBlob*        pShaderWithNewName = nullptr;
 	D3D_SHADER_MACRO* defines;
+	void initializeDefines();
 };

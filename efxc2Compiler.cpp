@@ -10,8 +10,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 
-Compiler::Compiler(const CompilerAPIContainer& _api) {
-    api = _api;
+void Compiler::initializeDefines() {
     numDefines = 1;
     defines = new D3D_SHADER_MACRO[numDefines];
     defines[numDefines - 1].Name = nullptr;

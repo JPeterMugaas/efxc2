@@ -52,6 +52,7 @@ void Files::WritePDBFile(Compiler& compiler) {
 		}
 #endif
 		outputLen = compiler.WritePDBFile(f);
+		_Analysis_assume_(f != NULL);
 		fclose(f);
 #ifdef _WIN32
 		wprintf(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile);
@@ -88,6 +89,7 @@ void Files::WriteIncludeFile(Compiler & compiler) {
 	}
 #endif
 	outputLen = compiler.WriteIncludeFile(f);
+	_Analysis_assume_(f != NULL);
 	fclose(f);
 	if (compiler.get_verbose()) {
 #ifdef _WIN32
