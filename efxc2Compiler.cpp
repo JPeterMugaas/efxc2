@@ -10,59 +10,8 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 
-Compiler::Compiler() {
-    h = LoadLibrary(DLL_NAME);
-    if (h == nullptr) {
-#ifdef _WIN32
-        //Find the WINDOWS dll
-        wchar_t dllPath[MAX_PATH];
-        size_t bytes = GetModuleFileName(nullptr, dllPath, MAX_PATH);
-        if (bytes == 0) {
-            fprintf(stderr, "Could not retrieve the directory of the running executable.\n");
-            print_windows_error();
-        }
-        //Fill rest of the buffer with NULLs
-        memset(dllPath + bytes, '\0', MAX_PATH - bytes);
-        //Copy the dll location over top efxc2.exe
-        wcscpy_s(dllPath + bytes, MAX_PATH, DLL_NAME);
-
-        h = LoadLibrary(dllPath);
-        if (h == nullptr) {
-            wprintf(L"Error: could not load " DLL_NAME L" from %s\n", dllPath);
-        }
-
-#else  /* _WIN32 */
-        print_windows_error();
-#endif /* _WIN32 */
-    }
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6387)
-#endif
-    ptr_D3DCompile2 = (pD3DCompile2g)GetProcAddress(h, "D3DCompile2");
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
-    if (ptr_D3DCompile2 == nullptr) {
-        printf("Error: could not get the address of D3DCompile2.\n");
-        print_windows_error();
-    }
-    ptr_D3DStripShader = (pD3DStripShaderg)GetProcAddress(h, "D3DStripShader");
-    if (ptr_D3DStripShader == nullptr) {
-        printf("Error: could not get the address of D3DStripShader.\n");
-        print_windows_error();
-    }
-    ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart");
-    if (ptr_D3DGetBlobPart == nullptr) {
-        printf("Error: could not get the address of D3DGetBlobPart.\n");
-        print_windows_error();
-    }
-    ptr_D3DSetBlobPart = (pD3DSetBlobPartg)GetProcAddress(h, "D3DSetBlobPart");
-    if (ptr_D3DGetBlobPart == nullptr) {
-        printf("Error: could not get the address of D3DSetBlobPart.\n");
-        print_windows_error();
-    }
-
+Compiler::Compiler(const CompilerAPIContainer& _api) {
+    api = _api;
     numDefines = 1;
     defines = new D3D_SHADER_MACRO[numDefines];
     defines[numDefines - 1].Name = nullptr;
@@ -129,7 +78,8 @@ void Compiler::Compile() {
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif
-    HRESULT hr = ptr_D3DCompile2(
+    auto ptr = api.get_ptr_D3DCompile2();
+    HRESULT hr = ptr(
         SourceCode,
         SourceLen,
         inputFile,
@@ -164,7 +114,7 @@ void Compiler::Compile() {
 }
 
 void Compiler::StripShader() {
-    auto* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
+    auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
     HRESULT hr = 0;
     strippedBlob = nullptr;
@@ -188,7 +138,8 @@ void Compiler::StripShader() {
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif
-        hr = ptr_D3DStripShader(compiledString, compiledLen, strip_flags, &strippedBlob);
+        auto ptr = api.get_ptr_D3DStripShader();
+        hr = ptr(compiledString, compiledLen, strip_flags, &strippedBlob);
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
@@ -244,7 +195,8 @@ char* Compiler::GetPDBFileName() {
         printf("\t 0x%016" PRIx64 ", \n", (INT64)0);
         printf("\t &pPDBName);\n");
     }
-    hr = ptr_D3DGetBlobPart(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, &pPDBName);
+    auto ptr = api.get_ptr_D3DGetBlobPart();
+    hr = ptr(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, &pPDBName);
     /*
     HRESULT D3DGetBlobPart(
     [in]  LPCVOID       pSrcData,
@@ -299,7 +251,8 @@ void Compiler::SetPDBFileName(_In_ char* _fileName) {
         printf("\t &pShaderWithNewName);\n");
     }
     HRESULT hr;
-    hr = ptr_D3DSetBlobPart(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, pNameBlobContent,
+    auto ptr = api.get_ptr_D3DSetBlobPart();
+    hr = ptr(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, pNameBlobContent,
         nameBlobPartSize, &pShaderWithNewName);
     /*
     HRESULT D3DSetBlobPart(
@@ -337,7 +290,8 @@ size_t Compiler::WritePDBFile(FILE* f) {
         printf("\t 0x%016" PRIx64 ", \n", (INT64)0);
         printf("\t &PDBData);\n");
     }
-    hr = ptr_D3DGetBlobPart(compiledString, compiledLen, D3D_BLOB_PDB, 0, &PDBData);
+    auto ptr = api.get_ptr_D3DGetBlobPart();
+    hr = ptr(compiledString, compiledLen, D3D_BLOB_PDB, 0, &PDBData);
     /*
     HRESULT D3DGetBlobPart(
     [in]  LPCVOID       pSrcData,

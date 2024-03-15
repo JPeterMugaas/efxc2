@@ -29,8 +29,8 @@ int main(int argc, char* argv[]) {
     char* temp = nullptr;
 #endif
     FILE* f;
-
-    Compiler compiler;
+    CompilerAPIContainer api;
+    Compiler compiler(api);
     Files files;
 
     /*first scan specifically for the nologo argument so no output
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
         else if (parseIgnoredOpts(argc, argv, &index, compiler)) {
             continue;
         }
-        else if (parseNotSupportedOpts(argc, argv, &index, compiler)) {
+        else if (parseNotSupportedOpts(argc, argv, &index)) {
             ;
         }
 #ifdef _MSC_VER

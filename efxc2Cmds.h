@@ -86,7 +86,7 @@ void cmd_Zpr(Compiler& compiler);
 void cmd_Zsb(Compiler& compiler);
 void cmd_Zss(Compiler& compiler);
 
-typedef void (gCompilerp)(Compiler& compiler);
+using gCompilerp = void (Compiler &);
 struct CompilerOnlyEntry {
 #ifdef _WIN32
     const wchar_t* Param;
@@ -174,14 +174,12 @@ bool parseIgnoredOpts(
 bool parseNotSupportedOpts(
     _In_ int argc,
     _In_ wchar_t* argv[1],
-    _Inout_	int* index,
-    Compiler& compiler);
+    _Inout_	int* index);
 #else
 bool parseNotSupportedOpts(
     _In_ int argc,
     _In_ char* argv[1],
-    _Inout_	int* index,
-    Compiler& compiler);
+    _Inout_	int* index);
 #endif
 
 #ifdef _WIN32

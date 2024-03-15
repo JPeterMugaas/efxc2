@@ -9,15 +9,11 @@
 //--------------------------------------------------------------------------------------
 #pragma once
 #include "efxc2.h"
+#include "efxc2CompilerAPIContainer.h"
 
 class Compiler {
 public:
-	explicit Compiler();
-	HMODULE get_h() const { return h; }
-	pD3DCompile2g get_ptr_D3DCompile2() const { return  ptr_D3DCompile2; }
-	pD3DStripShaderg get_ptr_D3DStripShader() const { return ptr_D3DStripShader; }
-	pD3DGetBlobPartg get_ptr_D3DGetBlobPart() const { return ptr_D3DGetBlobPart; }
-	pD3DSetBlobPartg get_ptr_D3DSetBlobPart() const { return ptr_D3DSetBlobPart; }
+	explicit Compiler(const CompilerAPIContainer& _api);
 	UINT get_sflags() const { return sflags; }
 	void set_sflags(UINT _sflags) { sflags = _sflags; }
 	UINT get_eflags() const { return eflags; }
@@ -52,6 +48,7 @@ public:
 	size_t WritePDBFile(FILE* f);
 	void LoadSourceCode(FILE* f);
 private:
+	CompilerAPIContainer api;
 	int              verbose = 1;
 	UINT             sflags = 0;
 	UINT             eflags = 0;
@@ -66,11 +63,7 @@ private:
 	size_t           SourceLen = 0;
 	char*            SourceCode = nullptr;
 	size_t           numDefines = 1;
-	HMODULE          h;
-	pD3DCompile2g    ptr_D3DCompile2;
-	pD3DStripShaderg ptr_D3DStripShader;
-	pD3DGetBlobPartg ptr_D3DGetBlobPart;
-	pD3DSetBlobPartg ptr_D3DSetBlobPart;
+
 	ID3DBlob*        compilerOutput = nullptr;
 	ID3DBlob*        strippedBlob = nullptr;
 	ID3DBlob*        pPDBName = nullptr;

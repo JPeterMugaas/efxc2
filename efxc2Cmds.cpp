@@ -561,14 +561,12 @@ bool parseIgnoredOpts(
 bool parseNotSupportedOpts(
 	_In_ int argc,
 	_In_ wchar_t* argv[1],
-	_Inout_	int* index,
-	Compiler& compiler) {
+	_Inout_	int* index) {
 #else
 bool parseNotSupportedOpts(
 	_In_ int argc,
 	_In_ char* argv[1],
-	_Inout_	int* index,
-	Compiler& compiler) {
+	_Inout_	int* index) {
 #endif
 	#ifdef _WIN32
 	const wchar_t* argument = argv[*index];
