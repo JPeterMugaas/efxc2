@@ -10,6 +10,8 @@
 #include "efxc2CompilerAPIContainer.h"
 #include "efxc2Utils.h"
 
+using namespace std;
+
 CompilerAPIContainer::CompilerAPIContainer() {
     h = LoadLibrary(DLL_NAME);
     if (h == nullptr) {

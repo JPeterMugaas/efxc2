@@ -10,6 +10,8 @@
 
 #include "efxc2Utils.h"
 
+using namespace std;
+
 static const char* HResultName(_In_ const HRESULT hr) {
 	for (int i = 0; g_ErrorTable[i].ErrorName != nullptr; i++) {
 		if (hr == g_ErrorTable[i].ErrorCode ) {

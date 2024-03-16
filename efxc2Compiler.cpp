@@ -10,6 +10,8 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 
+using namespace std;
+
 void Compiler::initializeDefines() {
     numDefines = 1;
     defines = new D3D_SHADER_MACRO[numDefines];

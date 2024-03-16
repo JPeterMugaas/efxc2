@@ -11,6 +11,8 @@
 #include "efxc2Compiler.h"
 #include "efxc2Files.h"
 
+using namespace std;
+
 #ifdef _WIN32
 void CompilerTasks(Compiler& compiler, Files files) {
 #else

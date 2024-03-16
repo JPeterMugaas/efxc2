@@ -11,6 +11,8 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
+using namespace std;
+
 void Files::WritePDBFile(Compiler& compiler) {
 	FILE* f;
 #ifdef _WIN32

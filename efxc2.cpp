@@ -13,6 +13,8 @@
 #include "efxc2CompilerTasks.h"
 #include "efxc2Files.h"
 
+using namespace std;
+
 /*Cygwin and MSYS2 compilers amd linkers don't support
 the wmain -Municode entry-point*/
 
