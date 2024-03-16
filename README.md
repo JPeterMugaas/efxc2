@@ -41,8 +41,7 @@ Ddo the following:
 
 1. install [CMake](https://cmake.org/) using `pacman -S [package name]`.  
 You can find what versions are available with the command `pacman -Ss cmake`.
-2. [Download the PKGBUILD](https://raw.githubusercontent.com/JPeterMugaas/MINGW-ext-packages/master/mingw-w64-efxc2/PKGBUILD) file and place it in an 
-2. empty directory named `mingw-w64-efxc2`.
+2. [Download the PKGBUILD](https://raw.githubusercontent.com/JPeterMugaas/MINGW-ext-packages/master/mingw-w64-efxc2/PKGBUILD) file and place it in an  empty directory named `mingw-w64-efxc2`.
 3. change the current directory to where you downloaded the PKGBUILD and 
 enter `makepkg-mingw` to build efxc2.
 4. install the packages you created using `pacman -U [package name]`. 
