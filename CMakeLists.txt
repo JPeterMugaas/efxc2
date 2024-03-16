@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.3.86)
+set(EFXC2_VERSION 0.0.3.87)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -20,6 +20,8 @@ include(GNUInstallDirs)
 
 set(PROJECT_COMPANY "J. Peter Mugaas")
 set(PROJECT_COPYRIGHT "Copyright (c) 2024 ${PROJECT_COMPANY}")
+
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 set(EXEC_SOURCES efxc2.cpp
                  efxc2Cmds.h
@@ -57,6 +59,7 @@ endif()
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(fxc ${EXEC_SOURCES})
+set_target_properties(fxc PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR})
 target_compile_definitions(fxc PRIVATE _UNICODE UNICODE)
 
 if(MINGW)
@@ -71,7 +74,7 @@ if(MSVC)
 endif()
 
 install(FILES 
-  ${CMAKE_CURRENT_SOURCE_DIR}/README.txt
+  ${CMAKE_CURRENT_SOURCE_DIR}/README.md
   ${CMAKE_CURRENT_SOURCE_DIR}/license_MPL_2_0.txt
   ${CMAKE_CURRENT_SOURCE_DIR}/HISTORY.md
   DESTINATION ${CMAKE_INSTALL_DOCDIR})
