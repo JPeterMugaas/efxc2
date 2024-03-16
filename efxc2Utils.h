@@ -9,6 +9,8 @@
 //--------------------------------------------------------------------------------------
 
 #pragma once
+#ifndef EFXC2UTILS_H_INCLUDED
+#define EFXC2UTILS_H_INCLUDED
 #include "efxc2.h"
 
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
@@ -114,3 +116,5 @@ void WriteByteArrayConst(_In_ FILE* f,
     _In_ const size_t len, 
     _In_z_ const char* variableName, 
     _In_ const int outputHex);
+
+#endif  /*EFXC2UTILS_H_INCLUDED*/

@@ -8,6 +8,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //--------------------------------------------------------------------------------------
 #pragma once
+#ifndef EFXC2CMDS_H_INCLUDED
+#define EFXC2CMDS_H_INCLUDED
+
 #include "efxc2.h"
 #include "efxc2Compiler.h"
 #include "efxc2Files.h"
@@ -128,13 +131,11 @@ static const CompilerOnlyEntry g_CompilerOnlyCall[] = {
 
 #ifdef _WIN32
 bool parseCompilerOnlyCall(
-    _In_ int argc,
     _In_ wchar_t* argv[1],
     _Inout_	int* index,
     Compiler& compiler);
 #else
 bool parseCompilerOnlyCall(
-    _In_ int argc,
     _In_ char* argv[1],
     _Inout_	int* index,
     Compiler& compiler);
@@ -158,13 +159,11 @@ static const char* g_IgnoredOpts[]{
 
 #ifdef _WIN32
 bool parseIgnoredOpts(
-    _In_ int argc,
     _In_ wchar_t* argv[1],
     _Inout_	int* index,
     Compiler& compiler);
 #else
 bool parseIgnoredOpts(
-    _In_ int argc,
     _In_ char* argv[1],
     _Inout_	int* index,
     Compiler & compiler);
@@ -172,12 +171,10 @@ bool parseIgnoredOpts(
 
 #ifdef _WIN32
 bool parseNotSupportedOpts(
-    _In_ int argc,
     _In_ wchar_t* argv[1],
     _Inout_	int* index);
 #else
 bool parseNotSupportedOpts(
-    _In_ int argc,
     _In_ char* argv[1],
     _Inout_	int* index);
 #endif
@@ -199,3 +196,5 @@ static const char* g_NotSupportedArgs[]{
     M_SETPRIVATE,
     nullptr
 };
+
+#endif /*EFXC2CMDS_H_INCLUDE*/

@@ -8,6 +8,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //--------------------------------------------------------------------------------------
 #pragma once
+#ifndef EFXC2FILES_H_INCLUDED
+#define EFXC2FILES_H_INCLUDED
 #include "efxc2.h"
 #include "efxc2Compiler.h"
 
@@ -53,3 +55,5 @@ private:
     char* temp = nullptr;
 #endif /* _WIN32 */
 };
+
+#endif /*EFXC2FILES_H_INCLUDED*/

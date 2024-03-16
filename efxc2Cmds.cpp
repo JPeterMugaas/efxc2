@@ -477,13 +477,11 @@ void cmd_Zss(Compiler & compiler) {
 
 #ifdef _WIN32
 bool parseCompilerOnlyCall(
-	_In_ int argc,
 	_In_ wchar_t* argv[1],
 	_Inout_	int* index,
 	Compiler& compiler) {
 #else
 bool parseCompilerOnlyCall(
-	_In_ int argc,
 	_In_ char* argv[1],
 	_Inout_	int* index,
 	Compiler& compiler) {
@@ -520,13 +518,11 @@ bool parseCompilerOnlyCall(
 
 #ifdef _WIN32
 bool parseIgnoredOpts(
-	_In_ int argc,
 	_In_ wchar_t* argv[1],
 	_Inout_	int* index,
 	Compiler& compiler) {
 #else
 bool parseIgnoredOpts(
-	_In_ int argc,
 	_In_ char* argv[1],
 	_Inout_	int* index,
 	Compiler & compiler) {
@@ -560,12 +556,10 @@ bool parseIgnoredOpts(
 
 #ifdef _WIN32
 bool parseNotSupportedOpts(
-	_In_ int argc,
 	_In_ wchar_t* argv[1],
 	_Inout_	int* index) {
 #else
 bool parseNotSupportedOpts(
-	_In_ int argc,
 	_In_ char* argv[1],
 	_Inout_	int* index) {
 #endif

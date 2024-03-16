@@ -9,6 +9,8 @@
 //--------------------------------------------------------------------------------------
 
 #pragma once
+#ifndef EFXC2COMPILERTASKS_H_INCLUDED
+#define EFXC2COMPILERTASKS_H_INCLUDED
 #include "efxc2.h"
 #include "efxc2Compiler.h"
 
@@ -17,3 +19,5 @@ void CompilerTasks(Compiler& compiler, Files files);
 #else
 void CompilerTasks(Compiler & compiler, Files files);
 #endif
+
+#endif /* EFXC2COMPILERTASKS_H_INCLUDED */

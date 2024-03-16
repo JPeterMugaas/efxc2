@@ -8,6 +8,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //--------------------------------------------------------------------------------------
 #pragma once
+#ifndef EFXC2COMPILERAPICONTAINER_H_INCLUDED
+#define EFXC2COMPILERAPICONTAINER_H_INCLUDED
 #include "efxc2.h"
 
 class CompilerAPIContainer {
@@ -25,3 +27,5 @@ private:
 	pD3DGetBlobPartg ptr_D3DGetBlobPart;
 	pD3DSetBlobPartg ptr_D3DSetBlobPart;
 };
+
+#endif /*EFXC2COMPILERAPICONTAINER_H_INCLUDED*/

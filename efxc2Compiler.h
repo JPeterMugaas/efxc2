@@ -8,6 +8,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //--------------------------------------------------------------------------------------
 #pragma once
+#ifndef EFXC2COMPILER_H_INCLUDED
+#define EFXC2COMPILER_H_INCLUDED
 #include "efxc2.h"
 #include "efxc2CompilerAPIContainer.h"
 
@@ -71,3 +73,5 @@ private:
 	D3D_SHADER_MACRO* defines;
 	void initializeDefines();
 };
+
+#endif /* EFXC2COMPILER_H_INCLUDED */

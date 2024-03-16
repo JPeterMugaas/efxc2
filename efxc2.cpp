@@ -56,14 +56,14 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, nullptr)) {
             print_help_screen();
         }
-        else if (parseCompilerOnlyCall(argc, argv, &index, compiler)) {
+        else if (parseCompilerOnlyCall(argv, &index, compiler)) {
             continue;
         }
-        else if (parseIgnoredOpts(argc, argv, &index, compiler)) {
+        else if (parseIgnoredOpts(argv, &index, compiler)) {
             continue;
         }
-        else if (parseNotSupportedOpts(argc, argv, &index)) {
-            ;
+        else if (parseNotSupportedOpts(argv, &index)) {
+            /* If true, this will not return.  It exits the program .*/
         }
 #ifdef _MSC_VER
 #pragma warning(push)
