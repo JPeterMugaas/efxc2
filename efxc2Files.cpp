@@ -44,7 +44,7 @@ void Files::WritePDBFile(Compiler& compiler) {
             free(w_PDBFileName);
 #else
             if (AppendSlash) {
-                pdbFile = concat(pdbFile, L"/");
+                pdbFile = concat(pdbFile, "/");
             }
             pdbFile = concat(pdbFile, pPDBFileName);
 #endif
