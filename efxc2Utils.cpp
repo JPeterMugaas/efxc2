@@ -133,10 +133,12 @@ void print_unsupported_arg_help() {
 	print_errno(errno);
 }
 
-char* GetFileName(_In_ char* path) {
-	if (path == nullptr) {
+char* GetFileName(_In_ char* path, _Out_ int* IsSpecialFolder) {
+	
+	if ((path == nullptr) || (IsSpecialFolder == nullptr)) {
 		return nullptr;
 	}
+	*IsSpecialFolder = false;
 	char* pCur = path;
 	char* pFileName = nullptr;
 
@@ -148,9 +150,11 @@ char* GetFileName(_In_ char* path) {
 	}
 	if (pFileName != nullptr) {
 		if (strcmp(pFileName, "..") == 0) {
+			*IsSpecialFolder = true;
 			return nullptr;
 		}
 		if (strcmp(pFileName, ".") == 0) {
+			*IsSpecialFolder = true;
 			return nullptr;
 		}
 		if (strcmp(pFileName, "") == 0) {
@@ -162,10 +166,11 @@ char* GetFileName(_In_ char* path) {
 
 
 #ifdef _WIN32
-wchar_t* GetFileName(_In_ wchar_t* path) {
-	if (path == nullptr) {
+wchar_t* GetFileName(_In_ wchar_t* path, _Out_ int* IsSpecialFolder) {
+	if ((path == nullptr) || (IsSpecialFolder == nullptr)) {
 		return nullptr;
 	}
+	*IsSpecialFolder = false;
 	wchar_t* pCur = path;
 	wchar_t* pFileName = nullptr;
 
@@ -177,9 +182,11 @@ wchar_t* GetFileName(_In_ wchar_t* path) {
 	}
 	if (pFileName != nullptr) {
 		if (wcscmp(pFileName, L"..") == 0) {
+			*IsSpecialFolder = true;
 			return nullptr;
 		}
 		if (wcscmp(pFileName, L".") == 0) {
+			*IsSpecialFolder = true;
 			return nullptr;
 		}
 		if (wcscmp(pFileName, L"") == 0) {

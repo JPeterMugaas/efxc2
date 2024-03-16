@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.3.81)
+set(EFXC2_VERSION 0.0.3.82)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -96,7 +96,9 @@ add_test(NAME nologo
 add_test(NAME default_PDB_filename
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
   COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Zss /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /FhCompiled/BC7Encode_TryMode456CS.inc /FdCompiled/ /VnBC7Encode_TryMode456CS)
-
+add_test(NAME default_PDB_filename_dot
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
+  COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Zss /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /FhCompiled/BC7Encode_TryMode456CS.inc /FdCompiled/. /VnBC7Encode_TryMode456CS)
 add_test(NAME short_cmd.BC7Encode_TryMode456CS
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
   COMMAND fxc BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /FhCompiled/BC7Encode_TryMode456CS.inc  /VnBC7Encode_TryMode456CS)

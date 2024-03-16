@@ -65,16 +65,16 @@ static const ProfilePrefix g_profilePrefixTable[] = {
   { "vs_3_0", "g_vs30"},
   { "vs_3_sw", "g_vs3ff"},
 
-  { NULL, NULL}
+  { nullptr, nullptr}
 };
 
 char* concat(const char* s1, const char* s2);
 #ifdef _WIN32
 wchar_t* concat(const wchar_t* s1, const wchar_t* s2);
 #endif
-char* GetFileName(_In_ char* path);
+char* GetFileName(_In_ char* path, _Out_ int* IsSpecialFolder);
 #ifdef _WIN32
-wchar_t* GetFileName(_In_ wchar_t* path);
+wchar_t* GetFileName(_In_ wchar_t* path, _Out_ int* IsSpecialFolder);
 void FixupFileName(_Inout_ wchar_t* FileName);
 bool parseOpt(_In_ const wchar_t* option, 
     _In_ int argc, 
