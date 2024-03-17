@@ -503,7 +503,7 @@ bool parseCompilerOnlyCall(
 		return false;
 	}
 
-	for (int i = 0; g_CompilerOnlyCall[i].Param != nullptr; i++) {
+	for (int i = 0; i < COMPILER_ONLY_ENTRIES_LENGTH; i++) {
 #ifdef _WIN32
 		if (wcscmp(g_CompilerOnlyCall[i].Param, argument) == 0) {
 #else
@@ -543,7 +543,7 @@ bool parseIgnoredOpts(
 	else {
 		return false;
 	}
-	for (int i = 0; g_IgnoredOpts[i] != nullptr; i++) {
+	for (int i = 0; i < IGNORED_OPTS_LENGTH; i++) {
 #ifdef _WIN32
 		if (wcscmp(g_IgnoredOpts[i], argument) == 0) {
 #else
@@ -579,7 +579,7 @@ bool parseNotSupportedOpts(
 	else {
 		return false;
 	}
-	for (int i = 0; g_NotSupportedArgs[i] != nullptr; i++) {
+	for (int i = 0; i < NOT_SUPPORTED_LENGTH; i++) {
 #ifdef _WIN32
 		if (wcscmp(g_NotSupportedArgs[i], argument) == 0) {
 			fwprintf(stderr, L"option -%ls not supported", argument);

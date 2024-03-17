@@ -99,8 +99,10 @@ struct CompilerOnlyEntry {
     gCompilerp* method;
 };
 
-static const CompilerOnlyEntry g_CompilerOnlyCall[] = {
-    { M_ALL_RESOURCES_BOUND, cmd_all_resources_bound },
+constexpr auto COMPILER_ONLY_ENTRIES_LENGTH = 26;
+
+const std::array <CompilerOnlyEntry, COMPILER_ONLY_ENTRIES_LENGTH> g_CompilerOnlyCall = { {
+   { M_ALL_RESOURCES_BOUND, cmd_all_resources_bound },
     { M_GCH, cmd_Gch },
     { M_GDP, cmd_Gdp },
     { M_GEC, cmd_Gec },
@@ -126,8 +128,8 @@ static const CompilerOnlyEntry g_CompilerOnlyCall[] = {
     { M_ZPR, cmd_Zpr },
     { M_ZSB, cmd_Zsb },
     { M_ZSS, cmd_Zss },
-    { nullptr, nullptr}
-};
+}};
+
 
 #ifdef _WIN32
 bool parseCompilerOnlyCall(
@@ -141,10 +143,11 @@ bool parseCompilerOnlyCall(
     Compiler& compiler);
 #endif
 
+constexpr auto IGNORED_OPTS_LENGTH = 8;
 #ifdef _WIN32
-static const wchar_t* g_IgnoredOpts[]{
+const std::array <const wchar_t*, IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #else
-static const char* g_IgnoredOpts[]{
+const std::array <const char*,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #endif
     M_CC,
     M_FE,
@@ -153,9 +156,7 @@ static const char* g_IgnoredOpts[]{
     M_NI,
     M_NO,
     M_P,
-    M_VI,
-    nullptr
-};
+    M_VI};
 
 #ifdef _WIN32
 bool parseIgnoredOpts(
@@ -179,10 +180,11 @@ bool parseNotSupportedOpts(
     _Inout_	int* index);
 #endif
 
+constexpr auto NOT_SUPPORTED_LENGTH = 10;
 #ifdef _WIN32
-static const wchar_t* g_NotSupportedArgs[]{
+const std::array <const wchar_t*, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = { {
 #else
-static const char* g_NotSupportedArgs[]{
+const std::array <const char*, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = { {
 #endif
     M_AT_SYMBOL,
     M_COMPRESS,
@@ -193,8 +195,7 @@ static const char* g_NotSupportedArgs[]{
     M_GETPRIVATE,
     M_MATCHUAVS,
     M_MERGEUAVS,
-    M_SETPRIVATE,
-    nullptr
-};
+    M_SETPRIVATE
+} };
 
 #endif /*EFXC2CMDS_H_INCLUDE*/

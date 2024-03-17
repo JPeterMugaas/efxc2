@@ -13,7 +13,7 @@
 using namespace std;
 
 static const char* HResultName(_In_ const HRESULT hr) {
-	for (int i = 0; g_ErrorTable[i].ErrorName != nullptr; i++) {
+	for (int i = 0; i < ERROR_TABLE_LENGTH; i++) {
 		if (hr == g_ErrorTable[i].ErrorCode ) {
 			return  g_ErrorTable[i].ErrorName;
 		}
@@ -385,7 +385,7 @@ char* setupVariableName(_In_ const char* model,
 	char* variableName = nullptr;
 	//Default output variable name
 	const char* prefix = "g";
-	for (int i = 0; g_profilePrefixTable[i].name != nullptr; i++) {
+	for (int i = 0; i < PROFILE_PREFIX_TABLE_LEN; i++) {
 		if (strcmp(g_profilePrefixTable[i].name, model) == 0) {
 			prefix = g_profilePrefixTable[i].prefix;
 			break;

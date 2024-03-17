@@ -30,7 +30,9 @@ struct ErrorTableEntry {
     const char* ErrorName;
 };
 
-static const ErrorTableEntry g_ErrorTable[] = {
+constexpr auto ERROR_TABLE_LENGTH = 11;
+
+const std::array <ErrorTableEntry, ERROR_TABLE_LENGTH >g_ErrorTable = { {
     { (HRESULT) 0x887C0002, "D3D11_ERROR_FILE_NOT_FOUND" },
     { (HRESULT) 0x887C0001, "D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS" },
     { (HRESULT) 0x887C0003, "D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS" },
@@ -41,16 +43,17 @@ static const ErrorTableEntry g_ErrorTable[] = {
     { (HRESULT) 0x80070057, "E_INVALIDARG" },
     { (HRESULT) 0x8007000E, "E_OUTOFMEMORY" },
     { (HRESULT) 0x80004001, "E_NOTIMPL" },
-    { (HRESULT) 1L, "S_FALSE ((HRESULT)" },
-    { (HRESULT) 0, nullptr }
-};
+    { 1L, "S_FALSE ((HRESULT)" }
+} };
 
 struct ProfilePrefix {
     const char* name;
     const char* prefix;
 };
 
-static const ProfilePrefix g_profilePrefixTable[] = {
+constexpr auto PROFILE_PREFIX_TABLE_LEN = 12;
+
+const std::array <ProfilePrefix, PROFILE_PREFIX_TABLE_LEN>g_profilePrefixTable = { {
   { "ps_2_0", "g_ps20"},
   { "ps_2_a", "g_ps21"},
   { "ps_2_b", "g_ps21"},
@@ -64,9 +67,7 @@ static const ProfilePrefix g_profilePrefixTable[] = {
   { "vs_2_sw", "g_vs2ff"},
   { "vs_3_0", "g_vs30"},
   { "vs_3_sw", "g_vs3ff"},
-
-  { nullptr, nullptr}
-};
+} };
 
 char* concat(const char* s1, const char* s2);
 #ifdef _WIN32

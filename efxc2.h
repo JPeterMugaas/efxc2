@@ -34,6 +34,7 @@
 #include <string>
 #include <cassert>
 #include <memory>
+#include <array>
 #include <wchar.h>
 #include <inttypes.h>
 #include <io.h>
@@ -228,121 +229,121 @@ constexpr auto ERR_SIZE = 128;
    upon platform.*/
 
 #ifdef _WIN32
-#define M_AT_SYMBOL                          L"@"
-#define M_QUESTION_MARK                      L"?"
-#define M_ALL_RESOURCES_BOUND                L"all_resources_bound"
-#define M_CC                                 L"Cc"
-#define M_COMPRESS                           L"compress"
-#define M_D                                  L"D"
-#define M_DECOMPRESS                         L"decompress"
-#define M_DUMPBIN                            L"dumpbin"
-#define M_E_                                 L"E"
-#define M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES L"enable_unbounded_descriptor_tables"
-#define M_FD                                 L"Fd"
-#define M_FE                                 L"Fe"
-#define M_FH                                 L"Fh"
-#define M_FL                                 L"Fl"
-#define M_FO                                 L"Fo"
-#define M_FORCE_ROOTSIG_VER                  L"force_rootsig_ver"
-#define M_FX                                 L"Fx"
-#define M_GCH                                L"Gch"
-#define M_GDP                                L"Gdp"
-#define M_GEC                                L"Gec"
-#define M_GES                                L"Ges"
-#define M_GETPRIVATE                         L"getprivate"
-#define M_GFA                                L"Gfa"
-#define M_GIS                                L"Gis"
-#define M_GPP                                L"Gpp"
-#define M_HELP                               L"help"
-#define M_I                                  L"I"
-#define M_LX                                 L"Lx"
-#define M_MATCHUAVS                          L"matchUAVs"
-#define M_MERGEUAVS                          L"mergeUAVs"
-#define M_NI                                 L"Ni"
-#define M_NO                                 L"No"
-#define M_NOLOGO                             L"nologo"
-#define M_O0                                 L"O0"
-#define M_O1                                 L"O1"
-#define M_O2                                 L"O2"
-#define M_O3                                 L"O3"
-#define M_OD                                 L"Od"
-#define M_OP                                 L"Op"
-#define M_P                                  L"P"
-#define M_QSTRIP_DEBUG                       L"Qstrip_debug"
-#define M_QSTRIP_PRIV                        L"Qstrip_priv"
-#define M_QSTRIP_REFLECT                     L"Qstrip_reflect"
-#define M_QSTRIP_ROOTSIGNATURE               L"Qstrip_rootsignature"
-#define M_RES_MAY_ALIAS                      L"res_may_alias"
-#define M_SETPRIVATE                         L"setprivate"
-#define M_SHTEMPLATE                         L"shtemplate"
-#define M_T                                  L"T"
-#define M_VD                                 L"Vd"
-#define M_VERSION                            L"version"
-#define M_VI                                 L"Vi"
-#define M_VN                                 L"Vn"
-#define M_WX                                 L"WX"
-#define M_ZI                                 L"Zi"
-#define M_ZPC                                L"Zpc"
-#define M_ZPR                                L"Zpr"
-#define M_ZSB                                L"Zsb"
-#define M_ZSS                                L"Zss"
+constexpr const wchar_t* M_AT_SYMBOL = L"@";
+constexpr const wchar_t* M_QUESTION_MARK = L"?";
+constexpr const wchar_t* M_ALL_RESOURCES_BOUND = L"all_resources_bound";
+constexpr const wchar_t* M_CC = L"Cc";
+constexpr const wchar_t* M_COMPRESS = L"compress";
+constexpr const wchar_t* M_D = L"D";
+constexpr const wchar_t* M_DECOMPRESS = L"decompress";
+constexpr const wchar_t* M_DUMPBIN = L"dumpbin";
+constexpr const wchar_t* M_E_ =  L"E";
+constexpr const wchar_t* M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES = L"enable_unbounded_descriptor_tables";
+constexpr const wchar_t* M_FD =  L"Fd";
+constexpr const wchar_t* M_FE =  L"Fe";
+constexpr const wchar_t* M_FH = L"Fh";
+constexpr const wchar_t* M_FL = L"Fl";
+constexpr const wchar_t* M_FO = L"Fo";
+constexpr const wchar_t* M_FORCE_ROOTSIG_VER = L"force_rootsig_ver";
+constexpr const wchar_t* M_FX = L"Fx";
+constexpr const wchar_t* M_GCH = L"Gch";
+constexpr const wchar_t* M_GDP = L"Gdp";
+constexpr const wchar_t* M_GEC = L"Gec";
+constexpr const wchar_t* M_GES = L"Ges";
+constexpr const wchar_t* M_GETPRIVATE = L"getprivate";
+constexpr const wchar_t* M_GFA = L"Gfa";
+constexpr const wchar_t* M_GIS = L"Gis";
+constexpr const wchar_t* M_GPP = L"Gpp";
+constexpr const wchar_t* M_HELP = L"help";
+constexpr const wchar_t* M_I = L"I";
+constexpr const wchar_t* M_LX = L"Lx";
+constexpr const wchar_t* M_MATCHUAVS = L"matchUAVs";
+constexpr const wchar_t* M_MERGEUAVS = L"mergeUAVs";
+constexpr const wchar_t* M_NI = L"Ni";
+constexpr const wchar_t* M_NO = L"No";
+constexpr const wchar_t* M_NOLOGO = L"nologo";
+constexpr const wchar_t* M_O0 = L"O0";
+constexpr const wchar_t* M_O1 = L"O1";
+constexpr const wchar_t* M_O2 = L"O2";
+constexpr const wchar_t* M_O3 = L"O3";
+constexpr const wchar_t* M_OD = L"Od";
+constexpr const wchar_t* M_OP = L"Op";
+constexpr const wchar_t* M_P = L"P";
+constexpr const wchar_t* M_QSTRIP_DEBUG = L"Qstrip_debug";
+constexpr const wchar_t* M_QSTRIP_PRIV = L"Qstrip_priv";
+constexpr const wchar_t* M_QSTRIP_REFLECT = L"Qstrip_reflect";
+constexpr const wchar_t* M_QSTRIP_ROOTSIGNATURE = L"Qstrip_rootsignature";
+constexpr const wchar_t* M_RES_MAY_ALIAS = L"res_may_alias";
+constexpr const wchar_t* M_SETPRIVATE = L"setprivate";
+constexpr const wchar_t* M_SHTEMPLATE = L"shtemplate";
+constexpr const wchar_t* M_T = L"T";
+constexpr const wchar_t* M_VD = L"Vd";
+constexpr const wchar_t* M_VERSION = L"version";
+constexpr const wchar_t* M_VI = L"Vi";
+constexpr const wchar_t* M_VN = L"Vn";
+constexpr const wchar_t* M_WX = L"WX";
+constexpr const wchar_t* M_ZI = L"Zi";
+constexpr const wchar_t* M_ZPC = L"Zpc";
+constexpr const wchar_t* M_ZPR = L"Zpr";
+constexpr const wchar_t* M_ZSB = L"Zsb";
+constexpr const wchar_t* M_ZSS = L"Zss";
 #else  /* _WIN32 */
-#define M_AT_SYMBOL                          "@"
-#define M_QUESTION_MARK                      "?"
-#define M_ALL_RESOURCES_BOUND                "all_resources_bound"
-#define M_CC                                 "Cc"
-#define M_COMPRESS                           "compress"
-#define M_D                                  "D"
-#define M_DECOMPRESS                         "decompress"
-#define M_DUMPBIN                            "dumpbin"
-#define M_E_                                 "E"
-#define M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES "enable_unbounded_descriptor_tables"
-#define M_FD                                 "Fd"
-#define M_FE                                 "Fe"
-#define M_FH                                 "Fh"
-#define M_FL                                 "Fl"
-#define M_FO                                 "Fo"
-#define M_FORCE_ROOTSIG_VER                  "force_rootsig_ver"
-#define M_FX                                 "Fx"
-#define M_GCH                                "Gch"
-#define M_GDP                                "Gdp"
-#define M_GEC                                "Gec"
-#define M_GES                                "Ges"
-#define M_GETPRIVATE                         "getprivate"
-#define M_GFA                                "Gfa"
-#define M_GIS                                "Gis"
-#define M_GPP                                "Gpp"
-#define M_HELP                               "help"
-#define M_I                                  "I"
-#define M_LX                                 "Lx"
-#define M_MATCHUAVS                          "matchUAVs"
-#define M_MERGEUAVS                          "mergeUAVs"
-#define M_NI                                 "Ni"
-#define M_NO                                 "No"
-#define M_NOLOGO                             "nologo"
-#define M_O0                                 "O0"
-#define M_O1                                 "O1"
-#define M_O2                                 "O2"
-#define M_O3                                 "O3"
-#define M_OD                                 "Od"
-#define M_OP                                 "Op"
-#define M_P                                  "P"
-#define M_QSTRIP_DEBUG                       "Qstrip_debug"
-#define M_QSTRIP_PRIV                        "Qstrip_priv"
-#define M_QSTRIP_REFLECT                     "Qstrip_reflect"
-#define M_QSTRIP_ROOTSIGNATURE               "Qstrip_rootsignature"
-#define M_RES_MAY_ALIAS                      "res_may_alias"
-#define M_SETPRIVATE                         "setprivate"
-#define M_SHTEMPLATE                         "shtemplate"
-#define M_T                                  "T"
-#define M_VD                                 "Vd"
-#define M_VERSION                            "version"
-#define M_VI                                 "Vi"
-#define M_VN                                 "Vn"
-#define M_WX                                 "WX"
-#define M_ZI                                 "Zi"
-#define M_ZPC                                "Zpc"
-#define M_ZPR                                "Zpr"
-#define M_ZSB                                "Zsb"
-#define M_ZSS                                "Zss"
+constexpr const char* M_AT_SYMBOL = "@";
+constexpr const char* M_QUESTION_MARK = "?";
+constexpr const char* M_ALL_RESOURCES_BOUND = "all_resources_bound";
+constexpr const char* M_CC = "Cc";
+constexpr const char* M_COMPRESS = "compress";
+constexpr const char* M_D = "D";
+constexpr const char* M_DECOMPRESS = "decompress";
+constexpr const char* M_DUMPBIN = "dumpbin";
+constexpr const char* M_E_ = "E";
+constexpr const char* M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES = "enable_unbounded_descriptor_tables";
+constexpr const char* M_FD = "Fd";
+constexpr const char* M_FE = "Fe";
+constexpr const char* M_FH = "Fh";
+constexpr const char* M_FL = "Fl";
+constexpr const char* M_FO = "Fo";
+constexpr const char* M_FORCE_ROOTSIG_VER = "force_rootsig_ver";
+constexpr const char* M_FX = "Fx";
+constexpr const char* M_GCH = "Gch";
+constexpr const char* M_GDP = "Gdp";
+constexpr const char* M_GEC = "Gec";
+constexpr const char* M_GES = "Ges";
+constexpr const char* M_GETPRIVATE = "getprivate";
+constexpr const char* M_GFA = "Gfa";
+constexpr const char* M_GIS = "Gis";
+constexpr const char* M_GPP = "Gpp";
+constexpr const char* M_HELP = "help";
+constexpr const char* M_I = "I";
+constexpr const char* M_LX = "Lx";
+constexpr const char* M_MATCHUAVS = "matchUAVs";
+constexpr const char* M_MERGEUAVS = "mergeUAVs";
+constexpr const char* M_NI = "Ni";
+constexpr const char* M_NO = "No";
+constexpr const char* M_NOLOGO = "nologo";
+constexpr const char* M_O0 = "O0";
+constexpr const char* M_O1 = "O1";
+constexpr const char* M_O2 = "O2";
+constexpr const char* M_O3 = "O3";
+constexpr const char* M_OD = "Od";
+constexpr const char* M_OP = "Op";
+constexpr const char* M_P = "P";
+constexpr const char* M_QSTRIP_DEBUG = "Qstrip_debug";
+constexpr const char* M_QSTRIP_PRIV = "Qstrip_priv";
+constexpr const char* M_QSTRIP_REFLECT = "Qstrip_reflect";
+constexpr const char* M_QSTRIP_ROOTSIGNATURE = "Qstrip_rootsignature";
+constexpr const char* M_RES_MAY_ALIAS = "res_may_alias";
+constexpr const char* M_SETPRIVATE = "setprivate";
+constexpr const char* M_SHTEMPLATE = "shtemplate";
+constexpr const char* M_T = "T";
+constexpr const char* M_VD = "Vd";
+constexpr const char* M_VERSION = "version";
+constexpr const char* M_VI = "Vi";
+constexpr const char* M_VN = "Vn";
+constexpr const char* M_WX = "WX";
+constexpr const char* M_ZI = "Zi";
+constexpr const char* M_ZPC = "Zpc";
+constexpr const char* M_ZPR = "Zpr";
+constexpr const char* M_ZSB = "Zsb";
+constexpr const char* M_ZSS = "Zss";
 #endif /* _WIN32 */
