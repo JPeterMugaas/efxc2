@@ -2,25 +2,25 @@
 
 efxc2 is an enhanced version of fxc2.  The original fxc2 program 
 is A wine-runnable version of Microsofts Shader Compiler fxc and 
-is available at https://github.com/mozilla/fxc2 .  Unfortunately,
+is available at [https://github.com/mozilla/fxc2](https://github.com/mozilla/fxc2).  Unfortunately,
 fxc2 does not appear to be maintained and I have encountered
 quite a few issues using that program. I needed a fxc compiler that
 was open-source and would adequately fulfill my needs.  So I decided
 to make my own modifications to the fxc2 source-code including a pull 
-request ( https://github.com/mozilla/fxc2/pull/3 ) into my own enhanced
+request, [https://github.com/mozilla/fxc2/pull/3](https://github.com/mozilla/fxc2/pull/3) into my own enhanced
 program (efxc2).
 
 This program works by using the d3dcompiler_47.dll included in Windows 
 using the API as described by:
 
-https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/
+[https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/](https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/)
 
 ## Usage:
 
 This program aims to be compatible with the syntax used by Microsoft's 
-Shader Compiler (fxc).  That program is documented at:
+*Effect-Compiler Tool* (fxc).  That program is documented at:
 
-https://learn.microsoft.com/en-us/windows/win32/direct3dtools/fxc
+[https://learn.microsoft.com/en-us/windows/win32/direct3dtools/fxc](https://learn.microsoft.com/en-us/windows/win32/direct3dtools/fxc)
 
 ## Compiling this program
 
@@ -35,7 +35,7 @@ A properly installed compiler such as:
 
 as well as [CMake](https://cmake.org/).
 
-### [MSYS2](https://www.msys2.org/) Environment
+### [Mingw-w64](https://www.mingw-w64.org/) under [MSYS2](https://www.msys2.org/)
 
 Ddo the following:
 
@@ -45,6 +45,14 @@ You can find what versions are available with the command `pacman -Ss cmake`.
 3. Change the current directory to where you downloaded the PKGBUILD and 
 enter `makepkg-mingw` to build efxc2.
 4. Install the packages you created using `pacman -U [package name]`. 
+
+### [MSYS2](https://www.msys2.org/) Environment
+
+1. Install [CMake](https://cmake.org/) using `pacman -S cmake`. 
+2. [Download the PKGBUILD](https://raw.githubusercontent.com/JPeterMugaas/MSYS2-ext-packages/master/efxc2/PKGBUILD) file and place it in an  empty directory named `efxc2`.
+2. Change the current directory to where you downloaded the PKGBUILD and 
+enter `makepkg` to build efxc2.
+4. Install the packages you created using `pacman -U efxc2`. 
 
 ### Other Environments
 
