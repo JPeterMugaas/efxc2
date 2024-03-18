@@ -30,7 +30,6 @@ int main(int argc, char* argv[]) {
 #else
     char* temp = nullptr;
 #endif
-    FILE* f;
     CompilerAPIContainer api;
     Compiler compiler(api);
     Files files;
