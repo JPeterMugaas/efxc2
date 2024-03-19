@@ -160,6 +160,32 @@ compiler to complain with the printf statement.*/
 #define D3DCOMPILE_SECDATA_REQUIRE_TEMPLATE_MATCH    0x00000004
 #endif
 
+/*D3DDisassembley flags*/
+#ifndef D3D_DISASM_ENABLE_COLOR_CODE
+#define D3D_DISASM_ENABLE_COLOR_CODE            0x00000001
+#endif
+#ifndef D3D_DISASM_ENABLE_DEFAULT_VALUE_PRINTS
+#define D3D_DISASM_ENABLE_DEFAULT_VALUE_PRINTS  0x00000002
+#endif
+#ifndef D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING
+#define D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING 0x00000004
+#endif
+#ifndef D3D_DISASM_ENABLE_INSTRUCTION_CYCLE
+#define D3D_DISASM_ENABLE_INSTRUCTION_CYCLE     0x00000008
+#endif
+#ifndef D3D_DISASM_DISABLE_DEBUG_INFO
+#define D3D_DISASM_DISABLE_DEBUG_INFO           0x00000010
+#endif
+#ifndef D3D_DISASM_ENABLE_INSTRUCTION_OFFSET
+#define D3D_DISASM_ENABLE_INSTRUCTION_OFFSET    0x00000020
+#endif
+#ifndef D3D_DISASM_INSTRUCTION_ONLY
+#define D3D_DISASM_INSTRUCTION_ONLY             0x00000040
+#endif
+#ifndef D3D_DISASM_PRINT_HEX_LITERALS
+#define D3D_DISASM_PRINT_HEX_LITERALS           0x00000080
+#endif
+
 typedef HRESULT(__stdcall* pD3DCompile2g)(
     _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
     _In_ SIZE_T SrcDataSize,
@@ -197,6 +223,13 @@ typedef HRESULT(__stdcall* pD3DSetBlobPartg) (
     _In_reads_bytes_(PartSize) LPCVOID pPart,
     _In_ SIZE_T PartSize,
     _Out_ ID3DBlob** ppNewShader);
+
+typedef HRESULT(__stdcall* pD3DDisassembleg) (
+    _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+    _In_ SIZE_T SrcDataSize,
+    _In_ UINT Flags,
+    _In_opt_ LPCSTR szComments,
+    _Out_ ID3DBlob** ppDisassembly);
 
 // This struct represents the first four bytes of the name blob:
 struct ShaderDebugName

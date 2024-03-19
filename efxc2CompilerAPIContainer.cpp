@@ -64,4 +64,9 @@ CompilerAPIContainer::CompilerAPIContainer() {
         printf("Error: could not get the address of D3DSetBlobPart.\n");
         print_windows_error();
     }
+    ptr_D3DDisassemble = (pD3DDisassembleg)GetProcAddress(h, "D3DDisassemble");
+    if (ptr_D3DDisassemble == nullptr) {
+        printf("Error: could not get the address of D3DDisassemble.\n");
+        print_windows_error();
+    }
 }
