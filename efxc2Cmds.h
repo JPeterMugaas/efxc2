@@ -143,13 +143,14 @@ bool parseCompilerOnlyCall(
     Compiler& compiler);
 #endif
 
-constexpr auto IGNORED_OPTS_LENGTH = 8;
+constexpr auto IGNORED_OPTS_LENGTH = 9;
 #ifdef _WIN32
 const std::array <const wchar_t*, IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #else
 const std::array <const char*,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #endif
     M_CC,
+    M_FC,
     M_FE,
     M_FORCE_ROOTSIG_VER,
     M_I,
