@@ -13,61 +13,40 @@
 
 using namespace std;
 
-void Files::WritePDBFile(Compiler& compiler) {
+void Files::WriteDisassembly(Compiler& compiler) {
     FILE* f;
-    int	AppendSlash = false;
 #ifdef _WIN32
     errno_t err = 0;
 #endif
     size_t  outputLen = 0;
-    /*write .PDB data if applicable*/
 #ifdef _WIN32
-    if (c_pdbFile != nullptr) {
-        auto pPDBFileName = GetFileName(c_pdbFile,&AppendSlash);
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6001 )
+#pragma warning( disable : 6387 )
+#endif /* _MSC_VER */
+    err = _wfopen_s(&f, DisassemblyFile, L"w");
+    if (err != 0) {
+        print_errno(err);
+    }
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif /* _MSC_VER */
 #else
-    if (pdbFile != nullptr) {
-        auto pPDBFileName = GetFileName(pdbFile, &AppendSlash);
+    f = fopen(DisassemblyFile, "w");
+    if (f == nullptr) {
+        print_errno();
+    }
 #endif
-        if (pPDBFileName != nullptr) {
-            compiler.SetPDBFileName(pPDBFileName);
-        }
-        else {
-            /* if only a dir was specified, use the default
-            filename in the shader data. */
-            pPDBFileName = compiler.GetPDBFileName();
+    outputLen = compiler.WriteAssemblyCode(f);
+    _Analysis_assume_(f != NULL);
+    fclose(f);
+    if (compiler.get_verbose()) {
 #ifdef _WIN32
-            wchar_t* w_PDBFileName = utf8_decode(pPDBFileName, strlen(pPDBFileName));
-            if (AppendSlash) {
-                pdbFile = concat(pdbFile,L"\\");
-            }
-            pdbFile = concat(pdbFile, w_PDBFileName);
-            free(w_PDBFileName);
-#else
-            if (AppendSlash) {
-                pdbFile = concat(pdbFile, "/");
-            }
-            pdbFile = concat(pdbFile, pPDBFileName);
-#endif
-        }
-#ifdef _WIN32
-        err = _wfopen_s(&f, pdbFile, L"w");
-        if (err != 0) {
-            print_errno(err);
-        }
-#else
-        f = fopen(IncludeFile, "w");
-        if (f == nullptr) {
-            print_errno();
-        }
-#endif
-        outputLen = compiler.WritePDBFile(f);
-        _Analysis_assume_(f != NULL);
-        fclose(f);
-#ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile);
+        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, DisassemblyFile);
 #else   /* _WIN32 */
         printf("Wrote %zu", outputLen);
-        printf(" bytes of .PDB data to %ls\n", pdbFile);
+        printf(" bytes of shader output to %ls\n", DisassemblyFile);
 #endif  /* WIN32 */
     }
 }
@@ -153,6 +132,63 @@ void Files::WriteObjectFile(Compiler& compiler) {
         printf(" bytes of shader output to %ls\n", ObjectFile);
 #endif
     }
+}
 
-
+void Files::WritePDBFile(Compiler& compiler) {
+    FILE* f;
+    int	AppendSlash = false;
+#ifdef _WIN32
+    errno_t err = 0;
+#endif
+    size_t  outputLen = 0;
+    /*write .PDB data if applicable*/
+#ifdef _WIN32
+    if (c_pdbFile != nullptr) {
+        auto pPDBFileName = GetFileName(c_pdbFile, &AppendSlash);
+#else
+    if (pdbFile != nullptr) {
+        auto pPDBFileName = GetFileName(pdbFile, &AppendSlash);
+#endif
+        if (pPDBFileName != nullptr) {
+            compiler.SetPDBFileName(pPDBFileName);
+        }
+        else {
+            /* if only a dir was specified, use the default
+            filename in the shader data. */
+            pPDBFileName = compiler.GetPDBFileName();
+#ifdef _WIN32
+            wchar_t* w_PDBFileName = utf8_decode(pPDBFileName, strlen(pPDBFileName));
+            if (AppendSlash) {
+                pdbFile = concat(pdbFile, L"\\");
+            }
+            pdbFile = concat(pdbFile, w_PDBFileName);
+            free(w_PDBFileName);
+#else
+            if (AppendSlash) {
+                pdbFile = concat(pdbFile, "/");
+            }
+            pdbFile = concat(pdbFile, pPDBFileName);
+#endif
+        }
+#ifdef _WIN32
+        err = _wfopen_s(&f, pdbFile, L"w");
+        if (err != 0) {
+            print_errno(err);
+        }
+#else
+        f = fopen(IncludeFile, "w");
+        if (f == nullptr) {
+            print_errno();
+        }
+#endif
+        outputLen = compiler.WritePDBFile(f);
+        _Analysis_assume_(f != NULL);
+        fclose(f);
+#ifdef _WIN32
+        wprintf(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile);
+#else   /* _WIN32 */
+        printf("Wrote %zu", outputLen);
+        printf(" bytes of .PDB data to %ls\n", pdbFile);
+#endif  /* WIN32 */
+    }
 }

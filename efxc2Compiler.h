@@ -42,9 +42,11 @@ public:
 	void set_numDefines(size_t _numDefines) { numDefines = _numDefines;  }
 	void add_define(char* defineOption);
 	void Compile();
+	void Disassemble();
 	void StripShader();
 	size_t WriteIncludeFile(FILE* f);
 	size_t WriteObjectFile(FILE* f);
+	size_t WriteAssemblyCode(FILE* f);
 	char* GetPDBFileName();
 	void SetPDBFileName(_In_ const char* _fileName);
 	size_t WritePDBFile(FILE* f);
@@ -56,6 +58,7 @@ private:
 	UINT             eflags = 0;
 	UINT             secondary_flags = 0;
 	UINT             strip_flags = 0;
+	UINT             disassembly_flags = 0;
 	char*            model = nullptr;
 	char*            entryPoint = nullptr;
 	char*            inputFile = nullptr;
@@ -67,6 +70,7 @@ private:
 	size_t           numDefines = 1;
 
 	ID3DBlob*        compilerOutput = nullptr;
+	ID3DBlob*        disassemlyCodeBlob = nullptr;
 	ID3DBlob*        strippedBlob = nullptr;
 	ID3DBlob*        pPDBName = nullptr;
 	ID3DBlob*        pShaderWithNewName = nullptr;

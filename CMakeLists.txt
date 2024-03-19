@@ -139,3 +139,8 @@ set_tests_properties(error.output_file_empty PROPERTIES WILL_FAIL true)
 add_test(NAME invalid_parameters_will_fail.DGSLEffect_fx
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc DGSLEffect.fx /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tvs_4_0_level_9_1 /Emain4BonesVc "/Fh${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/DGSLEffect_main4BonesVc.inc" "/Fd${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/DGSLEffect_main4BonesVc.pdb" /VnDGSLEffect_main4BonesVc)
+
+  add_test(NAME long_cmd.BC7Encode_TryMode456CS_asm
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
+  COMMAND fxc ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /Fc${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/BC7Encode_TryMode456CS.asm /Fd${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)
+

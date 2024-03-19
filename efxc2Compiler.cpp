@@ -114,6 +114,39 @@ void Compiler::Compile() {
     }
 }
 
+void Compiler::Disassemble() {
+    auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
+    size_t compiledLen = compilerOutput->GetBufferSize();
+    HRESULT hr = 0;
+    disassemlyCodeBlob = nullptr;
+    if (verbose) {
+        printf("Calling D3DDisassemble(\n");
+        printf("\t compiledString,\n");
+        printf("\t %zu,\n", compiledLen);
+        printf("\t 0x%016" PRIx64 ", \n", (INT64)disassembly_flags);
+        printf("\t nullptr, \n");
+    }
+    /*HRESULT D3DDisassemble(
+    [in]           LPCVOID  pSrcData,
+    [in]           SIZE_T   SrcDataSize,
+    [in]           UINT     Flags,
+    [in, optional] LPCSTR   szComments,
+    [out]          ID3DBlob **ppDisassembly
+    ); */
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6387)
+#endif
+    auto ptr = api.get_ptr_D3DDisassemble();
+    hr = ptr(compiledString, compiledLen, disassembly_flags, nullptr, &disassemlyCodeBlob);
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif
+    if (FAILED(hr)) {
+        print_hresult_error(hr);
+    }
+}
+
 void Compiler::StripShader() {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
@@ -148,9 +181,18 @@ void Compiler::StripShader() {
             print_hresult_error(hr);
         }
     }
-    else {
-        strippedBlob = nullptr;
+}
+
+size_t Compiler::WriteAssemblyCode(FILE* f) {
+    unsigned char const* outputString = nullptr;
+    size_t outputLen = 0;
+
+    if (disassemlyCodeBlob != nullptr) {
+        outputString = (unsigned char*)disassemlyCodeBlob->GetBufferPointer();
+        outputLen = disassemlyCodeBlob->GetBufferSize();
+        fwrite(outputString, outputLen, 1, f);
     }
+    return outputLen;
 }
 
 size_t Compiler::WriteIncludeFile(FILE* f) {

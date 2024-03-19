@@ -85,6 +85,10 @@ int main(int argc, char* argv[]) {
 #endif
             continue;
         }
+        else if (parseOpt(M_FC, argc, argv, &index, &temp)) {
+            cmd_Fc(compiler, files, temp);
+            continue;
+        }
         else if (parseOpt(M_FD, argc, argv, &index, &temp)) {
             cmd_Fd(compiler, files, temp);
             continue;

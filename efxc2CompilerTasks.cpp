@@ -21,10 +21,14 @@ void CompilerTasks(Compiler & compiler, Files files) {
     compiler.Compile();
     files.WritePDBFile(compiler);
     compiler.StripShader();
+    compiler.Disassemble();
     if ((compiler.get_commands() & CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {
         files.WriteIncludeFile(compiler);
     }
     if ((compiler.get_commands() & CMD_WRITE_OBJECT) == CMD_WRITE_OBJECT) {
         files.WriteObjectFile(compiler);
+    }
+    if ((compiler.get_commands() & CMD_WRITE_ASSEMBLY_CODE) == CMD_WRITE_ASSEMBLY_CODE) {
+        files.WriteDisassembly(compiler);
     }
 }

@@ -143,6 +143,24 @@ void cmd_enable_unbounded_descriptor_tables(Compiler & compiler) {
 }
 
 #ifdef _WIN32
+void cmd_Fc(Compiler& compiler, Files& files, _In_ wchar_t* assemblyCodeFile) {
+#else
+void cmd_Fc( Compiler & compiler, Files & files, _In_ char* assemblyCodeFile) {
+#endif
+#ifdef _WIN32
+	FixupFileName(assemblyCodeFile);
+#endif /* _WIN32 */
+	files.set_DisassemblyFile(assemblyCodeFile);
+	UINT cmd = compiler.get_commands();
+	cmd = cmd | CMD_WRITE_ASSEMBLY_CODE;
+	compiler.set_commands(cmd);
+	if (compiler.get_verbose()) {
+		printf("option -Fc (assembly code) with arg %ls\n", assemblyCodeFile);
+	}
+	return;
+}
+
+#ifdef _WIN32
 void cmd_Fd(const Compiler & compiler, Files & files, _In_ wchar_t* pdbFile) {
 #else
 void cmd_Fd(const Compiler & compiler, Files & files, _In_ char* pdbFile) {

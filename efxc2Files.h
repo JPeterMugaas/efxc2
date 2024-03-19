@@ -16,6 +16,8 @@
 class Files {
 public:
 #ifdef _WIN32
+    wchar_t* get_DisassemblyFile() const { return DisassemblyFile;  }
+    void set_DisassemblyFile(wchar_t* _DisassemblyFile) { DisassemblyFile = _DisassemblyFile;  }
     wchar_t* get_inputFile() const { return inputFile; }
     void set_inputFile(wchar_t* _inputFile) { inputFile = _inputFile; }
     wchar_t* get_IncludeFile() const { return IncludeFile; }
@@ -27,6 +29,8 @@ public:
     char* get_c_pdbFile() const { return c_pdbFile; };
     void set_c_pdbFile(char* _c_pdbFile) { c_pdbFile = _c_pdbFile; }
 #else  /* _WIN32 */
+    char* get_DisassemblyFile() const { return DisassemblyFile; }
+    void set_DisassemblyFile(char* _DisassemblyFile) { DisassemblyFile = _DisassemblyFile; }
     char* get_inputFile() const { return inputFile;  }
     void set_inputFile(char* _inputFile) { inputFile = _inputFile;  }
     char* get_IncludeFile() const { return IncludeFile; }
@@ -36,11 +40,13 @@ public:
     char* get_pdbFile() const { return pdbFile;  };
     void set_pdbFile(char* _pdbFile) { pdbFile = _pdbFile; }
 #endif /* _WIN32 */
+    void WriteDisassembly(Compiler& compiler);
     void WritePDBFile(Compiler& compiler);
     void WriteIncludeFile(Compiler& compiler);
     void WriteObjectFile(Compiler& compiler);
 private:
 #ifdef _WIN32
+    wchar_t* DisassemblyFile = nullptr;
     wchar_t* inputFile = nullptr;
     wchar_t* IncludeFile = nullptr;
     wchar_t* ObjectFile = nullptr;
@@ -48,6 +54,7 @@ private:
     wchar_t* temp = nullptr;
     char* c_pdbFile = nullptr;
 #else  /* _WIN32 */
+    char* DisassemblyFile = nullptr;
     char* inputFile = nullptr;
     char* IncludeFile = nullptr;
     char* ObjectFile = nullptr;
