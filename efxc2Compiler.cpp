@@ -184,7 +184,7 @@ size_t Compiler::WriteObjectFile(FILE* f) {
 }
 
 char* Compiler::GetPDBFileName() {
-    auto* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
+    auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
     HRESULT hr = 0;
     /*Get filename*/
@@ -213,10 +213,10 @@ char* Compiler::GetPDBFileName() {
     auto pDebugNameData = (ShaderDebugName*)(pPDBName->GetBufferPointer());
     auto pName = (char*)(pDebugNameData + 1);
     printf(".PDB Data Name: %s\n", pName);
-    return (char*)pName;
+    return pName;
 }
 
-void Compiler::SetPDBFileName(_In_ char* _fileName) {
+void Compiler::SetPDBFileName(_In_ const char* _fileName) {
     // Blobs are always a multiple of 4 bytes long. Since DxilShaderDebugName
     // is itself 4 bytes, we pad the storage of the string (not the string itself)
     // to 4 bytes also.

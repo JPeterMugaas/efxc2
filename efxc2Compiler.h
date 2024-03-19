@@ -46,7 +46,7 @@ public:
 	size_t WriteIncludeFile(FILE* f);
 	size_t WriteObjectFile(FILE* f);
 	char* GetPDBFileName();
-	void SetPDBFileName(_In_ char* _fileName);
+	void SetPDBFileName(_In_ const char* _fileName);
 	size_t WritePDBFile(FILE* f);
 	void LoadSourceCode(FILE* f);
 private:
