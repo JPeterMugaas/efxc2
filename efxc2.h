@@ -41,7 +41,9 @@
 #include <stdio.h>
 #include <sal.h>
 
-constexpr const wchar_t* DLL_NAME = L"d3dcompiler_47.dll";
+/*don't convert this to constexpr because it cause the 
+compiler to complain with the printf statement.*/
+#define DLL_NAME  L"d3dcompiler_47.dll"
 
 #ifndef D3D_COMPILE_STANDARD_FILE_INCLUDE
 #define D3D_COMPILE_STANDARD_FILE_INCLUDE ((ID3DInclude*)(UINT_PTR)1)

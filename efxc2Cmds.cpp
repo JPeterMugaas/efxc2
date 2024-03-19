@@ -54,7 +54,7 @@ void parseInputFile(_In_ const char* parameter, Compiler & compiler, Files & fil
 		inputFile = new wchar_t[wcslen(parameter) + 1];
 		wcscpy_s(inputFile, wcslen(parameter) + 1, parameter);
 		FixupFileName(inputFile);
-		c_inputFile = wcharToChar(inputFile);
+		c_inputFile = utf8_encode(inputFile);
 		compiler.set_inputFile(c_inputFile);
 #else  /* _WIN32 */
 		inputFile = new char[strlen(parameter) + 1];
@@ -108,7 +108,7 @@ void cmd_all_resources_bound(Compiler & compiler) {
 #ifdef _WIN32
 void cmd_D(Compiler & compiler,
 	_In_ const wchar_t* _defineOption) {
-	char* defineOption = wcharToChar(_defineOption);
+	char* defineOption = utf8_encode(_defineOption);
 #else
 void cmd_D(Compiler& compiler,
 	_In_ char* defineOption) {
@@ -121,7 +121,7 @@ void cmd_D(Compiler& compiler,
 
 #ifdef _WIN32
 void cmd_E(Compiler & compiler, _In_ const wchar_t* w_entryPoint) {
-	char* entryPoint = wcharToChar(w_entryPoint);
+	char* entryPoint = utf8_encode(w_entryPoint);
 #else
 void cmd_E(Compiler & compiler, _In_ char* entryPoint) {
 #endif
@@ -143,9 +143,9 @@ void cmd_enable_unbounded_descriptor_tables(Compiler & compiler) {
 }
 
 #ifdef _WIN32
-void cmd_Fd(Compiler & compiler, Files & files, _In_ wchar_t* pdbFile) {
+void cmd_Fd(const Compiler & compiler, Files & files, _In_ wchar_t* pdbFile) {
 #else
-void cmd_Fd(Compiler & compiler, Files & files, _In_ char* pdbFile) {
+void cmd_Fd(const Compiler & compiler, Files & files, _In_ char* pdbFile) {
 #endif
 #ifdef _WIN32
 	FixupFileName(pdbFile);
@@ -383,7 +383,7 @@ void cmd_res_may_alias(Compiler & compiler) {
 
 #ifdef _WIN32
 void cmd_T(Compiler & compiler, _In_ wchar_t* w_model) {
-	char* model = wcharToChar(w_model);
+	char* model = utf8_encode(w_model);
 #else
 void cmd_T(Compiler & compiler, _In_ char* model) {
 #endif
@@ -406,7 +406,7 @@ void cmd_Vd(Compiler & compiler) {
 
 #ifdef _WIN32
 void cmd_Vn(Compiler & compiler, _In_ wchar_t* w_variableName) {
-	char* variableName = wcharToChar(w_variableName);
+	char* variableName = utf8_encode(w_variableName);
 #else
 void cmd_Vn(Compiler & compiler, _In_ char* variableName) {
 #endif

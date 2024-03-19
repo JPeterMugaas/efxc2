@@ -412,24 +412,6 @@ char* setupVariableName(_In_ const char* model,
 }
 
 #ifdef _WIN32
-char* wcharToChar(_In_ LPCWSTR w) {
-	size_t len = wcslen(w);
-	char* c = nullptr;
-	c = (char*)malloc(len + 1);
-	if (c == nullptr) {
-		fprintf(stderr, "malloc failed/n");
-		print_errno();
-	}
-	memset(c, 0, len + 1);
-	size_t dummy = len;
-	wcstombs_s(&dummy, c, len + 1, w, len);
-	if (errno != 0) {
-		fprintf(stderr, "wcstombs failed/n");
-		print_errno();
-	}
-	return c;
-}
-
 void FixupFileName(_Inout_ wchar_t* FileName) {
 	if (FileName == nullptr) {
 		return;
@@ -474,7 +456,6 @@ wchar_t* utf8_decode(const char* str, size_t nbytes) {
 	return wstr;
 }
 
-
 char* utf8_encode(const wchar_t* wstr, size_t nchars) {
 	int nbytes = 0;
 	if ((nbytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
@@ -496,4 +477,8 @@ char* utf8_encode(const wchar_t* wstr, size_t nchars) {
 	return str;
 }
 
+char* utf8_encode(const wchar_t* wstr) {
+	size_t nchars = wcslen(wstr);
+	return utf8_encode(wstr, nchars);
+}
 #endif

@@ -108,9 +108,7 @@ char* setupVariableName(_In_ const char* model,
 #ifdef _WIN32
 wchar_t* utf8_decode(const char* str, size_t nbytes);
 char* utf8_encode(const wchar_t* wstr, size_t nchars);
-#endif
-#ifdef _WIN32
-char* wcharToChar(_In_ LPCWSTR w);
+char* utf8_encode(const wchar_t* wstr);
 #endif
 void WriteByteArrayConst(_In_ FILE* f, 
     _In_reads_bytes_(len) const unsigned char* outString, 

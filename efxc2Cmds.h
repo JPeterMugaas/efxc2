@@ -38,9 +38,9 @@ void cmd_E(Compiler& compiler, _In_ char* entryPoint);
 #endif
 void cmd_enable_unbounded_descriptor_tables(Compiler& compiler);
 #ifdef _WIN32
-void cmd_Fd(Compiler& compiler, Files& files, _In_ wchar_t* pdbFile);
+void cmd_Fd(const Compiler& compiler, Files& files, _In_ wchar_t* pdbFile);
 #else
-void cmd_Fd(Compiler& compiler, Files& files, _In_ char* pdbFile);
+void cmd_Fd(const Compiler& compiler, Files& files, _In_ char* pdbFile);
 #endif
 #ifdef _WIN32
 void cmd_Fh(Compiler& compiler, Files& files, _Inout_ wchar_t* outputFile);
