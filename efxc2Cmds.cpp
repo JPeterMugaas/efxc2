@@ -582,36 +582,37 @@ bool parseCompilerFileCall(
 	for (int i = 0; i < COMPILER_FILE_ENTRIES_LENGTH; i++) {
 #ifdef _WIN32
 		optionSize = wcslen(g_CompilerFileCall[i].Param);
-		if (wcsncmp(argument, g_CompilerFileCall[i].Param, optionSize) == 0) {
+		if (wcsncmp(argument, g_CompilerFileCall[i].Param, optionSize) != 0) {
 #else
 		optionSize = strlen(g_CompilerFileCall[i].Param);
-		if (strncmp(argument, g_CompilerFileCall[i].Param, optionSize) == 0) {
+		if (strncmp(argument, g_CompilerFileCall[i].Param, optionSize) != 0) {
 #endif
-			argument += optionSize;
-			if (*argument == '\0') {
-				*index += 1;
-				if (*index >= argc) {
-					fprintf(stderr, "Error: missing required argument for option %ls\n", g_CompilerFileCall[i].Param);
-					return false;
-				}
-#ifdef _WIN32
-				argumentOption = M_WCSDUP(argv[*index]);
-#else  /*_WIN32 */
-				argumentOption = strdup(argv[*index]);
-#endif /* _WIN32 */
-			}
-			else {
-#ifdef _WIN32
-				argumentOption = M_WCSDUP(argument);
-#else  /* _WIN32 */
-				argumentOption = strdup(argument);
-#endif /* _WIN32 */
-			}
-			auto ptr = (gCompilerFilep*)g_CompilerFileCall[i].method;
-			ptr(compiler, files, argumentOption);
-			*index += 1;
-			return true;
+			continue;
 		}
+		argument += optionSize;
+		if (*argument == '\0') {
+			*index += 1;
+			if (*index >= argc) {
+				fprintf(stderr, "Error: missing required argument for option %ls\n", g_CompilerFileCall[i].Param);
+				return false;
+			}
+#ifdef _WIN32
+			argumentOption = M_WCSDUP(argv[*index]);
+#else  /*_WIN32 */
+			argumentOption = strdup(argv[*index]);
+#endif /* _WIN32 */
+		}
+		else {
+#ifdef _WIN32
+			argumentOption = M_WCSDUP(argument);
+#else  /* _WIN32 */
+			argumentOption = strdup(argument);
+#endif /* _WIN32 */
+		}
+		auto ptr = (gCompilerFilep*)g_CompilerFileCall[i].method;
+		ptr(compiler, files, argumentOption);
+		*index += 1;
+		return true;
 	}
 	return false;
 }
