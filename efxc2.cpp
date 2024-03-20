@@ -85,20 +85,7 @@ int main(int argc, char* argv[]) {
 #endif
             continue;
         }
-        else if (parseOpt(M_FC, argc, argv, &index, &temp)) {
-            cmd_Fc(compiler, files, temp);
-            continue;
-        }
-        else if (parseOpt(M_FD, argc, argv, &index, &temp)) {
-            cmd_Fd(compiler, files, temp);
-            continue;
-        }
-        else if (parseOpt(M_FH, argc, argv, &index, &temp)) {
-            cmd_Fh(compiler, files, temp);
-            continue;
-        }
-        else if (parseOpt(M_FO, argc, argv, &index, &temp)) {
-            cmd_Fo(compiler, files, temp);
+        else if (parseCompilerFileCall(argc, argv, &index, compiler, files)) {
             continue;
         }
         else if (parseOpt(M_HELP, argc, argv, &index, nullptr)) {

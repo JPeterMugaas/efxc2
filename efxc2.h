@@ -255,7 +255,8 @@ struct ShaderDebugName
 /* command codes for internal use */
 constexpr auto CMD_WRITE_HEADER = 1;
 constexpr auto CMD_WRITE_OBJECT = 2;
-constexpr auto CMD_WRITE_ASSEMBLY_CODE = 4;
+constexpr auto CMD_WRITE_PDB_FILE = 4;
+constexpr auto CMD_WRITE_ASSEMBLY_CODE = 8;
 
 /* a good size for an error message */
 constexpr auto ERR_SIZE = 128;

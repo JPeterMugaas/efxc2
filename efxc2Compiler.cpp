@@ -125,6 +125,7 @@ void Compiler::Disassemble() {
         printf("\t %zu,\n", compiledLen);
         printf("\t 0x%016" PRIx64 ", \n", (INT64)disassembly_flags);
         printf("\t nullptr, \n");
+        printf("\t &disassemlyCodeBlob);");
     }
     /*HRESULT D3DDisassemble(
     [in]           LPCVOID  pSrcData,

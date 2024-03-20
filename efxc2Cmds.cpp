@@ -161,15 +161,20 @@ void cmd_Fc( Compiler & compiler, Files & files, _In_ char* assemblyCodeFile) {
 }
 
 #ifdef _WIN32
-void cmd_Fd(const Compiler & compiler, Files & files, _In_ wchar_t* pdbFile) {
+void cmd_Fd(Compiler & compiler, Files & files, _In_ wchar_t* pdbFile) {
 #else
-void cmd_Fd(const Compiler & compiler, Files & files, _In_ char* pdbFile) {
+void cmd_Fd(Compiler & compiler, Files & files, _In_ char* pdbFile) {
 #endif
 #ifdef _WIN32
 	FixupFileName(pdbFile);
 	files.set_c_pdbFile(utf8_encode(pdbFile, wcslen(pdbFile)));
 #endif /* _WIN32 */
 	files.set_pdbFile(pdbFile);
+
+	UINT cmd = compiler.get_commands();
+	cmd = cmd | CMD_WRITE_PDB_FILE;
+	compiler.set_commands(cmd);
+
 	if (compiler.get_verbose()) {
 		printf("option -Fd (.PDB) with arg %ls\n", pdbFile);
 	}
@@ -500,11 +505,13 @@ bool parseCompilerOnlyCall(
 	_In_ wchar_t* argv[1],
 	_Inout_	int* index,
 	Compiler& compiler) {
+	wchar_t** argumentOption = nullptr;
 #else
 bool parseCompilerOnlyCall(
 	_In_ char* argv[1],
 	_Inout_	int* index,
 	Compiler& compiler) {
+	char** argumentOption = nullptr;
 #endif
 #ifdef _WIN32
 	const wchar_t* argument = argv[*index];
@@ -535,6 +542,80 @@ bool parseCompilerOnlyCall(
 	}
 	return false;
 }
+
+#ifdef _WIN32
+bool parseCompilerFileCall(
+	_In_ int argc,
+	_In_ wchar_t* argv[1],
+	_Inout_	int* index,
+	Compiler& compiler,
+	Files& files) {
+	wchar_t* argumentOption = nullptr;
+#else
+bool parseCompilerFileCall(
+	_In_ int argc,
+	_In_ char* argv[1],
+	_Inout_	int* index,
+	Compiler & compiler,
+	Files & files) {
+	char* argumentOption = nullptr;
+#endif
+	size_t optionSize = 0;
+
+	if (!index || *index >= argc) {
+		return false;
+	}
+#ifdef _WIN32
+	const wchar_t* argument = argv[*index];
+#else  /* _WIN32 */
+	const char* argument = argv[*index];
+#endif /* _WIN32 */
+	if (argument[0] == '-' || argument[0] == '/') {
+		argument++;
+		if (argument[0] == '-') {
+			argument++;
+		}
+	}
+	else {
+		return false;
+	}
+	for (int i = 0; i < COMPILER_FILE_ENTRIES_LENGTH; i++) {
+#ifdef _WIN32
+		optionSize = wcslen(g_CompilerFileCall[i].Param);
+		if (wcsncmp(argument, g_CompilerFileCall[i].Param, optionSize) == 0) {
+#else
+		optionSize = strlen(g_CompilerFileCall[i].Param);
+		if (strncmp(argument, g_CompilerFileCall[i].Param, optionSize) == 0) {
+#endif
+			argument += optionSize;
+			if (*argument == '\0') {
+				*index += 1;
+				if (*index >= argc) {
+					fprintf(stderr, "Error: missing required argument for option %ls\n", g_CompilerFileCall[i].Param);
+					return false;
+				}
+#ifdef _WIN32
+				argumentOption = M_WCSDUP(argv[*index]);
+#else  /*_WIN32 */
+				argumentOption = strdup(argv[*index]);
+#endif /* _WIN32 */
+			}
+			else {
+#ifdef _WIN32
+				argumentOption = M_WCSDUP(argument);
+#else  /* _WIN32 */
+				argumentOption = strdup(argument);
+#endif /* _WIN32 */
+			}
+			auto ptr = (gCompilerFilep*)g_CompilerFileCall[i].method;
+			ptr(compiler, files, argumentOption);
+			*index += 1;
+			return true;
+		}
+	}
+	return false;
+}
+
 
 #ifdef _WIN32
 bool parseIgnoredOpts(

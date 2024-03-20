@@ -43,9 +43,9 @@ void cmd_Fc(Compiler& compiler, Files& files, _In_ wchar_t* assemblyCodeFile);
 void cmd_Fc(Compiler & compiler, Files & files, _In_ char* assemblyCodeFile);
 #endif
 #ifdef _WIN32
-void cmd_Fd(const Compiler& compiler, Files& files, _In_ wchar_t* pdbFile);
+void cmd_Fd(Compiler& compiler, Files& files, _In_ wchar_t* pdbFile);
 #else
-void cmd_Fd(const Compiler& compiler, Files& files, _In_ char* pdbFile);
+void cmd_Fd(Compiler& compiler, Files& files, _In_ char* pdbFile);
 #endif
 #ifdef _WIN32
 void cmd_Fh(Compiler& compiler, Files& files, _Inout_ wchar_t* outputFile);
@@ -93,6 +93,44 @@ void cmd_Zpc(Compiler& compiler);
 void cmd_Zpr(Compiler& compiler);
 void cmd_Zsb(Compiler& compiler);
 void cmd_Zss(Compiler& compiler);
+
+#ifdef _WIN32
+using gCompilerFilep = void(Compiler&, Files&, wchar_t*);
+#else
+using gCompilerFilep = void(Compiler&, Files&, char*);
+#endif
+struct CompileFileEntry {
+#ifdef _WIN32
+    const wchar_t* Param;
+#else
+    const char* Param;
+#endif
+    gCompilerFilep* method;
+};
+
+constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 4;
+const std::array <CompileFileEntry, COMPILER_FILE_ENTRIES_LENGTH> g_CompilerFileCall = { {
+    { M_FC, cmd_Fc },
+    { M_FD, cmd_Fd },
+    { M_FH, cmd_Fh },
+    { M_FO, cmd_Fo }
+} };
+
+#ifdef _WIN32
+bool parseCompilerFileCall(
+    _In_ int argc,
+    _In_ wchar_t* argv[1],
+    _Inout_	int* index,
+    Compiler& compiler,
+    Files& files);
+#else
+bool parseCompilerFileCall(
+    _In_ int argc,
+    _In_ char* argv[1],
+    _Inout_	int* index,
+    Compiler& compiler,
+    Files& files);
+#endif
 
 using gCompilerp = void (Compiler &);
 struct CompilerOnlyEntry {
@@ -148,14 +186,13 @@ bool parseCompilerOnlyCall(
     Compiler& compiler);
 #endif
 
-constexpr auto IGNORED_OPTS_LENGTH = 9;
+constexpr auto IGNORED_OPTS_LENGTH = 8;
 #ifdef _WIN32
 const std::array <const wchar_t*, IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #else
 const std::array <const char*,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #endif
     M_CC,
-    M_FC,
     M_FE,
     M_FORCE_ROOTSIG_VER,
     M_I,
