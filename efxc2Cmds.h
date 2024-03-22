@@ -66,6 +66,8 @@ void cmd_Gfa(Compiler& compiler);
 void cmd_Gis(Compiler& compiler);
 void cmd_Gpp(Compiler& compiler);
 void cmd_Lx(Compiler& compiler);
+void cmd_Ni(Compiler& compiler);
+void cmd_No(Compiler& compiler);
 void cmd_O0(Compiler& compiler);
 void cmd_O1(Compiler& compiler);
 void cmd_O2(Compiler& compiler);
@@ -143,7 +145,7 @@ struct CompilerOnlyEntry {
     gCompilerp* method;
 };
 
-constexpr auto COMPILER_ONLY_ENTRIES_LENGTH = 27;
+constexpr auto COMPILER_ONLY_ENTRIES_LENGTH = 29;
 
 const std::array <CompilerOnlyEntry, COMPILER_ONLY_ENTRIES_LENGTH> g_CompilerOnlyCall = { {
    { M_ALL_RESOURCES_BOUND, cmd_all_resources_bound },
@@ -156,6 +158,8 @@ const std::array <CompilerOnlyEntry, COMPILER_ONLY_ENTRIES_LENGTH> g_CompilerOnl
     { M_GIS, cmd_Gis },
     { M_GPP, cmd_Gpp },
     { M_LX, cmd_Lx },
+    { M_NI, cmd_Ni },
+    { M_NO, cmd_No },
     { M_O0, cmd_O0 },
     { M_O1, cmd_O1 },
     { M_O2, cmd_O2 },
@@ -188,7 +192,7 @@ bool parseCompilerOnlyCall(
     Compiler& compiler);
 #endif
 
-constexpr auto IGNORED_OPTS_LENGTH = 7;
+constexpr auto IGNORED_OPTS_LENGTH = 5;
 #ifdef _WIN32
 const std::array <const wchar_t*, IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #else
@@ -197,8 +201,6 @@ const std::array <const char*,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
     M_FE,
     M_FORCE_ROOTSIG_VER,
     M_I,
-    M_NI,
-    M_NO,
     M_P,
     M_VI};
 

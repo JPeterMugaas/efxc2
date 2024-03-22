@@ -304,6 +304,26 @@ void cmd_Lx(Compiler & compiler) {
 	return;
 }
 
+void cmd_Ni(Compiler& compiler) {
+	if (compiler.get_verbose()) {
+		printf("option -Cc | D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING\n");
+	}
+	UINT disassembly_flags = compiler.get_disassembly_flags();
+	disassembly_flags = disassembly_flags | D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING;
+	compiler.set_disassembly_flags(disassembly_flags);
+	return;
+}
+
+void cmd_No(Compiler& compiler) {
+	if (compiler.get_verbose()) {
+		printf("option -Cc | D3D_DISASM_ENABLE_INSTRUCTION_OFFSET\n");
+	}
+	UINT disassembly_flags = compiler.get_disassembly_flags();
+	disassembly_flags = disassembly_flags | D3D_DISASM_ENABLE_INSTRUCTION_OFFSET;
+	compiler.set_disassembly_flags(disassembly_flags);
+	return;
+}
+
 void cmd_O0(Compiler & compiler) {
 	if (compiler.get_verbose()) {
 		printf("option -O0 sflags | D3DCOMPILE_OPTIMIZATION_LEVEL0\n");
