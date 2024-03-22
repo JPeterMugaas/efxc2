@@ -72,7 +72,7 @@ private:
 	size_t           numDefines = 1;
 
 	ID3DBlob*        compilerOutput = nullptr;
-	ID3DBlob*        disassemlyCodeBlob = nullptr;
+	ID3DBlob*        disassemblyCodeBlob = nullptr;
 	ID3DBlob*        strippedBlob = nullptr;
 	ID3DBlob*        pPDBName = nullptr;
 	ID3DBlob*        pShaderWithNewName = nullptr;
