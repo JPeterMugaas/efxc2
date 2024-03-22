@@ -11,8 +11,6 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-using namespace std;
-
 void Files::WriteDisassembly(Compiler& compiler) {
     FILE* f;
 #ifdef _WIN32

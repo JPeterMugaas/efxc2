@@ -231,16 +231,6 @@ typedef HRESULT(__stdcall* pD3DDisassembleg) (
     _In_opt_ LPCSTR szComments,
     _Out_ ID3DBlob** ppDisassembly);
 
-typedef HRESULT(__stdcall* pD3DCreateLinkerg) (
-    __out interface ID3D11Linker** ppLinker
-    );
-
-typedef HRESULT(__stdcall* pD3DLoadModuleg) (
-    _In_ LPCVOID pSrcData,
-    _In_ SIZE_T cbSrcDataSize,
-    _Out_ interface ID3D11Module** ppModule
-    );
-
 // This struct represents the first four bytes of the name blob:
 struct ShaderDebugName
 {

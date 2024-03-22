@@ -11,8 +11,6 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-using namespace std;
-
 #ifdef _WIN32
 void option_ignored(_In_ const wchar_t* Opt, Compiler& compiler) {
 	if (compiler.get_verbose()) {

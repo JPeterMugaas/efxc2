@@ -10,8 +10,6 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 
-using namespace std;
-
 void Compiler::initializeDefines() {
     numDefines = 1;
     defines = new D3D_SHADER_MACRO[numDefines];
@@ -118,7 +116,7 @@ void Compiler::Disassemble() {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
     HRESULT hr = 0;
-    disassemlyCodeBlob = nullptr;
+    disassemblyCodeBlob = nullptr;
     if (verbose) {
         printf("Calling D3DDisassemble(\n");
         printf("\t compiledString,\n");
@@ -139,7 +137,7 @@ void Compiler::Disassemble() {
 #pragma warning( disable : 6387)
 #endif
     auto ptr = api.get_ptr_D3DDisassemble();
-    hr = ptr(compiledString, compiledLen, disassembly_flags, nullptr, &disassemlyCodeBlob);
+    hr = ptr(compiledString, compiledLen, disassembly_flags, nullptr, &disassemblyCodeBlob);
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
@@ -188,9 +186,9 @@ size_t Compiler::WriteAssemblyCode(FILE* f) {
     unsigned char const* outputString = nullptr;
     size_t outputLen = 0;
 
-    if (disassemlyCodeBlob != nullptr) {
-        outputString = (unsigned char*)disassemlyCodeBlob->GetBufferPointer();
-        outputLen = disassemlyCodeBlob->GetBufferSize();
+    if (disassemblyCodeBlob != nullptr) {
+        outputString = (unsigned char*)disassemblyCodeBlob->GetBufferPointer();
+        outputLen = disassemblyCodeBlob->GetBufferSize();
         fwrite(outputString, outputLen, 1, f);
     }
     return outputLen;
