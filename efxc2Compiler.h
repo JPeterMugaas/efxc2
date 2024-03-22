@@ -24,6 +24,8 @@ public:
 	void set_secondary_flags(UINT _secondary_flags) { secondary_flags = _secondary_flags; }
 	UINT get_strip_flags() const { return strip_flags; }
 	void set_strip_flags(UINT _strip_flags) { strip_flags = _strip_flags; }
+	UINT get_disassembly_flags() const { return disassembly_flags;  }
+	void set_disassembly_flags(UINT _disassembly_flags) { disassembly_flags = _disassembly_flags; }
 	char* get_model() const { return model; }
 	void set_model(char* _model) { model = _model; }
 	char* get_entryPoint() const { return entryPoint; }

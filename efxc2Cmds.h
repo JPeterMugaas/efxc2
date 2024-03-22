@@ -26,6 +26,7 @@ void parseInputFile(_In_ const wchar_t* parameter, Compiler& compiler, Files& fi
 void parseInputFile(_In_ const char* parameter, Compiler& compiler, Files& files);
 #endif
 void cmd_all_resources_bound(Compiler& compiler);
+void cmd_Cc(Compiler& compiler);
 #ifdef _WIN32
 void cmd_D(Compiler& compiler, _In_ const wchar_t* _defineOption);
 #else
@@ -142,10 +143,11 @@ struct CompilerOnlyEntry {
     gCompilerp* method;
 };
 
-constexpr auto COMPILER_ONLY_ENTRIES_LENGTH = 26;
+constexpr auto COMPILER_ONLY_ENTRIES_LENGTH = 27;
 
 const std::array <CompilerOnlyEntry, COMPILER_ONLY_ENTRIES_LENGTH> g_CompilerOnlyCall = { {
    { M_ALL_RESOURCES_BOUND, cmd_all_resources_bound },
+    { M_CC, cmd_Cc },
     { M_GCH, cmd_Gch },
     { M_GDP, cmd_Gdp },
     { M_GEC, cmd_Gec },
@@ -186,13 +188,12 @@ bool parseCompilerOnlyCall(
     Compiler& compiler);
 #endif
 
-constexpr auto IGNORED_OPTS_LENGTH = 8;
+constexpr auto IGNORED_OPTS_LENGTH = 7;
 #ifdef _WIN32
 const std::array <const wchar_t*, IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #else
 const std::array <const char*,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #endif
-    M_CC,
     M_FE,
     M_FORCE_ROOTSIG_VER,
     M_I,

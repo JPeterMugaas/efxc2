@@ -105,6 +105,16 @@ void cmd_all_resources_bound(Compiler & compiler) {
 	return;
 }
 
+void cmd_Cc(Compiler& compiler) {
+	if (compiler.get_verbose()) {
+		printf("option -Cc | D3D_DISASM_ENABLE_COLOR_CODED\n");
+	}
+	UINT disassembly_flags = compiler.get_disassembly_flags();
+	disassembly_flags = disassembly_flags | D3D_DISASM_ENABLE_COLOR_CODE;
+	compiler.set_disassembly_flags(disassembly_flags);
+	return;
+}
+
 #ifdef _WIN32
 void cmd_D(Compiler & compiler,
 	_In_ const wchar_t* _defineOption) {
