@@ -67,4 +67,9 @@ CompilerAPIContainer::CompilerAPIContainer() {
         printf("Error: could not get the address of D3DDisassemble.\n");
         print_windows_error();
     }
+    ptr_D3DLoadModule = (gD3DLoadModulep)GetProcAddress(h, "D3DLoadModule");
+    if (ptr_D3DLoadModule == nullptr) {
+        printf("Error: could not get the address of D3DLoadModule.\n");
+        print_windows_error();
+    }
 }
