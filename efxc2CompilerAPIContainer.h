@@ -21,6 +21,7 @@ public:
 	pD3DSetBlobPartg get_ptr_D3DSetBlobPart() const { return ptr_D3DSetBlobPart; }
 	pD3DDisassembleg get_ptr_D3DDisassemble() const { return ptr_D3DDisassemble; }
 	gD3DLoadModulep get_ptr_D3DLoadModule() const { return ptr_D3DLoadModule;  }
+	gD3DCreateLinkerp get_ptr_D3DCreateLinker() const { return ptr_D3DCreateLinker;  }
 private:
 	HMODULE get_h() const { return h; }
 	HMODULE          h;
@@ -30,6 +31,7 @@ private:
 	pD3DSetBlobPartg ptr_D3DSetBlobPart;
 	pD3DDisassembleg ptr_D3DDisassemble;
 	gD3DLoadModulep ptr_D3DLoadModule;
+	gD3DCreateLinkerp ptr_D3DCreateLinker;
 };
 
 #endif /*EFXC2COMPILERAPICONTAINER_H_INCLUDED*/

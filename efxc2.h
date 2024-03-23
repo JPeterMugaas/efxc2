@@ -237,6 +237,16 @@ typedef HRESULT(__stdcall* gD3DLoadModulep) (
     _Out_ interface ID3D11Module** ppModule
     );
 
+#ifdef _MSC_VER
+typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
+    __out interface ID3D11Linker** ppLinker
+    );
+#else
+typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
+    _Out_ interface ID3D11Linker** ppLinker
+    );
+#endif
+
 // This struct represents the first four bytes of the name blob:
 struct ShaderDebugName
 {
