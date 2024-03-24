@@ -533,7 +533,6 @@ bool parseCompilerOnlyCall(
 	_In_ wchar_t* argv[1],
 	_Inout_	int* index,
 	Compiler& compiler) {
-	wchar_t** argumentOption = nullptr;
 #else
 bool parseCompilerOnlyCall(
 	_In_ char* argv[1],
@@ -687,11 +686,11 @@ bool parseIgnoredOpts(
 #ifdef _WIN32
 bool parseNotSupportedOpts(
 	_In_ wchar_t* argv[1],
-	_Inout_	int* index) {
+	_In_ const int* index) {
 #else
 bool parseNotSupportedOpts(
 	_In_ char* argv[1],
-	_Inout_	int* index) {
+	_In_ const int* index) {
 #endif
 	#ifdef _WIN32
 	const wchar_t* argument = argv[*index];

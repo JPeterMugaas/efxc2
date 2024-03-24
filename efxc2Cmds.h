@@ -219,11 +219,11 @@ bool parseIgnoredOpts(
 #ifdef _WIN32
 bool parseNotSupportedOpts(
     _In_ wchar_t* argv[1],
-    _Inout_	int* index);
+    _In_ const int* index);
 #else
 bool parseNotSupportedOpts(
     _In_ char* argv[1],
-    _Inout_	int* index);
+    _In_ const int* index);
 #endif
 
 constexpr auto NOT_SUPPORTED_LENGTH = 10;
