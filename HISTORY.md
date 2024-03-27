@@ -5,6 +5,17 @@ https://github.com/JPeterMugaas/efxc2
 Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2/releases)
 
 ## Release History
+### March 27, 2024
+* Convert some arrays to std::array and convert parameter macros to constexpr.
+* convert DLL_NAME to constexpr const.
+* Replace wcharToChar with utf8_encode
+* Add /Fc support.
+* Refactored commands that specify files. Make .PDB file generation conditional.
+* Add some support for /Cc parameter.
+* Support for /Ni and /No parameters.
+* Remove `using namespace std;`
+* Expose `D3DLoadModule` and `D3DCreateLinker` functions.
+
 ### March 17, 2024
 * add utf8_decode and utf8_encode functions, SetPDBFileName, and convert pdbFile to a utf8 string.
 * .PDB support based on article at: [https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/](https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/)
