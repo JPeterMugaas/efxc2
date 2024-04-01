@@ -12,95 +12,95 @@
 #define EFXC2CMDS_H_INCLUDED
 
 #include "efxc2.h"
-#include "efxc2Compiler.h"
+#include "efxc2CompilerParams.h"
 #include "efxc2Files.h"
 
 #ifdef _WIN32
-void option_ignored(_In_ const wchar_t* Opt, Compiler& compiler);
+void option_ignored(_In_ const wchar_t* Opt, CompilerParams& params);
 #else
-void option_ignored(_In_ const char* Opt, _In_ Compiler& compiler);
+void option_ignored(_In_ const char* Opt, _In_ CompilerParams& params);
 #endif
 #ifdef _WIN32
-void parseInputFile(_In_ const wchar_t* parameter, Compiler& compiler, Files& files);
+void parseInputFile(_In_ const wchar_t* parameter, CompilerParams& params, Files& files);
 #else
-void parseInputFile(_In_ const char* parameter, Compiler& compiler, Files& files);
+void parseInputFile(_In_ const char* parameter, CompilerParams& params, Files& files);
 #endif
-void cmd_all_resources_bound(Compiler& compiler);
-void cmd_Cc(Compiler& compiler);
+void cmd_all_resources_bound(CompilerParams& params);
+void cmd_Cc(CompilerParams& params);
 #ifdef _WIN32
-void cmd_D(Compiler& compiler, _In_ const wchar_t* _defineOption);
+void cmd_D(CompilerParams& params, _In_ const wchar_t* _defineOption);
 #else
-void cmd_D(Compiler& compiler, _In_ char* _defineOption);
-#endif
-#ifdef _WIN32
-void cmd_E(Compiler& compiler, _In_ const wchar_t* w_entryPoint);
-#else
-void cmd_E(Compiler& compiler, _In_ char* entryPoint);
-#endif
-void cmd_enable_unbounded_descriptor_tables(Compiler& compiler);
-#ifdef _WIN32
-void cmd_Fc(Compiler& compiler, Files& files, _In_ wchar_t* assemblyCodeFile);
-#else
-void cmd_Fc(Compiler & compiler, Files & files, _In_ char* assemblyCodeFile);
+void cmd_D(CompilerParams& params, _In_ char* _defineOption);
 #endif
 #ifdef _WIN32
-void cmd_Fd(Compiler& compiler, Files& files, _In_ wchar_t* pdbFile);
+void cmd_E(CompilerParams& params, _In_ const wchar_t* w_entryPoint);
 #else
-void cmd_Fd(Compiler& compiler, Files& files, _In_ char* pdbFile);
+void cmd_E(CompilerParams& params, _In_ char* entryPoint);
+#endif
+void cmd_enable_unbounded_descriptor_tables(CompilerParams& params);
+#ifdef _WIN32
+void cmd_Fc(CompilerParams& params, Files& files, _In_ wchar_t* assemblyCodeFile);
+#else
+void cmd_Fc(CompilerParams& compiler, Files & files, _In_ char* assemblyCodeFile);
 #endif
 #ifdef _WIN32
-void cmd_Fh(Compiler& compiler, Files& files, _Inout_ wchar_t* outputFile);
+void cmd_Fd(CompilerParams& params, Files& files, _In_ wchar_t* pdbFile);
 #else
-void cmd_Fh(Compiler& compiler, Files& files, _Inout_ char* outputFile);
+void cmd_Fd(CompilerParams& params, Files& files, _In_ char* pdbFile);
 #endif
 #ifdef _WIN32
-void cmd_Fo(Compiler& compiler, Files& files, _Inout_ wchar_t* outputFile);
+void cmd_Fh(CompilerParams& params, Files& files, _Inout_ wchar_t* outputFile);
 #else
-void cmd_Fo(Compiler& compiler, Files& files, _Inout_ char* outputFile);
+void cmd_Fh(CompilerParams& params, Files& files, _Inout_ char* outputFile);
 #endif
-void cmd_Gch(Compiler& compiler);
-void cmd_Gdp(Compiler& compiler);
-void cmd_Gec(Compiler& compiler);
-void cmd_Ges(Compiler& compiler);
-void cmd_Gfa(Compiler& compiler);
-void cmd_Gis(Compiler& compiler);
-void cmd_Gpp(Compiler& compiler);
-void cmd_Lx(Compiler& compiler);
-void cmd_Ni(Compiler& compiler);
-void cmd_No(Compiler& compiler);
-void cmd_O0(Compiler& compiler);
-void cmd_O1(Compiler& compiler);
-void cmd_O2(Compiler& compiler);
-void cmd_O3(Compiler& compiler);
-void cmd_Od(Compiler& compiler);
-void cmd_Op(Compiler& compiler);
-void cmd_Qstrip_debug(Compiler& compiler);
-void cmd_Qstrip_priv(Compiler& compiler);
-void cmd_Qstrip_reflect(Compiler& compiler);
-void cmd_Qstrip_rootsignature(Compiler& compiler);
-void cmd_res_may_alias(Compiler& compiler);
 #ifdef _WIN32
-void cmd_T(Compiler& compiler, _In_ wchar_t* w_model);
+void cmd_Fo(CompilerParams& params, Files& files, _Inout_ wchar_t* outputFile);
 #else
-void cmd_T(Compiler& compiler, _In_ char* model);
+void cmd_Fo(CompilerParams& params, Files& files, _Inout_ char* outputFile);
 #endif
-void cmd_Vd(Compiler& compiler);
+void cmd_Gch(CompilerParams& params);
+void cmd_Gdp(CompilerParams& params);
+void cmd_Gec(CompilerParams& params);
+void cmd_Ges(CompilerParams& params);
+void cmd_Gfa(CompilerParams& params);
+void cmd_Gis(CompilerParams& params);
+void cmd_Gpp(CompilerParams& params);
+void cmd_Lx(CompilerParams& params);
+void cmd_Ni(CompilerParams& params);
+void cmd_No(CompilerParams& params);
+void cmd_O0(CompilerParams& params);
+void cmd_O1(CompilerParams& params);
+void cmd_O2(CompilerParams& params);
+void cmd_O3(CompilerParams& params);
+void cmd_Od(CompilerParams& params);
+void cmd_Op(CompilerParams& params);
+void cmd_Qstrip_debug(CompilerParams& params);
+void cmd_Qstrip_priv(CompilerParams& params);
+void cmd_Qstrip_reflect(CompilerParams& params);
+void cmd_Qstrip_rootsignature(CompilerParams& params);
+void cmd_res_may_alias(CompilerParams& params);
 #ifdef _WIN32
-void cmd_Vn(Compiler& compiler, _In_ wchar_t* w_variableName);
+void cmd_T(CompilerParams& params, _In_ wchar_t* w_model);
 #else
-void cmd_Vn(Compiler& compiler, _In_ char* variableName);
+void cmd_T(CompilerParams& params, _In_ char* model);
 #endif
-void cmd_WX(Compiler& compiler);
-void cmd_Zi(Compiler& compiler);
-void cmd_Zpc(Compiler& compiler);
-void cmd_Zpr(Compiler& compiler);
-void cmd_Zsb(Compiler& compiler);
-void cmd_Zss(Compiler& compiler);
+void cmd_Vd(CompilerParams& params);
+#ifdef _WIN32
+void cmd_Vn(CompilerParams& params, _In_ wchar_t* w_variableName);
+#else
+void cmd_Vn(CompilerParams& params, _In_ char* variableName);
+#endif
+void cmd_WX(CompilerParams& params);
+void cmd_Zi(CompilerParams& params);
+void cmd_Zpc(CompilerParams& params);
+void cmd_Zpr(CompilerParams& params);
+void cmd_Zsb(CompilerParams& params);
+void cmd_Zss(CompilerParams& params);
 
 #ifdef _WIN32
-using gCompilerFilep = void(Compiler&, Files&, wchar_t*);
+using gCompilerFilep = void(CompilerParams&, Files&, wchar_t*);
 #else
-using gCompilerFilep = void(Compiler&, Files&, char*);
+using gCompilerFilep = void(CompilerParams&, Files&, char*);
 #endif
 struct CompileFileEntry {
 #ifdef _WIN32
@@ -124,18 +124,18 @@ bool parseCompilerFileCall(
     _In_ int argc,
     _In_ wchar_t* argv[1],
     _Inout_	int* index,
-    Compiler& compiler,
+    CompilerParams& params,
     Files& files);
 #else
 bool parseCompilerFileCall(
     _In_ int argc,
     _In_ char* argv[1],
     _Inout_	int* index,
-    Compiler& compiler,
+    CompilerParams& params,
     Files& files);
 #endif
 
-using gCompilerp = void (Compiler &);
+using gCompilerp = void (CompilerParams &);
 struct CompilerOnlyEntry {
 #ifdef _WIN32
     const wchar_t* Param;
@@ -184,12 +184,12 @@ const std::array <CompilerOnlyEntry, COMPILER_ONLY_ENTRIES_LENGTH> g_CompilerOnl
 bool parseCompilerOnlyCall(
     _In_ wchar_t* argv[1],
     _Inout_	int* index,
-    Compiler& compiler);
+    CompilerParams& params);
 #else
 bool parseCompilerOnlyCall(
     _In_ char* argv[1],
     _Inout_	int* index,
-    Compiler& compiler);
+    CompilerParams& params);
 #endif
 
 constexpr auto IGNORED_OPTS_LENGTH = 5;
@@ -208,12 +208,12 @@ const std::array <const char*,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 bool parseIgnoredOpts(
     _In_ wchar_t* argv[1],
     _Inout_	int* index,
-    Compiler& compiler);
+    CompilerParams& params);
 #else
 bool parseIgnoredOpts(
     _In_ char* argv[1],
     _Inout_	int* index,
-    Compiler & compiler);
+    CompilerParams& params);
 #endif
 
 #ifdef _WIN32

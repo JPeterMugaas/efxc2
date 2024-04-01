@@ -10,20 +10,24 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 
-void Compiler::initializeDefines() {
-    numDefines = 1;
-    defines = new D3D_SHADER_MACRO[numDefines];
-    defines[numDefines - 1].Name = nullptr;
-    defines[numDefines - 1].Definition = nullptr;
-}
-
 void Compiler::Compile() {
-    //Default output variable name
-    if (variableName == nullptr) {
-        variableName = setupVariableName(model, entryPoint);
-    }
+
+    auto SourceCode = params.get_SourceCode();
+    auto SourceLen = params.get_SourceLen();
+    auto eflags = params.get_eflags();
+    auto sflags = params.get_sflags();
+    auto secondary_flags = params.get_secondary_flags();
+    auto numDefines = params.get_numDefines();
+    std::string _entryPoint = params.get_entryPoint();
+    const char* entryPoint = _entryPoint.c_str();
+    std::string _model = params.get_model();
+    const char* model = _model.c_str();
+    std::string _inputFile = params.get_inputFile();
+    const char* inputFile = _inputFile.c_str();
+    auto defines = params.get_defines();
+
     ID3DBlob* errors = nullptr;
-    if (verbose) {
+    if (params.get_verbose()) {
         printf("Calling D3DCompile2(\n");
 
         printf("\t SourceCode,\n");
@@ -115,9 +119,10 @@ void Compiler::Compile() {
 void Compiler::Disassemble() {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
+    auto disassembly_flags = params.get_disassembly_flags();
     HRESULT hr = 0;
     disassemblyCodeBlob = nullptr;
-    if (verbose) {
+    if (params.get_verbose()) {
         printf("Calling D3DDisassemble(\n");
         printf("\t compiledString,\n");
         printf("\t %zu,\n", compiledLen);
@@ -149,10 +154,11 @@ void Compiler::Disassemble() {
 void Compiler::StripShader() {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
+    auto strip_flags = params.get_strip_flags();
     HRESULT hr = 0;
     strippedBlob = nullptr;
     if (strip_flags != 0) {
-        if (verbose) {
+        if (params.get_verbose()) {
             printf("Calling D3DStripShader(\n");
             printf("\t compiledString,\n");
             printf("\t %zu,\n", compiledLen);
@@ -195,6 +201,14 @@ size_t Compiler::WriteAssemblyCode(FILE* f) {
 }
 
 size_t Compiler::WriteIncludeFile(FILE* f) {
+    auto variableName = params.get_variableName();
+    
+    //Default output variable name
+    if (variableName == "") {
+        std::string model = params.get_model();
+        std::string entryPoint = params.get_entryPoint();
+        variableName = setupVariableName(model.c_str(), entryPoint.c_str());
+    } 
     unsigned char const* outputString = nullptr;
     size_t outputLen = 0;
     if (strippedBlob == nullptr) {
@@ -205,7 +219,7 @@ size_t Compiler::WriteIncludeFile(FILE* f) {
         outputString = (unsigned char*)strippedBlob->GetBufferPointer();
         outputLen = strippedBlob->GetBufferSize();
     }
-    WriteByteArrayConst(f, outputString, outputLen, variableName, outputHex);
+    WriteByteArrayConst(f, outputString, outputLen, variableName.c_str(), params.get_outputHex());
     return outputLen;
 }
 
@@ -229,7 +243,7 @@ char* Compiler::GetPDBFileName() {
     size_t compiledLen = compilerOutput->GetBufferSize();
     HRESULT hr = 0;
     /*Get filename*/
-    if (verbose) {
+    if (params.get_verbose()) {
         printf("Calling D3DGetBlobPart(\n");
         printf("\t compiledString,\n");
         printf("\t %zu,\n", compiledLen);
@@ -282,7 +296,7 @@ void Compiler::SetPDBFileName(_In_ const char* _fileName) {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
 
-    if (verbose) {
+    if (params.get_verbose()) {
         printf("Calling D3DSetBlobPart(\n");
         printf("\t compiledString,\n");
         printf("\t %zu,\n", compiledLen);
@@ -324,7 +338,7 @@ size_t Compiler::WritePDBFile(FILE* f) {
         compiledString = (unsigned char*)pShaderWithNewName->GetBufferPointer();
         compiledLen = pShaderWithNewName->GetBufferSize();
     }
-    if (verbose) {
+    if (params.get_verbose()) {
         printf("Calling D3DGetBlobPart(\n");
         printf("\t compiledString,\n");
         printf("\t %zu,\n", compiledLen);
@@ -349,22 +363,4 @@ size_t Compiler::WritePDBFile(FILE* f) {
     size_t outputLen = PDBData->GetBufferSize();
     fwrite(outputString, outputLen, 1, f);
     return compiledLen;
-}
-
-void Compiler::LoadSourceCode(FILE* f) {
-    readall(f, &SourceCode, &SourceLen);
-}
-
-void Compiler::add_define(char* defineOption) {
-    assert(defineOption == nullptr);
-    numDefines++;
-    //Copy the old array into the new array, but put the new definition at the beginning
-    auto newDefines = new D3D_SHADER_MACRO[numDefines];
-    for (size_t i = 1; i < numDefines; i++) {
-        newDefines[i] = defines[i - 1];
-    }
-    delete[] defines;
-    defines = newDefines;
-    defines[0].Name = defineOption;
-    defines[0].Definition = "1";
 }

@@ -13,11 +13,12 @@
 #define EFXC2COMPILERTASKS_H_INCLUDED
 #include "efxc2.h"
 #include "efxc2Compiler.h"
+#include "efxc2CompilerParams.h"
 
 #ifdef _WIN32
-void CompilerTasks(Compiler& compiler, Files files);
+void CompilerTasks(Compiler& compiler, Files files, CompilerParams& params);
 #else
-void CompilerTasks(Compiler & compiler, Files files);
+void CompilerTasks(Compiler& compiler, Files files, CompilerParams& params);
 #endif
 
 #endif /* EFXC2COMPILERTASKS_H_INCLUDED */

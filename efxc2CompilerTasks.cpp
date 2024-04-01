@@ -12,23 +12,23 @@
 #include "efxc2Files.h"
 
 #ifdef _WIN32
-void CompilerTasks(Compiler& compiler, Files files) {
+void CompilerTasks(Compiler& compiler, Files files, CompilerParams& params) {
 #else
-void CompilerTasks(Compiler & compiler, Files files) {
+void CompilerTasks(Compiler& compiler, Files files, CompilerParams& params) {
 #endif
     compiler.Compile();
     compiler.StripShader();
-    if ((compiler.get_commands() & CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {
-        files.WriteIncludeFile(compiler);
+    if ((params.get_commands() & CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {
+        files.WriteIncludeFile(compiler,params);
     }
-    if ((compiler.get_commands() & CMD_WRITE_PDB_FILE) == CMD_WRITE_PDB_FILE) {
-        files.WritePDBFile(compiler);
+    if ((params.get_commands() & CMD_WRITE_PDB_FILE) == CMD_WRITE_PDB_FILE) {
+        files.WritePDBFile(compiler,params);
     }
-    if ((compiler.get_commands() & CMD_WRITE_OBJECT) == CMD_WRITE_OBJECT) {
-        files.WriteObjectFile(compiler);
+    if ((params.get_commands() & CMD_WRITE_OBJECT) == CMD_WRITE_OBJECT) {
+        files.WriteObjectFile(compiler,params);
     }
-    if ((compiler.get_commands() & CMD_WRITE_ASSEMBLY_CODE) == CMD_WRITE_ASSEMBLY_CODE) {
+    if ((params.get_commands() & CMD_WRITE_ASSEMBLY_CODE) == CMD_WRITE_ASSEMBLY_CODE) {
         compiler.Disassemble();
-        files.WriteDisassembly(compiler);
+        files.WriteDisassembly(compiler,params);
     }
 }

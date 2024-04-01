@@ -11,6 +11,7 @@
 #ifndef EFXC2FILES_H_INCLUDED
 #define EFXC2FILES_H_INCLUDED
 #include "efxc2.h"
+#include "efxc2CompilerParams.h"
 #include "efxc2Compiler.h"
 
 class Files {
@@ -40,10 +41,11 @@ public:
     char* get_pdbFile() const { return pdbFile;  };
     void set_pdbFile(char* _pdbFile) { pdbFile = _pdbFile; }
 #endif /* _WIN32 */
-    void WriteDisassembly(Compiler& compiler);
-    void WritePDBFile(Compiler& compiler);
-    void WriteIncludeFile(Compiler& compiler);
-    void WriteObjectFile(Compiler& compiler);
+
+    void WriteDisassembly(Compiler& compiler, CompilerParams& params);
+    void WriteIncludeFile(Compiler& compile, CompilerParams& params);
+    void WriteObjectFile(Compiler& compiler, CompilerParams& params);
+    void WritePDBFile(Compiler& compiler, CompilerParams& params);
 private:
 #ifdef _WIN32
     wchar_t* DisassemblyFile = nullptr;

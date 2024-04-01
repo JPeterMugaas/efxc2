@@ -10,6 +10,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Cmds.h"
 #include "efxc2Compiler.h"
+#include "efxc2CompilerParams.h"
 #include "efxc2CompilerTasks.h"
 #include "efxc2Files.h"
 
@@ -31,7 +32,7 @@ int main(int argc, char* argv[]) {
     char* temp = nullptr;
 #endif
     CompilerAPIContainer api;
-    Compiler compiler(api);
+    CompilerParams params;
     Files files;
 
     /*first scan specifically for the nologo argument so no output
@@ -40,7 +41,7 @@ int main(int argc, char* argv[]) {
     while (index < argc) {
         /* Detect the end of the options. */
         if (parseOpt(M_NOLOGO, argc, argv, &index, nullptr)) {
-            compiler.set_verbose(false);
+            params.set_verbose(false);
             break;
         }
         else {
@@ -57,10 +58,10 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, nullptr)) {
             print_help_screen();
         }
-        else if (parseCompilerOnlyCall(argv, &index, compiler)) {
+        else if (parseCompilerOnlyCall(argv, &index, params)) {
             continue;
         }
-        else if (parseIgnoredOpts(argv, &index, compiler)) {
+        else if (parseIgnoredOpts(argv, &index, params)) {
             continue;
         }
         else if (parseNotSupportedOpts(argv, &index)) {
@@ -72,20 +73,20 @@ int main(int argc, char* argv[]) {
 #pragma warning(disable: 6011)
 #endif /* _MSC_VER*/
         else if (parseOpt(M_D, argc, argv, &index, &temp)) {
-            cmd_D(compiler, temp);
+            cmd_D(params, temp);
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif /* _MSC_VER */
             continue;
         }
         else if (parseOpt(M_E_, argc, argv, &index, &temp)) {
-            cmd_E(compiler, temp);
+            cmd_E(params, temp);
 #ifdef _WIN32
             delete[] temp;
 #endif
             continue;
         }
-        else if (parseCompilerFileCall(argc, argv, &index, compiler, files)) {
+        else if (parseCompilerFileCall(argc, argv, &index, params, files)) {
             continue;
         }
         else if (parseOpt(M_HELP, argc, argv, &index, nullptr)) {
@@ -95,7 +96,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_T, argc, argv, &index, &temp)) {
-            cmd_T(compiler, temp);
+            cmd_T(params, temp);
 #ifdef _WIN32
             delete[] temp;
 #endif
@@ -105,7 +106,7 @@ int main(int argc, char* argv[]) {
             print_version();
         }
         else if (parseOpt(M_VN, argc, argv, &index, &temp)) {
-            cmd_Vn(compiler, temp);
+            cmd_Vn(params, temp);
 #ifdef _WIN32
             delete[] temp;
 #endif /* _WIN32 */
@@ -113,18 +114,18 @@ int main(int argc, char* argv[]) {
         }
         else {
 #ifdef _WIN32
-            parseInputFile(argv[index], compiler, files);
+            parseInputFile(argv[index], params, files);
 #else
-            parseInputFile(argv[index], compiler, files);
+            parseInputFile(argv[index], params, files);
 #endif
             index += 1;
         }
     }
-
+    Compiler compiler(api, params);
 #ifdef _WIN32
-    CompilerTasks(compiler, files);
+    CompilerTasks(compiler, files, params);
 #else
-    CompilerTasks(compiler, files);
+    CompilerTasks(compiler, files, params);
 #endif
     return 0;
 }

@@ -11,7 +11,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-void Files::WriteDisassembly(Compiler& compiler) {
+void Files::WriteDisassembly(Compiler& compiler, CompilerParams& params) {
     FILE* f;
 #ifdef _WIN32
     errno_t err = 0;
@@ -39,7 +39,7 @@ void Files::WriteDisassembly(Compiler& compiler) {
     outputLen = compiler.WriteAssemblyCode(f);
     _Analysis_assume_(f != NULL);
     fclose(f);
-    if (compiler.get_verbose()) {
+    if (params.get_verbose()) {
 #ifdef _WIN32
         wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, DisassemblyFile);
 #else   /* _WIN32 */
@@ -49,7 +49,7 @@ void Files::WriteDisassembly(Compiler& compiler) {
     }
 }
 
-void Files::WriteIncludeFile(Compiler & compiler) {
+void Files::WriteIncludeFile(Compiler& compiler,  CompilerParams& params) {
     FILE* f;
 #ifdef _WIN32
     errno_t err = 0;
@@ -77,7 +77,7 @@ void Files::WriteIncludeFile(Compiler & compiler) {
     outputLen = compiler.WriteIncludeFile(f);
     _Analysis_assume_(f != NULL);
     fclose(f);
-    if (compiler.get_verbose()) {
+    if (params.get_verbose()) {
 #ifdef _WIN32
         wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, IncludeFile);
 #else   /* _WIN32 */
@@ -87,7 +87,7 @@ void Files::WriteIncludeFile(Compiler & compiler) {
     }
 }
 
-void Files::WriteObjectFile(Compiler& compiler) {
+void Files::WriteObjectFile(Compiler& compiler, CompilerParams& params) {
     FILE* f;
 #ifdef _WIN32
     errno_t err = 0;
@@ -122,7 +122,7 @@ void Files::WriteObjectFile(Compiler& compiler) {
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif /* _MSC_VER */
-    if (compiler.get_verbose()) {
+    if (params.get_verbose()) {
 #ifdef _WIN32
         wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, ObjectFile);
 #else   /* _WIN32 */
@@ -132,7 +132,7 @@ void Files::WriteObjectFile(Compiler& compiler) {
     }
 }
 
-void Files::WritePDBFile(Compiler& compiler) {
+void Files::WritePDBFile(Compiler& compiler, CompilerParams& params) {
     FILE* f;
     int	AppendSlash = false;
 #ifdef _WIN32
