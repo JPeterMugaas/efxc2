@@ -24,7 +24,7 @@ public:
     size_t WriteObjectFile(FILE* f);
     size_t WriteAssemblyCode(FILE* f);
     std::string GetPDBFileName();
-    void SetPDBFileName(_In_ const std::string _fileName);
+    void SetPDBFileName(_In_ const std::string& _fileName);
     size_t WritePDBFile(FILE* f);
 private:
     CompilerAPIContainer api;

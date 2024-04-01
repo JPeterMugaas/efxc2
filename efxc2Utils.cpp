@@ -132,7 +132,7 @@ void print_unsupported_arg_help() {
 }
 
 /* from: https://btechgeeks.com/how-to-get-filename-from-a-path-with-or-without-extension-in-cpp/*/
-std::string GetFileName(_In_ std::string path, _Out_ int* IsSpecialFolder) {
+std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder) {
     *IsSpecialFolder = false;
     char sep = '/';
 #ifdef _WIN32
@@ -147,46 +147,13 @@ std::string GetFileName(_In_ std::string path, _Out_ int* IsSpecialFolder) {
             *IsSpecialFolder = true;
             rawname = "";
         }
-        return(rawname);
+        return rawname;
     }
-    return("");
+    return "";
 }
-
-char* GetFileName(_In_ char* path, _Out_ int* IsSpecialFolder) {
-    
-    if ((path == nullptr) || (IsSpecialFolder == nullptr)) {
-        return nullptr;
-    }
-    *IsSpecialFolder = false;
-    char* pCur = path;
-    char* pFileName = nullptr;
-
-    while (*pCur != '\0') {
-        if (*pCur == '/' || *pCur == '\\') {
-            pFileName = pCur + 1;
-        }
-        pCur++;
-    }
-    if (pFileName != nullptr) {
-        if (strcmp(pFileName, "..") == 0) {
-            *IsSpecialFolder = true;
-            return nullptr;
-        }
-        if (strcmp(pFileName, ".") == 0) {
-            *IsSpecialFolder = true;
-            return nullptr;
-        }
-        if (strcmp(pFileName, "") == 0) {
-            return nullptr;
-        }
-    }
-    return pFileName;
-}
-
 
 #ifdef _WIN32
-
-std::wstring GetFileName(_In_ std::wstring path, _Out_ int* IsSpecialFolder) {
+std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFolder) {
     *IsSpecialFolder = false;
     char sep = '/';
 #ifdef _WIN32
@@ -201,40 +168,10 @@ std::wstring GetFileName(_In_ std::wstring path, _Out_ int* IsSpecialFolder) {
             *IsSpecialFolder = true;
             rawname = L"";
         }
-        return(rawname);
+        return rawname;
     }
 
     return L"";
-}
-
-wchar_t* GetFileName(_In_ wchar_t* path, _Out_ int* IsSpecialFolder) {
-    if ((path == nullptr) || (IsSpecialFolder == nullptr)) {
-        return nullptr;
-    }
-    *IsSpecialFolder = false;
-    wchar_t* pCur = path;
-    wchar_t* pFileName = nullptr;
-
-    while (*pCur != '\0') {
-        if (*pCur == '/' || *pCur == '\\') {
-            pFileName = pCur + 1;
-        }
-        pCur++;
-    }
-    if (pFileName != nullptr) {
-        if (wcscmp(pFileName, L"..") == 0) {
-            *IsSpecialFolder = true;
-            return nullptr;
-        }
-        if (wcscmp(pFileName, L".") == 0) {
-            *IsSpecialFolder = true;
-            return nullptr;
-        }
-        if (wcscmp(pFileName, L"") == 0) {
-            return nullptr;
-        }
-    }
-    return pFileName;
 }
 #endif
 
@@ -395,7 +332,7 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
     return true;
 }
 
-std::string setupVariableName(_In_ std::string const & model,
+std::string setupVariableName(_In_ const std::string& model,
     _In_ std::string const & entryPoint) {
     std::string variableName = "";
     std::string prefix = "g";
@@ -425,23 +362,6 @@ void FixupFileName(_Inout_ std::wstring FileName) {
     }
     return;
 }
-
-void FixupFileName(_Inout_ wchar_t* FileName) {
-    if (FileName == nullptr) {
-        return;
-    }
-    for (int i = 0; FileName[i] != '\0'; i++)
-    {
-        if (FileName[i] == '/') {
-            FileName[i] = '\\';
-        }
-        else {
-            continue;
-        }
-    }
-    return;
-}
-
 #endif /* _WIN32 */
 
 #ifdef _WIN32
@@ -470,7 +390,7 @@ wchar_t* utf8_decode(const char* str, size_t nbytes) {
     return wstr;
 }
 
-std::wstring utf8_decode(const std::string str) {
+std::wstring utf8_decode(const std::string& str) {
     wchar_t* _res = utf8_decode( str.c_str(), str.length());
     std::wstring res = _res;
     /* utf8_decode uses malloc - do not remove this free */

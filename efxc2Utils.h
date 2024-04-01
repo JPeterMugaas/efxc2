@@ -69,13 +69,10 @@ const std::array <ProfilePrefix, PROFILE_PREFIX_TABLE_LEN>g_profilePrefixTable =
   { "vs_3_sw", "g_vs3ff"},
 } };
 
-std::string GetFileName(_In_ std::string path, _Out_ int* IsSpecialFolder);
-char* GetFileName(_In_ char* path, _Out_ int* IsSpecialFolder);
+std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder);
 #ifdef _WIN32
-std::wstring GetFileName(_In_ std::wstring path, _Out_ int* IsSpecialFolder);
-wchar_t* GetFileName(_In_ wchar_t* path, _Out_ int* IsSpecialFolder);
+std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFolder);
 void FixupFileName(_Inout_ std::wstring FileName);
-void FixupFileName(_Inout_ wchar_t* FileName);
 bool parseOpt(_In_ const wchar_t* option, 
     _In_ int argc, 
     _In_ wchar_t* argv[1], 
@@ -102,10 +99,10 @@ void print_unsupported_arg_help();
 int readall(_In_ FILE* in, 
     _Out_writes_bytes_(*sizeptr) char** dataptr, 
     _Out_opt_ size_t* sizeptr);
-std::string setupVariableName(_In_ std::string const& model,
+std::string setupVariableName(_In_ const std::string& model,
     _In_ std::string const& entryPoint);
 #ifdef _WIN32
-std::wstring utf8_decode(const std::string str);
+std::wstring utf8_decode(const std::string& str);
 wchar_t* utf8_decode(const char* str, size_t nbytes);
 char* utf8_encode(const wchar_t* wstr, size_t nchars);
 char* utf8_encode(const wchar_t* wstr);

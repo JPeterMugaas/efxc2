@@ -271,7 +271,7 @@ std::string Compiler::GetPDBFileName() {
     return pName;
 }
 
-void Compiler::SetPDBFileName(_In_ const std::string _fileName) {
+void Compiler::SetPDBFileName(_In_ const std::string& _fileName) {
     // Blobs are always a multiple of 4 bytes long. Since DxilShaderDebugName
     // is itself 4 bytes, we pad the storage of the string (not the string itself)
     // to 4 bytes also.
