@@ -16,25 +16,25 @@
 
 class Compiler {
 public:
-	explicit Compiler(const CompilerAPIContainer& _api, const CompilerParams& _params) : api(_api), params(_params) { };
-	void Compile();
-	void Disassemble();
-	void StripShader();
-	size_t WriteIncludeFile(FILE* f);
-	size_t WriteObjectFile(FILE* f);
-	size_t WriteAssemblyCode(FILE* f);
-	char* GetPDBFileName();
-	void SetPDBFileName(_In_ const char* _fileName);
-	size_t WritePDBFile(FILE* f);
+    explicit Compiler(const CompilerAPIContainer& _api, const CompilerParams& _params) : api(_api), params(_params) { };
+    void Compile();
+    void Disassemble();
+    void StripShader();
+    size_t WriteIncludeFile(FILE* f);
+    size_t WriteObjectFile(FILE* f);
+    size_t WriteAssemblyCode(FILE* f);
+    std::string GetPDBFileName();
+    void SetPDBFileName(_In_ const std::string _fileName);
+    size_t WritePDBFile(FILE* f);
 private:
-	CompilerAPIContainer api;
-	CompilerParams       params;
+    CompilerAPIContainer api;
+    CompilerParams       params;
 
-	ID3DBlob*        compilerOutput = nullptr;
-	ID3DBlob*        disassemblyCodeBlob = nullptr;
-	ID3DBlob*        strippedBlob = nullptr;
-	ID3DBlob*        pPDBName = nullptr;
-	ID3DBlob*        pShaderWithNewName = nullptr;
+    ID3DBlob*        compilerOutput = nullptr;
+    ID3DBlob*        disassemblyCodeBlob = nullptr;
+    ID3DBlob*        strippedBlob = nullptr;
+    ID3DBlob*        pPDBName = nullptr;
+    ID3DBlob*        pShaderWithNewName = nullptr;
 };
 
 #endif /* EFXC2COMPILER_H_INCLUDED */

@@ -69,12 +69,10 @@ const std::array <ProfilePrefix, PROFILE_PREFIX_TABLE_LEN>g_profilePrefixTable =
   { "vs_3_sw", "g_vs3ff"},
 } };
 
-#ifdef _WIN32
-wchar_t* concat(const wchar_t* s1, const wchar_t* s2);
-#endif
-char* concat(const char* s1, const char* s2);
+std::string GetFileName(_In_ std::string path, _Out_ int* IsSpecialFolder);
 char* GetFileName(_In_ char* path, _Out_ int* IsSpecialFolder);
 #ifdef _WIN32
+std::wstring GetFileName(_In_ std::wstring path, _Out_ int* IsSpecialFolder);
 wchar_t* GetFileName(_In_ wchar_t* path, _Out_ int* IsSpecialFolder);
 void FixupFileName(_Inout_ std::wstring FileName);
 void FixupFileName(_Inout_ wchar_t* FileName);
@@ -107,6 +105,7 @@ int readall(_In_ FILE* in,
 std::string setupVariableName(_In_ std::string const& model,
     _In_ std::string const& entryPoint);
 #ifdef _WIN32
+std::wstring utf8_decode(const std::string str);
 wchar_t* utf8_decode(const char* str, size_t nbytes);
 char* utf8_encode(const wchar_t* wstr, size_t nchars);
 char* utf8_encode(const wchar_t* wstr);

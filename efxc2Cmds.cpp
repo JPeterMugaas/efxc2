@@ -41,7 +41,7 @@ void parseInputFile(_In_ const char* parameter, CompilerParams& params, Files & 
 #pragma warning(disable: 6001)
 #pragma warning(disable: 6011)
 #endif
-	if (files.get_inputFile() == nullptr) {
+	if (files.get_inputFile().empty()) {
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

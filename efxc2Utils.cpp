@@ -131,6 +131,27 @@ void print_unsupported_arg_help() {
     print_errno(errno);
 }
 
+/* from: https://btechgeeks.com/how-to-get-filename-from-a-path-with-or-without-extension-in-cpp/*/
+std::string GetFileName(_In_ std::string path, _Out_ int* IsSpecialFolder) {
+    *IsSpecialFolder = false;
+    char sep = '/';
+#ifdef _WIN32
+    sep = '\\';
+#endif
+    size_t i = path.rfind(sep, path.length());
+    if (i != std::string::npos)
+    {
+        std::string filename = path.substr(i + 1, path.length() - i);
+        std::string rawname = filename.substr(0, path.length());
+        if ((rawname.compare("..") == 0) || (rawname.compare(".") == 0)) {
+            *IsSpecialFolder = true;
+            rawname = "";
+        }
+        return(rawname);
+    }
+    return("");
+}
+
 char* GetFileName(_In_ char* path, _Out_ int* IsSpecialFolder) {
     
     if ((path == nullptr) || (IsSpecialFolder == nullptr)) {
@@ -164,6 +185,28 @@ char* GetFileName(_In_ char* path, _Out_ int* IsSpecialFolder) {
 
 
 #ifdef _WIN32
+
+std::wstring GetFileName(_In_ std::wstring path, _Out_ int* IsSpecialFolder) {
+    *IsSpecialFolder = false;
+    char sep = '/';
+#ifdef _WIN32
+    sep = '\\';
+#endif
+    size_t i = path.rfind(sep, path.length());
+    if (i != std::wstring::npos)
+    {
+        std::wstring filename = path.substr(i + 1, path.length() - i);
+        std::wstring rawname = filename.substr(0, path.length());
+        if ((rawname.compare(L"..") == 0) || (rawname.compare(L".") == 0)) {
+            *IsSpecialFolder = true;
+            rawname = L"";
+        }
+        return(rawname);
+    }
+
+    return L"";
+}
+
 wchar_t* GetFileName(_In_ wchar_t* path, _Out_ int* IsSpecialFolder) {
     if ((path == nullptr) || (IsSpecialFolder == nullptr)) {
         return nullptr;
@@ -352,33 +395,6 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
     return true;
 }
 
-#ifdef _WIN32
-wchar_t* concat(const wchar_t* s1, const wchar_t* s2)
-{
-    auto* result = (wchar_t*)malloc(((wcslen(s1) + wcslen(s2)) * sizeof(wchar_t)) + sizeof(wchar_t)); // +1 for the null-terminator
-    if (result == nullptr) {
-        fprintf(stderr, "malloc failed/n");
-        print_errno();
-    }
-    wcscpy(result, s1);
-    wcscat(result, s2);
-    return result;
-}
-#endif
-
-char* concat(const char* s1, const char* s2)
-{
-    auto* result = (char*)malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
-    if (result == nullptr) {
-        fprintf(stderr, "malloc failed/n");
-        print_errno();
-    }
-    strcpy(result, s1);
-    strcat(result, s2);
-    return result;
-}
-
-
 std::string setupVariableName(_In_ std::string const & model,
     _In_ std::string const & entryPoint) {
     std::string variableName = "";
@@ -452,6 +468,14 @@ wchar_t* utf8_decode(const char* str, size_t nbytes) {
         return nullptr;
     }
     return wstr;
+}
+
+std::wstring utf8_decode(const std::string str) {
+    wchar_t* _res = utf8_decode( str.c_str(), str.length());
+    std::wstring res = _res;
+    /* utf8_decode uses malloc - do not remove this free */
+    free(_res);
+    return res;
 }
 
 char* utf8_encode(const wchar_t* wstr, size_t nchars) {

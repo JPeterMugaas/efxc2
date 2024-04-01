@@ -238,7 +238,7 @@ size_t Compiler::WriteObjectFile(FILE* f) {
     return outputLen;
 }
 
-char* Compiler::GetPDBFileName() {
+std::string Compiler::GetPDBFileName() {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
     HRESULT hr = 0;
@@ -271,11 +271,11 @@ char* Compiler::GetPDBFileName() {
     return pName;
 }
 
-void Compiler::SetPDBFileName(_In_ const char* _fileName) {
+void Compiler::SetPDBFileName(_In_ const std::string _fileName) {
     // Blobs are always a multiple of 4 bytes long. Since DxilShaderDebugName
     // is itself 4 bytes, we pad the storage of the string (not the string itself)
     // to 4 bytes also.
-    size_t fileNameLen = strlen(_fileName);
+    size_t fileNameLen = _fileName.length();
 
     size_t lengthOfNameStorage = (fileNameLen + 0x3) & ~0x3;
     size_t nameBlobPartSize = sizeof(ShaderDebugName) + lengthOfNameStorage;
@@ -291,7 +291,7 @@ void Compiler::SetPDBFileName(_In_ const char* _fileName) {
     // declared length does not include the null terminator:
     pNameBlobContent->NameLength = (uint16_t)fileNameLen - 1;
     // but the null terminator is expected to be present:
-    memcpy(pNameBlobContent + 1, _fileName, fileNameLen);
+    memcpy(pNameBlobContent + 1, _fileName.c_str(), fileNameLen);
 
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();

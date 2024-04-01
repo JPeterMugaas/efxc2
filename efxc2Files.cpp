@@ -23,7 +23,7 @@ void Files::WriteDisassembly(Compiler& compiler, CompilerParams& params) {
 #pragma warning( disable : 6001 )
 #pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
-    err = _wfopen_s(&f, DisassemblyFile, L"w");
+    err = _wfopen_s(&f, DisassemblyFile.c_str(), L"w");
     if (err != 0) {
         print_errno(err);
     }
@@ -31,7 +31,7 @@ void Files::WriteDisassembly(Compiler& compiler, CompilerParams& params) {
 #pragma warning( pop )
 #endif /* _MSC_VER */
 #else
-    f = fopen(DisassemblyFile, "w");
+    f = fopen(DisassemblyFile.c_str(), "w");
     if (f == nullptr) {
         print_errno();
     }
@@ -41,10 +41,10 @@ void Files::WriteDisassembly(Compiler& compiler, CompilerParams& params) {
     fclose(f);
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, DisassemblyFile);
+        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, DisassemblyFile.c_str());
 #else   /* _WIN32 */
         printf("Wrote %zu", outputLen);
-        printf(" bytes of shader output to %ls\n", DisassemblyFile);
+        printf(" bytes of shader output to %ls\n", DisassemblyFile.c_str());
 #endif  /* WIN32 */
     }
 }
@@ -61,7 +61,7 @@ void Files::WriteIncludeFile(Compiler& compiler,  CompilerParams& params) {
 #pragma warning( disable : 6001 )
 #pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
-    err = _wfopen_s(&f, IncludeFile, L"w");
+    err = _wfopen_s(&f, IncludeFile.c_str(), L"w");
     if (err != 0) {
         print_errno(err);
     }
@@ -69,7 +69,7 @@ void Files::WriteIncludeFile(Compiler& compiler,  CompilerParams& params) {
 #pragma warning( pop )
 #endif /* _MSC_VER */
 #else
-    f = fopen(IncludeFile, "w");
+    f = fopen(IncludeFile.c_str(), "w");
     if (f == nullptr) {
         print_errno();
     }
@@ -79,10 +79,10 @@ void Files::WriteIncludeFile(Compiler& compiler,  CompilerParams& params) {
     fclose(f);
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, IncludeFile);
+        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, IncludeFile.c_str());
 #else   /* _WIN32 */
         printf("Wrote %zu", outputLen);
-        printf(" bytes of shader output to %ls\n", IncludeFile);
+        printf(" bytes of shader output to %ls\n", IncludeFile.c_str());
 #endif  /* WIN32 */
     }
 }
@@ -99,7 +99,7 @@ void Files::WriteObjectFile(Compiler& compiler, CompilerParams& params) {
 #pragma warning( disable : 6001 )
 #pragma warning( disable : 6387 )
 #endif /* _MSC_VER */
-    err = _wfopen_s(&f, ObjectFile, L"w");
+    err = _wfopen_s(&f, ObjectFile.c_str(), L"w");
     if (err != 0) {
         print_errno(err);
     }
@@ -107,7 +107,7 @@ void Files::WriteObjectFile(Compiler& compiler, CompilerParams& params) {
 #pragma warning( pop )
 #endif /* _MSC_VER */
 #else
-    f = fopen(ObjectFile, "w");
+    f = fopen(ObjectFile.c_str(), "w");
     if (f == nullptr) {
         print_errno();
     }
@@ -124,10 +124,10 @@ void Files::WriteObjectFile(Compiler& compiler, CompilerParams& params) {
 #endif /* _MSC_VER */
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, ObjectFile);
+        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, ObjectFile.c_str());
 #else   /* _WIN32 */
         printf("Wrote %zu", outputLen);
-        printf(" bytes of shader output to %ls\n", ObjectFile);
+        printf(" bytes of shader output to %ls\n", ObjectFile.c_str());
 #endif
     }
 }
@@ -141,13 +141,13 @@ void Files::WritePDBFile(Compiler& compiler, CompilerParams& params) {
     size_t  outputLen = 0;
     /*write .PDB data if applicable*/
 #ifdef _WIN32
-    if (c_pdbFile != nullptr) {
+    if (c_pdbFile.empty() == false) {
         auto pPDBFileName = GetFileName(c_pdbFile, &AppendSlash);
 #else
-    if (pdbFile != nullptr) {
+    if (pdbFile.empty() == false) {
         auto pPDBFileName = GetFileName(pdbFile, &AppendSlash);
 #endif
-        if (pPDBFileName != nullptr) {
+        if (pPDBFileName.empty() == false) {
             compiler.SetPDBFileName(pPDBFileName);
         }
         else {
@@ -155,26 +155,25 @@ void Files::WritePDBFile(Compiler& compiler, CompilerParams& params) {
             filename in the shader data. */
             pPDBFileName = compiler.GetPDBFileName();
 #ifdef _WIN32
-            wchar_t* w_PDBFileName = utf8_decode(pPDBFileName, strlen(pPDBFileName));
+            std::wstring w_PDBFileName = utf8_decode(pPDBFileName);
             if (AppendSlash) {
-                pdbFile = concat(pdbFile, L"\\");
+                pdbFile.append(L"\\");
             }
-            pdbFile = concat(pdbFile, w_PDBFileName);
-            free(w_PDBFileName);
+            pdbFile.append(w_PDBFileName);
 #else
             if (AppendSlash) {
-                pdbFile = concat(pdbFile, "/");
+                pdbFile.append("/");
             }
-            pdbFile = concat(pdbFile, pPDBFileName);
+            pdbFile.append(pPDBFileName);
 #endif
         }
 #ifdef _WIN32
-        err = _wfopen_s(&f, pdbFile, L"w");
+        err = _wfopen_s(&f, pdbFile.c_str(), L"w");
         if (err != 0) {
             print_errno(err);
         }
 #else
-        f = fopen(IncludeFile, "w");
+        f = fopen(pdbFile.c_str(), "w");
         if (f == nullptr) {
             print_errno();
         }
@@ -183,7 +182,7 @@ void Files::WritePDBFile(Compiler& compiler, CompilerParams& params) {
         _Analysis_assume_(f != NULL);
         fclose(f);
 #ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile);
+        wprintf(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile.c_str());
 #else   /* _WIN32 */
         printf("Wrote %zu", outputLen);
         printf(" bytes of .PDB data to %ls\n", pdbFile);
