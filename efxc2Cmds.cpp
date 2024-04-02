@@ -490,7 +490,7 @@ void cmd_Zi(CompilerParams& params) {
 
 void cmd_Zpc(CompilerParams& params) {
 	if (params.get_verbose()) {
-		printf("option -Zpc flags | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR\n");
+		printf("option -Zpc sflags | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR\n");
 	}
 	UINT sflags = params.get_sflags();
 	sflags = sflags | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;

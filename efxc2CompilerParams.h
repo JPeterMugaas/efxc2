@@ -30,13 +30,13 @@ public:
 	UINT get_secondary_flags() const { return secondary_flags; }
 	void set_secondary_flags(UINT _secondary_flags) { secondary_flags = _secondary_flags; }
 	std::string get_model() const { return model; }
-	void set_model(std::string _model) { model = _model; }
+	void set_model(const std::string& _model) { model = _model; }
 	std::string get_entryPoint() const { return entryPoint; }
-	void set_entryPoint(std::string _entryPoint) { entryPoint = _entryPoint;  }
+	void set_entryPoint(const std::string& _entryPoint) { entryPoint = _entryPoint;  }
 	std::string get_variableName() const { return variableName; }
-	void set_variableName(std::string _variableName) { variableName = _variableName; }
+	void set_variableName(const std::string& _variableName) { variableName = _variableName; }
 	std::string get_inputFile() const { return inputFile; }
-	void set_inputFile(std::string _inputFile) { inputFile = _inputFile; }
+	void set_inputFile(const std::string& _inputFile) { inputFile = _inputFile; }
 	
 	D3D_SHADER_MACRO* get_defines() const { return defines; }
 	size_t get_numDefines() const { return numDefines; }

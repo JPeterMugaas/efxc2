@@ -16,9 +16,9 @@
 #include "efxc2CompilerParams.h"
 
 #ifdef _WIN32
-void CompilerTasks(Compiler& compiler, Files files, CompilerParams& params);
+void CompilerTasks(Compiler& compiler, Files& files, CompilerParams& params);
 #else
-void CompilerTasks(Compiler& compiler, Files files, CompilerParams& params);
+void CompilerTasks(Compiler& compiler, Files& files, CompilerParams& params);
 #endif
 
 #endif /* EFXC2COMPILERTASKS_H_INCLUDED */
