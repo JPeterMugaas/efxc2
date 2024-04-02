@@ -29,11 +29,11 @@ void option_ignored(_In_ const char* Opt, _In_ CompilerParams& params) {
 
 #ifdef _WIN32
 void parseInputFile(_In_ const wchar_t* parameter, CompilerParams& params, Files& files) {
-	wchar_t* inputFile = nullptr;
-	char* c_inputFile = nullptr;
+	std::wstring inputFile = L"";
+	std::string c_inputFile = "";
 #else
 void parseInputFile(_In_ const char* parameter, CompilerParams& params, Files & files) {
-	char* inputFile = nullptr;
+	std::string inputFile = "";
 #endif
 	FILE* f = nullptr;
 #ifdef _MSC_VER
@@ -48,23 +48,20 @@ void parseInputFile(_In_ const char* parameter, CompilerParams& params, Files & 
 		if (params.get_verbose()) {
 			printf("Parse input file name\n");
 		}
+		inputFile = parameter;
 #ifdef _WIN32
-		inputFile = new wchar_t[wcslen(parameter) + 1];
-		wcscpy_s(inputFile, wcslen(parameter) + 1, parameter);
 		FixupFileName(inputFile);
 		c_inputFile = utf8_encode(inputFile);
 		params.set_inputFile(c_inputFile);
 #else  /* _WIN32 */
-		inputFile = new char[strlen(parameter) + 1];
-		strncpy(inputFile, parameter, strlen(parameter) + 1);
 		params.set_inputFile(inputFile);
 #endif /* _WIN32 */
 		files.set_inputFile(inputFile);
 		if (params.get_verbose()) {
 #ifdef _WIN32
-			wprintf(L"input file: %ls\n", inputFile);
+			wprintf(L"input file: %ls\n", inputFile.c_str());
 #else  /* _WIN32 */
-			printf("input file: %ls\n", inputFile);
+			printf("input file: %s\n", inputFile.c_str());
 #endif /* _WIN32 */
 		}
 #ifdef _WIN32
@@ -72,14 +69,14 @@ void parseInputFile(_In_ const char* parameter, CompilerParams& params, Files & 
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif  /* _MSC_VER */
-		errno_t err = _wfopen_s(&f, inputFile, L"r");
+		errno_t err = _wfopen_s(&f, inputFile.c_str(), L"r");
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif  /* _MSC_VER */
 		if (err != 0) {
 			print_errno(err);
 #else
-		FILE* f = fopen(inputFile, "r");
+		FILE* f = fopen(inputFile.c_str(), "r");
 		if (f == nullptr) {
 			print_errno();
 #endif  /* _WIN32 */
@@ -129,13 +126,17 @@ void cmd_D(CompilerParams& params,
 
 #ifdef _WIN32
 void cmd_E(CompilerParams& params, _In_ const wchar_t* w_entryPoint) {
-	char* entryPoint = utf8_encode(w_entryPoint);
+	std::string entryPoint = utf8_encode(w_entryPoint);
 #else
 void cmd_E(CompilerParams& params, _In_ char* entryPoint) {
 #endif
 	params.set_entryPoint(entryPoint);
 	if (params.get_verbose()) {
+#ifdef _WIN32
+		printf("option -E (Entry Point) with arg '%s'\n", entryPoint.c_str());
+#else
 		printf("option -E (Entry Point) with arg '%s'\n", entryPoint);
+#endif
 	}
 	return;
 }
@@ -434,12 +435,16 @@ void cmd_res_may_alias(CompilerParams& params) {
 
 #ifdef _WIN32
 void cmd_T(CompilerParams& params, _In_ wchar_t* w_model) {
-	char* model = utf8_encode(w_model);
+	std::string model = utf8_encode(w_model);
 #else
 void cmd_T(CompilerParams& params, _In_ char* model) {
 #endif
 	if (params.get_verbose()) {
+#ifdef _WIN32
+		printf("option -T (Shader Model/Profile) with arg '%s'\n", model.c_str());
+#else
 		printf("option -T (Shader Model/Profile) with arg '%s'\n", model);
+#endif
 	}
 	params.set_model(model);
 	return;
@@ -456,13 +461,17 @@ void cmd_Vd(CompilerParams& params) {
 }
 
 #ifdef _WIN32
-void cmd_Vn(CompilerParams& params, _In_ wchar_t* w_variableName) {
-	char* variableName = utf8_encode(w_variableName);
+void cmd_Vn(CompilerParams& params, _In_ const wchar_t* w_variableName) {
+	std::string variableName = utf8_encode(w_variableName);
 #else
-void cmd_Vn(CompilerParams& params, _In_ char* variableName) {
+void cmd_Vn(CompilerParams& params, _In_ const char* variableName) {
 #endif
 	if (params.get_verbose()) {
+#ifdef _WIN32
+		printf("option -Vn (Variable Name) with arg '%s'\n", variableName.c_str());
+#else
 		printf("option -Vn (Variable Name) with arg '%s'\n", variableName);
+#endif
 	}
 	params.set_variableName(variableName);
 	return;

@@ -106,6 +106,7 @@ std::wstring utf8_decode(const std::string& str);
 wchar_t* utf8_decode(const char* str, size_t nbytes);
 char* utf8_encode(const wchar_t* wstr, size_t nchars);
 char* utf8_encode(const wchar_t* wstr);
+std::string utf8_encode(const std::wstring& wstr);
 #endif
 void WriteByteArrayConst(_In_ FILE* f, 
     _In_reads_bytes_(len) const unsigned char* outString, 

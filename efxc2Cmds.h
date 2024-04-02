@@ -86,9 +86,9 @@ void cmd_T(CompilerParams& params, _In_ char* model);
 #endif
 void cmd_Vd(CompilerParams& params);
 #ifdef _WIN32
-void cmd_Vn(CompilerParams& params, _In_ wchar_t* w_variableName);
+void cmd_Vn(CompilerParams& params, _In_ const wchar_t* w_variableName);
 #else
-void cmd_Vn(CompilerParams& params, _In_ char* variableName);
+void cmd_Vn(CompilerParams& params, _In_ const char* variableName);
 #endif
 void cmd_WX(CompilerParams& params);
 void cmd_Zi(CompilerParams& params);

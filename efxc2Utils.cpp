@@ -419,8 +419,17 @@ char* utf8_encode(const wchar_t* wstr, size_t nchars) {
     return str;
 }
 
+std::string utf8_encode(const std::wstring& wstr) {
+    char* _res = utf8_encode(wstr.c_str(), wstr.length());
+    std::string res = _res;
+    /* utf8_decode uses malloc - do not remove this free */
+    free(_res);
+    return res;
+}
+
 char* utf8_encode(const wchar_t* wstr) {
     size_t nchars = wcslen(wstr);
     return utf8_encode(wstr, nchars);
 }
+
 #endif
