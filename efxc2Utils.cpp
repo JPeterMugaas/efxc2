@@ -347,7 +347,23 @@ std::string setupVariableName(_In_ const std::string& model,
 }
 
 #ifdef _WIN32
-void FixupFileName(_Inout_ std::wstring FileName) {
+void FixupFileName(_Inout_ std::wstring& FileName) {
+    if (FileName.empty()) {
+        return;
+    }
+    for (int i = 0; FileName[i] != '\0'; i++)
+    {
+        if (FileName[i] == '/') {
+            FileName[i] = '\\';
+        }
+        else {
+            continue;
+        }
+    }
+    return;
+}
+
+void FixupFileName(_Inout_ std::string& FileName) {
     if (FileName.empty()) {
         return;
     }

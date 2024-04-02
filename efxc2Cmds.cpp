@@ -156,9 +156,6 @@ void cmd_Fc(CompilerParams& params, Files& files, _In_ wchar_t* assemblyCodeFile
 #else
 void cmd_Fc( CompilerParams& params, Files & files, _In_ char* assemblyCodeFile) {
 #endif
-#ifdef _WIN32
-	FixupFileName(assemblyCodeFile);
-#endif /* _WIN32 */
 	files.set_DisassemblyFile(assemblyCodeFile);
 	UINT cmd = params.get_commands();
 	cmd = cmd | CMD_WRITE_ASSEMBLY_CODE;
@@ -175,7 +172,6 @@ void cmd_Fd(CompilerParams& params, Files & files, _In_ wchar_t* pdbFile) {
 void cmd_Fd(CompilerParams& params, Files & files, _In_ char* pdbFile) {
 #endif
 #ifdef _WIN32
-	FixupFileName(pdbFile);
 	files.set_c_pdbFile(utf8_encode(pdbFile, wcslen(pdbFile)));
 #endif /* _WIN32 */
 	files.set_pdbFile(pdbFile);
@@ -197,9 +193,6 @@ void cmd_Fh(CompilerParams& params, Files & files, _Inout_ char* outputFile) {
 	if (params.get_verbose()) {
 		printf("option -Fh (Output File) with arg %ls\n", outputFile);
 	}
-#ifdef _WIN32
-	FixupFileName(outputFile);
-#endif /* _WIN32 */
 	files.set_IncludeFile(outputFile);
 	UINT cmd = params.get_commands();
 	cmd = cmd | CMD_WRITE_HEADER;
@@ -212,9 +205,6 @@ void cmd_Fo(CompilerParams& params, Files & files, _Inout_ wchar_t* outputFile) 
 #else
 void cmd_Fo(CompilerParams& params,  Files & files, _Inout_ char* outputFile) {
 #endif
-#ifdef _WIN32
-	FixupFileName(outputFile);
-#endif /* _WIN32 */
 	files.set_ObjectFile(outputFile);
 	UINT cmd = params.get_commands();
 	cmd = cmd | CMD_WRITE_OBJECT;

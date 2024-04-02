@@ -13,22 +13,29 @@
 #include "efxc2.h"
 #include "efxc2CompilerParams.h"
 #include "efxc2Compiler.h"
+#include "efxc2Utils.h"
 
 class Files {
 public:
 #ifdef _WIN32
     std::wstring get_DisassemblyFile() const { return DisassemblyFile;  }
-    void set_DisassemblyFile(const std::wstring& _DisassemblyFile) { DisassemblyFile = _DisassemblyFile;  }
+    void set_DisassemblyFile(const std::wstring& _DisassemblyFile) { 
+        DisassemblyFile = _DisassemblyFile;  FixupFileName(DisassemblyFile);  }
     std::wstring get_inputFile() const { return inputFile; }
-    void set_inputFile(const std::wstring& _inputFile) { inputFile = _inputFile; }
+    void set_inputFile(const std::wstring& _inputFile) { 
+        inputFile = _inputFile; FixupFileName(inputFile); }
     std::wstring get_IncludeFile() const { return IncludeFile; }
-    void set_IncludeFile(const std::wstring& _IncludeFile) { IncludeFile = _IncludeFile; }
+    void set_IncludeFile(const std::wstring& _IncludeFile) { 
+        IncludeFile = _IncludeFile; FixupFileName(IncludeFile); }
     std::wstring get_ObjectFile() const { return ObjectFile; }
-    void set_ObjectFile(const std::wstring& _ObjectFile) { ObjectFile = _ObjectFile; }
+    void set_ObjectFile(const std::wstring& _ObjectFile) {
+        ObjectFile = _ObjectFile; FixupFileName(ObjectFile); }
     std::wstring get_pdbFile() const { return pdbFile; };
-    void set_pdbFile(const std::wstring& _pdbFile) { pdbFile = _pdbFile; }
+    void set_pdbFile(const std::wstring& _pdbFile) { 
+        pdbFile = _pdbFile; FixupFileName(pdbFile); }
     std::string get_c_pdbFile() const { return c_pdbFile; };
-    void set_c_pdbFile(const std::string& _c_pdbFile) { c_pdbFile = _c_pdbFile; }
+    void set_c_pdbFile(const std::string& _c_pdbFile) { 
+        c_pdbFile = _c_pdbFile; FixupFileName(c_pdbFile); }
 #else  /* _WIN32 */
     std::string get_DisassemblyFile() const { return DisassemblyFile; }
     void set_DisassemblyFile(const std::string& _DisassemblyFile) { DisassemblyFile = _DisassemblyFile; }

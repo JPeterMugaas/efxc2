@@ -72,7 +72,8 @@ const std::array <ProfilePrefix, PROFILE_PREFIX_TABLE_LEN>g_profilePrefixTable =
 std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder);
 #ifdef _WIN32
 std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFolder);
-void FixupFileName(_Inout_ std::wstring FileName);
+void FixupFileName(_Inout_ std::string& FileName);
+void FixupFileName(_Inout_ std::wstring& FileName);
 bool parseOpt(_In_ const wchar_t* option, 
     _In_ int argc, 
     _In_ wchar_t* argv[1], 
