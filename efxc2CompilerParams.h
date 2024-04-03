@@ -40,7 +40,7 @@ public:
 	
 	D3D_SHADER_MACRO* get_defines() const { return defines; }
 	size_t get_numDefines() const { return numDefines; }
-	void add_define(char* defineOption);
+	void add_define(const std::string& defineOption);
 	void LoadSourceCode(FILE* f);
 	char* get_SourceCode() const { return SourceCode; }
 	size_t get_SourceLen() const { return SourceLen; }

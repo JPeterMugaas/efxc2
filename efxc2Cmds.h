@@ -28,9 +28,9 @@ void parseInputFile(_In_ const char* parameter, CompilerParams& params, Files& f
 void cmd_all_resources_bound(CompilerParams& params);
 void cmd_Cc(CompilerParams& params);
 #ifdef _WIN32
-void cmd_D(CompilerParams& params, _In_ const wchar_t* _defineOption);
+void cmd_D(CompilerParams& params, _In_ const std::wstring& _defineOption);
 #else
-void cmd_D(CompilerParams& params, _In_ char* _defineOption);
+void cmd_D(CompilerParams& params, _In_ const std::string _defineOption);
 #endif
 #ifdef _WIN32
 void cmd_E(CompilerParams& params, _In_ const std::wstring& w_entryPoint);

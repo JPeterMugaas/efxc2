@@ -18,8 +18,7 @@ void CompilerParams::initializeDefines() {
     defines[numDefines - 1].Definition = nullptr;
 }
 
-void CompilerParams::add_define(char* defineOption) {
-    assert(defineOption == nullptr);
+void CompilerParams::add_define(const std::string& defineOption) {
     numDefines++;
     //Copy the old array into the new array, but put the new definition at the beginning
     auto newDefines = new D3D_SHADER_MACRO[numDefines];
@@ -28,7 +27,7 @@ void CompilerParams::add_define(char* defineOption) {
     }
     delete[] defines;
     defines = newDefines;
-    defines[0].Name = defineOption;
+    defines[0].Name = defineOption.c_str();
     defines[0].Definition = "1";
 }
 

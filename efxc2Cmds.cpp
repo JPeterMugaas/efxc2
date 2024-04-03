@@ -112,15 +112,15 @@ void cmd_Cc(CompilerParams& params) {
 
 #ifdef _WIN32
 void cmd_D(CompilerParams& params,
-	_In_ const wchar_t* _defineOption) {
-	char* defineOption = utf8_encode(_defineOption);
+	_In_ const std::wstring& _defineOption) {
+	std::string defineOption = utf8_encode(_defineOption);
 #else
 void cmd_D(CompilerParams& params,
-	_In_ char* defineOption) {
+	_In_ const std::string defineOption) {
 #endif
 	params.add_define(defineOption);
 	if (params.get_verbose()) {
-		printf("option -D with arg %s\n", defineOption);
+		printf("option -D with arg %s\n", defineOption.c_str());
 	}
 }
 
