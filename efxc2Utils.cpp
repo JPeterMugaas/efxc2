@@ -273,9 +273,9 @@ int readall(_In_ FILE* in,
 }
 
 #ifdef _WIN32
-bool parseOpt(_In_ const wchar_t* option, _In_ int argc, _In_ wchar_t* argv[1], _Inout_ int* index, _Inout_opt_ wchar_t** argumentOption) {
+bool parseOpt(_In_ const wchar_t* option, _In_ int argc, _In_ wchar_t* argv[1], _Inout_ int* index, _Inout_opt_ std::wstring* argumentOption) {
 #else  /* _WIN32 */
-bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout_ int* index, _Inout_opt_ char** argumentOption) {
+bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout_ int* index, _Inout_opt_ std::string* argumentOption) {
 #endif /* _WIN32 */
     assert(option != nullptr);
     if (!index || *index >= argc) {
@@ -314,18 +314,10 @@ bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout
                 fprintf(stderr, "Error: missing required argument for option %ls\n", option);
                 return false;
             }
-#ifdef _WIN32
-            * argumentOption = M_WCSDUP(argv[*index]);
-#else  /*_WIN32 */
-            * argumentOption = strdup(argv[*index]);
-#endif /* _WIN32 */
+            *argumentOption = argv[*index];
         }
         else {
-#ifdef _WIN32
-            * argumentOption = M_WCSDUP(argument);
-#else  /* _WIN32 */
-            * argumentOption = strdup(argument);
-#endif /* _WIN32 */
+            *argumentOption = argument;
         }
     }
     *index += 1;

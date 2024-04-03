@@ -564,7 +564,7 @@ bool parseCompilerFileCall(
 	_Inout_	int* index,
 	CompilerParams& params,
 	Files& files) {
-	wchar_t* argumentOption = nullptr;
+	std::wstring argumentOption = L"";
 #else
 bool parseCompilerFileCall(
 	_In_ int argc,
@@ -572,7 +572,7 @@ bool parseCompilerFileCall(
 	_Inout_	int* index,
 	CompilerParams& params,
 	Files & files) {
-	char* argumentOption = nullptr;
+	std::string argumentOption = "";
 #endif
 	size_t optionSize = 0;
 
@@ -610,18 +610,10 @@ bool parseCompilerFileCall(
 				fprintf(stderr, "Error: missing required argument for option %ls\n", g_CompilerFileCall[i].Param);
 				return false;
 			}
-#ifdef _WIN32
-			argumentOption = M_WCSDUP(argv[*index]);
-#else  /*_WIN32 */
-			argumentOption = strdup(argv[*index]);
-#endif /* _WIN32 */
+			argumentOption = argv[*index];
 		}
 		else {
-#ifdef _WIN32
-			argumentOption = M_WCSDUP(argument);
-#else  /* _WIN32 */
-			argumentOption = strdup(argument);
-#endif /* _WIN32 */
+			argumentOption = argument;
 		}
 		auto ptr = (gCompilerFilep*)g_CompilerFileCall[i].method;
 		ptr(params, files, argumentOption);

@@ -27,9 +27,9 @@ int main(int argc, char* argv[]) {
     // ====================================================================================
     // Process Command Line Arguments
 #ifdef _WIN32
-    wchar_t* temp = nullptr;
+    std::wstring temp = L"";
 #else
-    char* temp = nullptr;
+    std::string temp = "";
 #endif
     CompilerAPIContainer api;
     CompilerParams params;
@@ -67,23 +67,12 @@ int main(int argc, char* argv[]) {
         else if (parseNotSupportedOpts(argv, &index)) {
             /* If true, this will not return.  It exits the program .*/
         }
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 6001)
-#pragma warning(disable: 6011)
-#endif /* _MSC_VER*/
         else if (parseOpt(M_D, argc, argv, &index, &temp)) {
             cmd_D(params, temp);
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif /* _MSC_VER */
             continue;
         }
         else if (parseOpt(M_E_, argc, argv, &index, &temp)) {
             cmd_E(params, temp);
-#ifdef _WIN32
-            delete[] temp;
-#endif
             continue;
         }
         else if (parseCompilerFileCall(argc, argv, &index, params, files)) {
@@ -97,9 +86,6 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_T, argc, argv, &index, &temp)) {
             cmd_T(params, temp);
-#ifdef _WIN32
-            delete[] temp;
-#endif
             continue;
         }
         else if (parseOpt(M_VERSION, argc, argv, &index, nullptr)) {
@@ -107,25 +93,14 @@ int main(int argc, char* argv[]) {
         }
         else if (parseOpt(M_VN, argc, argv, &index, &temp)) {
             cmd_Vn(params, temp);
-#ifdef _WIN32
-            delete[] temp;
-#endif /* _WIN32 */
             continue;
         }
         else {
-#ifdef _WIN32
             parseInputFile(argv[index], params, files);
-#else
-            parseInputFile(argv[index], params, files);
-#endif
             index += 1;
         }
     }
     Compiler compiler(api, params);
-#ifdef _WIN32
     CompilerTasks(compiler, files, params);
-#else
-    CompilerTasks(compiler, files, params);
-#endif
     return 0;
 }

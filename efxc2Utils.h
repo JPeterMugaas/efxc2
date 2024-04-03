@@ -74,18 +74,19 @@ std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder
 std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFolder);
 void FixupFileName(_Inout_ std::string& FileName);
 void FixupFileName(_Inout_ std::wstring& FileName);
-bool parseOpt(_In_ const wchar_t* option, 
-    _In_ int argc, 
-    _In_ wchar_t* argv[1], 
-    _Inout_ int* index, 
-    _Inout_opt_ wchar_t** argumentOption);
+bool parseOpt(_In_ const wchar_t* option,
+    _In_ int argc,
+    _In_ wchar_t* argv[1],
+    _Inout_ int* index,
+    _Inout_opt_ std::wstring* argumentOption);
+
 #else  /* _WIN32 */
 char* LoadSource(_In_ const char* filename, _Out_ size_t* len);
-bool parseOpt(_In_ const char* option, 
-    _In_ int argc, 
-    _In_ char* argv[1], 
-    _Inout_	int* index, 
-    _Inout_opt_ char** argumentOption);
+bool parseOpt(_In_ const char* option,
+    _In_ int argc,
+    _In_ char* argv[1],
+    _Inout_ int* index,
+    _Inout_opt_ std::string * argumentOption);
 #endif /* _WIN32 */
 void print_copyright();
 [[noreturn]] void print_errno(errno_t _errno);
