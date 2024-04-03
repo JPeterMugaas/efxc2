@@ -449,11 +449,7 @@ void cmd_Vn(CompilerParams& params, _In_ const std::wstring& w_variableName) {
 void cmd_Vn(CompilerParams& params, _In_ const std::string& variableName) {
 #endif
 	if (params.get_verbose()) {
-#ifdef _WIN32
 		printf("option -Vn (Variable Name) with arg '%s'\n", variableName.c_str());
-#else
-		printf("option -Vn (Variable Name) with arg '%s'\n", variableName);
-#endif
 	}
 	params.set_variableName(variableName);
 	return;
