@@ -623,7 +623,6 @@ bool parseCompilerFileCall(
 	return false;
 }
 
-
 #ifdef _WIN32
 bool parseIgnoredOpts(
 	_In_ wchar_t* argv[1],

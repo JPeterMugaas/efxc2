@@ -11,7 +11,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-void Files::WriteDisassembly(Compiler& compiler, CompilerParams& params) {
+void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) const {
     FILE* f;
 #ifdef _WIN32
     errno_t err = 0;
@@ -49,7 +49,7 @@ void Files::WriteDisassembly(Compiler& compiler, CompilerParams& params) {
     }
 }
 
-void Files::WriteIncludeFile(Compiler& compiler,  CompilerParams& params) {
+void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) const {
     FILE* f;
 #ifdef _WIN32
     errno_t err = 0;
@@ -87,7 +87,7 @@ void Files::WriteIncludeFile(Compiler& compiler,  CompilerParams& params) {
     }
 }
 
-void Files::WriteObjectFile(Compiler& compiler, CompilerParams& params) {
+void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) const {
     FILE* f;
 #ifdef _WIN32
     errno_t err = 0;
@@ -132,7 +132,7 @@ void Files::WriteObjectFile(Compiler& compiler, CompilerParams& params) {
     }
 }
 
-void Files::WritePDBFile(Compiler& compiler, CompilerParams& params) {
+void Files::WritePDBFile(Compiler& compiler) {
     FILE* f;
     int	AppendSlash = false;
 #ifdef _WIN32

@@ -49,10 +49,10 @@ public:
     void set_pdbFile(const std::string& _pdbFile) { pdbFile = _pdbFile; }
 #endif /* _WIN32 */
 
-    void WriteDisassembly(Compiler& compiler, CompilerParams& params);
-    void WriteIncludeFile(Compiler& compile, CompilerParams& params);
-    void WriteObjectFile(Compiler& compiler, CompilerParams& params);
-    void WritePDBFile(Compiler& compiler, CompilerParams& params);
+    void WriteDisassembly(Compiler& compiler, const CompilerParams& params) const;
+    void WriteIncludeFile(Compiler& compile, const CompilerParams& params) const;
+    void WriteObjectFile(Compiler& compiler, const CompilerParams& params) const;
+    void WritePDBFile(Compiler& compiler);
 private:
 #ifdef _WIN32
     std::wstring DisassemblyFile = L"";
