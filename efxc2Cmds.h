@@ -33,30 +33,30 @@ void cmd_D(CompilerParams& params, _In_ const wchar_t* _defineOption);
 void cmd_D(CompilerParams& params, _In_ char* _defineOption);
 #endif
 #ifdef _WIN32
-void cmd_E(CompilerParams& params, _In_ const wchar_t* w_entryPoint);
+void cmd_E(CompilerParams& params, _In_ const std::wstring& w_entryPoint);
 #else
-void cmd_E(CompilerParams& params, _In_ char* entryPoint);
+void cmd_E(CompilerParams& params, _In_ const std::string entryPoint);
 #endif
 void cmd_enable_unbounded_descriptor_tables(CompilerParams& params);
 #ifdef _WIN32
-void cmd_Fc(CompilerParams& params, Files& files, _In_ wchar_t* assemblyCodeFile);
+void cmd_Fc(CompilerParams& params, Files& files, _In_ const std::wstring& assemblyCodeFile);
 #else
-void cmd_Fc(CompilerParams& compiler, Files & files, _In_ char* assemblyCodeFile);
+void cmd_Fc(CompilerParams& params, Files& files, _In_ const std::string& assemblyCodeFile);
 #endif
 #ifdef _WIN32
-void cmd_Fd(CompilerParams& params, Files& files, _In_ wchar_t* pdbFile);
+void cmd_Fd(CompilerParams& params, Files& files, _In_ const std::wstring& pdbFile);
 #else
-void cmd_Fd(CompilerParams& params, Files& files, _In_ char* pdbFile);
+void cmd_Fd(CompilerParams& params, Files& files, _In_ const std::string& pdbFile);
 #endif
 #ifdef _WIN32
-void cmd_Fh(CompilerParams& params, Files& files, _Inout_ wchar_t* outputFile);
+void cmd_Fh(CompilerParams& params, Files& files, _In_ const std::wstring& outputFile);
 #else
-void cmd_Fh(CompilerParams& params, Files& files, _Inout_ char* outputFile);
+void cmd_Fh(CompilerParams& params, Files& files, _In_ const std::string& outputFile);
 #endif
 #ifdef _WIN32
-void cmd_Fo(CompilerParams& params, Files& files, _Inout_ wchar_t* outputFile);
+void cmd_Fo(CompilerParams& params, Files& files, _In_ const std::wstring& outputFile);
 #else
-void cmd_Fo(CompilerParams& params, Files& files, _Inout_ char* outputFile);
+void cmd_Fo(CompilerParams& params, Files& files, _In_ const std::string& outputFile);
 #endif
 void cmd_Gch(CompilerParams& params);
 void cmd_Gdp(CompilerParams& params);
@@ -80,15 +80,15 @@ void cmd_Qstrip_reflect(CompilerParams& params);
 void cmd_Qstrip_rootsignature(CompilerParams& params);
 void cmd_res_may_alias(CompilerParams& params);
 #ifdef _WIN32
-void cmd_T(CompilerParams& params, _In_ wchar_t* w_model);
+void cmd_T(CompilerParams& params, _In_ const std::wstring& w_model);
 #else
-void cmd_T(CompilerParams& params, _In_ char* model);
+void cmd_T(CompilerParams& params, _In_ const std::string& model);
 #endif
 void cmd_Vd(CompilerParams& params);
 #ifdef _WIN32
-void cmd_Vn(CompilerParams& params, _In_ const wchar_t* w_variableName);
+void cmd_Vn(CompilerParams& params, _In_ const std::wstring& w_variableName);
 #else
-void cmd_Vn(CompilerParams& params, _In_ const char* variableName);
+void cmd_Vn(CompilerParams& params, _In_ const std::string& variableName);
 #endif
 void cmd_WX(CompilerParams& params);
 void cmd_Zi(CompilerParams& params);
@@ -98,9 +98,9 @@ void cmd_Zsb(CompilerParams& params);
 void cmd_Zss(CompilerParams& params);
 
 #ifdef _WIN32
-using gCompilerFilep = void(CompilerParams&, Files&, wchar_t*);
+using gCompilerFilep = void(CompilerParams&, Files&, const std::wstring&);
 #else
-using gCompilerFilep = void(CompilerParams&, Files&, char*);
+using gCompilerFilep = void(CompilerParams&, Files&, const std::string&);
 #endif
 struct CompileFileEntry {
 #ifdef _WIN32

@@ -125,18 +125,14 @@ void cmd_D(CompilerParams& params,
 }
 
 #ifdef _WIN32
-void cmd_E(CompilerParams& params, _In_ const wchar_t* w_entryPoint) {
+void cmd_E(CompilerParams& params, _In_ const std::wstring& w_entryPoint) {
 	std::string entryPoint = utf8_encode(w_entryPoint);
 #else
-void cmd_E(CompilerParams& params, _In_ char* entryPoint) {
+void cmd_E(CompilerParams& params, _In_ const std::string entryPoint) {
 #endif
 	params.set_entryPoint(entryPoint);
 	if (params.get_verbose()) {
-#ifdef _WIN32
 		printf("option -E (Entry Point) with arg '%s'\n", entryPoint.c_str());
-#else
-		printf("option -E (Entry Point) with arg '%s'\n", entryPoint);
-#endif
 	}
 	return;
 }
@@ -152,27 +148,27 @@ void cmd_enable_unbounded_descriptor_tables(CompilerParams& params) {
 }
 
 #ifdef _WIN32
-void cmd_Fc(CompilerParams& params, Files& files, _In_ wchar_t* assemblyCodeFile) {
+void cmd_Fc(CompilerParams& params, Files& files, _In_ const std::wstring& assemblyCodeFile) {
 #else
-void cmd_Fc( CompilerParams& params, Files & files, _In_ char* assemblyCodeFile) {
+void cmd_Fc( CompilerParams& params, Files & files, _In_ const std::string& assemblyCodeFile) {
 #endif
 	files.set_DisassemblyFile(assemblyCodeFile);
 	UINT cmd = params.get_commands();
 	cmd = cmd | CMD_WRITE_ASSEMBLY_CODE;
 	params.set_commands(cmd);
 	if (params.get_verbose()) {
-		printf("option -Fc (assembly code) with arg %ls\n", assemblyCodeFile);
+		printf("option -Fc (assembly code) with arg %ls\n", assemblyCodeFile.c_str());
 	}
 	return;
 }
 
 #ifdef _WIN32
-void cmd_Fd(CompilerParams& params, Files & files, _In_ wchar_t* pdbFile) {
+void cmd_Fd(CompilerParams& params, Files & files, _In_ const std::wstring& pdbFile) {
 #else
-void cmd_Fd(CompilerParams& params, Files & files, _In_ char* pdbFile) {
+void cmd_Fd(CompilerParams& params, Files & files, _In_ const std::string& pdbFile) {
 #endif
 #ifdef _WIN32
-	files.set_c_pdbFile(utf8_encode(pdbFile, wcslen(pdbFile)));
+	files.set_c_pdbFile(utf8_encode(pdbFile));
 #endif /* _WIN32 */
 	files.set_pdbFile(pdbFile);
 
@@ -181,17 +177,17 @@ void cmd_Fd(CompilerParams& params, Files & files, _In_ char* pdbFile) {
 	params.set_commands(cmd);
 
 	if (params.get_verbose()) {
-		printf("option -Fd (.PDB) with arg %ls\n", pdbFile);
+		printf("option -Fd (.PDB) with arg %ls\n", pdbFile.c_str());
 	}
 	return;
 }
 #ifdef _WIN32
-void cmd_Fh(CompilerParams& params, Files & files, _Inout_ wchar_t* outputFile) {
+void cmd_Fh(CompilerParams& params, Files & files, _In_ const std::wstring& outputFile) {
 #else
-void cmd_Fh(CompilerParams& params, Files & files, _Inout_ char* outputFile) {
+void cmd_Fh(CompilerParams& params, Files & files, _In_ const std::string& outputFile) {
 #endif
 	if (params.get_verbose()) {
-		printf("option -Fh (Output File) with arg %ls\n", outputFile);
+		printf("option -Fh (Output File) with arg %ls\n", outputFile.c_str());
 	}
 	files.set_IncludeFile(outputFile);
 	UINT cmd = params.get_commands();
@@ -201,15 +197,15 @@ void cmd_Fh(CompilerParams& params, Files & files, _Inout_ char* outputFile) {
 }
 
 #ifdef _WIN32
-void cmd_Fo(CompilerParams& params, Files & files, _Inout_ wchar_t* outputFile) {
+void cmd_Fo(CompilerParams& params, Files & files, _In_ const std::wstring& outputFile) {
 #else
-void cmd_Fo(CompilerParams& params,  Files & files, _Inout_ char* outputFile) {
+void cmd_Fo(CompilerParams& params,  Files & files, _In_ const std::string& outputFile) {
 #endif
 	files.set_ObjectFile(outputFile);
 	UINT cmd = params.get_commands();
 	cmd = cmd | CMD_WRITE_OBJECT;
 	if (params.get_verbose()) {
-		printf("option -FO (Output File) with arg %ls\n", outputFile);
+		printf("option -FO (Output File) with arg %ls\n", outputFile.c_str());
 	}
 	params.set_commands(cmd);
 	return;
@@ -424,17 +420,13 @@ void cmd_res_may_alias(CompilerParams& params) {
 }
 
 #ifdef _WIN32
-void cmd_T(CompilerParams& params, _In_ wchar_t* w_model) {
+void cmd_T(CompilerParams& params, _In_ const std::wstring& w_model) {
 	std::string model = utf8_encode(w_model);
 #else
-void cmd_T(CompilerParams& params, _In_ char* model) {
+void cmd_T(CompilerParams & params, _In_ const std::string & model) {
 #endif
 	if (params.get_verbose()) {
-#ifdef _WIN32
 		printf("option -T (Shader Model/Profile) with arg '%s'\n", model.c_str());
-#else
-		printf("option -T (Shader Model/Profile) with arg '%s'\n", model);
-#endif
 	}
 	params.set_model(model);
 	return;
@@ -451,10 +443,10 @@ void cmd_Vd(CompilerParams& params) {
 }
 
 #ifdef _WIN32
-void cmd_Vn(CompilerParams& params, _In_ const wchar_t* w_variableName) {
+void cmd_Vn(CompilerParams& params, _In_ const std::wstring& w_variableName) {
 	std::string variableName = utf8_encode(w_variableName);
 #else
-void cmd_Vn(CompilerParams& params, _In_ const char* variableName) {
+void cmd_Vn(CompilerParams& params, _In_ const std::string& variableName) {
 #endif
 	if (params.get_verbose()) {
 #ifdef _WIN32
