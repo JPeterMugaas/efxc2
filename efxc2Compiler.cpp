@@ -279,6 +279,7 @@ void Compiler::SetPDBFileName(_In_ const std::string& _fileName) {
 
     size_t lengthOfNameStorage = (fileNameLen + 0x3) & ~0x3;
     size_t nameBlobPartSize = sizeof(ShaderDebugName) + lengthOfNameStorage;
+
     auto pNameBlobContent = (ShaderDebugName*)(malloc(nameBlobPartSize));
 
     if (pNameBlobContent == nullptr) {
@@ -320,6 +321,7 @@ void Compiler::SetPDBFileName(_In_ const std::string& _fileName) {
     [in]  SIZE_T        PartSize,
     [out] ID3DBlob      **ppNewShader);
     */
+    free(pNameBlobContent);
     if (FAILED(hr)) {
         print_hresult_error(hr);
     }
