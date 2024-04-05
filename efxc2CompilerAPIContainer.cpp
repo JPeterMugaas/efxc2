@@ -13,27 +13,7 @@
 CompilerAPIContainer::CompilerAPIContainer() {
     h = LoadLibrary(DLL_NAME);
     if (h == nullptr) {
-#ifdef _WIN32
-        //Find the WINDOWS dll
-        wchar_t dllPath[MAX_PATH];
-        size_t bytes = GetModuleFileName(nullptr, dllPath, MAX_PATH);
-        if (bytes == 0) {
-            fprintf(stderr, "Could not retrieve the directory of the running executable.\n");
-            print_windows_error();
-        }
-        //Fill rest of the buffer with NULLs
-        memset(dllPath + bytes, '\0', MAX_PATH - bytes);
-        //Copy the dll location over top efxc2.exe
-        wcscpy_s(dllPath + bytes, MAX_PATH, DLL_NAME);
-
-        h = LoadLibrary(dllPath);
-        if (h == nullptr) {
-            wprintf(L"Error: could not load " DLL_NAME L" from %s\n", dllPath);
-        }
-
-#else  /* _WIN32 */
         print_windows_error();
-#endif /* _WIN32 */
     }
 #ifdef _MSC_VER
 #pragma warning( push )
