@@ -280,19 +280,19 @@ void Compiler::SetPDBFileName(_In_ const std::string& _fileName) {
     size_t lengthOfNameStorage = (fileNameLen + 0x3) & ~0x3;
     size_t nameBlobPartSize = sizeof(ShaderDebugName) + lengthOfNameStorage;
 
-    auto pNameBlobContent = (ShaderDebugName*)(malloc(nameBlobPartSize));
-
-    if (pNameBlobContent == nullptr) {
-        fprintf(stderr, "malloc failed/n");
-        print_errno();
-    }
+    std::vector<char> pNameBlobContent;
+    pNameBlobContent.resize(nameBlobPartSize + sizeof(ShaderDebugName));
     // Ensure bytes after name are indeed zeroes:
-    memset(pNameBlobContent, 0, nameBlobPartSize);
-    pNameBlobContent->Flags = 0;
+    std::fill(pNameBlobContent.begin(), pNameBlobContent.end(), 0);
+    ShaderDebugName*  header = reinterpret_cast<ShaderDebugName*>(&pNameBlobContent[0]);
+
+    header->Flags = 0;
     // declared length does not include the null terminator:
-    pNameBlobContent->NameLength = (uint16_t)fileNameLen - 1;
+    header->NameLength = (uint16_t)fileNameLen - 1;
     // but the null terminator is expected to be present:
-    memcpy(pNameBlobContent + 1, _fileName.c_str(), fileNameLen);
+    for (int i = 0; i < _fileName.length(); i++) {
+        pNameBlobContent[sizeof(ShaderDebugName) + i] = _fileName[i];
+    }
 
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
@@ -309,7 +309,7 @@ void Compiler::SetPDBFileName(_In_ const std::string& _fileName) {
     }
     HRESULT hr;
     auto ptr = api.get_ptr_D3DSetBlobPart();
-    hr = ptr(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, pNameBlobContent,
+    hr = ptr(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, pNameBlobContent.data(),
         nameBlobPartSize, &pShaderWithNewName);
     /*
     HRESULT D3DSetBlobPart(
@@ -321,7 +321,6 @@ void Compiler::SetPDBFileName(_In_ const std::string& _fileName) {
     [in]  SIZE_T        PartSize,
     [out] ID3DBlob      **ppNewShader);
     */
-    free(pNameBlobContent);
     if (FAILED(hr)) {
         print_hresult_error(hr);
     }

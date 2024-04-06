@@ -34,8 +34,10 @@
 #include <string>
 #include <cassert>
 #include <memory>
+#include <algorithm>
 #include <array>
 #include <wchar.h>
+#include <vector>
 #include <inttypes.h>
 #include <io.h>
 #include <stdio.h>
