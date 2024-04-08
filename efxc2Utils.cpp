@@ -336,12 +336,12 @@ std::wstring utf8_decode(const std::string& str) {
 
     auto _wstr = std::make_unique<std::vector<char>>();
     _wstr->resize(((size_t)nchars + 1) * sizeof(wchar_t));
-    auto* wstr = reinterpret_cast<wchar_t*>(&_wstr);
+    auto* wstr = reinterpret_cast<wchar_t*>(_wstr->data());
     wstr[nchars] = L'\0';
     
     if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
         str.c_str(), (int)str.length(), wstr, nchars) == 0) {
-        return nullptr;
+        return L"";
     }
     return wstr;
 }
@@ -355,10 +355,10 @@ std::string utf8_encode(const std::wstring& wstr) {
 
     auto str = std::make_unique<std::vector<char>>();
     str->resize(nbytes + 1);
-    str[nbytes] = '\0';
+    str->data()[nbytes] = '\0';
 
     if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-        wstr.c_str(), (int)wstr.length(), str, nbytes, nullptr, nullptr) == 0) {
+        wstr.c_str(), (int)wstr.length(), str->data(), nbytes, nullptr, nullptr) == 0) {
         return "";
     }
     return str->data();
