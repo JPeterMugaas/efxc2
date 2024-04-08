@@ -33,5 +33,11 @@ void CompilerParams::add_define(const std::string& defineOption) {
 
 void CompilerParams::LoadSourceCode(FILE* f)
 {
-    readall(f, &SourceCode, &SourceLen);
+    readall(f, SourceCode);
+    if (SourceCode != nullptr) {
+        SourceLen = SourceCode->size();
+    }
+    else {
+        SourceLen = 0;
+    }
 }

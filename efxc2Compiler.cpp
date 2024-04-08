@@ -83,7 +83,7 @@ void Compiler::Compile() {
 #endif
     auto ptr = api.get_ptr_D3DCompile2();
     HRESULT hr = ptr(
-        SourceCode,
+        SourceCode.get()->data(),
         SourceLen,
         inputFile,
         defines,
@@ -284,7 +284,7 @@ void Compiler::SetPDBFileName(_In_ const std::string& _fileName) {
     pNameBlobContent.resize(nameBlobPartSize + sizeof(ShaderDebugName));
     // Ensure bytes after name are indeed zeroes:
     std::fill(pNameBlobContent.begin(), pNameBlobContent.end(), 0);
-    ShaderDebugName*  header = reinterpret_cast<ShaderDebugName*>(&pNameBlobContent[0]);
+    auto* header = reinterpret_cast<ShaderDebugName*>(&pNameBlobContent[0]);
 
     header->Flags = 0;
     // declared length does not include the null terminator:

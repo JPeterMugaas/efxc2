@@ -13,6 +13,8 @@
 #define EFXC2UTILS_H_INCLUDED
 #include "efxc2.h"
 
+#define M_BUFFER   std::shared_ptr<std::vector<char>>
+
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
 /* Size of each input chunk to be
    read and allocate for. */
@@ -98,9 +100,8 @@ void print_unsupported_arg_help();
 [[noreturn]] void print_usage_toomany();
 [[noreturn]] void print_version();
 [[noreturn]] void print_windows_error();
-int readall(_In_ FILE* in, 
-    _Out_writes_bytes_(*sizeptr) char** dataptr, 
-    _Out_opt_ size_t* sizeptr);
+int readall(_In_ FILE* in,
+    _Out_ M_BUFFER& dataptr);
 std::string setupVariableName(_In_ const std::string& model,
     _In_ std::string const& entryPoint);
 #ifdef _WIN32

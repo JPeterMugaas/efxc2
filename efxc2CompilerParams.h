@@ -11,6 +11,7 @@
 #ifndef EFXC2CCOMPILERPARAMS_H_INCLUDED
 #define EFXC2CCOMPILERPARAMS_H_INCLUDED
 #include "efxc2.h"
+#include "efxc2Utils.h"
 
 class CompilerParams{
 public:
@@ -42,7 +43,7 @@ public:
 	size_t get_numDefines() const { return numDefines; }
 	void add_define(const std::string& defineOption);
 	void LoadSourceCode(FILE* f);
-	char* get_SourceCode() const { return SourceCode; }
+	M_BUFFER get_SourceCode() const { return SourceCode; }
 	size_t get_SourceLen() const { return SourceLen; }
 	/* D3DStripShader parameters */
 	UINT get_strip_flags() const { return strip_flags; }
@@ -66,7 +67,7 @@ private:
 	std::string       inputFile = "";
 	std::string       variableName = "";
 	size_t            SourceLen = 0;
-	char*             SourceCode = nullptr;
+	M_BUFFER          SourceCode = nullptr;
 	/* D3DStripShader parameters */
 	UINT              strip_flags = 0;
 	/* D3DDisassemble parameters */

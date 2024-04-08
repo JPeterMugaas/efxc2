@@ -197,78 +197,28 @@ void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char
     fprintf(f, "\n};\n");
 }
 
-/*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
-   /* This function returns one of the READALL_ constants above.
-      If the return value is zero == READALL_OK, then:
-        (*dataptr) points to a dynamically allocated buffer, with
-        (*sizeptr) chars read from the file.
-        The buffer is allocated for one extra char, which is NUL,
-        and automatically appended after the data.
-      Initial values of (*dataptr) and (*sizeptr) are ignored.
-   */
-int readall(_In_ FILE* in,
-    _Out_writes_bytes_(*sizeptr) char** dataptr,
-    _Out_opt_ size_t* sizeptr)
-{
-    char* data = nullptr;
-    char* temp;
-    size_t size = 0;
+int readall(_In_ FILE * in,
+    _Out_ M_BUFFER& dataptr) {
+    dataptr = std::make_shared<std::vector<char>>();
+    auto temp = std::make_unique<std::vector<char>>();
     size_t used = 0;
     size_t n;
-
-    /* None of the parameters can be NULL. */
-    if (in == nullptr || dataptr == nullptr || sizeptr == nullptr)
+    if (in == nullptr || dataptr == nullptr) {
         return READALL_INVALID;
-
-    *dataptr = nullptr;
-    *sizeptr = 0;
-
-    /* A read error already occurred? */
-    if (ferror(in))
-        return READALL_ERROR;
-
+    }
     while (TRUE) {
-        if (used + READALL_CHUNK + 1 > size) {
-            size = used + READALL_CHUNK + 1;
-
-            /* Overflow check. Some ANSI C compilers
-               may optimize this away, though. */
-            if (size <= used) {
-                free(data);
-                return READALL_TOOMUCH;
-            }
-
-            temp = (char*)realloc(data, size);
-            if (temp == nullptr) {
-                free(data);
-                return READALL_NOMEM;
-            }
-            data = temp;
-        }
-
-        n = fread(data + used, 1, READALL_CHUNK, in);
+        temp->resize(READALL_CHUNK);
+        n = fread(temp->data(), 1, READALL_CHUNK, in);
         if (n == 0) {
             break;
         }
         used += n;
+        temp->resize(n);
+        dataptr->insert(dataptr->end(), temp->begin(), temp->end());
     }
-
     if (ferror(in)) {
-        free(data);
         return READALL_ERROR;
     }
-
-    temp = (char*)realloc(data, used + 1);
-    if (temp == nullptr) {
-        free(data);
-        return READALL_NOMEM;
-    }
-    data = temp;
-    data[used] = '\0';
-
-    *dataptr = data;
-    *sizeptr = used;
-
     return READALL_OK;
 }
 
