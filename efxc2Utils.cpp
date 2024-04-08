@@ -327,67 +327,41 @@ void FixupFileName(_Inout_ std::string& FileName) {
   https://stackoverflow.com/questions/215963/how-do-you-properly-use-widechartomultibyte
 */
 
-wchar_t* utf8_decode(const char* str, size_t nbytes) {
+std::wstring utf8_decode(const std::string& str) {
     int nchars = 0;
     if ((nchars = MultiByteToWideChar(CP_UTF8,
-        MB_ERR_INVALID_CHARS, str, (int) nbytes, nullptr, 0)) == 0) {
-        return nullptr;
+        MB_ERR_INVALID_CHARS, str.c_str(), (int)str.length(), nullptr, 0)) == 0) {
+        return L"";
     }
 
-    wchar_t* wstr = nullptr;
-    if (!(wstr = (wchar_t*)malloc(((size_t)nchars + 1) * sizeof(wchar_t)))) {
-        return nullptr;
-    }
-
+    auto _wstr = std::make_unique<std::vector<char>>();
+    _wstr->resize(((size_t)nchars + 1) * sizeof(wchar_t));
+    auto* wstr = reinterpret_cast<wchar_t*>(&_wstr);
     wstr[nchars] = L'\0';
+    
     if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
-        str, (int)nbytes, wstr, nchars) == 0) {
-        free(wstr);
+        str.c_str(), (int)str.length(), wstr, nchars) == 0) {
         return nullptr;
     }
     return wstr;
 }
 
-std::wstring utf8_decode(const std::string& str) {
-    wchar_t* _res = utf8_decode( str.c_str(), str.length());
-    std::wstring res = _res;
-    /* utf8_decode uses malloc - do not remove this free */
-    free(_res);
-    return res;
-}
-
-char* utf8_encode(const wchar_t* wstr, size_t nchars) {
+std::string utf8_encode(const std::wstring& wstr) {
     int nbytes = 0;
     if ((nbytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-        wstr, (int)nchars, nullptr, 0, nullptr, nullptr)) == 0) {
-        return nullptr;
+        wstr.c_str(), (int)wstr.length(), nullptr, 0, nullptr, nullptr)) == 0) {
+        return "";
     }
 
-    char* str = nullptr;
-    if (!(str = (char*)malloc((size_t)nbytes + 1))) {
-        return nullptr;
-    }
-
+    auto str = std::make_unique<std::vector<char>>();
+    str->resize(nbytes + 1);
     str[nbytes] = '\0';
+
     if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-        wstr, (int) nchars, str, nbytes, nullptr, nullptr) == 0) {
-        free(str);
-        return nullptr;
+        wstr.c_str(), (int)wstr.length(), str, nbytes, nullptr, nullptr) == 0) {
+        return "";
     }
-    return str;
-}
-
-std::string utf8_encode(const std::wstring& wstr) {
-    char* _res = utf8_encode(wstr.c_str(), wstr.length());
-    std::string res = _res;
-    /* utf8_decode uses malloc - do not remove this free */
-    free(_res);
-    return res;
-}
-
-char* utf8_encode(const wchar_t* wstr) {
-    size_t nchars = wcslen(wstr);
-    return utf8_encode(wstr, nchars);
+    return str->data();
 }
 
 #endif

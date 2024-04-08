@@ -106,9 +106,6 @@ std::string setupVariableName(_In_ const std::string& model,
     _In_ std::string const& entryPoint);
 #ifdef _WIN32
 std::wstring utf8_decode(const std::string& str);
-wchar_t* utf8_decode(const char* str, size_t nbytes);
-char* utf8_encode(const wchar_t* wstr, size_t nchars);
-char* utf8_encode(const wchar_t* wstr);
 std::string utf8_encode(const std::wstring& wstr);
 #endif
 void WriteByteArrayConst(_In_ FILE* f, 
