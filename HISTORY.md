@@ -5,6 +5,19 @@ https://github.com/JPeterMugaas/efxc2
 Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2/releases)
 
 ## Release History
+### April 8, 2024
+* Refactor Source-code to move stuff from Compiler to CompilerParams.
+* Made most internals use std::string or std::wstring.
+* Remove code that loads the .DLL only from the same directory as the program.
+* remove malloc/free from SetPDBFileName and use std::vector for our buffer.
+* SourceCode now a shared pointer to a vector of char.
+* Rewrote the readall procedure to use this shared pointer to pass the source-code to the CompilerParams object.
+* DLL_NAME is now a constexpr
+* Removed some overloads from utf8_decode and utf8_encode to simplify the API.
+* utf8_decode and utf8_encode use smart pointers instead of malloc/free.
+* Set the default c++std flag to Visual Studio 2022's default.  We can change this to a later C++ standard version if needed.
+* MSYS, had to switch to strerror from strerror_r. strerror_r was not declared for some reason.
+
 ### March 27, 2024
 * Convert some arrays to std::array and convert parameter macros to constexpr.
 * convert DLL_NAME to constexpr const.
