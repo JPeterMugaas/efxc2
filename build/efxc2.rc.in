@@ -86,9 +86,9 @@ BEGIN
             VALUE "CompanyName", "@PROJECT_COMPANY@"
             VALUE "FileDescription", "@PROJECT_DESCRIPTION@"
             VALUE "FileVersion", "@PROJECT_VERSION@"
-            VALUE "InternalName", "@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+            VALUE "InternalName", "@PROJECT_NAME@@CMAKE_EXECUTABLE_SUFFIX@"
             VALUE "LegalCopyright", "@PROJECT_COPYRIGHT@"
-            VALUE "OriginalFilename", "@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+            VALUE "OriginalFilename", "@PROJECT_NAME@@CMAKE_EXECUTABLE_SUFFIX@"
             VALUE "ProductName", "@PROJECT_NAME@"
             VALUE "ProductVersion", "@PROJECT_VERSION@"
         END

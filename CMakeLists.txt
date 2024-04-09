@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.6.118)
+set(EFXC2_VERSION 0.0.6.119)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -59,9 +59,7 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 list(APPEND EXEC_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/config.h")
     
-if(WIN32)
-    list(APPEND EXEC_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc")
-endif()
+list(APPEND EXEC_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/efxc2.rc")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(fxc ${EXEC_SOURCES})
