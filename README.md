@@ -37,7 +37,10 @@ as well as [CMake](https://cmake.org/).
 
 ### [Mingw-w64](https://www.mingw-w64.org/) under [MSYS2](https://www.msys2.org/)
 
-Ddo the following:
+MSYS2 now includes efxc2 as a mingw-64 package so you can install it with pacman with the command  `pacman -S [package name]`.  You 
+can search for the appropriate "efxc2" package with the command `pacman -Ss efxc2`.
+
+If you prefer to compile it for yourself, do the following:
 
 1. Install [CMake](https://cmake.org/) using `pacman -S [package name]`.  
 You can find what versions are available with the command `pacman -Ss cmake`.
