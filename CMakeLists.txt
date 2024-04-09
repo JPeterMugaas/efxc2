@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.5.116)
+set(EFXC2_VERSION 0.0.5.117)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -21,7 +21,7 @@ include(GNUInstallDirs)
 set(PROJECT_COMPANY "J. Peter Mugaas")
 set(PROJECT_COPYRIGHT "Copyright (c) 2024 ${PROJECT_COMPANY}")
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

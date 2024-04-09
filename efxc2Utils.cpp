@@ -116,12 +116,12 @@ void print_unsupported_arg_help() {
 }
 
 [[noreturn]] void print_errno(errno_t _errno) {
-    char errmsg[ERR_SIZE];
 #ifdef _WIN32
+    char errmsg[ERR_SIZE];
     strerror_s(errmsg, ERR_SIZE, _errno);
 #else  /* _WIN32 */
-    /*int strerror_r(int errnum, char *buf, size_t buflen);*/
-    strerror_r(errno, errmsg, ERR_SIZE);
+    char* errmsg = nullptr;
+    errmsg = strerror(_errno);
 #endif /* _WIN32 */
     fprintf(stderr, "%s\n", errmsg);
     exit(1);
