@@ -13,13 +13,6 @@
 #include "efxc2.h"
 #include "efxc2Utils.h"
 
-struct CompilerDefine {
-  std::string Name;
-  std::string Definition;
-};
-
-using M_COMPILER_DEFINES = std::shared_ptr<std::vector<CompilerDefine>>;
-
 class CompilerParams{
 public:
 	explicit CompilerParams() { initializeDefines(); };
@@ -47,7 +40,6 @@ public:
 	void set_inputFile(const std::string& _inputFile) { inputFile = _inputFile; }
 	
 	M_COMPILER_DEFINES get_defines() const { return defines; }
-	size_t get_numDefines() const { return numDefines; }
 	void add_define(const std::string& defineOption);
 	void LoadSourceCode(FILE* f);
 	M_BUFFER get_SourceCode() const { return SourceCode; }
@@ -67,7 +59,6 @@ private:
 	UINT               sflags = 0;
 	UINT               eflags = 0;
 	UINT               secondary_flags = 0;
-	size_t             numDefines = 1;
 	M_COMPILER_DEFINES defines;
 	std::string        model = "";
 	std::string        entryPoint = "";

@@ -15,6 +15,13 @@
 
 using M_BUFFER = std::shared_ptr<std::vector<char>>;
 
+struct CompilerDefine {
+    std::string Name;
+    std::string Definition;
+};
+
+using M_COMPILER_DEFINES = std::shared_ptr<std::vector<CompilerDefine>>;
+
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
 /* Size of each input chunk to be
    read and allocate for. */
