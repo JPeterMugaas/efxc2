@@ -117,13 +117,14 @@ void print_unsupported_arg_help() {
 
 [[noreturn]] void print_errno(errno_t _errno) {
 #ifdef _WIN32
-    char errmsg[ERR_SIZE];
-    strerror_s(errmsg, ERR_SIZE, _errno);
+    auto errmsg = std::make_unique<std::vector<char>>(ERR_SIZE);
+    strerror_s(errmsg->data(), ERR_SIZE, _errno);
+    fprintf(stderr, "%s\n", errmsg->data());
 #else  /* _WIN32 */
     char* errmsg = nullptr;
     errmsg = strerror(_errno);
-#endif /* _WIN32 */
     fprintf(stderr, "%s\n", errmsg);
+#endif /* _WIN32 */
     exit(1);
 }
 

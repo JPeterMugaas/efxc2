@@ -12,7 +12,7 @@
 
 void Compiler::Compile() {
     auto SourceCode = params.get_SourceCode();
-    auto SourceLen = params.get_SourceLen();
+    size_t SourceLen = SourceCode->size();
     auto eflags = params.get_eflags();
     auto sflags = params.get_sflags();
     auto secondary_flags = params.get_secondary_flags();
@@ -42,18 +42,10 @@ void Compiler::Compile() {
         printf("\t %s, \n", inputFile);
         /* print defines */
         printf("\t");
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 6001)
-#pragma warning(disable: 6011)
-#endif
         for (size_t i = 0; i < defines->size(); i++)
             if (defines->at(i).Name != nullptr) {
                 printf(" %s=%s", defines->at(i).Name, defines->at(i).Definition);
             }
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
         printf(",\n");
         /* done printing defines */
         printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");
@@ -86,10 +78,6 @@ void Compiler::Compile() {
        [out, optional] ID3DBlob               **ppErrorMsgs
      );
     */
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6387)
-#endif
     auto ptr = api.get_ptr_D3DCompile2();
     HRESULT hr = ptr(
         SourceCode.get()->data(),
@@ -107,9 +95,6 @@ void Compiler::Compile() {
         &compilerOutput,
         &errors
     );
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
     if (FAILED(hr)) {
         if (errors) {
             auto* error = (char*)errors->GetBufferPointer();
