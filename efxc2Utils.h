@@ -13,7 +13,7 @@
 #define EFXC2UTILS_H_INCLUDED
 #include "efxc2.h"
 
-#define M_BUFFER   std::shared_ptr<std::vector<char>>
+using M_BUFFER = std::shared_ptr<std::vector<char>>;
 
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
 /* Size of each input chunk to be

@@ -12,23 +12,26 @@
 #include "efxc2Utils.h"
 
 void CompilerParams::initializeDefines() {
-    numDefines = 1;
-    defines = new D3D_SHADER_MACRO[numDefines];
-    defines[numDefines - 1].Name = nullptr;
-    defines[numDefines - 1].Definition = nullptr;
+    defines = std::make_shared<std::vector < CompilerDefine >> ();
 }
 
 void CompilerParams::add_define(const std::string& defineOption) {
-    numDefines++;
-    //Copy the old array into the new array, but put the new definition at the beginning
-    auto newDefines = new D3D_SHADER_MACRO[numDefines];
-    for (size_t i = 1; i < numDefines; i++) {
-        newDefines[i] = defines[i - 1];
+    CompilerDefine _def;
+    size_t delin_pos;
+    _def.Definition = "1";
+
+    delin_pos = defineOption.find('=');
+    if (delin_pos == std::string::npos) {
+        _def.Name = defineOption;
     }
-    delete[] defines;
-    defines = newDefines;
-    defines[0].Name = defineOption.c_str();
-    defines[0].Definition = "1";
+    else {
+        _def.Name = defineOption.substr(0, delin_pos);
+        _def.Definition = defineOption.substr(delin_pos + 1, defineOption.length() - 1);
+
+    }
+   
+    
+    defines->insert(defines->begin(), _def);
 }
 
 void CompilerParams::LoadSourceCode(FILE* f)

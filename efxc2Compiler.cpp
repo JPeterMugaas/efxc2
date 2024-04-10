@@ -11,21 +11,28 @@
 #include "efxc2Compiler.h"
 
 void Compiler::Compile() {
-
     auto SourceCode = params.get_SourceCode();
     auto SourceLen = params.get_SourceLen();
     auto eflags = params.get_eflags();
     auto sflags = params.get_sflags();
     auto secondary_flags = params.get_secondary_flags();
-    auto numDefines = params.get_numDefines();
     std::string _entryPoint = params.get_entryPoint();
     const char* entryPoint = _entryPoint.c_str();
     std::string _model = params.get_model();
     const char* model = _model.c_str();
     std::string _inputFile = params.get_inputFile();
     const char* inputFile = _inputFile.c_str();
-    auto defines = params.get_defines();
-
+    auto _defines = params.get_defines();
+    auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
+    D3D_SHADER_MACRO _def;
+    for (size_t i = 0; i <  _defines->size(); i++) {
+        _def.Definition = _defines.get()->at(i).Definition.c_str();
+        _def.Name = _defines.get()->at(i).Name.c_str();
+        defines->insert(defines->end(), _def);
+    }
+    _def.Definition = nullptr;
+    _def.Name = nullptr;
+    defines->insert(defines->end(), _def);
     ID3DBlob* errors = nullptr;
     if (params.get_verbose()) {
         printf("Calling D3DCompile2(\n");
@@ -40,8 +47,10 @@ void Compiler::Compile() {
 #pragma warning(disable: 6001)
 #pragma warning(disable: 6011)
 #endif
-        for (size_t i = 0; i < numDefines - 1; i++)
-            printf(" %s=%s", defines[i].Name, defines[i].Definition);
+        for (size_t i = 0; i < defines->size(); i++)
+            if (defines->at(i).Name != nullptr) {
+                printf(" %s=%s", defines->at(i).Name, defines->at(i).Definition);
+            }
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -86,7 +95,7 @@ void Compiler::Compile() {
         SourceCode.get()->data(),
         SourceLen,
         inputFile,
-        defines,
+        defines->data(),
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
         entryPoint,
         model,

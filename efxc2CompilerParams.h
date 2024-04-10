@@ -13,6 +13,13 @@
 #include "efxc2.h"
 #include "efxc2Utils.h"
 
+struct CompilerDefine {
+  std::string Name;
+  std::string Definition;
+};
+
+using M_COMPILER_DEFINES = std::shared_ptr<std::vector<CompilerDefine>>;
+
 class CompilerParams{
 public:
 	explicit CompilerParams() { initializeDefines(); };
@@ -39,7 +46,7 @@ public:
 	std::string get_inputFile() const { return inputFile; }
 	void set_inputFile(const std::string& _inputFile) { inputFile = _inputFile; }
 	
-	D3D_SHADER_MACRO* get_defines() const { return defines; }
+	M_COMPILER_DEFINES get_defines() const { return defines; }
 	size_t get_numDefines() const { return numDefines; }
 	void add_define(const std::string& defineOption);
 	void LoadSourceCode(FILE* f);
@@ -53,25 +60,25 @@ public:
 	void set_disassembly_flags(UINT _disassembly_flags) { disassembly_flags = _disassembly_flags;  }
 private:
 	/* application flags */
-	int               verbose = 1;
-	int               outputHex = 0;
-	UINT              commands = 0;
+	int                verbose = 1;
+	int                outputHex = 0;
+	UINT               commands = 0;
 	/* D3DCompile2 parameters */
-	UINT              sflags = 0;
-	UINT              eflags = 0;
-	UINT              secondary_flags = 0;
-	size_t            numDefines = 1;
-	D3D_SHADER_MACRO* defines;
-	std::string       model = "";
-	std::string       entryPoint = "";
-	std::string       inputFile = "";
-	std::string       variableName = "";
-	size_t            SourceLen = 0;
-	M_BUFFER          SourceCode = nullptr;
+	UINT               sflags = 0;
+	UINT               eflags = 0;
+	UINT               secondary_flags = 0;
+	size_t             numDefines = 1;
+	M_COMPILER_DEFINES defines;
+	std::string        model = "";
+	std::string        entryPoint = "";
+	std::string        inputFile = "";
+	std::string        variableName = "";
+	size_t             SourceLen = 0;
+	M_BUFFER           SourceCode = nullptr;
 	/* D3DStripShader parameters */
-	UINT              strip_flags = 0;
+	UINT               strip_flags = 0;
 	/* D3DDisassemble parameters */
-	UINT              disassembly_flags = 0;
+	UINT               disassembly_flags = 0;
 
 	void initializeDefines();
 };
