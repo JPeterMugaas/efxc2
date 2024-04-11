@@ -10,6 +10,12 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 
+static void DisplayDefine(D3D_SHADER_MACRO i) {
+    if (i.Name != nullptr && i.Definition != nullptr) {
+        printf(" %s=%s", i.Name, i.Definition);
+    }
+}
+
 void Compiler::Compile() {
     auto SourceCode = params.get_SourceCode();
     size_t SourceLen = SourceCode->size();
@@ -42,10 +48,7 @@ void Compiler::Compile() {
         printf("\t %s, \n", inputFile);
         /* print defines */
         printf("\t");
-        for (size_t i = 0; i < defines->size(); i++)
-            if (defines->at(i).Name != nullptr) {
-                printf(" %s=%s", defines->at(i).Name, defines->at(i).Definition);
-            }
+        std::for_each(defines->begin(), defines->end(), DisplayDefine);
         printf(",\n");
         /* done printing defines */
         printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");
@@ -122,7 +125,7 @@ void Compiler::Disassemble() {
         printf("\t %zu,\n", compiledLen);
         printf("\t 0x%016" PRIx64 ", \n", (INT64)disassembly_flags);
         printf("\t nullptr, \n");
-        printf("\t &disassemlyCodeBlob);");
+        printf("\t &disassemlyCodeBlob);\n");
     }
     /*HRESULT D3DDisassemble(
     [in]           LPCVOID  pSrcData,
