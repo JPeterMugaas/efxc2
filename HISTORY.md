@@ -5,6 +5,15 @@ https://github.com/JPeterMugaas/efxc2
 Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2/releases)
 
 ## Release History
+### April 10, 2024
+* Remove SourceLen from CompilerParams and make print_errno use a dynamic buffer instead of a static one (also use standard types).
+* publish version info in MSYS/CYGWIN. Fixed resource-file so that it complies with standards for .EXE's, not .DLL's.
+* Move M_COMPILER_DEFINES to efxc2Utils. Eliminate numdefines since it's no longer used.
+* Defines functionality now uses smart pointers.
+* You can now pass a value to a define like this: `[define name]=[define value]`.  This is described at [Microsoft's website](https://learn.microsoft.com/en-us/windows/win32/direct3dtools/dx-graphics-tools-fxc-syntax).  If 
+no value for a define is specified, a default of "1" is used.  The previous behavior was that all defines had a value of "1".
+* print_errno use a dynamic buffer instead of a static one and also uses standard type.
+
 ### April 8, 2024
 * Refactor Source-code to move stuff from Compiler to CompilerParams.
 * Made most internals use std::string or std::wstring.
