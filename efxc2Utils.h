@@ -24,8 +24,10 @@ using M_COMPILER_DEFINES = std::shared_ptr<std::vector<CompilerDefine>>;
 
 #ifdef _WIN32
 using M_CMD_PARAMS = std::vector<std::wstring>;
+using M_STRING = std::wstring;
 #else
 using M_CMD_PARAMS = std::vector<std::string>;
+using M_STRING = std::string;
 #endif
 
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
