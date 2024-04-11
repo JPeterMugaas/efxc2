@@ -48,7 +48,7 @@ void Compiler::Compile() {
         printf("\t %s, \n", inputFile);
         /* print defines */
         printf("\t");
-        std::for_each(defines->begin(), defines->end(), DisplayDefine);
+        std::ranges::for_each(defines->begin(), defines->end(), DisplayDefine);
         printf(",\n");
         /* done printing defines */
         printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");
@@ -280,8 +280,8 @@ void Compiler::SetPDBFileName(_In_ const std::string& _fileName) {
     std::vector<char> pNameBlobContent;
     pNameBlobContent.resize(nameBlobPartSize + sizeof(ShaderDebugName));
     // Ensure bytes after name are indeed zeroes:
-    std::fill(pNameBlobContent.begin(), pNameBlobContent.end(), 0);
-    auto* header = reinterpret_cast<ShaderDebugName*>(&pNameBlobContent[0]);
+    std::ranges::fill(pNameBlobContent.begin(), pNameBlobContent.end(), 0);
+    auto* header = std::bit_cast<ShaderDebugName*>(&pNameBlobContent[0]);
 
     header->Flags = 0;
     // declared length does not include the null terminator:

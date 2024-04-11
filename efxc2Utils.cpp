@@ -337,7 +337,7 @@ std::wstring utf8_decode(const std::string& str) {
 
     auto _wstr = std::make_unique<std::vector<char>>();
     _wstr->resize(((size_t)nchars + 1) * sizeof(wchar_t));
-    auto* wstr = reinterpret_cast<wchar_t*>(_wstr->data());
+    auto* wstr = std::bit_cast<wchar_t*>(_wstr->data());
     wstr[nchars] = L'\0';
     
     if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,

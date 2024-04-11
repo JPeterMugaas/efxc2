@@ -36,6 +36,8 @@
 #include <memory>
 #include <algorithm>
 #include <array>
+#include <bit>
+#include <ranges>
 #include <wchar.h>
 #include <vector>
 #include <inttypes.h>
