@@ -140,14 +140,14 @@ void Files::WritePDBFile(Compiler& compiler) {
 #endif
     size_t  outputLen = 0;
     /*write .PDB data if applicable*/
+
 #ifdef _WIN32
     if (c_pdbFile.empty() == false) {
-        auto pPDBFileName = GetFileName(c_pdbFile, &AppendSlash);
+        if (auto pPDBFileName = GetFileName(c_pdbFile, &AppendSlash); pPDBFileName.empty() == false) {
 #else
     if (pdbFile.empty() == false) {
-        auto pPDBFileName = GetFileName(pdbFile, &AppendSlash);
+        if (auto pPDBFileName = GetFileName(pdbFile, &AppendSlash); pPDBFileName.empty() == false) {
 #endif
-        if (pPDBFileName.empty() == false) {
             compiler.SetPDBFileName(pPDBFileName);
         }
         else {

@@ -22,6 +22,12 @@ struct CompilerDefine {
 
 using M_COMPILER_DEFINES = std::shared_ptr<std::vector<CompilerDefine>>;
 
+#ifdef _WIN32
+using M_CMD_PARAMS = std::vector<std::wstring>;
+#else
+using M_CMD_PARAMS = std::vector<std::string>;
+#endif
+
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
 /* Size of each input chunk to be
    read and allocate for. */

@@ -14,8 +14,6 @@
 #include "efxc2CompilerTasks.h"
 #include "efxc2Files.h"
 
-using namespace std;
-
 /*Cygwin and MSYS2 compilers amd linkers don't support
 the wmain -Municode entry-point*/
 
@@ -26,6 +24,8 @@ int main(int argc, char* argv[]) {
 #endif /* _WIN32 */
     // ====================================================================================
     // Process Command Line Arguments
+
+    M_CMD_PARAMS args(argv + 1, argv + argc);
 #ifdef _WIN32
     std::wstring temp = L"";
 #else

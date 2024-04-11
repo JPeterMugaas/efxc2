@@ -17,19 +17,15 @@ void CompilerParams::initializeDefines() {
 
 void CompilerParams::add_define(const std::string& defineOption) {
     CompilerDefine _def;
-    size_t delin_pos;
     _def.Definition = "1";
 
-    delin_pos = defineOption.find('=');
-    if (delin_pos == std::string::npos) {
+    if (size_t delin_pos = defineOption.find('='); delin_pos == std::string::npos) {
         _def.Name = defineOption;
     }
     else {
         _def.Name = defineOption.substr(0, delin_pos);
         _def.Definition = defineOption.substr(delin_pos + 1, defineOption.length() - 1);
-
     }
-   
     
     defines->insert(defines->begin(), _def);
 }
