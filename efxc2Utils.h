@@ -15,12 +15,6 @@
 
 using M_BUFFER = std::shared_ptr<std::vector<char>>;
 
-struct CompilerDefine {
-    std::string Name;
-    std::string Definition;
-};
-
-using M_COMPILER_DEFINES = std::shared_ptr<std::vector<CompilerDefine>>;
 
 #ifdef _WIN32
 using M_CMD_PARAMS = std::vector<std::wstring>;

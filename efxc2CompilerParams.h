@@ -13,6 +13,13 @@
 #include "efxc2.h"
 #include "efxc2Utils.h"
 
+struct CompilerDefine {
+	std::string Name;
+	std::string Definition;
+};
+
+using M_COMPILER_DEFINES = std::shared_ptr<std::vector<CompilerDefine>>;
+
 class CompilerParams{
 public:
 	explicit CompilerParams() { initializeDefines(); };
@@ -31,16 +38,16 @@ public:
 	UINT get_secondary_flags() const { return secondary_flags; }
 	void set_secondary_flags(UINT _secondary_flags) { secondary_flags = _secondary_flags; }
 	std::string get_model() const { return model; }
-	void set_model(const std::string& _model) { model = _model; }
+	void set_model(const std::string_view& _model) { model = _model; }
 	std::string get_entryPoint() const { return entryPoint; }
-	void set_entryPoint(const std::string& _entryPoint) { entryPoint = _entryPoint;  }
+	void set_entryPoint(const std::string_view& _entryPoint) { entryPoint = _entryPoint;  }
 	std::string get_variableName() const { return variableName; }
-	void set_variableName(const std::string& _variableName) { variableName = _variableName; }
+	void set_variableName(const std::string_view& _variableName) { variableName = _variableName; }
 	std::string get_inputFile() const { return inputFile; }
-	void set_inputFile(const std::string& _inputFile) { inputFile = _inputFile; }
+	void set_inputFile(const std::string_view& _inputFile) { inputFile = _inputFile; }
 	
 	M_COMPILER_DEFINES get_defines() const { return defines; }
-	void add_define(const std::string& defineOption);
+	void add_define(const std::string_view& defineOption);
 	void LoadSourceCode(FILE* f);
 	M_BUFFER get_SourceCode() const { return SourceCode; }
 	/* D3DStripShader parameters */
