@@ -22,7 +22,7 @@ void CompilerTasks(Compiler& compiler, Files& files, CompilerParams& params) {
         files.WriteIncludeFile(compiler,params);
     }
     if ((params.get_commands() & CMD_WRITE_PDB_FILE) == CMD_WRITE_PDB_FILE) {
-        files.WritePDBFile(compiler);
+        files.WritePDBFile(compiler, params);
     }
     if ((params.get_commands() & CMD_WRITE_OBJECT) == CMD_WRITE_OBJECT) {
         files.WriteObjectFile(compiler,params);

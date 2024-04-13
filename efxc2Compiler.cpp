@@ -12,7 +12,7 @@
 
 static void DisplayDefine(D3D_SHADER_MACRO i) {
     if (i.Name != nullptr && i.Definition != nullptr) {
-        printf(" %s=%s", i.Name, i.Definition);
+        std::cout << std::format("{}={}", i.Name, i.Definition);
     }
 }
 
@@ -41,26 +41,25 @@ void Compiler::Compile() {
     defines->insert(defines->end(), _def);
     ID3DBlob* errors = nullptr;
     if (params.get_verbose()) {
-        printf("Calling D3DCompile2(\n");
-
-        printf("\t SourceCode,\n");
-        printf("\t %zu,\n", SourceLen);
-        printf("\t %s, \n", inputFile);
+        std::cout << "Calling D3DCompile2(\n";
+        std::cout << "\t SourceCode,\n";
+        std::cout << std::format("\t {},\n", SourceLen);
+        std::cout << std::format("\t {}, \n", inputFile);
         /* print defines */
-        printf("\t");
+        std::cout << "\t";
         std::ranges::for_each(defines->begin(), defines->end(), DisplayDefine);
-        printf(",\n");
+        std::cout << ",\n";
         /* done printing defines */
-        printf("\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n");
-        printf("\t %s,\n", entryPoint);
-        printf("\t %s,\n", model);
-        printf("\t 0x%016" PRIx64 ", \n", (INT64)sflags);
-        printf("\t 0x%016" PRIx64 ", \n", (INT64)eflags);
-        printf("\t 0x%016" PRIx64 ", \n", (INT64)secondary_flags);
-        printf("\t nullptr,\n");
-        printf("\t 0,\n");
-        printf("\t &CompilerOutput,\n");
-        printf("\t &errors);\n");
+        std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
+        std::cout << std::format("\t {},\n", entryPoint);
+        std::cout << std::format("\t {},\n", model);
+        std::cout << std::format("\t {:#08x},\n", sflags);
+        std::cout << std::format("\t {:#08x},\n", eflags);
+        std::cout << std::format("\t {:#08x},\n", secondary_flags);
+        std::cout << "\t nullptr,\n";
+        std::cout << "\t 0,\n";
+        std::cout << "\t &CompilerOutput,\n";
+        std::cout << "\t &errors);\n";
     }
 
     /*
@@ -101,12 +100,12 @@ void Compiler::Compile() {
     if (FAILED(hr)) {
         if (errors) {
             auto* error = (char*)errors->GetBufferPointer();
-            fprintf(stderr, "Got an error while compiling:\n%s\n", error);
+            std::cerr << std::format("Got an error while compiling:\n{}\n", error);
             errors->Release();
-            printf("Error Code: 0x%lx", hr);
+            std::cout << std::format( "Error Code: {:#08x}", hr);
         }
         else {
-            fprintf(stderr, "Got an error (%lx) while compiling, but no error message from the function.\n", hr);
+            std::cerr << std::format( "Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
             print_hresult_error(hr);
         }
         exit(1);
@@ -120,12 +119,13 @@ void Compiler::Disassemble() {
     HRESULT hr = 0;
     disassemblyCodeBlob = nullptr;
     if (params.get_verbose()) {
-        printf("Calling D3DDisassemble(\n");
-        printf("\t compiledString,\n");
-        printf("\t %zu,\n", compiledLen);
-        printf("\t 0x%016" PRIx64 ", \n", (INT64)disassembly_flags);
-        printf("\t nullptr, \n");
-        printf("\t &disassemlyCodeBlob);\n");
+        std::cout << "Calling D3DDisassemble(\n";
+        std::cout << "\t compiledString,\n";
+        std::cout << std::format("\t {},\n", compiledLen);
+        std::cout << std::format("\t {:#08x},\n", disassembly_flags);
+        std::cout << "\t nullptr, \n";
+        std::cout << "\t nullptr, \n";
+        std::cout << "\t &disassemlyCodeBlob);\n";
     }
     /*HRESULT D3DDisassemble(
     [in]           LPCVOID  pSrcData,
@@ -156,11 +156,11 @@ void Compiler::StripShader() {
     strippedBlob = nullptr;
     if (strip_flags != 0) {
         if (params.get_verbose()) {
-            printf("Calling D3DStripShader(\n");
-            printf("\t compiledString,\n");
-            printf("\t %zu,\n", compiledLen);
-            printf("\t 0x%016" PRIx64 ", \n", (INT64)strip_flags);
-            printf("\t &strippedBlob);\n");
+            std::cout << "Calling D3DStripShader(\n";
+            std::cout << "\t compiledString,\n";
+            std::cout << std::format("\t {},\n", compiledLen);
+            std::cout << std::format("\t {:#08x},\n", strip_flags);
+            std::cout << "\t &strippedBlob);\n";
         }
         /*
         HRESULT D3DStripShader(
@@ -241,12 +241,12 @@ std::string Compiler::GetPDBFileName() {
     HRESULT hr = 0;
     /*Get filename*/
     if (params.get_verbose()) {
-        printf("Calling D3DGetBlobPart(\n");
-        printf("\t compiledString,\n");
-        printf("\t %zu,\n", compiledLen);
-        printf("\t D3D_BLOB_DEBUG_NAME,\n");
-        printf("\t 0x%016" PRIx64 ", \n", (INT64)0);
-        printf("\t &pPDBName);\n");
+        std::cout << "Calling D3DGetBlobPart(\n";
+        std::cout << "\t compiledString,\n";
+        std::cout << std::format("\t {},\n", compiledLen);
+        std::cout << "\t D3D_BLOB_DEBUG_NAME,\n";
+        std::cout << std::format("\t {:#08x},\n", 9);
+        std::cout << "\t & pPDBName); \n";
     }
     auto ptr = api.get_ptr_D3DGetBlobPart();
     hr = ptr(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, &pPDBName);
@@ -264,7 +264,9 @@ std::string Compiler::GetPDBFileName() {
     }
     auto pDebugNameData = (ShaderDebugName*)(pPDBName->GetBufferPointer());
     auto pName = (char*)(pDebugNameData + 1);
-    printf(".PDB Data Name: %s\n", pName);
+    if (params.get_verbose()) {
+        std::cout << std::format(".PDB Data Name: {}\n", pName);
+    }
     return pName;
 }
 
@@ -295,14 +297,14 @@ void Compiler::SetPDBFileName(_In_ const std::string& _fileName) {
     size_t compiledLen = compilerOutput->GetBufferSize();
 
     if (params.get_verbose()) {
-        printf("Calling D3DSetBlobPart(\n");
-        printf("\t compiledString,\n");
-        printf("\t %zu,\n", compiledLen);
-        printf("\t D3D_BLOB_DEBUG_NAME,\n");
-        printf("\t 0x%016" PRIx64 ", \n", (INT64)0);
-        printf("\t pNameBlobContent,\n");
-        printf("\t %zu,\n", nameBlobPartSize);
-        printf("\t &pShaderWithNewName);\n");
+        std::cout << "Calling D3DSetBlobPart(\n";
+        std::cout << "\t compiledString,\n";
+        std::cout << std::format("\t {},\n", compiledLen);
+        std::cout << "\t D3D_BLOB_DEBUG_NAME,\n";
+        std::cout << std::format("\t {:#08x},\n", 0);
+        std::cout << "\t pNameBlobContent,\n";
+        std::cout <<  std::format("\t {},\n", nameBlobPartSize);
+        std::cout << "\t &pShaderWithNewName);\n";
     }
     HRESULT hr;
     auto ptr = api.get_ptr_D3DSetBlobPart();
@@ -337,12 +339,12 @@ size_t Compiler::WritePDBFile(FILE* f) {
         compiledLen = pShaderWithNewName->GetBufferSize();
     }
     if (params.get_verbose()) {
-        printf("Calling D3DGetBlobPart(\n");
-        printf("\t compiledString,\n");
-        printf("\t %zu,\n", compiledLen);
-        printf("\t D3D_BLOB_PDB,\n");
-        printf("\t 0x%016" PRIx64 ", \n", (INT64)0);
-        printf("\t &PDBData);\n");
+        std::cout << "Calling D3DGetBlobPart(\n";
+        std::cout << "\t compiledString,\n";
+        std::cout << std::format("\t {},\n", compiledLen);
+        std::cout << "\t D3D_BLOB_PDB,\n";
+        std::cout << std::format("\t {:#08x},\n", (INT64)0);
+        std::cout << "\t &PDBData);\n";
     }
     auto ptr = api.get_ptr_D3DGetBlobPart();
     hr = ptr(compiledString, compiledLen, D3D_BLOB_PDB, 0, &PDBData);

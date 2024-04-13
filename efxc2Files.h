@@ -52,7 +52,7 @@ public:
     void WriteDisassembly(Compiler& compiler, const CompilerParams& params) const;
     void WriteIncludeFile(Compiler& compile, const CompilerParams& params) const;
     void WriteObjectFile(Compiler& compiler, const CompilerParams& params) const;
-    void WritePDBFile(Compiler& compiler);
+    void WritePDBFile(Compiler& compiler, const CompilerParams& params);
 private:
 #ifdef _WIN32
     std::wstring DisassemblyFile = L"";

@@ -20,49 +20,49 @@ static std::string HResultName(_In_ const HRESULT hr) {
 }
 
 void print_copyright() {
-    printf(PROGRAM_DESCRIPTION " " PROGRAM_VERSION "\n");
-    printf(PROGRAM_COPYRIGHT "\n");
-    printf("This program is licensed under the Mozilla Public License, v. 2.0.\n");
+    std::cout << PROGRAM_DESCRIPTION " " PROGRAM_VERSION "\n";
+    std::cout << PROGRAM_COPYRIGHT "\n";
+    std::cout << "This program is licensed under the Mozilla Public License, v. 2.0.\n";
     return;
 }
 
 void print_usage_arg() {
-    printf("\n");
-    printf("More information about valid parameters is available at Microsoft's website \n");
-    printf("\n");
-    printf("https://msdn.microsoft.com/en-us/library/windows/desktop/bb509709(v=vs.85).aspx\n");
+    std::cout << "\n";
+    std::cout << "More information about valid parameters is available at Microsoft's website \n";
+    std::cout << "\n";
+    std::cout << "https://msdn.microsoft.com/en-us/library/windows/desktop/bb509709(v=vs.85).aspx\n";
     return;
 }
 
 void print_unsupported_arg_help() {
-    printf("This isn't a sign of disaster, odds are it will be very easy to add support for\n");
-    printf("this argument.  Review the meaning of the argument in the real fxc program, and\n");
-    printf("then add it into efxc2.\n");
-    printf("\n");
+    std::cout << "This isn't a sign of disaster, odds are it will be very easy to add support for\n";
+    std::cout << "this argument.  Review the meaning of the argument in the real fxc program, and\n";
+    std::cout << "then add it into efxc2.\n";
+    std::cout << "\n";
     print_usage_arg();
     return;
 }
 
 [[noreturn]] void print_version() {
-    printf(PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n");
-    printf(PROGRAM_COPYRIGHT "\n");
+    std::cout << PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n";
+    std::cout << PROGRAM_COPYRIGHT "\n";
     exit(0);
 }
 
 [[noreturn]] void print_usage_missing(const char* arg) {
-    fprintf(stderr, "efxc2 is missing the %s argument.\n", arg);
-    printf("We expected to receive this, and it's likely things will not work correctly\n");
-    printf("without it.  Review efxc2 and make sure things will work.\n");
-    printf("\n");
+    std::cerr << std::format("efxc2 is missing the %s argument.\n", arg);
+    std::cout << "We expected to receive this, and it's likely things will not work correctly\n";
+    std::cout << "without it.  Review efxc2 and make sure things will work.\n";
+    std::cout << "\n";
     print_usage_arg();
     exit(1);
 }
 
 [[noreturn]] void print_usage_toomany() {
-    fprintf(stderr, "You specified multiple input files.\n");
-    printf("We did not expect to receive this, and aren't prepared to handle multiple input\n");
-    printf("files. You'll have to edit the source to behave the way you want.\n");
-    printf("\n");
+    std::cerr << "You specified multiple input files.\n";
+    std::cout << "We did not expect to receive this, and aren't prepared to handle multiple input\n";
+    std::cout << "files. You'll have to edit the source to behave the way you want.\n";
+    std::cout << "\n";
     print_usage_arg();
     exit(1);
 }
@@ -73,10 +73,10 @@ void print_unsupported_arg_help() {
         nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
     std::string message(messageBuffer, size);
     LocalFree(messageBuffer);
-    fprintf(stderr, "Windows Error Message: %s\n", messageBuffer);
-    printf("Windows Error Message: %s\n", messageBuffer);
-    printf("Error Code: 0x%lx\n", hr);
-    printf("Error Name: %s\n", HResultName(hr).c_str());
+    std::cerr << std::format("Windows Error Message: {}\n", messageBuffer);
+    std::cout << std::format("Windows Error Message : {}\n", messageBuffer);
+    std::cout << std::format("Error Code: {:#08x}\n", hr);
+    std::cout << std::format("Error Name: {}\n", HResultName(hr));
     exit(1);
 }
 
@@ -123,7 +123,7 @@ void print_unsupported_arg_help() {
 #else  /* _WIN32 */
     char* errmsg = nullptr;
     errmsg = strerror(_errno);
-    fprintf(stderr, "%s\n", errmsg);
+    std::cerr << std::format("{}\n", errmsg);
 #endif /* _WIN32 */
     exit(1);
 }
@@ -247,7 +247,11 @@ bool parseOpt(_In_ const M_STRING& option, _In_ const M_CMD_PARAMS& args, _Inout
         if (arg_idx >= argument.size()) {
             *index += 1;
             if (*index >= args.size() ) {
+#ifdef _WIN32
                 fprintf(stderr, "Error: missing required argument for option %ls\n", option.c_str());
+#else
+                std::cerr << std::format("Error: missing required argument for option %ls\n", option);
+#endif
                 return false;
             }
             *argumentOption = args[*index];

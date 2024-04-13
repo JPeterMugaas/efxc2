@@ -42,10 +42,9 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
     if (params.get_verbose()) {
 #ifdef _WIN32
         wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, DisassemblyFile.c_str());
-#else   /* _WIN32 */
-        printf("Wrote %zu", outputLen);
-        printf(" bytes of shader output to %ls\n", DisassemblyFile.c_str());
-#endif  /* WIN32 */
+#else
+        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile);
+#endif
     }
 }
 
@@ -80,10 +79,9 @@ void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) c
     if (params.get_verbose()) {
 #ifdef _WIN32
         wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, IncludeFile.c_str());
-#else   /* _WIN32 */
-        printf("Wrote %zu", outputLen);
-        printf(" bytes of shader output to %ls\n", IncludeFile.c_str());
-#endif  /* WIN32 */
+#else
+        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile);
+#endif
     }
 }
 
@@ -125,14 +123,13 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
     if (params.get_verbose()) {
 #ifdef _WIN32
         wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, ObjectFile.c_str());
-#else   /* _WIN32 */
-        printf("Wrote %zu", outputLen);
-        printf(" bytes of shader output to %ls\n", ObjectFile.c_str());
+#else
+        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile);;
 #endif
     }
 }
 
-void Files::WritePDBFile(Compiler& compiler) {
+void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
     FILE* f;
     int	AppendSlash = false;
 #ifdef _WIN32
@@ -181,11 +178,12 @@ void Files::WritePDBFile(Compiler& compiler) {
         outputLen = compiler.WritePDBFile(f);
         _Analysis_assume_(f != NULL);
         fclose(f);
+        if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile.c_str());
-#else   /* _WIN32 */
-        printf("Wrote %zu", outputLen);
-        printf(" bytes of .PDB data to %ls\n", pdbFile);
-#endif  /* WIN32 */
+            wprintf(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile.c_str());
+#else
+            std::cout << std::format("Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile);
+#endif
+        }
     }
 }
