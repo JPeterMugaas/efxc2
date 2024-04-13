@@ -44,7 +44,7 @@ const int  READALL_NOMEM = -4;  /* Out of memory */
 /* Helper D3D error lookup table*/
 struct ErrorTableEntry {
     HRESULT ErrorCode;
-    const char* ErrorName;
+    const std::string ErrorName;
 };
 
 constexpr auto ERROR_TABLE_LENGTH = 11;
@@ -64,8 +64,8 @@ const std::array <ErrorTableEntry, ERROR_TABLE_LENGTH >g_ErrorTable = { {
 } };
 
 struct ProfilePrefix {
-    const char* name;
-    const char* prefix;
+    const std::string name;
+    const std::string prefix;
 };
 
 constexpr auto PROFILE_PREFIX_TABLE_LEN = 12;

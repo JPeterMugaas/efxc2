@@ -10,7 +10,7 @@
 
 #include "efxc2Utils.h"
 
-static const char* HResultName(_In_ const HRESULT hr) {
+static std::string HResultName(_In_ const HRESULT hr) {
     for (int i = 0; i < ERROR_TABLE_LENGTH; i++) {
         if (hr == g_ErrorTable[i].ErrorCode ) {
             return  g_ErrorTable[i].ErrorName;
@@ -76,7 +76,7 @@ void print_unsupported_arg_help() {
     fprintf(stderr, "Windows Error Message: %s\n", messageBuffer);
     printf("Windows Error Message: %s\n", messageBuffer);
     printf("Error Code: 0x%lx\n", hr);
-    printf("Error Name: %s\n", HResultName(hr));
+    printf("Error Name: %s\n", HResultName(hr).c_str());
     exit(1);
 }
 
