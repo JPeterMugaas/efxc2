@@ -26,7 +26,7 @@ This program aims to be compatible with the syntax used by Microsoft's
 
 ### Requirements
 
-A properly installed compiler such as:
+A properly installed compiler that supports [C++20](https://isocpp.org/std/the-standard) such as:
 
 * [Clang](http://www.clang.org)
 * [GCC](https://gcc.gnu.org/)
