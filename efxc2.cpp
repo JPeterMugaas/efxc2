@@ -37,10 +37,10 @@ int main(int argc, char* argv[]) {
 
     /*first scan specifically for the nologo argument so no output
     is given regardless of parameter order*/
-    int index = 1;
-    while (index < argc) {
+    size_t index = 0;
+    while (index < args.size()) {
         /* Detect the end of the options. */
-        if (parseOpt(M_NOLOGO, argc, argv, &index, nullptr)) {
+        if (parseOpt(M_NOLOGO, args, &index, nullptr)) {
             params.set_verbose(false);
             break;
         }
@@ -50,53 +50,53 @@ int main(int argc, char* argv[]) {
     }
 
     /*now scan for all arguments and input file name*/
-    index = 1;
+    index = 0;
     while (TRUE) {
         /* Detect the end of the options. */
-        if (index >= argc)
+        if (index >= args.size())
             break;
-        else if (parseOpt(M_QUESTION_MARK, argc, argv, &index, nullptr)) {
+        else if (parseOpt(M_QUESTION_MARK, args, &index, nullptr)) {
             print_help_screen();
         }
-        else if (parseCompilerOnlyCall(argv, &index, params)) {
+        else if (parseCompilerOnlyCall(args, &index, params)) {
             continue;
         }
-        else if (parseIgnoredOpts(argv, &index, params)) {
+        else if (parseIgnoredOpts(args, &index, params)) {
             continue;
         }
-        else if (parseNotSupportedOpts(argv, &index)) {
+        else if (parseNotSupportedOpts(args, &index)) {
             /* If true, this will not return.  It exits the program .*/
         }
-        else if (parseOpt(M_D, argc, argv, &index, &temp)) {
+        else if (parseOpt(M_D, args, &index, &temp)) {
             cmd_D(params, temp);
             continue;
         }
-        else if (parseOpt(M_E_, argc, argv, &index, &temp)) {
+        else if (parseOpt(M_E_, args, &index, &temp)) {
             cmd_E(params, temp);
             continue;
         }
-        else if (parseCompilerFileCall(argc, argv, &index, params, files)) {
+        else if (parseCompilerFileCall(args, &index, params, files)) {
             continue;
         }
-        else if (parseOpt(M_HELP, argc, argv, &index, nullptr)) {
+        else if (parseOpt(M_HELP, args, &index, nullptr)) {
             print_help_screen();
         }
-        else if (parseOpt(M_NOLOGO, argc, argv, &index, nullptr)) {
+        else if (parseOpt(M_NOLOGO, args, &index, nullptr)) {
             continue;
         }
-        else if (parseOpt(M_T, argc, argv, &index, &temp)) {
+        else if (parseOpt(M_T, args, &index, &temp)) {
             cmd_T(params, temp);
             continue;
         }
-        else if (parseOpt(M_VERSION, argc, argv, &index, nullptr)) {
+        else if (parseOpt(M_VERSION, args, &index, nullptr)) {
             print_version();
         }
-        else if (parseOpt(M_VN, argc, argv, &index, &temp)) {
+        else if (parseOpt(M_VN, args, &index, &temp)) {
             cmd_Vn(params, temp);
             continue;
         }
         else {
-            parseInputFile(argv[index], params, files);
+            parseInputFile(args[index], params, files);
             index += 1;
         }
     }

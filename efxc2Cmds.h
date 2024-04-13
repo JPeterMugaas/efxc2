@@ -15,7 +15,7 @@
 #include "efxc2CompilerParams.h"
 #include "efxc2Files.h"
 
-void option_ignored(_In_ const M_STRING& Opt, _In_ CompilerParams& params);
+void option_ignored(_In_ const M_STRING& Opt, _In_ const CompilerParams& params);
 void parseInputFile(_In_ const M_STRING& parameter, CompilerParams& params, Files& files);
 void cmd_all_resources_bound(CompilerParams& params);
 void cmd_Cc(CompilerParams& params);
@@ -59,11 +59,7 @@ void cmd_Zss(CompilerParams& params);
 
 using gCompilerFilep = void(CompilerParams&, Files&, const M_STRING&);
 struct CompileFileEntry {
-#ifdef _WIN32
-    const wchar_t* Param;
-#else
-    const char* Param;
-#endif
+    const M_STRING Param;
     gCompilerFilep* method;
 };
 
@@ -75,29 +71,15 @@ const std::array <CompileFileEntry, COMPILER_FILE_ENTRIES_LENGTH> g_CompilerFile
     { M_FO, cmd_Fo }
 } };
 
-#ifdef _WIN32
 bool parseCompilerFileCall(
-    _In_ int argc,
-    _In_ wchar_t* argv[1],
-    _Inout_	int* index,
+    _In_ const M_CMD_PARAMS& args,
+    _Inout_	size_t* index,
     CompilerParams& params,
     Files& files);
-#else
-bool parseCompilerFileCall(
-    _In_ int argc,
-    _In_ char* argv[1],
-    _Inout_	int* index,
-    CompilerParams& params,
-    Files& files);
-#endif
 
 using gCompilerp = void (CompilerParams &);
 struct CompilerOnlyEntry {
-#ifdef _WIN32
-    const wchar_t* Param;
-#else
-    const char* Param;
-#endif
+    const M_STRING Param;
     gCompilerp* method;
 };
 
@@ -135,24 +117,16 @@ const std::array <CompilerOnlyEntry, COMPILER_ONLY_ENTRIES_LENGTH> g_CompilerOnl
     { M_ZSS, cmd_Zss },
 }};
 
-
-#ifdef _WIN32
-bool parseCompilerOnlyCall(
-    _In_ wchar_t* argv[1],
-    _Inout_	int* index,
+bool  parseCompilerOnlyCall(
+    _In_ const M_CMD_PARAMS& args,
+    _Inout_	size_t* index,
     CompilerParams& params);
-#else
-bool parseCompilerOnlyCall(
-    _In_ char* argv[1],
-    _Inout_	int* index,
-    CompilerParams& params);
-#endif
 
 constexpr auto IGNORED_OPTS_LENGTH = 5;
 #ifdef _WIN32
-const std::array <const wchar_t*, IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
+const std::array <const std::wstring, IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #else
-const std::array <const char*,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
+const std::array <const std::string,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 #endif
     M_FE,
     M_FORCE_ROOTSIG_VER,
@@ -160,33 +134,20 @@ const std::array <const char*,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
     M_P,
     M_VI};
 
-#ifdef _WIN32
 bool parseIgnoredOpts(
-    _In_ wchar_t* argv[1],
-    _Inout_	int* index,
+    _In_ const M_CMD_PARAMS& args,
+    _Inout_	size_t* index,
     CompilerParams& params);
-#else
-bool parseIgnoredOpts(
-    _In_ char* argv[1],
-    _Inout_	int* index,
-    CompilerParams& params);
-#endif
 
-#ifdef _WIN32
 bool parseNotSupportedOpts(
-    _In_ wchar_t* argv[1],
-    _In_ const int* index);
-#else
-bool parseNotSupportedOpts(
-    _In_ char* argv[1],
-    _In_ const int* index);
-#endif
+    _In_ const M_CMD_PARAMS& args,
+    _In_ const size_t* index);
 
 constexpr auto NOT_SUPPORTED_LENGTH = 10;
 #ifdef _WIN32
-const std::array <const wchar_t*, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = { {
+const std::array <const std::wstring, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = { {
 #else
-const std::array <const char*, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = { {
+const std::array <const std::string, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = { {
 #endif
     M_AT_SYMBOL,
     M_COMPRESS,

@@ -11,7 +11,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-void option_ignored(_In_ const M_STRING& Opt, _In_ CompilerParams& params) {
+void option_ignored(_In_ const M_STRING& Opt, _In_ const CompilerParams& params) {
     if (params.get_verbose()) {
 #ifdef _WIN32
         wprintf(L"Option %ls ignored", Opt.c_str());
@@ -63,12 +63,11 @@ void parseInputFile(_In_ const M_STRING& parameter, CompilerParams& params, File
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif  /* _MSC_VER */
-        errno_t err = _wfopen_s(&f, inputFile.c_str(), L"r");
+        if (errno_t err = _wfopen_s(&f, inputFile.c_str(), L"r"); err != 0) {
+            print_errno(err);
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif  /* _MSC_VER */
-        if (err != 0) {
-            print_errno(err);
 #else
         FILE* f = fopen(inputFile.c_str(), "r");
         if (f == nullptr) {
@@ -492,27 +491,19 @@ void cmd_Zss(CompilerParams& params) {
     return;
 }
 
-#ifdef _WIN32
 bool  parseCompilerOnlyCall(
-    _In_ wchar_t* argv[1],
-    _Inout_	int* index,
+    _In_ const M_CMD_PARAMS& args,
+    _Inout_	size_t* index,
     CompilerParams& params) {
-#else
-bool  parseCompilerOnlyCall(
-    _In_ char* argv[1],
-    _Inout_	int* index,
-    CompilerParams& params) {
-    char** argumentOption = nullptr;
-#endif
-#ifdef _WIN32
-    const wchar_t* argument = argv[*index];
-#else  /* _WIN32 */
-    const char* argument = argv[*index];
-#endif /* _WIN32 */
+    if (!index || *index >= args.size()) {
+        return false;
+    }
+    const M_STRING argument = args[*index];
+    size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
-        argument++;
-        if (argument[0] == '-') {
-            argument++;
+        arg_idx++;
+        if (argument[arg_idx] == '-') {
+            arg_idx++;
         }
     }
     else {
@@ -520,77 +511,60 @@ bool  parseCompilerOnlyCall(
     }
 
     for (int i = 0; i < COMPILER_ONLY_ENTRIES_LENGTH; i++) {
-#ifdef _WIN32
-        if (wcscmp(g_CompilerOnlyCall[i].Param, argument) == 0) {
-#else
-        if (strcmp(g_CompilerOnlyCall[i].Param, argument) == 0) {
-#endif
+        if (argument.compare(arg_idx, g_CompilerOnlyCall[i].Param.size(), g_CompilerOnlyCall[i].Param) == 0) {
             auto ptr = (gCompilerp*)g_CompilerOnlyCall[i].method;
             ptr(params);
-            * index += 1;
+            *index += 1;
             return true;
         }
     }
     return false;
 }
 
-#ifdef _WIN32
 bool parseCompilerFileCall(
-    _In_ int argc,
-    _In_ wchar_t* argv[1],
-    _Inout_	int* index,
+    _In_ const M_CMD_PARAMS& args,
+    _Inout_	size_t* index,
     CompilerParams& params,
     Files& files) {
-    std::wstring argumentOption = L"";
-#else
-bool parseCompilerFileCall(
-    _In_ int argc,
-    _In_ char* argv[1],
-    _Inout_	int* index,
-    CompilerParams& params,
-    Files & files) {
-    std::string argumentOption = "";
-#endif
-    size_t optionSize = 0;
-
-    if (!index || *index >= argc) {
+    if (!index || *index >= args.size()) {
         return false;
     }
 #ifdef _WIN32
-    const wchar_t* argument = argv[*index];
-#else  /* _WIN32 */
-    const char* argument = argv[*index];
-#endif /* _WIN32 */
+    std::wstring argumentOption = L"";
+#else
+    std::string argumentOption = "";
+#endif
+    if (!index || *index >= args.size()) {
+       return false;
+    }
+
+    M_STRING argument = args[*index];
+    size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
-        argument++;
-        if (argument[0] == '-') {
-            argument++;
+        arg_idx++;
+        if (argument[arg_idx] == '-') {
+           arg_idx++;
         }
     }
     else {
         return false;
     }
-    for (int i = 0; i < COMPILER_FILE_ENTRIES_LENGTH; i++) {
-#ifdef _WIN32
-        optionSize = wcslen( g_CompilerFileCall[i].Param);
-        if (wcsncmp(argument, g_CompilerFileCall[i].Param, optionSize) != 0) {
-#else
-        optionSize = strlen( g_CompilerFileCall[i].Param);
-        if (strncmp(argument, g_CompilerFileCall[i].Param, optionSize) != 0) {
-#endif
+
+    for (size_t i = 0; i < COMPILER_FILE_ENTRIES_LENGTH; i++) {
+        if (argument.compare(arg_idx, g_CompilerFileCall[i].Param.size(), g_CompilerFileCall[i].Param) != 0) {
             continue;
         }
-        argument += optionSize;
-        if (*argument == '\0') {
+        arg_idx += g_CompilerFileCall[i].Param.size();
+        if (arg_idx >= argument.size()) {
             *index += 1;
-            if (*index >= argc) {
-                fprintf(stderr, "Error: missing required argument for option %ls\n", g_CompilerFileCall[i].Param);
+            if (*index >= args.size()) {
+                fprintf(stderr, "Error: missing required argument for option %ls\n", g_CompilerFileCall[i].Param.c_str());
                 return false;
             }
-            argumentOption = argv[*index];
+            argumentOption = args[*index];
         }
         else {
-            argumentOption = argument;
+            argumentOption = argument.substr(arg_idx, argument.size());
         }
         auto ptr = (gCompilerFilep*)g_CompilerFileCall[i].method;
         ptr(params, files, argumentOption);
@@ -600,37 +574,30 @@ bool parseCompilerFileCall(
     return false;
 }
 
-#ifdef _WIN32
 bool parseIgnoredOpts(
-    _In_ wchar_t* argv[1],
-    _Inout_	int* index,
+    _In_ const M_CMD_PARAMS& args,
+    _Inout_	size_t* index,
     CompilerParams& params) {
-#else
-bool parseIgnoredOpts(
-    _In_ char* argv[1],
-    _Inout_	int* index,
-    CompilerParams& params) {
-#endif
+    if (!index || *index >= args.size()) {
+        return false;
+    }
 #ifdef _WIN32
-    const wchar_t* argument = argv[*index];
+    const std::wstring argument = args[*index];
 #else  /* _WIN32 */
-    const char* argument = argv[*index];
+    const std::string argument = args[*index];
 #endif /* _WIN32 */
+    size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
-        argument++;
-        if (argument[0] == '-') {
-            argument++;
+        arg_idx++;
+        if (argument[arg_idx] == '-') {
+            arg_idx++;
         }
     }
     else {
         return false;
     }
     for (int i = 0; i < IGNORED_OPTS_LENGTH; i++) {
-#ifdef _WIN32
-        if (wcscmp(g_IgnoredOpts[i], argument) == 0) {
-#else
-        if (strcmp(g_IgnoredOpts[i], argument) == 0) {
-#endif
+        if (argument.compare(arg_idx, std::string::npos, g_IgnoredOpts[i]) == 0) {
             option_ignored(argument, params);
             return true;
         }
@@ -638,36 +605,33 @@ bool parseIgnoredOpts(
     return false;
 }
 
+bool parseNotSupportedOpts(
+    _In_ const M_CMD_PARAMS& args,
+    _In_ const size_t* index) {
+    if (!index || *index >= args.size()) {
+        return false;
+    }
 #ifdef _WIN32
-bool parseNotSupportedOpts(
-    _In_ wchar_t* argv[1],
-    _In_ const int* index) {
-#else
-bool parseNotSupportedOpts(
-    _In_ char* argv[1],
-    _In_ const int* index) {
-#endif
-    #ifdef _WIN32
-    const wchar_t* argument = argv[*index];
+    const std::wstring argument = args[*index];
 #else  /* _WIN32 */
-    const char* argument = argv[*index];
+    const std::string argument = args[*index];
 #endif /* _WIN32 */
+    size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
-        argument++;
-        if (argument[0] == '-') {
-            argument++;
+        arg_idx++;
+        if (argument[arg_idx] == '-') {
+            arg_idx++;
         }
     }
     else {
         return false;
     }
     for (int i = 0; i < NOT_SUPPORTED_LENGTH; i++) {
+        if (argument.compare(arg_idx, std::string::npos, g_NotSupportedArgs[i]) == 0) {
 #ifdef _WIN32
-        if (wcscmp(g_NotSupportedArgs[i], argument) == 0) {
-            fwprintf(stderr, L"option -%ls not supported", argument);
+            fwprintf(stderr, L"option -%ls not supported", argument.c_str());
 #else
-        if (strcmp(g_NotSupportedArgs[i], argument) == 0) {
-            fprintf(stderr, "option -%s not supported", argument);
+            fprintf(stderr, "option -%s not supported", argument.c_str());
 #endif
             print_unsupported_arg_help();
             return true;

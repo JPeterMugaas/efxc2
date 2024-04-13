@@ -139,8 +139,7 @@ std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder
 #ifdef _WIN32
     sep = '\\';
 #endif
-    size_t i = path.rfind(sep, path.length());
-    if (i != std::string::npos)
+    if (size_t i = path.rfind(sep, path.length()); i != std::string::npos)
     {
         std::string filename = path.substr(i + 1, path.length() - i);
         std::string rawname = filename.substr(0, path.length());
@@ -222,52 +221,39 @@ int readall(_In_ FILE * in,
     return READALL_OK;
 }
 
-#ifdef _WIN32
-bool parseOpt(_In_ const wchar_t* option, _In_ int argc, _In_ wchar_t* argv[1], _Inout_ int* index, _Inout_opt_ std::wstring* argumentOption) {
-#else  /* _WIN32 */
-bool parseOpt(_In_ const char* option, _In_ int argc, _In_ char* argv[1], _Inout_ int* index, _Inout_opt_ std::string* argumentOption) {
-#endif /* _WIN32 */
-    assert(option != nullptr);
-    if (!index || *index >= argc) {
+bool parseOpt(_In_ const M_STRING& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
+    if (!index || *index >= args.size()) {
         return false;
     }
-#ifdef _WIN32
-    const wchar_t* argument = argv[*index];
-#else  /* _WIN32 */
-    const char* argument = argv[*index];
-#endif /* _WIN32 */
+
+    M_STRING argument = args[*index];
+    size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
-        argument++;
-        if (argument[0] == '-') {
-            argument++;
+        arg_idx++;
+        if (argument[arg_idx] == '-') {
+            arg_idx++;
         }
     }
     else {
         return false;
     }
 
-#ifdef _WIN32
-    size_t optionSize = wcslen(option);
-    if (wcsncmp(argument, option, optionSize) != 0) {
-#else  /* _WIN32 */
-    size_t optionSize = strlen(option);
-    if (strncmp(argument, option, optionSize) != 0) {
-#endif /* _WIN32 */
+    if (argument.compare(arg_idx, option.size(), option) != 0) {
         return false;
     }
 
     if (argumentOption) {
-        argument += optionSize;
-        if (*argument == '\0') {
+        arg_idx += option.size();
+        if (arg_idx >= argument.size()) {
             *index += 1;
-            if (*index >= argc) {
-                fprintf(stderr, "Error: missing required argument for option %ls\n", option);
+            if (*index >= args.size() ) {
+                fprintf(stderr, "Error: missing required argument for option %ls\n", option.c_str());
                 return false;
             }
-            *argumentOption = argv[*index];
+            *argumentOption = args[*index];
         }
         else {
-            *argumentOption = argument;
+            *argumentOption = argument.substr(arg_idx, argument.size());
         }
     }
     *index += 1;
