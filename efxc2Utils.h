@@ -107,8 +107,8 @@ void print_unsupported_arg_help();
 [[noreturn]] void print_windows_error();
 int readall(_In_ FILE* in,
     _Out_ M_BUFFER& dataptr);
-std::string setupVariableName(_In_ const std::string& model,
-    _In_ std::string const& entryPoint);
+std::string setupVariableName(_In_ const std::string_view& model,
+    _In_ const std::string& entryPoint);
 #ifdef _WIN32
 std::wstring utf8_decode(const std::string& str);
 std::string utf8_encode(const std::wstring& wstr);

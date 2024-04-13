@@ -264,8 +264,8 @@ bool parseOpt(_In_ const M_STRING& option, _In_ const M_CMD_PARAMS& args, _Inout
     return true;
 }
 
-std::string setupVariableName(_In_ const std::string& model,
-    _In_ std::string const & entryPoint) {
+std::string setupVariableName(_In_ const std::string_view& model,
+    _In_ const std::string& entryPoint) {
     std::string variableName = "";
     std::string prefix = "g";
     for (int i = 0; i < PROFILE_PREFIX_TABLE_LEN; i++) {
