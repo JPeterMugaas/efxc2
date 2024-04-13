@@ -50,7 +50,7 @@ void print_unsupported_arg_help() {
 }
 
 [[noreturn]] void print_usage_missing(const char* arg) {
-    std::cerr << std::format("efxc2 is missing the %s argument.\n", arg);
+    std::cerr << std::format("efxc2 is missing the {} argument.\n", arg);
     std::cout << "We expected to receive this, and it's likely things will not work correctly\n";
     std::cout << "without it.  Review efxc2 and make sure things will work.\n";
     std::cout << "\n";
