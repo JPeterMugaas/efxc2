@@ -197,14 +197,14 @@ void Compiler::StripShader() {
     }
 }
 
-size_t Compiler::WriteAssemblyCode(FILE* f) {
-    unsigned char const* outputString = nullptr;
+size_t Compiler::WriteAssemblyCode(std::ofstream& f) {
+    char const* outputString = nullptr;
     size_t outputLen = 0;
 
     if (disassemblyCodeBlob != nullptr) {
-        outputString = (unsigned char*)disassemblyCodeBlob->GetBufferPointer();
+        outputString = (char*)disassemblyCodeBlob->GetBufferPointer();
         outputLen = disassemblyCodeBlob->GetBufferSize();
-        fwrite(outputString, outputLen, 1, f);
+        f.write(outputString, outputLen);
     }
     return outputLen;
 }
@@ -233,18 +233,18 @@ size_t Compiler::WriteIncludeFile(std::ofstream& f)
     return outputLen;
 }
 
-size_t Compiler::WriteObjectFile(FILE* f) {
-    unsigned char const* outputString;
+size_t Compiler::WriteObjectFile(std::ofstream& f) {
+    char const* outputString;
     size_t outputLen = 0;
     if (strippedBlob == nullptr) {
-        outputString = (unsigned char*)compilerOutput->GetBufferPointer();
+        outputString = (char*)compilerOutput->GetBufferPointer();
         outputLen = compilerOutput->GetBufferSize();
     }
     else {
-        outputString = (unsigned char*)strippedBlob->GetBufferPointer();
+        outputString = (char*)strippedBlob->GetBufferPointer();
         outputLen = strippedBlob->GetBufferSize();
     }
-    fwrite(outputString, outputLen, 1, f);
+    f.write(outputString, outputLen);
     return outputLen;
 }
 
@@ -338,17 +338,17 @@ void Compiler::SetPDBFileName(_In_ const std::string_view& _fileName) {
     }
 }
 
-size_t Compiler::WritePDBFile(FILE* f) {
+size_t Compiler::WritePDBFile(std::ofstream& f) {
     HRESULT hr = 0;
     ID3DBlob* PDBData = nullptr;
-    unsigned char const* compiledString = nullptr;
+    char const* compiledString = nullptr;
     size_t compiledLen = 0;
     if (pShaderWithNewName == nullptr) {
-        compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
+        compiledString = (char*)compilerOutput->GetBufferPointer();
         compiledLen = compilerOutput->GetBufferSize();
     }
     else {
-        compiledString = (unsigned char*)pShaderWithNewName->GetBufferPointer();
+        compiledString = (char*)pShaderWithNewName->GetBufferPointer();
         compiledLen = pShaderWithNewName->GetBufferSize();
     }
     if (params.get_verbose()) {
@@ -372,8 +372,8 @@ size_t Compiler::WritePDBFile(FILE* f) {
     if (FAILED(hr)) {
         print_hresult_error(hr);
     }
-    auto outputString = (unsigned char*)PDBData->GetBufferPointer();
+    auto outputString = (char*)PDBData->GetBufferPointer();
     size_t outputLen = PDBData->GetBufferSize();
-    fwrite(outputString, outputLen, 1, f);
+    f.write(outputString, outputLen);
     return compiledLen;
 }

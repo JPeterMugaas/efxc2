@@ -21,11 +21,11 @@ public:
     void Disassemble();
     void StripShader();
     size_t WriteIncludeFile(std::ofstream& f);
-    size_t WriteObjectFile(FILE* f);
-    size_t WriteAssemblyCode(FILE* f);
+    size_t WriteObjectFile(std::ofstream& f);
+    size_t WriteAssemblyCode(std::ofstream& f);
     std::string GetPDBFileName();
     void SetPDBFileName(_In_ const std::string_view& _fileName);
-    size_t WritePDBFile(FILE* f);
+    size_t WritePDBFile(std::ofstream& f);
 private:
     CompilerAPIContainer api;
     CompilerParams       params;

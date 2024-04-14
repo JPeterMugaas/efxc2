@@ -190,6 +190,7 @@ void WriteByteArrayConst(_In_ std::ofstream& f, _In_reads_bytes_(len) const unsi
         }
     }
     f <<  "\n};\n";
+    return;
 }
 
 int readall(_In_ FILE * in,

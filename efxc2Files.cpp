@@ -12,33 +12,15 @@
 #include "efxc2Files.h"
 
 void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) const {
-    FILE* f;
-#ifdef _WIN32
-    errno_t err = 0;
-#endif
+    std::ofstream f;
+    f = std::ofstream(std::filesystem::path(DisassemblyFile), std::ios::out);
+    if (!f) {
+        std::cerr << "File Open Failed";
+        exit(1);
+    }
     size_t  outputLen = 0;
-#ifdef _WIN32
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6001 )
-#pragma warning( disable : 6387 )
-#endif /* _MSC_VER */
-    err = _wfopen_s(&f, DisassemblyFile.c_str(), L"w");
-    if (err != 0) {
-        print_errno(err);
-    }
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
-#else
-    f = fopen(DisassemblyFile.c_str(), "w");
-    if (f == nullptr) {
-        print_errno();
-    }
-#endif
     outputLen = compiler.WriteAssemblyCode(f);
-    _Analysis_assume_(f != NULL);
-    fclose(f);
+    f.close();
     if (params.get_verbose()) {
 #ifdef _WIN32
         std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile);
@@ -51,6 +33,10 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
 void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream( std::filesystem::path(IncludeFile), std::ios::out);
+    if (!f) {
+        std::cerr << "File Open Failed";
+        exit(1);
+    }
     size_t  outputLen = 0;
     outputLen = compiler.WriteIncludeFile(f);
     f.close();
@@ -64,40 +50,15 @@ void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) c
 }
 
 void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) const {
-    FILE* f;
-#ifdef _WIN32
-    errno_t err = 0;
-#endif
+    std::ofstream f;
+    f = std::ofstream(std::filesystem::path(ObjectFile), std::ios::out | std::ios::binary);
+    if (!f) {
+        std::cerr << "File Open Failed";
+        exit(1);
+    }
     size_t  outputLen = 0;
-#ifdef _WIN32
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6001 )
-#pragma warning( disable : 6387 )
-#endif /* _MSC_VER */
-    err = _wfopen_s(&f, ObjectFile.c_str(), L"w");
-    if (err != 0) {
-        print_errno(err);
-    }
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
-#else
-    f = fopen(ObjectFile.c_str(), "w");
-    if (f == nullptr) {
-        print_errno();
-    }
-#endif
     outputLen = compiler.WriteObjectFile(f);
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6001 )
-#pragma warning( disable : 6387 )
-#endif /* _MSC_VER */
-    fclose(f);
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
+    f.close();
     if (params.get_verbose()) {
 #ifdef _WIN32
         std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile);
@@ -108,12 +69,9 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
 }
 
 void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
-    FILE* f;
-    int	AppendSlash = false;
-#ifdef _WIN32
-    errno_t err = 0;
-#endif
+    std::ofstream f;
     size_t  outputLen = 0;
+    int	AppendSlash = false;
     /*write .PDB data if applicable*/
 
 #ifdef _WIN32
@@ -142,20 +100,13 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
             pdbFile.append(pPDBFileName);
 #endif
         }
-#ifdef _WIN32
-        err = _wfopen_s(&f, pdbFile.c_str(), L"w");
-        if (err != 0) {
-            print_errno(err);
+        f = std::ofstream(std::filesystem::path(pdbFile), std::ios::out | std::ios::binary);
+        if (!f) {
+            std::cerr << "File Open Failed";
+            exit(1);
         }
-#else
-        f = fopen(pdbFile.c_str(), "w");
-        if (f == nullptr) {
-            print_errno();
-        }
-#endif
         outputLen = compiler.WritePDBFile(f);
-        _Analysis_assume_(f != NULL);
-        fclose(f);
+        f.close();
         if (params.get_verbose()) {
 #ifdef _WIN32
             std::wcout << format(L"Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile);
