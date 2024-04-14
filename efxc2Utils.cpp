@@ -98,11 +98,7 @@ void print_unsupported_arg_help() {
 #pragma warning(push)
 #pragma warning(disable:4477)
 #endif /* _MSC_VER */
-#ifdef _WIN32
-    fwprintf(stderr, L"Windows error: %ls\n", strErrorMessage);
-#else  /* _WIN32 */
-    fprintf(stderr, "Windows error: %ls\n", strErrorMessage);
-#endif /* _WIN32 */
+    std::wcerr << std::format(L"Windows error: {}\n", strErrorMessage);
 #if defined(_MSC_VER)
 # pragma warning(pop)
 #endif /* _MSC_VER */
