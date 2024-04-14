@@ -180,7 +180,7 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
         fclose(f);
         if (params.get_verbose()) {
 #ifdef _WIN32
-            std::wcout << format(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile);
+            std::wcout << format(L"Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile);
 #else
             std::cout << std::format("Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile);
 #endif

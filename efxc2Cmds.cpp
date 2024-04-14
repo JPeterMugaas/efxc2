@@ -14,9 +14,9 @@
 void option_ignored(_In_ const M_STRING& Opt, _In_ const CompilerParams& params) {
     if (params.get_verbose()) {
 #ifdef _WIN32
-        std::wcout << std::format(L"Option %s ignored", Opt);
+        std::wcout << std::format(L"Option {} ignored", Opt);
 #else
-        std::cout << std::format("Option %s ignored", Opt);
+        std::cout << std::format("Option {} ignored", Opt);
 #endif
     }
     return;
@@ -180,9 +180,9 @@ void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING& outputFil
     params.set_commands(cmd);
     if (params.get_verbose()) {
 #ifdef _WIN32
-        std::wcout << std::format(L"option -Fh (Output File) with arg %ls\n", outputFile);
+        std::wcout << std::format(L"option -Fh (Output File) with arg {}\n", outputFile);
 #else
-        std::cout << std::format("option -Fh (Output File) with arg %ls\n", outputFile);
+        std::cout << std::format("option -Fh (Output File) with arg {}\n", outputFile);
 #endif
     }
     return;
@@ -195,9 +195,9 @@ void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING& outputFil
     params.set_commands(cmd);
     if (params.get_verbose()) {
 #ifdef _WIN32
-        std::wcout << std::format(L"option -FO (Output File) with arg %ls\n", outputFile);
+        std::wcout << std::format(L"option -FO (Output File) with arg {}\n", outputFile);
 #else
-        std::cout << std::format("option -FO (Output File) with arg %ls\n", outputFile);
+        std::cout << std::format("option -FO (Output File) with arg {}\n", outputFile);
 #endif
     }
     return;

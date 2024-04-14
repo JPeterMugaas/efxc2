@@ -248,9 +248,9 @@ bool parseOpt(_In_ const M_STRING& option, _In_ const M_CMD_PARAMS& args, _Inout
             *index += 1;
             if (*index >= args.size() ) {
 #ifdef _WIN32
-                std::wcerr << std::format(L"Error: missing required argument for option %ls\n", option);
+                std::wcerr << std::format(L"Error: missing required argument for option {}\n", option);
 #else
-                std::cerr << std::format("Error: missing required argument for option %ls\n", option);
+                std::cerr << std::format("Error: missing required argument for option {}\n", option);
 #endif
                 return false;
             }
