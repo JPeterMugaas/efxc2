@@ -42,7 +42,19 @@ void Compiler::Compile() {
     ID3DBlob* errors = nullptr;
     if (params.get_verbose()) {
         std::cout << "Calling D3DCompile2(\n";
-        std::cout << "\t SourceCode,\n";
+        /* Source Code sample*/
+        std::cout << "\t \"";
+        for (size_t i = 0; i < SourceCode->size(); ++i) {
+            if (i < 41) {
+                std::cout << SourceCode->at(i);
+            }
+            else {
+                std::cout << "...";
+                break;
+            }
+        }
+        std::cout << "\",\n";
+        /**/
         std::cout << std::format("\t {},\n", SourceLen);
         std::cout << std::format("\t {}, \n", inputFile);
         /* print defines */
