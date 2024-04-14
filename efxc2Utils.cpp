@@ -119,7 +119,7 @@ void print_unsupported_arg_help() {
 #ifdef _WIN32
     auto errmsg = std::make_unique<std::vector<char>>(ERR_SIZE);
     strerror_s(errmsg->data(), ERR_SIZE, _errno);
-    fprintf(stderr, "%s\n", errmsg->data());
+    std::cerr << std::format("{}\n", errmsg.get()->data() );
 #else  /* _WIN32 */
     char* errmsg = nullptr;
     errmsg = strerror(_errno);
