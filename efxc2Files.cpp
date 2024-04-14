@@ -49,33 +49,11 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
 }
 
 void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) const {
-    FILE* f;
-#ifdef _WIN32
-    errno_t err = 0;
-#endif
+    std::ofstream f;
+    f = std::ofstream( std::filesystem::path(IncludeFile), std::ios::out);
     size_t  outputLen = 0;
-#ifdef _WIN32
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6001 )
-#pragma warning( disable : 6387 )
-#endif /* _MSC_VER */
-    err = _wfopen_s(&f, IncludeFile.c_str(), L"w");
-    if (err != 0) {
-        print_errno(err);
-    }
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif /* _MSC_VER */
-#else
-    f = fopen(IncludeFile.c_str(), "w");
-    if (f == nullptr) {
-        print_errno();
-    }
-#endif
     outputLen = compiler.WriteIncludeFile(f);
-    _Analysis_assume_(f != NULL);
-    fclose(f);
+    f.close();
     if (params.get_verbose()) {
 #ifdef _WIN32
         std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile);

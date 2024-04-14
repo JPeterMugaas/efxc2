@@ -20,7 +20,7 @@ public:
     void Compile();
     void Disassemble();
     void StripShader();
-    size_t WriteIncludeFile(FILE* f);
+    size_t WriteIncludeFile(std::ofstream& f);
     size_t WriteObjectFile(FILE* f);
     size_t WriteAssemblyCode(FILE* f);
     std::string GetPDBFileName();

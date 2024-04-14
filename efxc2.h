@@ -36,6 +36,8 @@
 #include <bit>
 #include <cassert>
 #include <format>
+#include <fstream>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <ranges>

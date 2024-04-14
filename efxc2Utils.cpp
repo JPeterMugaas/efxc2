@@ -170,26 +170,26 @@ std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFold
 }
 #endif
 
-void WriteByteArrayConst(_In_ FILE* f, _In_reads_bytes_(len) const unsigned char* outString, 
-    _In_ const size_t len, 
-    _In_z_ const char* variableName, 
+void WriteByteArrayConst(_In_ std::ofstream& f, _In_reads_bytes_(len) const unsigned char* outString,
+    _In_ const size_t len,
+    _In_z_ const char* variableName,
     _In_ const int outputHex) {
-    fprintf(f, "const BYTE %s[] =\n{\n", variableName);
+    f << std::format("const BYTE {}[] =\n{{\n", variableName);
     for (size_t i = 0; i < len; i++) {
         if (outputHex) {
-            fprintf(f, " 0x%02" PRIx8, outString[i]);
+            f << std::format(" 0x{:>02x}", outString[i]);
         }
         else {
-            fprintf(f, "%4" PRIu8, outString[i]);
+            f << std::format("{:>4}", outString[i]);
         }
         if (i != len - 1) {
-            fprintf(f, ",");
+            f << ",";
         }
         if ((i % 6 == 5) && (i != len - 1)) {
-            fprintf(f, "\n");
+            f << "\n";
         }
     }
-    fprintf(f, "\n};\n");
+    f <<  "\n};\n";
 }
 
 int readall(_In_ FILE * in,
