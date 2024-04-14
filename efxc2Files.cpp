@@ -41,7 +41,7 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
     fclose(f);
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, DisassemblyFile.c_str());
+        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile);
 #else
         std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile);
 #endif
@@ -78,7 +78,7 @@ void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) c
     fclose(f);
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, IncludeFile.c_str());
+        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile);
 #else
         std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile);
 #endif
@@ -122,7 +122,7 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
 #endif /* _MSC_VER */
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"Wrote %zu bytes of shader output to %ls\n", outputLen, ObjectFile.c_str());
+        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile);
 #else
         std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile);;
 #endif
@@ -180,7 +180,7 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
         fclose(f);
         if (params.get_verbose()) {
 #ifdef _WIN32
-            wprintf(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile.c_str());
+            std::wcout << format(L"Wrote %zu bytes of .PDB data to %ls\n", outputLen, pdbFile);
 #else
             std::cout << std::format("Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile);
 #endif

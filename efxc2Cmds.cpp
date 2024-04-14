@@ -14,7 +14,7 @@
 void option_ignored(_In_ const M_STRING& Opt, _In_ const CompilerParams& params) {
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"Option %ls ignored", Opt.c_str());
+        std::wcout << std::format(L"Option %s ignored", Opt);
 #else
         std::cout << std::format("Option %s ignored", Opt);
 #endif
@@ -40,7 +40,7 @@ void parseInputFile(_In_ const M_STRING& parameter, CompilerParams& params, File
 #pragma warning(pop)
 #endif
         if (params.get_verbose()) {
-            printf("Parse input file name\n");
+            std::cout << "Parse input file name\n";
         }
         inputFile = parameter;
 #ifdef _WIN32
@@ -53,7 +53,7 @@ void parseInputFile(_In_ const M_STRING& parameter, CompilerParams& params, File
         files.set_inputFile(inputFile);
         if (params.get_verbose()) {
 #ifdef _WIN32
-            wprintf(L"input file: %ls\n", inputFile.c_str());
+            std::wcout << std::format(L"input file: {}\n", inputFile);
 #else
             std::cout << std::format("input file: {}\n", inputFile);
 #endif
@@ -145,7 +145,7 @@ void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING& assemblyC
     params.set_commands(cmd);
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"option -Fc (assembly code) with arg %ls\n", assemblyCodeFile.c_str());
+        std::wcout << std::format(L"option -Fc (assembly code) with arg {}\n", assemblyCodeFile);
 #else
         std::cout << std::format("option -Fc (assembly code) with arg {}\n", assemblyCodeFile);
 #endif
@@ -165,7 +165,7 @@ void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING& pdbFile) 
 
     if (params.get_verbose()) {
 #ifdef _WIN32
-        printf("option -Fd (.PDB) with arg %ls\n", pdbFile.c_str());
+        std::wcout << format(L"option -Fd (.PDB) with arg {}\n", pdbFile);
 #else
         std::cout << format("option -Fd (.PDB) with arg {}\n", pdbFile);
 #endif
@@ -180,7 +180,7 @@ void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING& outputFil
     params.set_commands(cmd);
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"option -Fh (Output File) with arg %ls\n", outputFile.c_str());
+        std::wcout << std::format(L"option -Fh (Output File) with arg %ls\n", outputFile);
 #else
         std::cout << std::format("option -Fh (Output File) with arg %ls\n", outputFile);
 #endif
@@ -195,7 +195,7 @@ void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING& outputFil
     params.set_commands(cmd);
     if (params.get_verbose()) {
 #ifdef _WIN32
-        wprintf(L"option -FO (Output File) with arg %ls\n", outputFile.c_str());
+        std::wcout << std::format(L"option -FO (Output File) with arg %ls\n", outputFile);
 #else
         std::cout << std::format("option -FO (Output File) with arg %ls\n", outputFile);
 #endif
@@ -575,7 +575,7 @@ bool parseCompilerFileCall(
             *index += 1;
             if (*index >= args.size()) {
 #ifdef _WIN32
-                fwprintf(stderr, L"Error: missing required argument for option %ls\n", g_CompilerFileCall[i].Param.c_str());
+                std::wcerr << std::format(L"Error: missing required argument for option {}\n", g_CompilerFileCall[i].Param);
 #else
                 std::cerr << std::format("Error: missing required argument for option {}\n", g_CompilerFileCall[i].Param );
 #endif
@@ -649,7 +649,7 @@ bool parseNotSupportedOpts(
     for (int i = 0; i < NOT_SUPPORTED_LENGTH; i++) {
         if (argument.compare(arg_idx, std::string::npos, g_NotSupportedArgs[i]) == 0) {
 #ifdef _WIN32
-            fwprintf(stderr, L"option -%ls not supported", argument.c_str());
+            std::wcerr << std::format(L"option -{} not supported", argument);
 #else
             std::cerr << std::format("option -{} not supported", argument);
 #endif
