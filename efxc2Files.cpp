@@ -15,7 +15,11 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(DisassemblyFile), std::ios::out);
     if (!f) {
-        std::cerr << "File Open Failed";
+#ifdef _WIN32
+        std::wcerr << std::format(L"Can not open {}", DisassemblyFile);
+#else
+        std::cerr << std::format("Can not open {}", DisassemblyFile);
+#endif
         exit(1);
     }
     size_t  outputLen = 0;
@@ -34,7 +38,11 @@ void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) c
     std::ofstream f;
     f = std::ofstream( std::filesystem::path(IncludeFile), std::ios::out);
     if (!f) {
-        std::cerr << "File Open Failed";
+#ifdef _WIN32
+        std::wcerr << std::format(L"Can not open {}", IncludeFile);
+#else
+        std::cerr << std::format("Can not open {}", IncludeFile);
+#endif
         exit(1);
     }
     size_t  outputLen = 0;
@@ -53,7 +61,11 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(ObjectFile), std::ios::out | std::ios::binary);
     if (!f) {
-        std::cerr << "File Open Failed";
+#ifdef _WIN32
+        std::wcerr << std::format(L"Can not open {}", ObjectFile);;
+#else
+        std::cerr << std::format("Can not open {}", ObjectFile);;
+#endif
         exit(1);
     }
     size_t  outputLen = 0;
@@ -102,7 +114,11 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
         }
         f = std::ofstream(std::filesystem::path(pdbFile), std::ios::out | std::ios::binary);
         if (!f) {
-            std::cerr << "File Open Failed";
+#ifdef _WIN32
+            std::wcerr << std::format(L"Can not open {}", pdbFile);
+#else
+            std::cerr << std::format("Can not open {}", pdbFile);
+#endif
             exit(1);
         }
         outputLen = compiler.WritePDBFile(f);
