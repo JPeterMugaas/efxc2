@@ -11,6 +11,29 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
+void Files::LoadInputFile(CompilerParams& params) {
+    FILE* f = nullptr;
+#ifdef _WIN32
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 6387)
+#endif  /* _MSC_VER */
+    if (errno_t err = _wfopen_s(&f, inputFile.c_str(), L"r"); err != 0) {
+        print_errno(err);
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif  /* _MSC_VER */
+#else
+    FILE* f = fopen(inputFile.c_str(), "r");
+    if (f == nullptr) {
+        print_errno();
+#endif  /* _WIN32 */
+    }
+    params.LoadSourceCode(f);
+    _Analysis_assume_(f != NULL);
+    fclose(f);
+}
+
 void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(DisassemblyFile), std::ios::out);

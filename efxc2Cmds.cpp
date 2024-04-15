@@ -29,7 +29,6 @@ void parseInputFile(_In_ const M_STRING& parameter, CompilerParams& params, File
 #else
     std::string inputFile = "";
 #endif
-    FILE* f = nullptr;
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 6001)
@@ -58,25 +57,7 @@ void parseInputFile(_In_ const M_STRING& parameter, CompilerParams& params, File
             std::cout << std::format("input file: {}\n", inputFile);
 #endif
         }
-#ifdef _WIN32
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6387)
-#endif  /* _MSC_VER */
-        if (errno_t err = _wfopen_s(&f, inputFile.c_str(), L"r"); err != 0) {
-            print_errno(err);
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif  /* _MSC_VER */
-#else
-        FILE* f = fopen(inputFile.c_str(), "r");
-        if (f == nullptr) {
-            print_errno();
-#endif  /* _WIN32 */
-        }
-        params.LoadSourceCode(f);
-        _Analysis_assume_(f != NULL);
-        fclose(f);
+        files.LoadInputFile(params);
     }
     else {
         print_usage_toomany();
