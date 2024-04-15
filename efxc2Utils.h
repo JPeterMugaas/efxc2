@@ -85,8 +85,6 @@ std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder
 std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFolder);
 void FixupFileName(_Inout_ std::string& FileName);
 void FixupFileName(_Inout_ std::wstring& FileName);
-#else  /* _WIN32 */
-char* LoadSource(_In_ const char* filename, _Out_ size_t* len);
 #endif /* _WIN32 */
 bool parseOpt(_In_ const M_STRING& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption);
 void print_copyright();

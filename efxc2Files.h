@@ -49,7 +49,7 @@ public:
     void set_pdbFile(const std::string& _pdbFile) { pdbFile = _pdbFile; }
 #endif /* _WIN32 */
 
-    void LoadInputFile(CompilerParams& params);
+    void LoadInputFile(CompilerParams& params) const;
     void WriteDisassembly(Compiler& compiler, const CompilerParams& params) const;
     void WriteIncludeFile(Compiler& compile, const CompilerParams& params) const;
     void WriteObjectFile(Compiler& compiler, const CompilerParams& params) const;

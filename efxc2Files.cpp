@@ -11,7 +11,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-void Files::LoadInputFile(CompilerParams& params) {
+void Files::LoadInputFile(CompilerParams& params) const {
     FILE* f = nullptr;
 #ifdef _WIN32
 #ifdef _MSC_VER
@@ -24,7 +24,7 @@ void Files::LoadInputFile(CompilerParams& params) {
 #pragma warning( pop )
 #endif  /* _MSC_VER */
 #else
-    FILE* f = fopen(inputFile.c_str(), "r");
+    f = fopen(inputFile.c_str(), "r");
     if (f == nullptr) {
         print_errno();
 #endif  /* _WIN32 */
