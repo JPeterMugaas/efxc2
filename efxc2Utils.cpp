@@ -342,7 +342,7 @@ std::string utf8_encode(const std::wstring& wstr) {
     }
 
     auto str = std::make_unique<std::vector<char>>();
-    str->resize(nbytes + 1);
+    str->resize(static_cast<std::vector<char, std::allocator<char>>::size_type>(nbytes) + 1);
     str->data()[nbytes] = '\0';
 
     if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,

@@ -577,15 +577,15 @@ bool parseCompilerFileCall(
 
 bool parseIgnoredOpts(
     _In_ const M_CMD_PARAMS& args,
-    _Inout_	size_t* index,
-    CompilerParams& params) {
+    _Inout_	const size_t* index,
+    const CompilerParams& params) {
     if (!index || *index >= args.size()) {
         return false;
     }
 #ifdef _WIN32
-    const std::wstring argument = args[*index];
+    const std::wstring_view argument = args[*index];
 #else  /* _WIN32 */
-    const std::string argument = args[*index];
+    const std::string_view argument = args[*index];
 #endif /* _WIN32 */
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
@@ -613,9 +613,9 @@ bool parseNotSupportedOpts(
         return false;
     }
 #ifdef _WIN32
-    const std::wstring argument = args[*index];
+    const std::wstring_view argument = args[*index];
 #else  /* _WIN32 */
-    const std::string argument = args[*index];
+    const std::string_view argument = args[*index];
 #endif /* _WIN32 */
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {

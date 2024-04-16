@@ -136,8 +136,8 @@ const std::array <const std::string,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
 
 bool parseIgnoredOpts(
     _In_ const M_CMD_PARAMS& args,
-    _Inout_	size_t* index,
-    CompilerParams& params);
+    _Inout_	const size_t* index,
+    const CompilerParams& params);
 
 bool parseNotSupportedOpts(
     _In_ const M_CMD_PARAMS& args,

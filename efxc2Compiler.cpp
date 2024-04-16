@@ -30,7 +30,7 @@ void Compiler::Compile() {
     const char* inputFile = _inputFile.c_str();
     auto _defines = params.get_defines();
     auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
-    D3D_SHADER_MACRO _def;
+    D3D_SHADER_MACRO _def = { nullptr, nullptr };
     for (size_t i = 0; i <  _defines->size(); i++) {
         _def.Definition = _defines.get()->at(i).Definition.c_str();
         _def.Name = _defines.get()->at(i).Name.c_str();
@@ -224,7 +224,7 @@ size_t Compiler::WriteIncludeFile(std::ofstream& f)
         data = compilerOutput;
     }
     else {
-        data = strippedBlob;;
+        data = strippedBlob;
     }
     WriteByteArrayConst(f, data, variableName, params.get_outputHex());
     return data->GetBufferSize();
