@@ -96,7 +96,7 @@ void cmd_D(CompilerParams& params, _In_ const M_STRING& _defineOption) {
     }
 }
 
-void cmd_E(CompilerParams& params, _In_ const M_STRING& _entryPoint) {
+void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW& _entryPoint) {
 #ifdef _WIN32
     std::string entryPoint = utf8_encode(_entryPoint);
 #else
@@ -392,7 +392,7 @@ void cmd_res_may_alias(CompilerParams& params) {
     return;
 }
 
-void cmd_T(CompilerParams& params, _In_ const M_STRING& _model) {
+void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model) {
 #ifdef _WIN32
     std::string model = utf8_encode(_model);
 #else
@@ -415,7 +415,7 @@ void cmd_Vd(CompilerParams& params) {
     return;
 }
 
-void cmd_Vn(CompilerParams& params, _In_ const M_STRING& _variableName) {
+void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW& _variableName) {
 #ifdef _WIN32
     std::string variableName = utf8_encode(_variableName);
 #else

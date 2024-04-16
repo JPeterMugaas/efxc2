@@ -315,10 +315,10 @@ void FixupFileName(_Inout_ std::string& FileName) {
   https://stackoverflow.com/questions/215963/how-do-you-properly-use-widechartomultibyte
 */
 
-std::wstring utf8_decode(const std::string& str) {
+std::wstring utf8_decode(const std::string_view& str) {
     int nchars = 0;
     if ((nchars = MultiByteToWideChar(CP_UTF8,
-        MB_ERR_INVALID_CHARS, str.c_str(), (int)str.length(), nullptr, 0)) == 0) {
+        MB_ERR_INVALID_CHARS, str.data(), (int)str.length(), nullptr, 0)) == 0) {
         return L"";
     }
 
@@ -328,16 +328,16 @@ std::wstring utf8_decode(const std::string& str) {
     wstr[nchars] = L'\0';
     
     if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
-        str.c_str(), (int)str.length(), wstr, nchars) == 0) {
+        str.data(), (int)str.length(), wstr, nchars) == 0) {
         return L"";
     }
     return wstr;
 }
 
-std::string utf8_encode(const std::wstring& wstr) {
+std::string utf8_encode(const std::wstring_view& wstr) {
     int nbytes = 0;
     if ((nbytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-        wstr.c_str(), (int)wstr.length(), nullptr, 0, nullptr, nullptr)) == 0) {
+        wstr.data(), (int)wstr.length(), nullptr, 0, nullptr, nullptr)) == 0) {
         return "";
     }
 
@@ -346,7 +346,7 @@ std::string utf8_encode(const std::wstring& wstr) {
     str->data()[nbytes] = '\0';
 
     if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-        wstr.c_str(), (int)wstr.length(), str->data(), nbytes, nullptr, nullptr) == 0) {
+        wstr.data(), (int)wstr.length(), str->data(), nbytes, nullptr, nullptr) == 0) {
         return "";
     }
     return str->data();

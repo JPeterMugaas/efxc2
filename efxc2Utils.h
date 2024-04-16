@@ -104,8 +104,8 @@ int readall(_In_ FILE* in,
 std::string setupVariableName(_In_ const std::string_view& model,
     _In_ const std::string& entryPoint);
 #ifdef _WIN32
-std::wstring utf8_decode(const std::string& str);
-std::string utf8_encode(const std::wstring& wstr);
+std::wstring utf8_decode(const std::string_view& str);
+std::string utf8_encode(const std::wstring_view& wstr);
 #endif
 void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
     _In_ const std::string_view& variableName,
