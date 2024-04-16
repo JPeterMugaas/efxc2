@@ -105,9 +105,8 @@ std::string setupVariableName(_In_ const std::string_view& model,
 std::wstring utf8_decode(const std::string& str);
 std::string utf8_encode(const std::wstring& wstr);
 #endif
-void WriteByteArrayConst(_In_ std::ofstream& f, _In_reads_bytes_(len) const unsigned char* outString,
-    _In_ const size_t len,
-    _In_z_ const char* variableName,
+void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
+    _In_ std::string variableName,
     _In_ const int outputHex);
 
 #endif  /*EFXC2UTILS_H_INCLUDED*/

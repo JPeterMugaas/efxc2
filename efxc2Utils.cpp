@@ -170,10 +170,11 @@ std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFold
 }
 #endif
 
-void WriteByteArrayConst(_In_ std::ofstream& f, _In_reads_bytes_(len) const unsigned char* outString,
-    _In_ const size_t len,
-    _In_z_ const char* variableName,
+ void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
+    _In_ std::string variableName,
     _In_ const int outputHex) {
+    auto* outString = (unsigned char*)data->GetBufferPointer();
+    size_t len = data->GetBufferSize();
     f << std::format("const BYTE {}[] =\n{{\n", variableName);
     for (size_t i = 0; i < len; i++) {
         if (outputHex) {
@@ -189,7 +190,7 @@ void WriteByteArrayConst(_In_ std::ofstream& f, _In_reads_bytes_(len) const unsi
             f << "\n";
         }
     }
-    f <<  "\n};\n";
+    f << "\n};\n";
     return;
 }
 

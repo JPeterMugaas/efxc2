@@ -212,25 +212,22 @@ size_t Compiler::WriteAssemblyCode(std::ofstream& f) {
 size_t Compiler::WriteIncludeFile(std::ofstream& f)
 {
     auto variableName = params.get_variableName();
-
+       
     //Default output variable name
     if (variableName == "") {
         std::string model = params.get_model();
         std::string entryPoint = params.get_entryPoint();
         variableName = setupVariableName(model.c_str(), entryPoint.c_str());
     }
-    unsigned char const* outputString = nullptr;
-    size_t outputLen = 0;
+    ID3DBlob* data;
     if (strippedBlob == nullptr) {
-        outputString = (unsigned char*)compilerOutput->GetBufferPointer();
-        outputLen = compilerOutput->GetBufferSize();
+        data = compilerOutput;
     }
     else {
-        outputString = (unsigned char*)strippedBlob->GetBufferPointer();
-        outputLen = strippedBlob->GetBufferSize();
+        data = strippedBlob;;
     }
-    WriteByteArrayConst(f, outputString, outputLen, variableName.c_str(), params.get_outputHex());
-    return outputLen;
+    WriteByteArrayConst(f, data, variableName.c_str(), params.get_outputHex());
+    return data->GetBufferSize();
 }
 
 size_t Compiler::WriteObjectFile(std::ofstream& f) {
