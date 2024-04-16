@@ -85,9 +85,9 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
     f = std::ofstream(std::filesystem::path(ObjectFile), std::ios::out | std::ios::binary);
     if (!f) {
 #ifdef _WIN32
-        std::wcerr << std::format(L"Can not open {}", ObjectFile);;
+        std::wcerr << std::format(L"Can not open {}", ObjectFile);
 #else
-        std::cerr << std::format("Can not open {}", ObjectFile);;
+        std::cerr << std::format("Can not open {}", ObjectFile);
 #endif
         exit(1);
     }

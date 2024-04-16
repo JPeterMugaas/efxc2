@@ -19,22 +19,22 @@ class Files {
 public:
 #ifdef _WIN32
     std::wstring get_DisassemblyFile() const { return DisassemblyFile;  }
-    void set_DisassemblyFile(const std::wstring& _DisassemblyFile) { 
+    void set_DisassemblyFile(const std::wstring_view& _DisassemblyFile) { 
         DisassemblyFile = _DisassemblyFile;  FixupFileName(DisassemblyFile);  }
     std::wstring get_inputFile() const { return inputFile; }
-    void set_inputFile(const std::wstring& _inputFile) { 
+    void set_inputFile(const std::wstring_view& _inputFile) { 
         inputFile = _inputFile; FixupFileName(inputFile); }
     std::wstring get_IncludeFile() const { return IncludeFile; }
-    void set_IncludeFile(const std::wstring& _IncludeFile) { 
+    void set_IncludeFile(const std::wstring_view& _IncludeFile) { 
         IncludeFile = _IncludeFile; FixupFileName(IncludeFile); }
     std::wstring get_ObjectFile() const { return ObjectFile; }
-    void set_ObjectFile(const std::wstring& _ObjectFile) {
+    void set_ObjectFile(const std::wstring_view& _ObjectFile) {
         ObjectFile = _ObjectFile; FixupFileName(ObjectFile); }
     std::wstring get_pdbFile() const { return pdbFile; };
-    void set_pdbFile(const std::wstring& _pdbFile) { 
+    void set_pdbFile(const std::wstring_view& _pdbFile) { 
         pdbFile = _pdbFile; FixupFileName(pdbFile); }
     std::string get_c_pdbFile() const { return c_pdbFile; };
-    void set_c_pdbFile(const std::string& _c_pdbFile) { 
+    void set_c_pdbFile(const std::string_view& _c_pdbFile) { 
         c_pdbFile = _c_pdbFile; FixupFileName(c_pdbFile); }
 #else  /* _WIN32 */
     std::string get_DisassemblyFile() const { return DisassemblyFile; }
