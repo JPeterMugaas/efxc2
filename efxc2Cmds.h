@@ -15,8 +15,8 @@
 #include "efxc2CompilerParams.h"
 #include "efxc2Files.h"
 
-void option_ignored(_In_ const M_STRING& Opt, _In_ const CompilerParams& params);
-void parseInputFile(_In_ const M_STRING& parameter, CompilerParams& params, Files& files);
+void option_ignored(_In_ const M_STRING_VIEW& Opt, _In_ const CompilerParams& params);
+void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params, Files& files);
 void cmd_all_resources_bound(CompilerParams& params);
 void cmd_Cc(CompilerParams& params);
 void cmd_D(CompilerParams& params, _In_ const M_STRING& _defineOption);

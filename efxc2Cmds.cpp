@@ -11,7 +11,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-void option_ignored(_In_ const M_STRING& Opt, _In_ const CompilerParams& params) {
+void option_ignored(_In_ const M_STRING_VIEW& Opt, _In_ const CompilerParams& params) {
     if (params.get_verbose()) {
 #ifdef _WIN32
         std::wcout << std::format(L"Option {} ignored", Opt);
@@ -22,7 +22,7 @@ void option_ignored(_In_ const M_STRING& Opt, _In_ const CompilerParams& params)
     return;
 }
 
-void parseInputFile(_In_ const M_STRING& parameter, CompilerParams& params, Files& files) {
+void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params, Files& files) {
 #ifdef _WIN32
     std::wstring inputFile = L"";
     std::string c_inputFile = "";

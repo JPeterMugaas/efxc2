@@ -226,7 +226,7 @@ size_t Compiler::WriteIncludeFile(std::ofstream& f)
     else {
         data = strippedBlob;;
     }
-    WriteByteArrayConst(f, data, variableName.c_str(), params.get_outputHex());
+    WriteByteArrayConst(f, data, variableName, params.get_outputHex());
     return data->GetBufferSize();
 }
 

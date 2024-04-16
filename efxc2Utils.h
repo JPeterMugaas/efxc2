@@ -19,9 +19,11 @@ using M_BUFFER = std::shared_ptr<std::vector<char>>;
 #ifdef _WIN32
 using M_CMD_PARAMS = std::vector<std::wstring>;
 using M_STRING = std::wstring;
+using M_STRING_VIEW = std::wstring_view;
 #else
 using M_CMD_PARAMS = std::vector<std::string>;
 using M_STRING = std::string;
+using M_STRING_VIEW = std::string_view;
 #endif
 
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */
@@ -86,7 +88,7 @@ std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFold
 void FixupFileName(_Inout_ std::string& FileName);
 void FixupFileName(_Inout_ std::wstring& FileName);
 #endif /* _WIN32 */
-bool parseOpt(_In_ const M_STRING& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption);
+bool parseOpt(_In_ const M_STRING_VIEW& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption);
 void print_copyright();
 [[noreturn]] void print_errno(errno_t _errno);
 [[noreturn]] void print_errno(void);
@@ -106,7 +108,7 @@ std::wstring utf8_decode(const std::string& str);
 std::string utf8_encode(const std::wstring& wstr);
 #endif
 void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
-    _In_ std::string variableName,
+    _In_ const std::string_view& variableName,
     _In_ const int outputHex);
 
 #endif  /*EFXC2UTILS_H_INCLUDED*/

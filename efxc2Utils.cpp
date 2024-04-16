@@ -171,7 +171,7 @@ std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFold
 #endif
 
  void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
-    _In_ std::string variableName,
+    _In_ const std::string_view& variableName,
     _In_ const int outputHex) {
     auto* outString = (unsigned char*)data->GetBufferPointer();
     size_t len = data->GetBufferSize();
@@ -219,7 +219,7 @@ int readall(_In_ FILE * in,
     return READALL_OK;
 }
 
-bool parseOpt(_In_ const M_STRING& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
+bool parseOpt(_In_ const M_STRING_VIEW& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
     if (!index || *index >= args.size()) {
         return false;
     }
