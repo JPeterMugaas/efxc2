@@ -86,14 +86,11 @@ const std::array <ProfilePrefix, PROFILE_PREFIX_TABLE_LEN>g_profilePrefixTable =
 
 std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder);
 #ifdef _WIN32
-std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFolder);
 void FixupFileName(_Inout_ std::string& FileName);
 void FixupFileName(_Inout_ std::wstring& FileName);
 #endif /* _WIN32 */
 bool parseOpt(_In_ const M_STRING_VIEW& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption);
 void print_copyright();
-[[noreturn]] void print_errno(errno_t _errno);
-[[noreturn]] void print_errno(void);
 [[noreturn]] void print_help_screen();
 [[noreturn]] void print_hresult_error(const HRESULT hr);
 void print_unsupported_arg_help();
@@ -101,7 +98,7 @@ void print_unsupported_arg_help();
 [[noreturn]] void print_usage_toomany();
 [[noreturn]] void print_version();
 [[noreturn]] void print_windows_error();
-int readall(_In_ FILE* in,
+int readall(_In_ std::ifstream& in,
     _Out_ M_BUFFER& dataptr);
 std::string setupVariableName(_In_ const std::string_view& model,
     _In_ const std::string& entryPoint);

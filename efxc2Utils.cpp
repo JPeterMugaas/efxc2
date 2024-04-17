@@ -111,23 +111,6 @@ void print_unsupported_arg_help() {
     exit(0);
 }
 
-[[noreturn]] void print_errno(errno_t _errno) {
-#ifdef _WIN32
-    auto errmsg = std::make_unique<std::vector<char>>(ERR_SIZE);
-    strerror_s(errmsg->data(), ERR_SIZE, _errno);
-    std::cerr << std::format("{}\n", errmsg.get()->data() );
-#else  /* _WIN32 */
-    char* errmsg = nullptr;
-    errmsg = strerror(_errno);
-    std::cerr << std::format("{}\n", errmsg);
-#endif /* _WIN32 */
-    exit(1);
-}
-
-[[noreturn]] void print_errno(void) {
-    print_errno(errno);
-}
-
 /* from: https://btechgeeks.com/how-to-get-filename-from-a-path-with-or-without-extension-in-cpp/*/
 std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder) {
     *IsSpecialFolder = false;
@@ -147,25 +130,6 @@ std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder
     }
     return "";
 }
-
-#ifdef _WIN32
-std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFolder) {
-    *IsSpecialFolder = false;
-    wchar_t sep = L'\\';
-    if (size_t i = path.rfind(sep, path.length()); i != std::wstring::npos)
-    {
-        std::wstring filename = path.substr(i + 1, path.length() - i);
-        std::wstring rawname = filename.substr(0, path.length());
-        if ((rawname.compare(L"..") == 0) || (rawname.compare(L".") == 0)) {
-            *IsSpecialFolder = true;
-            rawname = L"";
-        }
-        return rawname;
-    }
-
-    return L"";
-}
-#endif
 
  void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
     _In_ const std::string_view& variableName,
@@ -191,30 +155,28 @@ std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFold
     return;
 }
 
-int readall(_In_ FILE * in,
-    _Out_ M_BUFFER& dataptr) {
-    dataptr = std::make_shared<std::vector<char>>();
-    auto temp = std::make_unique<std::vector<char>>();
-    size_t used = 0;
-    size_t n;
-    if (in == nullptr || dataptr == nullptr) {
-        return READALL_INVALID;
-    }
-    while (TRUE) {
-        temp->resize(READALL_CHUNK);
-        n = fread(temp->data(), 1, READALL_CHUNK, in);
-        if (n == 0) {
-            break;
-        }
-        used += n;
-        temp->resize(n);
-        dataptr->insert(dataptr->end(), temp->begin(), temp->end());
-    }
-    if (ferror(in)) {
-        return READALL_ERROR;
-    }
-    return READALL_OK;
-}
+ int readall(_In_ std::ifstream& in,
+     _Out_ M_BUFFER& dataptr) {
+     dataptr = std::make_shared<std::vector<char>>();
+     auto temp = std::make_unique<std::vector<char>>();
+     size_t used = 0;
+     size_t n = 0;
+     if (dataptr == nullptr) {
+         return READALL_INVALID;
+     }
+     while (TRUE) {
+         temp->resize(READALL_CHUNK);
+         in.read(temp->data(), READALL_CHUNK);
+         n = in.gcount();
+         if (n == 0) {
+             break;
+         }
+         used += n;
+         temp->resize(n);
+         dataptr->insert(dataptr->end(), temp->begin(), temp->end());
+     }
+     return READALL_OK;
+ }
 
 bool parseOpt(_In_ const M_STRING_VIEW& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
     if (!index || *index >= args.size()) {

@@ -48,7 +48,7 @@ public:
 	
 	M_COMPILER_DEFINES get_defines() const { return defines; }
 	void add_define(const std::string_view& defineOption);
-	void LoadSourceCode(FILE* f);
+	void LoadSourceCode(std::ifstream& f);
 	M_BUFFER get_SourceCode() const { return SourceCode; }
 	/* D3DStripShader parameters */
 	UINT get_strip_flags() const { return strip_flags; }

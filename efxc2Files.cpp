@@ -12,32 +12,24 @@
 #include "efxc2Files.h"
 
 void Files::LoadInputFile(CompilerParams& params) const {
-    FILE* f = nullptr;
+    std::ifstream f;
+    f.open(std::filesystem::path(inputFile));
+    if (!f.is_open()) {
 #ifdef _WIN32
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 6387)
-#endif  /* _MSC_VER */
-    if (errno_t err = _wfopen_s(&f, inputFile.c_str(), L"r"); err != 0) {
-        print_errno(err);
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif  /* _MSC_VER */
+        std::wcerr << std::format(L"Can not open {}", inputFile);
 #else
-    f = fopen(inputFile.c_str(), "r");
-    if (f == nullptr) {
-        print_errno();
-#endif  /* _WIN32 */
+        std::cerr << std::format("Can not open {}", inputFile);
+#endif
+        exit(1);
     }
     params.LoadSourceCode(f);
-    _Analysis_assume_(f != NULL);
-    fclose(f);
+    f.close();
 }
 
 void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(DisassemblyFile), std::ios::out);
-    if (!f) {
+    if (!f.is_open()) {
 #ifdef _WIN32
         std::wcerr << std::format(L"Can not open {}", DisassemblyFile);
 #else
@@ -60,7 +52,7 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
 void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream( std::filesystem::path(IncludeFile), std::ios::out);
-    if (!f) {
+    if (!f.is_open() ) {
 #ifdef _WIN32
         std::wcerr << std::format(L"Can not open {}", IncludeFile);
 #else
@@ -83,7 +75,7 @@ void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) c
 void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(ObjectFile), std::ios::out | std::ios::binary);
-    if (!f) {
+    if (!f.is_open()) {
 #ifdef _WIN32
         std::wcerr << std::format(L"Can not open {}", ObjectFile);
 #else

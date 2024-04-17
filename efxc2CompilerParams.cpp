@@ -30,7 +30,6 @@ void CompilerParams::add_define(const std::string_view& defineOption) {
     defines->insert(defines->begin(), _def);
 }
 
-void CompilerParams::LoadSourceCode(FILE* f)
-{
+void CompilerParams::LoadSourceCode(std::ifstream& f) {
     readall(f, SourceCode);
 }
