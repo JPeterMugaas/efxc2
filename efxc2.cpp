@@ -57,10 +57,10 @@ int main(int argc, char* argv[]) {
         else if (parseCompilerOnlyCall(args, &index, params)) {
             continue;
         }
-        else if (parseIgnoredOpts(args, &index, params)) {
+        else if (parseIgnoredOptions(args, &index, params)) {
             continue;
         }
-        else if (parseNotSupportedOpts(args, &index)) {
+        else if (parseNotSupportedOptions(args, &index)) {
             /* If true, this will not return.  It exits the program .*/
         }
         else if (parseOpt(M_D, args, &index, &temp)) {

@@ -124,9 +124,9 @@ bool  parseCompilerOnlyCall(
 
 constexpr auto IGNORED_OPTS_LENGTH = 5;
 #ifdef _WIN32
-const std::array <const std::wstring, IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
+const std::array <const std::wstring, IGNORED_OPTS_LENGTH>g_IgnoredOptions = {
 #else
-const std::array <const std::string,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
+const std::array <const std::string,IGNORED_OPTS_LENGTH>g_IgnoredOptions = {
 #endif
     M_FE,
     M_FORCE_ROOTSIG_VER,
@@ -134,12 +134,12 @@ const std::array <const std::string,IGNORED_OPTS_LENGTH>g_IgnoredOpts = {
     M_P,
     M_VI};
 
-bool parseIgnoredOpts(
+bool parseIgnoredOptions(
     _In_ const M_CMD_PARAMS& args,
     _Inout_	const size_t* index,
     const CompilerParams& params);
 
-bool parseNotSupportedOpts(
+bool parseNotSupportedOptions(
     _In_ const M_CMD_PARAMS& args,
     _In_ const size_t* index);
 

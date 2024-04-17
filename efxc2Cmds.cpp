@@ -569,7 +569,7 @@ bool parseCompilerFileCall(
     return false;
 }
 
-bool parseIgnoredOpts(
+bool parseIgnoredOptions(
     _In_ const M_CMD_PARAMS& args,
     _Inout_	const size_t* index,
     const CompilerParams& params) {
@@ -588,7 +588,7 @@ bool parseIgnoredOpts(
         return false;
     }
     for (int i = 0; i < IGNORED_OPTS_LENGTH; i++) {
-        if (argument.compare(arg_idx, std::string::npos, g_IgnoredOpts[i]) == 0) {
+        if (argument.compare(arg_idx, std::string::npos, g_IgnoredOptions[i]) == 0) {
             option_ignored(argument, params);
             return true;
         }
@@ -596,7 +596,7 @@ bool parseIgnoredOpts(
     return false;
 }
 
-bool parseNotSupportedOpts(
+bool parseNotSupportedOptions(
     _In_ const M_CMD_PARAMS& args,
     _In_ const size_t* index) {
     if (!index || *index >= args.size()) {

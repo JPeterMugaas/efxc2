@@ -19,12 +19,12 @@ void CompilerParams::add_define(const std::string_view& defineOption) {
     CompilerDefine _def;
     _def.Definition = "1";
 
-    if (size_t delin_pos = defineOption.find('='); delin_pos == std::string::npos) {
+    if (size_t Dellin_pos = defineOption.find('='); Dellin_pos == std::string::npos) {
         _def.Name = defineOption;
     }
     else {
-        _def.Name = defineOption.substr(0, delin_pos);
-        _def.Definition = defineOption.substr(delin_pos + 1, defineOption.length() - 1);
+        _def.Name = defineOption.substr(0, Dellin_pos);
+        _def.Definition = defineOption.substr(Dellin_pos + 1, defineOption.length() - 1);
     }
     
     defines->insert(defines->begin(), _def);
