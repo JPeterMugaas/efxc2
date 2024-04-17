@@ -12,9 +12,9 @@
 #include "efxc2Files.h"
 
 #ifdef _WIN32
-void CompilerTasks(Compiler& compiler, Files& files, CompilerParams& params) {
+void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& params) {
 #else
-void CompilerTasks(Compiler& compiler, Files& files, CompilerParams& params) {
+void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& params) {
 #endif
     compiler.Compile();
     compiler.StripShader();
