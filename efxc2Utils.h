@@ -98,7 +98,7 @@ void print_unsupported_arg_help();
 [[noreturn]] void print_usage_toomany();
 [[noreturn]] void print_version();
 [[noreturn]] void print_windows_error();
-int readall(_In_ std::ifstream& in,
+int readAll(_In_ std::ifstream& in,
     _Out_ M_BUFFER& dataptr);
 std::string setupVariableName(_In_ const std::string_view& model,
     _In_ const std::string& entryPoint);

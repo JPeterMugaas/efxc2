@@ -155,7 +155,7 @@ std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder
     return;
 }
 
- int readall(_In_ std::ifstream& in,
+ int readAll(_In_ std::ifstream& in,
      _Out_ M_BUFFER& dataptr) {
      dataptr = std::make_shared<std::vector<char>>();
      auto temp = std::make_unique<std::vector<char>>();

@@ -30,7 +30,6 @@
 #ifdef _WIN32
 #include <direct.h>
 #endif /* _WIN32 */
-#include <stdio.h>
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -43,10 +42,6 @@
 #include <ranges>
 #include <string>
 #include <vector>
-#include <wchar.h>
-#include <inttypes.h>
-#include <io.h>
-#include <stdio.h>
 #include <sal.h>
 
 constexpr auto DLL_NAME = L"d3dcompiler_47.dll";

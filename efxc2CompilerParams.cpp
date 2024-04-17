@@ -31,5 +31,5 @@ void CompilerParams::add_define(const std::string_view& defineOption) {
 }
 
 void CompilerParams::LoadSourceCode(std::ifstream& f) {
-    readall(f, SourceCode);
+    readAll(f, SourceCode);
 }
