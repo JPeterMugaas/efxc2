@@ -20,10 +20,12 @@ using M_BUFFER = std::shared_ptr<std::vector<char>>;
 using M_CMD_PARAMS = std::vector<std::wstring>;
 using M_STRING = std::wstring;
 using M_STRING_VIEW = std::wstring_view;
+constexpr auto M_STRING_INIT = L"";
 #else
 using M_CMD_PARAMS = std::vector<std::string>;
 using M_STRING = std::string;
 using M_STRING_VIEW = std::string_view;
+constexpr auto M_STRING_INIT = "";
 #endif
 
 /*from: https://stackoverflow.com/questions/14002954/c-programming-how-to-read-the-whole-file-contents-into-a-buffer */

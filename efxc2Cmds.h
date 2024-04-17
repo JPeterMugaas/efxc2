@@ -19,13 +19,13 @@ void option_ignored(_In_ const M_STRING_VIEW& Opt, _In_ const CompilerParams& pa
 void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params, Files& files);
 void cmd_all_resources_bound(CompilerParams& params);
 void cmd_Cc(CompilerParams& params);
-void cmd_D(CompilerParams& params, _In_ const M_STRING& _defineOption);
+void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW& _defineOption);
 void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW& _entryPoint);
 void cmd_enable_unbounded_descriptor_tables(CompilerParams& params);
-void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING& assemblyCodeFile);
-void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING& pdbFile);
-void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING& outputFile);
-void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING& outputFile);
+void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& assemblyCodeFile);
+void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& pdbFile);
+void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
+void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
 void cmd_Gch(CompilerParams& params);
 void cmd_Gdp(CompilerParams& params);
 void cmd_Gec(CompilerParams& params);
@@ -57,7 +57,7 @@ void cmd_Zpr(CompilerParams& params);
 void cmd_Zsb(CompilerParams& params);
 void cmd_Zss(CompilerParams& params);
 
-using gCompilerFilep = void(CompilerParams&, Files&, const M_STRING&);
+using gCompilerFilep = void(CompilerParams&, Files&, const M_STRING_VIEW&);
 struct CompileFileEntry {
     const M_STRING Param;
     gCompilerFilep* method;

@@ -23,11 +23,9 @@ void option_ignored(_In_ const M_STRING_VIEW& Opt, _In_ const CompilerParams& pa
 }
 
 void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params, Files& files) {
+    M_STRING inputFile = M_STRING_INIT;
 #ifdef _WIN32
-    std::wstring inputFile = L"";
     std::string c_inputFile = "";
-#else
-    std::string inputFile = "";
 #endif
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -84,11 +82,11 @@ void cmd_Cc(CompilerParams& params) {
     return;
 }
 
-void cmd_D(CompilerParams& params, _In_ const M_STRING& _defineOption) {
+void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW& _defineOption) {
 #ifdef _WIN32
     std::string defineOption = utf8_encode(_defineOption);
 #else
-    std::string defineOption = _defineOption;
+    std::string defineOption = { _defineOption.data(), _defineOption.size()};
 #endif
     params.add_define(defineOption);
     if (params.get_verbose()) {
@@ -100,7 +98,7 @@ void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW& _entryPoint) {
 #ifdef _WIN32
     std::string entryPoint = utf8_encode(_entryPoint);
 #else
-    std::string entryPoint = _entryPoint;
+    std::string entryPoint = { _entryPoint.data(), _entryPoint.size()};
 #endif
     params.set_entryPoint(entryPoint);
     if (params.get_verbose()) {
@@ -119,7 +117,7 @@ void cmd_enable_unbounded_descriptor_tables(CompilerParams& params) {
     return;
 }
 
-void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING& assemblyCodeFile) {
+void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& assemblyCodeFile) {
     files.set_DisassemblyFile(assemblyCodeFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_ASSEMBLY_CODE;
@@ -134,7 +132,7 @@ void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING& assemblyC
     return;
 }
 
-void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING& pdbFile) {
+void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& pdbFile) {
 #ifdef _WIN32
     files.set_c_pdbFile(utf8_encode(pdbFile));
 #endif /* _WIN32 */
@@ -154,7 +152,7 @@ void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING& pdbFile) 
     return;
 }
 
-void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING& outputFile) {
+void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile) {
     files.set_IncludeFile(outputFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_HEADER;
@@ -169,7 +167,7 @@ void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING& outputFil
     return;
 }
 
-void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING& outputFile) {
+void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile) {
     files.set_ObjectFile(outputFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_OBJECT;
@@ -396,7 +394,7 @@ void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model) {
 #ifdef _WIN32
     std::string model = utf8_encode(_model);
 #else
-    std::string model = _model;
+    std::string model = { _model.data(), _model.size()};
 #endif
     if (params.get_verbose()) {
         std::cout << std::format("option -T (Shader Model/Profile) with arg {}\n", model);
@@ -419,7 +417,7 @@ void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW& _variableName) {
 #ifdef _WIN32
     std::string variableName = utf8_encode(_variableName);
 #else
-    std::string variableName = _variableName;
+    std::string variableName = { _variableName.data(), _variableName.size()};
 #endif
     if (params.get_verbose()) {
         std::cout << std::format("option -Vn (Variable Name) with arg {}'\n", variableName);
@@ -526,16 +524,12 @@ bool parseCompilerFileCall(
     if (!index || *index >= args.size()) {
         return false;
     }
-#ifdef _WIN32
-    std::wstring argumentOption = L"";
-#else
-    std::string argumentOption = "";
-#endif
+    M_STRING argumentOption = M_STRING_INIT;
     if (!index || *index >= args.size()) {
        return false;
     }
 
-    M_STRING argument = args[*index];
+    M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
         arg_idx++;
@@ -582,11 +576,7 @@ bool parseIgnoredOpts(
     if (!index || *index >= args.size()) {
         return false;
     }
-#ifdef _WIN32
-    const std::wstring_view argument = args[*index];
-#else  /* _WIN32 */
-    const std::string_view argument = args[*index];
-#endif /* _WIN32 */
+    const M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
         arg_idx++;
@@ -612,11 +602,7 @@ bool parseNotSupportedOpts(
     if (!index || *index >= args.size()) {
         return false;
     }
-#ifdef _WIN32
-    const std::wstring_view argument = args[*index];
-#else  /* _WIN32 */
-    const std::string_view argument = args[*index];
-#endif /* _WIN32 */
+    const M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
         arg_idx++;

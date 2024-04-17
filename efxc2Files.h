@@ -55,21 +55,15 @@ public:
     void WriteObjectFile(Compiler& compiler, const CompilerParams& params) const;
     void WritePDBFile(Compiler& compiler, const CompilerParams& params);
 private:
+
+    M_STRING DisassemblyFile = M_STRING_INIT;
+    M_STRING inputFile = M_STRING_INIT;
+    M_STRING IncludeFile = M_STRING_INIT;
+    M_STRING ObjectFile = M_STRING_INIT;
+    M_STRING pdbFile = M_STRING_INIT;
+    M_STRING temp = M_STRING_INIT;
 #ifdef _WIN32
-    std::wstring DisassemblyFile = L"";
-    std::wstring inputFile = L"";
-    std::wstring IncludeFile = L"";
-    std::wstring ObjectFile = L"";
-    std::wstring pdbFile = L"";
-    std::wstring temp = L"";
     std::string c_pdbFile = "";
-#else  /* _WIN32 */
-    std::string DisassemblyFile = "";
-    std::string inputFile = "";
-    std::string IncludeFile = "";
-    std::string ObjectFile = "";
-    std::string pdbFile = "";
-    std::string temp = "";
 #endif /* _WIN32 */
 };
 

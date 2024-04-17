@@ -151,10 +151,7 @@ std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder
 #ifdef _WIN32
 std::wstring GetFileName(_In_ const std::wstring& path, _Out_ int* IsSpecialFolder) {
     *IsSpecialFolder = false;
-    char sep = '/';
-#ifdef _WIN32
-    sep = '\\';
-#endif
+    wchar_t sep = L'\\';
     if (size_t i = path.rfind(sep, path.length()); i != std::wstring::npos)
     {
         std::wstring filename = path.substr(i + 1, path.length() - i);
@@ -224,7 +221,7 @@ bool parseOpt(_In_ const M_STRING_VIEW& option, _In_ const M_CMD_PARAMS& args, _
         return false;
     }
 
-    M_STRING argument = args[*index];
+    M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
         arg_idx++;

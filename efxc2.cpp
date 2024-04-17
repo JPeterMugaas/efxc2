@@ -26,11 +26,7 @@ int main(int argc, char* argv[]) {
     // Process Command Line Arguments
 
     M_CMD_PARAMS args(argv + 1, argv + argc);
-#ifdef _WIN32
-    std::wstring temp = L"";
-#else
-    std::string temp = "";
-#endif
+    M_STRING temp = M_STRING_INIT;
     CompilerAPIContainer api;
     CompilerParams params;
     Files files;
