@@ -33,6 +33,7 @@ void cmd_Ges(CompilerParams& params);
 void cmd_Gfa(CompilerParams& params);
 void cmd_Gis(CompilerParams& params);
 void cmd_Gpp(CompilerParams& params);
+void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW& _includeDir);
 void cmd_Lx(CompilerParams& params);
 void cmd_Ni(CompilerParams& params);
 void cmd_No(CompilerParams& params);
@@ -122,7 +123,7 @@ bool  parseCompilerOnlyCall(
     _Inout_	size_t* index,
     CompilerParams& params);
 
-constexpr auto IGNORED_OPTS_LENGTH = 5;
+constexpr auto IGNORED_OPTS_LENGTH = 4;
 #ifdef _WIN32
 const std::array <const std::wstring, IGNORED_OPTS_LENGTH>g_IgnoredOptions = {
 #else
@@ -130,7 +131,6 @@ const std::array <const std::string,IGNORED_OPTS_LENGTH>g_IgnoredOptions = {
 #endif
     M_FE,
     M_FORCE_ROOTSIG_VER,
-    M_I,
     M_P,
     M_VI};
 

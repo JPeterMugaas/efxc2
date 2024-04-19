@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.8.155)
+set(EFXC2_VERSION 0.0.8.156)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -34,6 +34,8 @@ set(EXEC_SOURCES efxc2.cpp
                  efxc2Compiler.cpp
                  efxc2CompilerAPIContainer.h
                  efxc2CompilerAPIContainer.cpp
+                 efxc2CompilerIncludes.h
+                 efxc2CompilerIncludes.cpp
                  efxc2CompilerParams.h
                  efxc2CompilerParams.cpp
                  efxc2CompilerTasks.h
@@ -150,3 +152,6 @@ add_test(NAME defines.2_default_define
 add_test(NAME defines.2_define_2
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl /DTEST_DEFINE=2 /D TEST_DEFINE2=2 /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /Fc${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/BC7Encode_TryMode456CS.asm /Fd${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)
+add_test(NAME includes.includes
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
+  COMMAND fxc ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl /DTEST_DEFINE=2 /D TEST_DEFINE2=2 /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /Fc${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/BC7Encode_TryMode456CS.asm /I${CMAKE_CURRENT_BINARY_DIR}/tests /Fd${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)

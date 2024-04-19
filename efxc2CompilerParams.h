@@ -12,6 +12,7 @@
 #define EFXC2CCOMPILERPARAMS_H_INCLUDED
 #include "efxc2.h"
 #include "efxc2Utils.h"
+#include "efxc2CompilerIncludes.h"
 
 struct CompilerDefine {
 	std::string Name;
@@ -22,10 +23,10 @@ using M_COMPILER_DEFINES = std::shared_ptr<std::vector<CompilerDefine>>;
 
 class CompilerParams{
 public:
-	explicit CompilerParams() { initializeDefines(); };
+	explicit CompilerParams() { initializeDefines(); initializeIncludes(); };
 	/* application flags and params */
 	int get_verbose() const { return verbose; }
-	void set_verbose(int _verbose) { verbose = _verbose; }
+	void set_verbose(int _verbose) { verbose = _verbose; includeDirs.set_verbose(_verbose); }
 	int get_outputHex() const { return outputHex; }
 	void set_outputHex(int _outputHex) { outputHex = _outputHex; }
 	UINT get_commands() const { return commands; }
@@ -56,6 +57,7 @@ public:
 	/* D3DDisassemble parameters */
 	UINT get_disassembly_flags() const { return disassembly_flags; 	}
 	void set_disassembly_flags(UINT _disassembly_flags) { disassembly_flags = _disassembly_flags;  }
+	CompilerIncludes* get_includeDirs() { return &includeDirs;  }
 private:
 	/* application flags */
 	int                verbose = 1;
@@ -75,8 +77,10 @@ private:
 	UINT               strip_flags = 0;
 	/* D3DDisassemble parameters */
 	UINT               disassembly_flags = 0;
+	CompilerIncludes   includeDirs;
 
 	void initializeDefines();
+	void initializeIncludes();
 };
 
 

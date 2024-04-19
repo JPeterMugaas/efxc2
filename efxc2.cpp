@@ -77,6 +77,10 @@ int main(int argc, char* argv[]) {
         else if (parseOpt(M_HELP, args, &index, nullptr)) {
             print_help_screen();
         }
+        else if (parseOpt(M_I, args, &index, &temp)) {
+            cmd_I(params, temp);
+            continue;
+        }
         else if (parseOpt(M_NOLOGO, args, &index, nullptr)) {
             continue;
         }

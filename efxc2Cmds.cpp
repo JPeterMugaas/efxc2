@@ -252,6 +252,18 @@ void cmd_Gpp(CompilerParams& params) {
     return;
 }
 
+void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW& _includeDir) {
+    if (params.get_verbose()) {
+#ifdef _WIN32
+        std::wcout << std::format(L"option -I (Shader Include Dir) with arg {}\n", _includeDir);
+#else
+        std::cout << std::format("option -I (Shader Include Dir) with arg {}\n", _includeDir);
+#endif
+    }
+    params.get_includeDirs()->AddIncludeDir(_includeDir);
+    return;
+}
+
 void cmd_Lx(CompilerParams& params) {
     if (params.get_verbose()) {
         std::cout << "option -Lx - output hexidecimal literals\n";
@@ -394,7 +406,7 @@ void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model) {
 #ifdef _WIN32
     std::string model = utf8_encode(_model);
 #else
-    std::string model = { _model.data(), _model.size()};
+    std::string model = { _model.data(), _model.size() };
 #endif
     if (params.get_verbose()) {
         std::cout << std::format("option -T (Shader Model/Profile) with arg {}\n", model);

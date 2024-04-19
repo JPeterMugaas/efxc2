@@ -22,6 +22,7 @@ void Compiler::Compile() {
     auto eflags = params.get_eflags();
     auto sflags = params.get_sflags();
     auto secondary_flags = params.get_secondary_flags();
+    auto  includeDirs = params.get_includeDirs();
     std::string _entryPoint = params.get_entryPoint();
     const char* entryPoint = _entryPoint.c_str();
     std::string _model = params.get_model();
@@ -98,7 +99,7 @@ void Compiler::Compile() {
         SourceLen,
         inputFile,
         defines->data(),
-        D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        includeDirs,
         entryPoint,
         model,
         sflags,
