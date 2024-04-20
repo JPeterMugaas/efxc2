@@ -29,12 +29,27 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
             std::cout << "/tpParentData: nullptr/n";
         }
     }
+    std::ofstream f;
+    std::error_code ec;
+    std::uintmax_t fileSize = std::filesystem::file_size(Filename, ec);
+    if (ec.value() == 0) {
+        char* buf = new char[fileSize];
+        f = std::ofstream(std::filesystem::path(Filename), std::ios::out);
+        f.close();
+        *ppData = buf;
+        *pBytes = (UINT)fileSize;
+        return S_OK;
+    }
+    *ppData = nullptr;
+    *pBytes = 0;
     return E_FAIL;
 }
 
 /* do not change this signature, it's part of an "inheritance" API. */
 HRESULT CompilerIncludes::Close(LPCVOID pData) {
-    return E_FAIL;
+    char* buf = (char*)pData;
+    delete[] buf;
+    return S_OK;
 }
 
 /* do not change this signature, it's part of an "inheritance" API. */
