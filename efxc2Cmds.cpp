@@ -44,8 +44,6 @@ void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params,
         FixupFileName(inputFile);
         c_inputFile = utf8_encode(inputFile);
         params.set_inputFile(c_inputFile);
-#else  /* _WIN32 */
-        params.set_inputFile(inputFile);
 #endif /* _WIN32 */
         files.set_inputFile(inputFile);
         if (params.get_verbose()) {
@@ -133,9 +131,6 @@ void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& asse
 }
 
 void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& pdbFile) {
-#ifdef _WIN32
-    files.set_c_pdbFile(utf8_encode(pdbFile));
-#endif /* _WIN32 */
     files.set_pdbFile(pdbFile);
 
     UINT cmd = params.get_commands();

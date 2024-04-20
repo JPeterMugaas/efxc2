@@ -18,9 +18,6 @@
 class Files {
 public:
 #ifdef _WIN32
-    std::string get_c_pdbFile() const { return c_pdbFile; };
-    void set_c_pdbFile(const std::string_view& _c_pdbFile) { 
-        c_pdbFile = _c_pdbFile; FixupFileName(c_pdbFile); }
 #endif /* _WIN32 */
     std::filesystem::path get_DisassemblyFile() const { return DisassemblyFile; }
     void set_DisassemblyFile(const M_STRING_VIEW& _DisassemblyFile) { DisassemblyFile = _DisassemblyFile; }
@@ -47,9 +44,6 @@ private:
     std::filesystem::path ObjectFile = M_STRING_INIT;
     std::filesystem::path pdbFile = M_STRING_INIT;
     std::filesystem::path temp = M_STRING_INIT;
-#ifdef _WIN32
-    std::string c_pdbFile = "";
-#endif /* _WIN32 */
 };
 
 #endif /*EFXC2FILES_H_INCLUDED*/

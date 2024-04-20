@@ -84,7 +84,6 @@ const std::array <ProfilePrefix, PROFILE_PREFIX_TABLE_LEN>g_profilePrefixTable =
   { "vs_3_sw", "g_vs3ff"},
 } };
 
-std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder);
 #ifdef _WIN32
 void FixupFileName(_Inout_ std::string& FileName);
 void FixupFileName(_Inout_ std::wstring& FileName);

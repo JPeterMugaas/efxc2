@@ -100,20 +100,19 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
     size_t  outputLen = 0;
     int	AppendSlash = false;
     /*write .PDB data if applicable*/
-
-#ifdef _WIN32
-    if (c_pdbFile.empty() == false) {
-        if (auto pPDBFileName = GetFileName(c_pdbFile, &AppendSlash); pPDBFileName.empty() == false) {
-#else
     if (pdbFile.empty() == false) {
-        if (auto pPDBFileName = GetFileName(pdbFile, &AppendSlash); pPDBFileName.empty() == false) {
+        if (!pdbFile.filename().empty()) {
+#ifdef _WIN32
+            auto c_pdbFile = utf8_encode(pdbFile.filename().native());
+            compiler.SetPDBFileName(c_pdbFile);
+#else
+            compiler.SetPDBFileName(c_pdbFile.filename().native());
 #endif
-            compiler.SetPDBFileName(pPDBFileName);
         }
         else {
             /* if only a dir was specified, use the default
             filename in the shader data. */
-            pPDBFileName = compiler.GetPDBFileName();
+            auto pPDBFileName = compiler.GetPDBFileName();
 #ifdef _WIN32
             std::wstring w_PDBFileName = utf8_decode(pPDBFileName);
             if (AppendSlash) {

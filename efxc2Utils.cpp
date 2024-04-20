@@ -111,26 +111,6 @@ void print_unsupported_arg_help() {
     exit(0);
 }
 
-/* from: https://btechgeeks.com/how-to-get-filename-from-a-path-with-or-without-extension-in-cpp/*/
-std::string GetFileName(_In_ const std::string& path, _Out_ int* IsSpecialFolder) {
-    *IsSpecialFolder = false;
-    char sep = '/';
-#ifdef _WIN32
-    sep = '\\';
-#endif
-    if (size_t i = path.rfind(sep, path.length()); i != std::string::npos)
-    {
-        std::string filename = path.substr(i + 1, path.length() - i);
-        std::string rawname = filename.substr(0, path.length());
-        if ((rawname.compare("..") == 0) || (rawname.compare(".") == 0)) {
-            *IsSpecialFolder = true;
-            rawname = "";
-        }
-        return rawname;
-    }
-    return "";
-}
-
  void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
     _In_ const std::string_view& variableName,
     _In_ const int outputHex) {
