@@ -16,9 +16,9 @@ void Files::LoadInputFile(CompilerParams& params) const {
     f.open(std::filesystem::path(inputFile));
     if (!f.is_open()) {
 #ifdef _WIN32
-        std::wcerr << std::format(L"Can not open {}", inputFile);
+        std::wcerr << std::format(L"Can not open {}", inputFile.native());
 #else
-        std::cerr << std::format("Can not open {}", inputFile);
+        std::cerr << std::format("Can not open {}", inputFile.native());
 #endif
         exit(1);
     }
@@ -31,9 +31,9 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
     f = std::ofstream(std::filesystem::path(DisassemblyFile), std::ios::out);
     if (!f.is_open()) {
 #ifdef _WIN32
-        std::wcerr << std::format(L"Can not open {}", DisassemblyFile);
+        std::wcerr << std::format(L"Can not open {}", DisassemblyFile.native());
 #else
-        std::cerr << std::format("Can not open {}", DisassemblyFile);
+        std::cerr << std::format("Can not open {}", DisassemblyFile.native());
 #endif
         exit(1);
     }
@@ -42,9 +42,9 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
     f.close();
     if (params.get_verbose()) {
 #ifdef _WIN32
-        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile);
+        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile.native());
 #else
-        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile);
+        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile.native());
 #endif
     }
 }
@@ -54,9 +54,9 @@ void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) c
     f = std::ofstream( std::filesystem::path(IncludeFile), std::ios::out);
     if (!f.is_open() ) {
 #ifdef _WIN32
-        std::wcerr << std::format(L"Can not open {}", IncludeFile);
+        std::wcerr << std::format(L"Can not open {}", IncludeFile.native());
 #else
-        std::cerr << std::format("Can not open {}", IncludeFile);
+        std::cerr << std::format("Can not open {}", IncludeFile.native());
 #endif
         exit(1);
     }
@@ -65,9 +65,9 @@ void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) c
     f.close();
     if (params.get_verbose()) {
 #ifdef _WIN32
-        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile);
+        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile.native());
 #else
-        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile);
+        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile.native());
 #endif
     }
 }
@@ -77,9 +77,9 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
     f = std::ofstream(std::filesystem::path(ObjectFile), std::ios::out | std::ios::binary);
     if (!f.is_open()) {
 #ifdef _WIN32
-        std::wcerr << std::format(L"Can not open {}", ObjectFile);
+        std::wcerr << std::format(L"Can not open {}", ObjectFile.native());
 #else
-        std::cerr << std::format("Can not open {}", ObjectFile);
+        std::cerr << std::format("Can not open {}", ObjectFile.native());
 #endif
         exit(1);
     }
@@ -88,9 +88,9 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
     f.close();
     if (params.get_verbose()) {
 #ifdef _WIN32
-        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile);
+        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());
 #else
-        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile);;
+        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());;
 #endif
     }
 }
@@ -130,9 +130,9 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
         f = std::ofstream(std::filesystem::path(pdbFile), std::ios::out | std::ios::binary);
         if (!f) {
 #ifdef _WIN32
-            std::wcerr << std::format(L"Can not open {}", pdbFile);
+            std::wcerr << std::format(L"Can not open {}", pdbFile.native());
 #else
-            std::cerr << std::format("Can not open {}", pdbFile);
+            std::cerr << std::format("Can not open {}", pdbFile.native());
 #endif
             exit(1);
         }
@@ -140,9 +140,9 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
         f.close();
         if (params.get_verbose()) {
 #ifdef _WIN32
-            std::wcout << format(L"Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile);
+            std::wcout << format(L"Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile.native());
 #else
-            std::cout << std::format("Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile);
+            std::cout << std::format("Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile.native());
 #endif
         }
     }
