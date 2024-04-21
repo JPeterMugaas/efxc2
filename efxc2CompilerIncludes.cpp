@@ -16,9 +16,33 @@ d3dcommon.h.
 
 #include "efxc2CompilerIncludes.h"
 
+static int LoadFile(const std::filesystem::path& currentFile, int verbose, char** buf, std::uintmax_t* fileSize) {
+    std::ifstream f;
+    std::error_code ec;
+    *fileSize = std::filesystem::file_size(currentFile, ec);
+    if (ec.value() == 0) {
+        if (verbose) {
+#ifdef _WIN32
+            std::wcout << std::format(L"Found {}\n", currentFile.native());
+#else
+            std::cout << std::format("Found {}\n", currentFile.native());
+#endif
+        }
+        *buf = new char[*fileSize];
+        f = std::ifstream(currentFile, std::ios::in);
+        f.read(*buf, *fileSize);
+        f.close();
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) {
     std::filesystem::path Filename = std::string(pFileName);
-
+    char* buf = nullptr;
+    std::uintmax_t fileSize = 0;
     if (verbose) {
         std::cout << "Called CompilerIncludes::Open(\n";
         switch (IncludeType) {
@@ -44,44 +68,17 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
             std::cout << "\tpParentData: nullptr)\n";
         }
     }
-    std::ifstream f;
-    std::error_code ec;
-    std::uintmax_t fileSize = std::filesystem::file_size(Filename, ec);
-    if (ec.value() == 0) {
-        if (verbose) {
-#ifdef _WIN32
-            std::wcout << std::format(L"Found {}\n", Filename.native());
-#else
-            std::cout << std::format("Found {}\n", Filename.native());
-#endif
-        }
-        auto buf = new char[fileSize];
-        f = std::ifstream(std::filesystem::path(Filename), std::ios::in);
-        f.read(buf, fileSize);
-        f.close();
+    if ( LoadFile(Filename, verbose, &buf, &fileSize)) {
         *ppData = buf;
         *pBytes = (UINT)fileSize;
         return S_OK;
     }
     else {
-        char* buf = nullptr;
         M_STRING currentFile;
         for (int i = 0; i < dirs.size(); ++i) {
             currentFile = dirs[i] + std::filesystem::path::preferred_separator;
             currentFile = currentFile + Filename.native();
-            std::uintmax_t fileSize = std::filesystem::file_size(currentFile, ec);
-            if (ec.value() == 0) {
-                if (verbose) {
-#ifdef _WIN32
-                    std::wcout << std::format(L"Found {}\n", currentFile);
-#else
-                    std::cout << std::format("Found {}\n", currentFile);
-#endif
-                }
-                buf = new char[fileSize];
-                f = std::ifstream(std::filesystem::path(currentFile), std::ios::in);
-                f.read(buf, fileSize);
-                f.close();
+            if (LoadFile(currentFile, verbose, &buf, &fileSize)) {
                 *ppData = buf;
                 *pBytes = (UINT)fileSize;
                 return S_OK;
