@@ -29,8 +29,6 @@ public:
     void set_ObjectFile(const M_STRING_VIEW& _ObjectFile) { ObjectFile = _ObjectFile;  }
     std::filesystem::path get_pdbFile() const { return pdbFile;  };
     void set_pdbFile(const M_STRING_VIEW& _pdbFile) { pdbFile = _pdbFile; }
-
-
     void LoadInputFile(CompilerParams& params) const;
     void WriteDisassembly(Compiler& compiler, const CompilerParams& params) const;
     void WriteIncludeFile(Compiler& compile, const CompilerParams& params) const;

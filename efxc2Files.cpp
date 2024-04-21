@@ -16,11 +16,11 @@ void Files::LoadInputFile(CompilerParams& params) const {
     f.open(std::filesystem::path(inputFile));
     if (!f.is_open()) {
 #ifdef _WIN32
-        std::wcerr << std::format(L"Can not open {}", inputFile.native());
+std::wcerr << std::format(L"Can not open {}", inputFile.native());
 #else
-        std::cerr << std::format("Can not open {}", inputFile.native());
+std::cerr << std::format("Can not open {}", inputFile.native());
 #endif
-        exit(1);
+exit(1);
     }
     params.LoadSourceCode(f);
     f.close();
@@ -51,8 +51,8 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
 
 void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) const {
     std::ofstream f;
-    f = std::ofstream( std::filesystem::path(IncludeFile), std::ios::out);
-    if (!f.is_open() ) {
+    f = std::ofstream(std::filesystem::path(IncludeFile), std::ios::out);
+    if (!f.is_open()) {
 #ifdef _WIN32
         std::wcerr << std::format(L"Can not open {}", IncludeFile.native());
 #else
@@ -98,35 +98,35 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
 void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
     std::ofstream f;
     size_t  outputLen = 0;
-    int	AppendSlash = false;
     /*write .PDB data if applicable*/
     if (pdbFile.empty() == false) {
-        if (!pdbFile.filename().empty()) {
+        if ((!pdbFile.filename().empty() &&
+            (pdbFile.filename().string().compare(".") != 0) &&
+            (pdbFile.filename().string().compare("..") != 0))) {
 #ifdef _WIN32
             auto c_pdbFile = utf8_encode(pdbFile.filename().native());
             compiler.SetPDBFileName(c_pdbFile);
 #else
-            compiler.SetPDBFileName(c_pdbFile.filename().native());
+            compiler.SetPDBFileName(pdbFile.filename().native());
 #endif
         }
         else {
             /* if only a dir was specified, use the default
             filename in the shader data. */
             auto pPDBFileName = compiler.GetPDBFileName();
+            if ((pdbFile.filename().string().compare(".") == 0) ||
+                (pdbFile.filename().string().compare("..") == 0)) {
+                   pPDBFileName.insert(pPDBFileName.begin(), std::filesystem::path::preferred_separator);
+            }
 #ifdef _WIN32
-            std::wstring w_PDBFileName = utf8_decode(pPDBFileName);
-            if (AppendSlash) {
-                pdbFile.append(L"\\");
-            }
-            pdbFile.append(w_PDBFileName);
+            auto w_pdbFile = pdbFile.native() + utf8_decode(pPDBFileName);
+            pdbFile = std::filesystem::path(w_pdbFile);
 #else
-            if (AppendSlash) {
-                pdbFile.append("/");
-            }
-            pdbFile.append(pPDBFileName);
+            auto c_pdbFile = pdbFile.native() + pPDBFileName;
+            pdbFile = std::filesystem::path(c_pdbFile);
 #endif
         }
-        f = std::ofstream(std::filesystem::path(pdbFile), std::ios::out | std::ios::binary);
+        f = std::ofstream(pdbFile, std::ios::out | std::ios::binary);
         if (!f) {
 #ifdef _WIN32
             std::wcerr << std::format(L"Can not open {}", pdbFile.native());

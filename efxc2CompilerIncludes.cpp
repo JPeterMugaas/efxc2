@@ -10,17 +10,14 @@
 #include "efxc2CompilerIncludes.h"
 
 HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) {
-#ifdef _WIN32
-    std::wstring Filename = utf8_decode(pFileName);
-#else
-    std::string filename = pFileName;
-#endif
+    std::filesystem::path Filename = std::string(pFileName);
+
     if (verbose) {
         std::cout << "Called CompilerIncludes::Open(\n";
 #ifdef _WIN32
-        std::wcout << std::format(L"\tpFileName: {}\n", Filename);
+        std::wcout << std::format(L"\tpFileName: {}\n", Filename.native());
 #else
-        std::cout << std::format("\tpFileName {}\n", Filename);
+        std::cout << std::format("\tpFileName {}\n", Filename.native());
 #endif
         if (pParentData != nullptr) {
             std::cout << "/tpParentData: *****/n";
@@ -33,7 +30,7 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
     std::error_code ec;
     std::uintmax_t fileSize = std::filesystem::file_size(Filename, ec);
     if (ec.value() == 0) {
-        char* buf = new char[fileSize];
+        auto buf = new char[fileSize];
         f = std::ofstream(std::filesystem::path(Filename), std::ios::out);
         f.close();
         *ppData = buf;
@@ -47,7 +44,7 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
 
 /* do not change this signature, it's part of an "inheritance" API. */
 HRESULT CompilerIncludes::Close(LPCVOID pData) {
-    char* buf = (char*)pData;
+    auto buf = (char*)pData;
     delete[] buf;
     return S_OK;
 }
