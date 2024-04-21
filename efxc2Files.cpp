@@ -100,9 +100,9 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
     size_t  outputLen = 0;
     /*write .PDB data if applicable*/
     if (pdbFile.empty() == false) {
-        if ((!pdbFile.filename().empty() &&
+        if (!pdbFile.filename().empty() &&
             (pdbFile.filename().string().compare(".") != 0) &&
-            (pdbFile.filename().string().compare("..") != 0))) {
+            (pdbFile.filename().string().compare("..") != 0)) {
 #ifdef _WIN32
             auto c_pdbFile = utf8_encode(pdbFile.filename().native());
             compiler.SetPDBFileName(c_pdbFile);

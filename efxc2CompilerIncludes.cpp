@@ -7,6 +7,13 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //--------------------------------------------------------------------------------------
+
+/*
+This unit does cause some warnings with SonarLint.I'm not sure what to do about these warnings
+since the unit is part of an inheritance callback scheme from a .DLL.   The API is defined in
+d3dcommon.h.
+*/
+
 #include "efxc2CompilerIncludes.h"
 
 HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) {
@@ -14,24 +21,36 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
 
     if (verbose) {
         std::cout << "Called CompilerIncludes::Open(\n";
+        switch (IncludeType) {
+        case D3D_INCLUDE_LOCAL: // #include "FILE"
+            std::cout << "\tIncludeType: D3D_INCLUDE_LOCAL\n";
+            break;
+        case D3D_INCLUDE_SYSTEM: // #include <FILE>
+            std::cout << "\tIncludeType: D3D_INCLUDE_SYSTEM\n";
+            break;
+        /* D3D10_INCLUDE_LOCAL is an alias for D3D_INCLUDE_LOCAL.
+           D3D10_INCLUDE_SYSTEM is an alias for D3D_INCLUDE_SYSTEM  */
+        default:;
+        }
 #ifdef _WIN32
         std::wcout << std::format(L"\tpFileName: {}\n", Filename.native());
 #else
         std::cout << std::format("\tpFileName {}\n", Filename.native());
 #endif
         if (pParentData != nullptr) {
-            std::cout << "/tpParentData: *****/n";
+            std::cout << "\tpParentData: *****\n";
         }
         else {
-            std::cout << "/tpParentData: nullptr/n";
+            std::cout << "\tpParentData: nullptr\n";
         }
     }
-    std::ofstream f;
+    std::ifstream f;
     std::error_code ec;
     std::uintmax_t fileSize = std::filesystem::file_size(Filename, ec);
     if (ec.value() == 0) {
         auto buf = new char[fileSize];
-        f = std::ofstream(std::filesystem::path(Filename), std::ios::out);
+        f = std::ifstream(std::filesystem::path(Filename), std::ios::in);
+        f.read(buf, fileSize);
         f.close();
         *ppData = buf;
         *pBytes = (UINT)fileSize;
@@ -44,6 +63,15 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
 
 /* do not change this signature, it's part of an "inheritance" API. */
 HRESULT CompilerIncludes::Close(LPCVOID pData) {
+    if (verbose) {
+        std::cout << "Called CompilerIncludes::Close(\n";
+        if (pData != nullptr) {
+            std::cout << "\tpData: *****\n";
+        }
+        else {
+            std::cout << "\tpData: nullptr\n";
+        }
+    }
     auto buf = (char*)pData;
     delete[] buf;
     return S_OK;
