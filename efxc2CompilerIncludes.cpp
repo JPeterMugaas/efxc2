@@ -38,16 +38,23 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
         std::cout << std::format("\tpFileName {}\n", Filename.native());
 #endif
         if (pParentData != nullptr) {
-            std::cout << "\tpParentData: *****\n";
+            std::cout << "\tpParentData: *****)\n";
         }
         else {
-            std::cout << "\tpParentData: nullptr\n";
+            std::cout << "\tpParentData: nullptr)\n";
         }
     }
     std::ifstream f;
     std::error_code ec;
     std::uintmax_t fileSize = std::filesystem::file_size(Filename, ec);
     if (ec.value() == 0) {
+        if (verbose) {
+#ifdef _WIN32
+            std::wcout << std::format(L"Found {}\n", Filename.native());
+#else
+            std::cout << std::format("Found {}\n", Filename.native());
+#endif
+        }
         auto buf = new char[fileSize];
         f = std::ifstream(std::filesystem::path(Filename), std::ios::in);
         f.read(buf, fileSize);
@@ -55,6 +62,31 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
         *ppData = buf;
         *pBytes = (UINT)fileSize;
         return S_OK;
+    }
+    else {
+        char* buf = nullptr;
+        M_STRING currentFile;
+        for (int i = 0; i < dirs.size(); ++i) {
+            currentFile = dirs[i] + std::filesystem::path::preferred_separator;
+            currentFile = currentFile + Filename.native();
+            std::uintmax_t fileSize = std::filesystem::file_size(currentFile, ec);
+            if (ec.value() == 0) {
+                if (verbose) {
+#ifdef _WIN32
+                    std::wcout << std::format(L"Found {}\n", currentFile);
+#else
+                    std::cout << std::format("Found {}\n", currentFile);
+#endif
+                }
+                buf = new char[fileSize];
+                f = std::ifstream(std::filesystem::path(currentFile), std::ios::in);
+                f.read(buf, fileSize);
+                f.close();
+                *ppData = buf;
+                *pBytes = (UINT)fileSize;
+                return S_OK;
+            }
+        }
     }
     *ppData = nullptr;
     *pBytes = 0;
@@ -81,5 +113,5 @@ HRESULT CompilerIncludes::Close(LPCVOID pData) {
 void CompilerIncludes::AddIncludeDir(const M_STRING_VIEW& _dir)
 {
     M_STRING dir = { _dir.data(), _dir.size() };
-    dirs.insert(dirs.begin(), dir);
+    dirs.insert(dirs.end(), dir);
 }
