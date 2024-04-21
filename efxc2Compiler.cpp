@@ -111,14 +111,15 @@ void Compiler::Compile() {
         &errors
     );
     if (FAILED(hr)) {
+        std::cerr << "Compile error";
         if (errors) {
             auto* error = (char*)errors->GetBufferPointer();
-            std::cerr << std::format("Got an error while compiling:\n{}\n", error);
+            std::cout << std::format("Got an error while compiling:\n{}\n", error);
             errors->Release();
             std::cout << std::format( "Error Code: {:#08x}", hr);
         }
         else {
-            std::cerr << std::format( "Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
+            std::cout << std::format( "Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
             print_hresult_error(hr);
         }
         exit(1);
