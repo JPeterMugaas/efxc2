@@ -28,7 +28,7 @@ public:
     void set_input_parent_path(const std::filesystem::path& _input_parent_pat) { input_parent_path = _input_parent_pat; }
 private:
     int verbose = 1;
-    std::vector<M_STRING> dirs;
+    std::vector<std::filesystem::path> dirs;
 public:
     std::filesystem::path input_parent_path;
     CompilerIncludes() = default;

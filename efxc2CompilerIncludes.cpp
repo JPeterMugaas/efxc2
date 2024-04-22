@@ -70,29 +70,24 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
             std::cout << "\tpParentData: nullptr)\n";
         }
     }
-    if (LoadFile(input_parent_path /= Filename, verbose, &buf, &fileSize)) {
+    if  ((!input_parent_path.empty()) &&
+        (LoadFile(input_parent_path /= Filename, verbose, &buf, &fileSize))) {
         *ppData = buf;
         *pBytes = (UINT)fileSize;
         return S_OK;
     }
-    else {
-        if (LoadFile(Filename, verbose, &buf, &fileSize)) {
+    if (LoadFile(Filename, verbose, &buf, &fileSize)) {
+        *ppData = buf;
+        *pBytes = (UINT)fileSize;
+        return S_OK;
+    }
+    std::filesystem::path currentFile;
+    for (int i = 0; i < dirs.size(); ++i) {
+        currentFile = dirs[i] /= Filename.native();
+        if (LoadFile(currentFile, verbose, &buf, &fileSize)) {
             *ppData = buf;
             *pBytes = (UINT)fileSize;
             return S_OK;
-        }
-        else {
-            M_STRING currentFile;
-            for (int i = 0; i < dirs.size(); ++i) {
-                currentFile = dirs[i] + std::filesystem::path::preferred_separator;
-                currentFile = currentFile + Filename.native();
-                if (LoadFile(currentFile, verbose, &buf, &fileSize)) {
-                    *ppData = buf;
-                    *pBytes = (UINT)fileSize;
-                    return S_OK;
-
-                }
-            }
         }
     }
     return E_FAIL;
@@ -118,5 +113,5 @@ HRESULT CompilerIncludes::Close(LPCVOID pData) {
 void CompilerIncludes::AddIncludeDir(const M_STRING_VIEW& _dir)
 {
     M_STRING dir = { _dir.data(), _dir.size() };
-    dirs.insert(dirs.end(), dir);
+    dirs.emplace(dirs.end(), dir);
 }
