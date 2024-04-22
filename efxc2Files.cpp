@@ -13,15 +13,17 @@
 
 void Files::LoadInputFile(CompilerParams& params) const {
     std::ifstream f;
-    f.open(std::filesystem::path(inputFile));
+    std::filesystem::path _path = inputFile;
+    f.open(_path);
     if (!f.is_open()) {
 #ifdef _WIN32
-std::wcerr << std::format(L"Can not open {}", inputFile.native());
+        std::wcerr << std::format(L"Can not open {}", inputFile.native());
 #else
-std::cerr << std::format("Can not open {}", inputFile.native());
+        std::cerr << std::format("Can not open {}", inputFile.native());
 #endif
-exit(1);
+        exit(1);
     }
+    params.get_includeDirs()->set_input_parent_path(_path.parent_path());
     params.LoadSourceCode(f);
     f.close();
 }

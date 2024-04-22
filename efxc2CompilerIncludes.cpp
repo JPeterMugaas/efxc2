@@ -40,6 +40,8 @@ static int LoadFile(const std::filesystem::path& currentFile, int verbose, char*
 }
 
 HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) {
+    *ppData = nullptr;
+    *pBytes = 0;
     std::filesystem::path Filename = std::string(pFileName);
     char* buf = nullptr;
     std::uintmax_t fileSize = 0;
@@ -68,25 +70,31 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
             std::cout << "\tpParentData: nullptr)\n";
         }
     }
-    if ( LoadFile(Filename, verbose, &buf, &fileSize)) {
+    if (LoadFile(input_parent_path /= Filename, verbose, &buf, &fileSize)) {
         *ppData = buf;
         *pBytes = (UINT)fileSize;
         return S_OK;
     }
     else {
-        M_STRING currentFile;
-        for (int i = 0; i < dirs.size(); ++i) {
-            currentFile = dirs[i] + std::filesystem::path::preferred_separator;
-            currentFile = currentFile + Filename.native();
-            if (LoadFile(currentFile, verbose, &buf, &fileSize)) {
-                *ppData = buf;
-                *pBytes = (UINT)fileSize;
-                return S_OK;
+        if (LoadFile(Filename, verbose, &buf, &fileSize)) {
+            *ppData = buf;
+            *pBytes = (UINT)fileSize;
+            return S_OK;
+        }
+        else {
+            M_STRING currentFile;
+            for (int i = 0; i < dirs.size(); ++i) {
+                currentFile = dirs[i] + std::filesystem::path::preferred_separator;
+                currentFile = currentFile + Filename.native();
+                if (LoadFile(currentFile, verbose, &buf, &fileSize)) {
+                    *ppData = buf;
+                    *pBytes = (UINT)fileSize;
+                    return S_OK;
+
+                }
             }
         }
     }
-    *ppData = nullptr;
-    *pBytes = 0;
     return E_FAIL;
 }
 
