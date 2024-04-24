@@ -512,9 +512,9 @@ bool  parseCompilerOnlyCall(
         return false;
     }
 
-    for (int i = 0; i < COMPILER_ONLY_ENTRIES_LENGTH; i++) {
-        if (argument.compare(arg_idx, g_CompilerOnlyCall[i].Param.size(), g_CompilerOnlyCall[i].Param) == 0) {
-            auto ptr = (gCompilerp*)g_CompilerOnlyCall[i].method;
+    for (CompilerOnlyEntry currentEntry : g_CompilerOnlyCall) {
+        if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) == 0) {
+            auto ptr = (gCompilerp*)currentEntry.method;
             ptr(params);
             *index += 1;
             return true;
@@ -548,18 +548,18 @@ bool parseCompilerFileCall(
         return false;
     }
 
-    for (size_t i = 0; i < COMPILER_FILE_ENTRIES_LENGTH; i++) {
-        if (argument.compare(arg_idx, g_CompilerFileCall[i].Param.size(), g_CompilerFileCall[i].Param) != 0) {
+    for (CompileFileEntry currentEntry : g_CompilerFileCall) {
+        if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) {
             continue;
         }
-        arg_idx += g_CompilerFileCall[i].Param.size();
+        arg_idx += currentEntry.Param.size();
         if (arg_idx >= argument.size()) {
             *index += 1;
             if (*index >= args.size()) {
 #ifdef _WIN32
-                std::wcerr << std::format(L"Error: missing required argument for option {}\n", g_CompilerFileCall[i].Param);
+                std::wcerr << std::format(L"Error: missing required argument for option {}\n", currentEntry.Param);
 #else
-                std::cerr << std::format("Error: missing required argument for option {}\n", g_CompilerFileCall[i].Param );
+                std::cerr << std::format("Error: missing required argument for option {}\n", currentEntry.Param );
 #endif
                 return false;
             }
@@ -568,7 +568,7 @@ bool parseCompilerFileCall(
         else {
             argumentOption = argument.substr(arg_idx, argument.size());
         }
-        auto ptr = (gCompilerFilep*)g_CompilerFileCall[i].method;
+        auto ptr = (gCompilerFilep*)currentEntry.method;
         ptr(params, files, argumentOption);
         *index += 1;
         return true;
@@ -594,8 +594,8 @@ bool parseIgnoredOptions(
     else {
         return false;
     }
-    for (int i = 0; i < IGNORED_OPTS_LENGTH; i++) {
-        if (argument.compare(arg_idx, std::string::npos, g_IgnoredOptions[i]) == 0) {
+    for (M_STRING CurrentEntry : g_IgnoredOptions) {
+        if (argument.compare(arg_idx, std::string::npos, CurrentEntry) == 0) {
             option_ignored(argument, params);
             return true;
         }
@@ -620,8 +620,8 @@ bool parseNotSupportedOptions(
     else {
         return false;
     }
-    for (int i = 0; i < NOT_SUPPORTED_LENGTH; i++) {
-        if (argument.compare(arg_idx, std::string::npos, g_NotSupportedArgs[i]) == 0) {
+    for (M_STRING CurrentEntry : g_NotSupportedArgs) {
+        if (argument.compare(arg_idx, std::string::npos, CurrentEntry) == 0) {
 #ifdef _WIN32
             std::wcerr << std::format(L"option -{} not supported", argument);
 #else
