@@ -5,6 +5,21 @@ https://github.com/JPeterMugaas/efxc2
 Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2/releases)
 
 ## Release History
+### April 24, 2024
+* Convert some strings and wstrings to std::filesystem::path.
+* Get rid of GetFileName and c_pdbFile.
+* Fix for .pdb use default filename file path syntax.
+* Added comment about SonarQube and fixed where file was being written instead of read.
+* Write compiler error message to cout instead of cerr so that I can see it better in log files.
+* Add 2 tests and stuff for test cases.
+* Include Dir (/I) now supported.
+* Refactored for loop for ease of maintenance.
+* First, try to load includes from the same dir as the input file name.
+* Convert dirs into a std::vector<std::filesystem::path>.
+* fixed SonarQUbe warning about mixing private and public class members.
+* Make a for loop into a range for loop.  Handle error if include is not opened.  It can happen  because File Size can succeeded if the directory entry is a subdir.
+* Convert command-line comparison loops into range loops.
+
 ### April 18, 2024
 * Fix misspellings in source-code.
 * Convert program to C++20 standard.
