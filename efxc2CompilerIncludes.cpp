@@ -30,9 +30,14 @@ static int LoadFile(const std::filesystem::path& currentFile, int verbose, char*
         }
         *buf = new char[*fileSize];
         f = std::ifstream(currentFile, std::ios::in);
-        f.read(*buf, *fileSize);
-        f.close();
-        return true;
+        if (f.is_open()) {
+            f.read(*buf, *fileSize);
+            f.close();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     else {
         return false;
@@ -81,10 +86,8 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
         *pBytes = (UINT)fileSize;
         return S_OK;
     }
-    std::filesystem::path currentFile;
-    for (int i = 0; i < dirs.size(); ++i) {
-        currentFile = dirs[i] /= Filename.native();
-        if (LoadFile(currentFile, verbose, &buf, &fileSize)) {
+    for (std::filesystem::path currentDir : dirs) {
+        if (LoadFile(currentDir /= Filename, verbose, &buf, &fileSize)) {
             *ppData = buf;
             *pBytes = (UINT)fileSize;
             return S_OK;
