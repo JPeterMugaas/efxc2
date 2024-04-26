@@ -106,7 +106,7 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
             (pdbFile.filename().string().compare(".") != 0) &&
             (pdbFile.filename().string().compare("..") != 0)) {
 #ifdef _WIN32
-            auto c_pdbFile = utf8_encode(pdbFile.filename().native());
+            auto c_pdbFile = wstring_to_utf8(pdbFile.filename().native());
             compiler.SetPDBFileName(c_pdbFile);
 #else
             compiler.SetPDBFileName(pdbFile.filename().native());
@@ -121,7 +121,7 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
                    pPDBFileName.insert(pPDBFileName.begin(), std::filesystem::path::preferred_separator);
             }
 #ifdef _WIN32
-            auto w_pdbFile = pdbFile.native() + utf8_decode(pPDBFileName);
+            auto w_pdbFile = pdbFile.native() + utf8_to_wstring(pPDBFileName);
             pdbFile = std::filesystem::path(w_pdbFile);
 #else
             auto c_pdbFile = pdbFile.native() + pPDBFileName;

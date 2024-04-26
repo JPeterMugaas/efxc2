@@ -34,6 +34,7 @@
 #include <array>
 #include <bit>
 #include <cassert>
+#include <codecvt>
 #include <format>
 #include <fstream>
 #include <filesystem>

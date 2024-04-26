@@ -42,7 +42,7 @@ void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params,
         inputFile = parameter;
 #ifdef _WIN32
         FixupFileName(inputFile);
-        c_inputFile = utf8_encode(inputFile);
+        c_inputFile = wstring_to_utf8(inputFile);
         params.set_inputFile(c_inputFile);
 #endif /* _WIN32 */
         files.set_inputFile(inputFile);
@@ -82,7 +82,7 @@ void cmd_Cc(CompilerParams& params) {
 
 void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW& _defineOption) {
 #ifdef _WIN32
-    std::string defineOption = utf8_encode(_defineOption);
+    std::string defineOption = wstring_to_utf8({ _defineOption.data(), _defineOption.size() });
 #else
     std::string defineOption = { _defineOption.data(), _defineOption.size()};
 #endif
@@ -94,7 +94,7 @@ void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW& _defineOption) {
 
 void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW& _entryPoint) {
 #ifdef _WIN32
-    std::string entryPoint = utf8_encode(_entryPoint);
+    std::string entryPoint = wstring_to_utf8({ _entryPoint.data(), _entryPoint.size()});
 #else
     std::string entryPoint = { _entryPoint.data(), _entryPoint.size()};
 #endif
@@ -399,7 +399,7 @@ void cmd_res_may_alias(CompilerParams& params) {
 
 void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model) {
 #ifdef _WIN32
-    std::string model = utf8_encode(_model);
+    std::string model = wstring_to_utf8({ _model.data(), _model.size() });
 #else
     std::string model = { _model.data(), _model.size() };
 #endif
@@ -422,7 +422,7 @@ void cmd_Vd(CompilerParams& params) {
 
 void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW& _variableName) {
 #ifdef _WIN32
-    std::string variableName = utf8_encode(_variableName);
+    std::string variableName = wstring_to_utf8({ _variableName.data(), _variableName.size() });
 #else
     std::string variableName = { _variableName.data(), _variableName.size()};
 #endif

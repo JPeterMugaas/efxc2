@@ -102,11 +102,13 @@ int readAll(_In_ std::ifstream& in,
 std::string setupVariableName(_In_ const std::string_view& model,
     _In_ const std::string& entryPoint);
 #ifdef _WIN32
-std::wstring utf8_decode(const std::string_view& str);
-std::string utf8_encode(const std::wstring_view& wstr);
+std::wstring utf8_to_wstring(std::string const& str);
 #endif
 void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
     _In_ const std::string_view& variableName,
     _In_ const int outputHex);
+#ifdef _WIN32
+std::string wstring_to_utf8(std::wstring const& str);
+#endif
 
 #endif  /*EFXC2UTILS_H_INCLUDED*/
