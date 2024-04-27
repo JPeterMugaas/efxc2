@@ -12,7 +12,7 @@
 #include "efxc2Files.h"
 
 void option_ignored(_In_ const M_STRING_VIEW& Opt, _In_ const CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"Option {} ignored", Opt);
 #else
@@ -36,7 +36,7 @@ void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params,
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-        if (params.get_verbose()) {
+        if (params.get_verbose() && params.get_debug()) {
             std::cout << "Parse input file name\n";
         }
         inputFile = parameter;
@@ -46,7 +46,7 @@ void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params,
         params.set_inputFile(c_inputFile);
 #endif /* _WIN32 */
         files.set_inputFile(inputFile);
-        if (params.get_verbose()) {
+        if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
             std::wcout << std::format(L"input file: {}\n", inputFile);
 #else
@@ -61,7 +61,7 @@ void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params,
 }
 
 void cmd_all_resources_bound(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -all_resources_bound sflags | D3DCOMPILE_ALL_RESOURCES_BOUND\n";
     }
     UINT sflags = params.get_sflags();
@@ -71,7 +71,7 @@ void cmd_all_resources_bound(CompilerParams& params) {
 }
 
 void cmd_Cc(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Cc | D3D_DISASM_ENABLE_COLOR_CODED\n";
     }
     UINT disassembly_flags = params.get_disassembly_flags();
@@ -87,7 +87,7 @@ void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW& _defineOption) {
     std::string defineOption = { _defineOption.data(), _defineOption.size()};
 #endif
     params.add_define(defineOption);
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << std::format("option -D with arg {}\n", defineOption);
     }
 }
@@ -99,7 +99,7 @@ void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW& _entryPoint) {
     std::string entryPoint = { _entryPoint.data(), _entryPoint.size()};
 #endif
     params.set_entryPoint(entryPoint);
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << std::format("option -E (Entry Point) with arg {}'\n", entryPoint);
     }
     return;
@@ -120,7 +120,7 @@ void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& asse
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_ASSEMBLY_CODE;
     params.set_commands(cmd);
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"option -Fc (assembly code) with arg {}\n", assemblyCodeFile);
 #else
@@ -137,7 +137,7 @@ void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& pdbF
     cmd = cmd | CMD_WRITE_PDB_FILE;
     params.set_commands(cmd);
 
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << format(L"option -Fd (.PDB) with arg {}\n", pdbFile);
 #else
@@ -152,7 +152,7 @@ void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outp
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_HEADER;
     params.set_commands(cmd);
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"option -Fh (Output File) with arg {}\n", outputFile);
 #else
@@ -167,7 +167,7 @@ void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outp
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_OBJECT;
     params.set_commands(cmd);
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"option -FO (Output File) with arg {}\n", outputFile);
 #else
@@ -178,7 +178,7 @@ void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outp
 }
 
 void cmd_Gch(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gch eflags | D3DCOMPILE_EFFECT_CHILD_EFFECT";
     }
     UINT eflags = params.get_eflags();
@@ -188,7 +188,7 @@ void cmd_Gch(CompilerParams& params) {
 }
 
 void cmd_Gdp(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gdp eflags | D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS";
     }
     UINT eflags = params.get_eflags();
@@ -198,7 +198,7 @@ void cmd_Gdp(CompilerParams& params) {
 }
 
 void cmd_Gec(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gec sflags | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY\n";
     }
     UINT sflags = params.get_sflags();
@@ -208,7 +208,7 @@ void cmd_Gec(CompilerParams& params) {
 }
 
 void cmd_Ges(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Ges sflags | D3DCOMPILE_ENABLE_STRICTNESS\n";
     }
     UINT sflags = params.get_sflags();
@@ -218,7 +218,7 @@ void cmd_Ges(CompilerParams& params) {
 }
 
 void cmd_Gfa(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gfa sflags | D3DCOMPILE_AVOID_FLOW_CONTROL\n";
     }
     UINT sflags = params.get_sflags();
@@ -228,7 +228,7 @@ void cmd_Gfa(CompilerParams& params) {
 }
 
 void cmd_Gis(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gis sflags | D3DCOMPILE_IEEE_STRICTNESS\n";
     }
     UINT sflags = params.get_sflags();
@@ -238,7 +238,7 @@ void cmd_Gis(CompilerParams& params) {
 }
 
 void cmd_Gpp(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gpp sflags | D3DCOMPILE_PARTIAL_PRECISION\n";
     }
     UINT sflags = params.get_sflags();
@@ -248,7 +248,7 @@ void cmd_Gpp(CompilerParams& params) {
 }
 
 void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW& _includeDir) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"option -I (Shader Include Dir) with arg {}\n", _includeDir);
 #else
@@ -260,7 +260,7 @@ void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW& _includeDir) {
 }
 
 void cmd_Lx(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Lx - output hexidecimal literals\n";
     }
     params.set_outputHex(TRUE);
@@ -268,7 +268,7 @@ void cmd_Lx(CompilerParams& params) {
 }
 
 void cmd_Ni(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Cc | D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING\n";
     }
     UINT disassembly_flags = params.get_disassembly_flags();
@@ -278,7 +278,7 @@ void cmd_Ni(CompilerParams& params) {
 }
 
 void cmd_No(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Cc | D3D_DISASM_ENABLE_INSTRUCTION_OFFSET\n";
     }
     UINT disassembly_flags = params.get_disassembly_flags();
@@ -288,7 +288,7 @@ void cmd_No(CompilerParams& params) {
 }
 
 void cmd_O0(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -O0 sflags | D3DCOMPILE_OPTIMIZATION_LEVEL0\n";
     }
     UINT sflags = params.get_sflags();
@@ -298,7 +298,7 @@ void cmd_O0(CompilerParams& params) {
 }
 
 void cmd_O1(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -O1 sflags | D3DCOMPILE_OPTIMIZATION_LEVEL1\n";
     }
     UINT sflags = params.get_sflags();
@@ -308,7 +308,7 @@ void cmd_O1(CompilerParams& params) {
 }
 
 void cmd_O2(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -O1 sflags | D3DCOMPILE_OPTIMIZATION_LEVEL2\n";
     }
     UINT sflags = params.get_sflags();
@@ -318,7 +318,7 @@ void cmd_O2(CompilerParams& params) {
 }
 
 void cmd_O3(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -O1 sflags | D3DCOMPILE_OPTIMIZATION_LEVEL3\n";
     }
     UINT sflags = params.get_sflags();
@@ -328,7 +328,7 @@ void cmd_O3(CompilerParams& params) {
 }
 
 void cmd_Od(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Od sflags | D3DCOMPILE_SKIP_OPTIMIZATION\n";
     }
     UINT sflags = params.get_sflags();
@@ -338,7 +338,7 @@ void cmd_Od(CompilerParams& params) {
 }
 
 void cmd_Op(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Op sflags | D3DCOMPILE_NO_PRESHADER\n";
     }
     UINT sflags = params.get_sflags();
@@ -348,7 +348,7 @@ void cmd_Op(CompilerParams& params) {
 }
 
 void cmd_Qstrip_debug(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Qstrip_debug strip_flags | D3DCOMPILER_STRIP_DEBUG_INFO\n";
     }
     UINT strip_flags = params.get_strip_flags();
@@ -358,7 +358,7 @@ void cmd_Qstrip_debug(CompilerParams& params) {
 }
 
 void cmd_Qstrip_priv(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Qstrip_priv strip_flags | D3DCOMPILER_STRIP_PRIVATE_DATA\n";
     }
     UINT strip_flags = params.get_strip_flags();
@@ -368,7 +368,7 @@ void cmd_Qstrip_priv(CompilerParams& params) {
 }
 
 void cmd_Qstrip_reflect(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Qstrip_reflect strip_flags | D3DCOMPILER_STRIP_REFLECTION_DATA\n";
     }
     UINT strip_flags = params.get_strip_flags();
@@ -378,7 +378,7 @@ void cmd_Qstrip_reflect(CompilerParams& params) {
 }
 
 void cmd_Qstrip_rootsignature(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Qstrip_rootsignature strip_flags | D3DCOMPILER_STRIP_ROOT_SIGNATUR\n";
     }
     UINT strip_flags = params.get_strip_flags();
@@ -388,7 +388,7 @@ void cmd_Qstrip_rootsignature(CompilerParams& params) {
 }
 
 void cmd_res_may_alias(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -res_may_alias sflags | D3DCOMPILE_RESOURCES_MAY_ALIAS\n";
     }
     UINT sflags = params.get_sflags();
@@ -403,7 +403,7 @@ void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model) {
 #else
     std::string model = { _model.data(), _model.size() };
 #endif
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << std::format("option -T (Shader Model/Profile) with arg {}\n", model);
     }
     params.set_model(model);
@@ -411,7 +411,7 @@ void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model) {
 }
 
 void cmd_Vd(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Vd sflags | D3DCOMPILE_SKIP_VALIDATION\n";
     }
     UINT sflags = params.get_sflags();
@@ -426,7 +426,7 @@ void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW& _variableName) {
 #else
     std::string variableName = { _variableName.data(), _variableName.size()};
 #endif
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << std::format("option -Vn (Variable Name) with arg {}'\n", variableName);
     }
     params.set_variableName(variableName);
@@ -434,7 +434,7 @@ void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW& _variableName) {
 }
 
 void cmd_WX(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -WX sflags |  D3DCOMPILE_WARNINGS_ARE_ERRORS\n";
     }
     UINT sflags = params.get_sflags();
@@ -444,7 +444,7 @@ void cmd_WX(CompilerParams& params) {
 }
 
 void cmd_Zi(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zi sflags | D3DCOMPILE_DEBUG\n";
     }
     UINT sflags = params.get_sflags();
@@ -454,7 +454,7 @@ void cmd_Zi(CompilerParams& params) {
 }
 
 void cmd_Zpc(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zpc sflags | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR\n";
     }
     UINT sflags = params.get_sflags();
@@ -464,7 +464,7 @@ void cmd_Zpc(CompilerParams& params) {
 }
 
 void cmd_Zpr(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zpr sflags | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR\n";
     }
     UINT sflags = params.get_sflags();
@@ -474,7 +474,7 @@ void cmd_Zpr(CompilerParams& params) {
 }
 
 void cmd_Zsb(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zsb sflags | D3DCOMPILE_DEBUG_NAME_FOR_BINARY\n";
     }
     UINT sflags = params.get_sflags();
@@ -484,7 +484,7 @@ void cmd_Zsb(CompilerParams& params) {
 }
 
 void cmd_Zss(CompilerParams& params) {
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zss sflags | D3DCOMPILE_DEBUG_NAME_FOR_SOURCE\n";
     }
     UINT sflags = params.get_sflags();

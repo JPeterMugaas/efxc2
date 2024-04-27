@@ -26,10 +26,13 @@ public:
     void AddIncludeDir(const M_STRING_VIEW& _dir);
     void set_verbose(int _verbose) { verbose = _verbose;  }
     int get_verbose() const { return verbose; }
+    void set_debug(int _debug) { debug = _debug; }
+    int get_debug() const { return debug; }
     std::filesystem::path get_input_parent_path() const { return input_parent_path; }
     void set_input_parent_path(const std::filesystem::path& _input_parent_pat) { input_parent_path = _input_parent_pat; }
 private:
     int verbose = 1;
+    int debug = 0;
     std::vector<std::filesystem::path> dirs;
     std::filesystem::path input_parent_path;
 };

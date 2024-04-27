@@ -45,6 +45,17 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    /* scan for debug parameter*/
+    while (index < args.size()) {
+        /* Detect the end of the options. */
+        if (parseOpt(M_DEBUG, args, &index, nullptr)) {
+            params.set_debug(true);
+            break;
+        }
+        else {
+            index++;
+        }
+    }
     /*now scan for all arguments and input file name*/
     index = 0;
     while (TRUE) {
@@ -82,6 +93,9 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseOpt(M_NOLOGO, args, &index, nullptr)) {
+            continue;
+        }
+        else if (parseOpt(M_DEBUG, args, &index, nullptr)) {
             continue;
         }
         else if (parseOpt(M_T, args, &index, &temp)) {

@@ -41,7 +41,7 @@ void Compiler::Compile() {
     _def.Name = nullptr;
     defines->insert(defines->end(), _def);
     ID3DBlob* errors = nullptr;
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DCompile2(\n";
         /* Source Code sample*/
         std::cout << "\t \"";
@@ -132,7 +132,7 @@ void Compiler::Disassemble() {
     auto disassembly_flags = params.get_disassembly_flags();
     HRESULT hr = 0;
     disassemblyCodeBlob = nullptr;
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DDisassemble(\n";
         std::cout << "\t compiledString,\n";
         std::cout << std::format("\t {},\n", compiledLen);
@@ -169,7 +169,7 @@ void Compiler::StripShader() {
     HRESULT hr = 0;
     strippedBlob = nullptr;
     if (strip_flags != 0) {
-        if (params.get_verbose()) {
+        if (params.get_verbose() && params.get_debug()) {
             std::cout << "Calling D3DStripShader(\n";
             std::cout << "\t compiledString,\n";
             std::cout << std::format("\t {},\n", compiledLen);
@@ -252,7 +252,7 @@ std::string Compiler::GetPDBFileName() {
     size_t compiledLen = compilerOutput->GetBufferSize();
     HRESULT hr = 0;
     /*Get filename*/
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DGetBlobPart(\n";
         std::cout << "\t compiledString,\n";
         std::cout << std::format("\t {},\n", compiledLen);
@@ -308,7 +308,7 @@ void Compiler::SetPDBFileName(_In_ const std::string_view& _fileName) {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
 
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DSetBlobPart(\n";
         std::cout << "\t compiledString,\n";
         std::cout << std::format("\t {},\n", compiledLen);
@@ -350,7 +350,7 @@ size_t Compiler::WritePDBFile(std::ofstream& f) {
         compiledString = (char*)pShaderWithNewName->GetBufferPointer();
         compiledLen = pShaderWithNewName->GetBufferSize();
     }
-    if (params.get_verbose()) {
+    if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DGetBlobPart(\n";
         std::cout << "\t compiledString,\n";
         std::cout << std::format("\t {},\n", compiledLen);

@@ -27,6 +27,8 @@ public:
 	/* application flags and params */
 	int get_verbose() const { return verbose; }
 	void set_verbose(int _verbose) { verbose = _verbose; includeDirs.set_verbose(_verbose); }
+	int get_debug() const { return debug; }
+	void set_debug(int _debug) { debug = _debug; includeDirs.set_debug(_debug); }
 	int get_outputHex() const { return outputHex; }
 	void set_outputHex(int _outputHex) { outputHex = _outputHex; }
 	UINT get_commands() const { return commands; }
@@ -61,6 +63,7 @@ public:
 private:
 	/* application flags */
 	int                verbose = 1;
+	int                debug = 0;
 	int                outputHex = 0;
 	UINT               commands = 0;
 	/* D3DCompile2 parameters */

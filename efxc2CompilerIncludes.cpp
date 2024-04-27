@@ -22,6 +22,7 @@ static int LoadFile(const std::filesystem::path& currentFile, int verbose, char*
     *fileSize = std::filesystem::file_size(currentFile, ec);
     if (ec.value() == 0) {
         if (verbose) {
+
 #ifdef _WIN32
             std::wcout << std::format(L"Found {}\n", currentFile.native());
 #else
@@ -50,7 +51,7 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
     std::filesystem::path Filename = std::string(pFileName);
     char* buf = nullptr;
     std::uintmax_t fileSize = 0;
-    if (verbose) {
+    if (verbose && debug) {
         std::cout << "Called CompilerIncludes::Open(\n";
         switch (IncludeType) {
         case D3D_INCLUDE_LOCAL: // #include "FILE"
@@ -98,7 +99,7 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
 
 /* do not change this signature, it's part of an "inheritance" API. */
 HRESULT CompilerIncludes::Close(LPCVOID pData) {
-    if (verbose) {
+    if (verbose && debug) {
         std::cout << "Called CompilerIncludes::Close(\n";
         if (pData != nullptr) {
             std::cout << "\tpData: *****\n";
@@ -116,5 +117,7 @@ HRESULT CompilerIncludes::Close(LPCVOID pData) {
 void CompilerIncludes::AddIncludeDir(const M_STRING_VIEW& _dir)
 {
     M_STRING dir = { _dir.data(), _dir.size() };
+
     dirs.emplace(dirs.end(), dir);
+    dirs[dirs.size() - 1].make_preferred();
 }
