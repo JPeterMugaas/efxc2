@@ -15,11 +15,6 @@ void CompilerParams::initializeDefines() {
     defines = std::make_shared<std::vector < CompilerDefine >> ();
 }
 
-void CompilerParams::initializeIncludes()
-{
-   
-}
-
 void CompilerParams::add_define(const std::string_view& defineOption) {
     CompilerDefine _def;
     _def.Definition = "1";

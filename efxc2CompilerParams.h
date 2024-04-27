@@ -23,7 +23,7 @@ using M_COMPILER_DEFINES = std::shared_ptr<std::vector<CompilerDefine>>;
 
 class CompilerParams{
 public:
-	explicit CompilerParams() { initializeDefines(); initializeIncludes(); };
+	explicit CompilerParams() { initializeDefines(); };
 	/* application flags and params */
 	int get_verbose() const { return verbose; }
 	void set_verbose(int _verbose) { verbose = _verbose; includeDirs.set_verbose(_verbose); }
@@ -80,7 +80,6 @@ private:
 	CompilerIncludes   includeDirs;
 
 	void initializeDefines();
-	void initializeIncludes();
 };
 
 
