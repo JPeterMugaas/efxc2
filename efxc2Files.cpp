@@ -97,6 +97,10 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
     }
 }
 
+void Files::WritePreprocessFile(Compiler& compiler, const CompilerParams& params) const {
+
+}
+
 void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
     std::ofstream f;
     size_t  outputLen = 0;

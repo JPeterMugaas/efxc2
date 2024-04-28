@@ -347,6 +347,21 @@ void cmd_Op(CompilerParams& params) {
     return;
 }
 
+void cmd_P(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile) {
+    files.set_preprocessFile (outputFile);
+    UINT cmd = params.get_commands();
+    cmd = cmd | CMD_PREPROCESS_FILE;
+    params.set_commands(cmd);
+    if (params.get_verbose() && params.get_debug()) {
+#ifdef _WIN32
+        std::wcout << std::format(L"option -P (Output File) with arg {}\n", outputFile);
+#else
+        std::cout << std::format("option -P (Output File) with arg {}\n", outputFile);
+#endif
+    }
+    return;
+}
+
 void cmd_Qstrip_debug(CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Qstrip_debug strip_flags | D3DCOMPILER_STRIP_DEBUG_INFO\n";

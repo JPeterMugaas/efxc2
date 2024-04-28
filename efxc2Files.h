@@ -29,11 +29,16 @@ public:
     void set_ObjectFile(const M_STRING_VIEW& _ObjectFile) { ObjectFile = _ObjectFile;  ObjectFile.make_preferred();  }
     std::filesystem::path get_pdbFile() const { return pdbFile;  };
     void set_pdbFile(const M_STRING_VIEW& _pdbFile) { pdbFile = _pdbFile; pdbFile.make_preferred(); }
+    std::filesystem::path get_preprocessFile() const { return preprocessFile; }
+    void set_preprocessFile(const M_STRING_VIEW& _preprocessFile) {
+        preprocessFile = _preprocessFile; preprocessFile.make_preferred();
+    }
     void LoadInputFile(CompilerParams& params) const;
     void WriteDisassembly(Compiler& compiler, const CompilerParams& params) const;
     void WriteIncludeFile(Compiler& compile, const CompilerParams& params) const;
     void WriteObjectFile(Compiler& compiler, const CompilerParams& params) const;
     void WritePDBFile(Compiler& compiler, const CompilerParams& params);
+    void WritePreprocessFile(Compiler& compiler, const CompilerParams& params) const;
 private:
 
     std::filesystem::path DisassemblyFile = M_STRING_INIT;
@@ -41,6 +46,7 @@ private:
     std::filesystem::path IncludeFile = M_STRING_INIT;
     std::filesystem::path ObjectFile = M_STRING_INIT;
     std::filesystem::path pdbFile = M_STRING_INIT;
+    std::filesystem::path preprocessFile = M_STRING_INIT;
     std::filesystem::path temp = M_STRING_INIT;
 };
 

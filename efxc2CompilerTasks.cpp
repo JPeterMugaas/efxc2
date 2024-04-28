@@ -16,6 +16,14 @@ void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& param
 #else
 void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& params) {
 #endif
+    if ((params.get_commands() & CMD_PREPROCESS_FILE) == CMD_PREPROCESS_FILE) {
+        if (params.get_commands() != CMD_PREPROCESS_FILE) {
+            std::cerr << "The /P option must be used alone.";
+            exit(1);
+        }
+        files.WritePreprocessFile(compiler, params);
+        exit(0);
+    }
     compiler.Compile();
     compiler.StripShader();
     if ((params.get_commands() & CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {

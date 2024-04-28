@@ -43,6 +43,7 @@ void cmd_O2(CompilerParams& params);
 void cmd_O3(CompilerParams& params);
 void cmd_Od(CompilerParams& params);
 void cmd_Op(CompilerParams& params);
+void cmd_P(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
 void cmd_Qstrip_debug(CompilerParams& params);
 void cmd_Qstrip_priv(CompilerParams& params);
 void cmd_Qstrip_reflect(CompilerParams& params);
@@ -64,12 +65,13 @@ struct CompileFileEntry {
     gCompilerFilep* method;
 };
 
-constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 4;
+constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 5;
 const std::array <CompileFileEntry, COMPILER_FILE_ENTRIES_LENGTH> g_CompilerFileCall = { {
     { M_FC, cmd_Fc },
     { M_FD, cmd_Fd },
     { M_FH, cmd_Fh },
-    { M_FO, cmd_Fo }
+    { M_FO, cmd_Fo },
+    { M_P, cmd_P }
 } };
 
 bool parseCompilerFileCall(
@@ -123,7 +125,7 @@ bool  parseCompilerOnlyCall(
     _Inout_	size_t* index,
     CompilerParams& params);
 
-constexpr auto IGNORED_OPTS_LENGTH = 4;
+constexpr auto IGNORED_OPTS_LENGTH = 3;
 #ifdef _WIN32
 const std::array <const std::wstring, IGNORED_OPTS_LENGTH>g_IgnoredOptions = {
 #else
@@ -131,7 +133,6 @@ const std::array <const std::string,IGNORED_OPTS_LENGTH>g_IgnoredOptions = {
 #endif
     M_FE,
     M_FORCE_ROOTSIG_VER,
-    M_P,
     M_VI};
 
 bool parseIgnoredOptions(
