@@ -17,12 +17,14 @@
 class Compiler {
 public:
     explicit Compiler(const CompilerAPIContainer& _api, const CompilerParams& _params) : api(_api), params(_params) { };
+    void Preprocess();
     void Compile();
     void Disassemble();
     void StripShader();
     size_t WriteIncludeFile(std::ofstream& f);
     size_t WriteObjectFile(std::ofstream& f);
     size_t WriteAssemblyCode(std::ofstream& f);
+    size_t WritePreprocessFile(std::ofstream& f);
     std::string GetPDBFileName();
     void SetPDBFileName(_In_ const std::string_view& _fileName);
     size_t WritePDBFile(std::ofstream& f);
@@ -35,6 +37,7 @@ private:
     ID3DBlob*        strippedBlob = nullptr;
     ID3DBlob*        pPDBName = nullptr;
     ID3DBlob*        pShaderWithNewName = nullptr;
+    ID3DBlob*        pPreprocessOutput = nullptr;
 };
 
 #endif /* EFXC2COMPILER_H_INCLUDED */

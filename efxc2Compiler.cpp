@@ -16,6 +16,91 @@ static void DisplayDefine(D3D_SHADER_MACRO i) {
     }
 }
 
+void Compiler::Preprocess() {
+    auto SourceCode = params.get_SourceCode();
+    size_t SourceLen = SourceCode->size();
+    auto  includeDirs = params.get_includeDirs();
+    std::string _inputFile = params.get_inputFile();
+    const char* inputFile = _inputFile.c_str();
+
+    auto _defines = params.get_defines();
+    auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
+    D3D_SHADER_MACRO _def = { nullptr, nullptr };
+    for (size_t i = 0; i < _defines->size(); i++) {
+        _def.Definition = _defines.get()->at(i).Definition.c_str();
+        _def.Name = _defines.get()->at(i).Name.c_str();
+        defines->insert(defines->end(), _def);
+    }
+    _def.Definition = nullptr;
+    _def.Name = nullptr;
+    defines->insert(defines->end(), _def);
+    ID3DBlob* errors = nullptr;
+    if (params.get_verbose() && params.get_debug()) {
+        std::cout << "Calling D3DPreprocess(\n";
+        /* Source Code sample*/
+        std::cout << "\t \"";
+        for (size_t i = 0; i < SourceCode->size(); ++i) {
+            if (i < 41) {
+                std::cout << SourceCode->at(i);
+            }
+            else {
+                std::cout << "...";
+                break;
+            }
+        }
+        std::cout << "\",\n";
+        /**/
+        std::cout << std::format("\t {},\n", SourceLen);
+        std::cout << std::format("\t {}, \n", inputFile);
+        /* print defines */
+        std::cout << "\t";
+        std::ranges::for_each(defines->begin(), defines->end(), DisplayDefine);
+        std::cout << ",\n";
+        /* done printing defines */
+        std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
+        std::cout << "\t &CompilerOutput,\n";
+        std::cout << "\t &errors);\n";
+    }
+/*
+HRESULT D3DPreprocess(
+  [in]            LPCVOID                pSrcData,
+  [in]            SIZE_T                 SrcDataSize,
+  [in, optional]  LPCSTR                 pSourceName,
+  [in, optional]  const D3D_SHADER_MACRO *pDefines,
+  [in, optional]  ID3DInclude            *pInclude,
+  [out]           ID3DBlob               **ppCodeText,
+  [out, optional] ID3DBlob               **ppErrorMsgs
+);
+*/
+    auto ptr = api.get_ptr_D3DPreprocess();
+    if (ptr == nullptr) {
+        std::cerr << "Error variable null when it should not be.";
+            exit(1);
+    }
+    HRESULT hr = ptr(
+        SourceCode.get()->data(),
+        SourceLen,
+        inputFile,
+        defines->data(),
+        includeDirs,
+        &pPreprocessOutput,
+        &errors);
+    if (FAILED(hr)) {
+        std::cerr << "Compile error";
+        if (errors) {
+            auto* error = (char*)errors->GetBufferPointer();
+            std::cout << std::format("Got an error while compiling:\n{}\n", error);
+            errors->Release();
+            std::cout << std::format("Error Code: {:#08x}", hr);
+        }
+        else {
+            std::cout << std::format("Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
+            print_hresult_error(hr);
+        }
+        exit(1);
+    }
+}
+
 void Compiler::Compile() {
     auto SourceCode = params.get_SourceCode();
     size_t SourceLen = SourceCode->size();
@@ -74,7 +159,6 @@ void Compiler::Compile() {
         std::cout << "\t &CompilerOutput,\n";
         std::cout << "\t &errors);\n";
     }
-
     /*
     HRESULT D3DCompile2(
        [in]            LPCVOID                pSrcData,
@@ -243,6 +327,14 @@ size_t Compiler::WriteObjectFile(std::ofstream& f) {
         outputString = (char*)strippedBlob->GetBufferPointer();
         outputLen = strippedBlob->GetBufferSize();
     }
+    f.write(outputString, outputLen);
+    return outputLen;
+}
+
+size_t Compiler::WritePreprocessFile(std::ofstream& f) {
+    char const* outputString;
+    outputString = (char*)pPreprocessOutput->GetBufferPointer();
+    size_t outputLen = pPreprocessOutput->GetBufferSize();
     f.write(outputString, outputLen);
     return outputLen;
 }

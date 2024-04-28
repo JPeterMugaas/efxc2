@@ -21,6 +21,7 @@ void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& param
             std::cerr << "The /P option must be used alone.";
             exit(1);
         }
+        compiler.Preprocess();
         files.WritePreprocessFile(compiler, params);
         exit(0);
     }

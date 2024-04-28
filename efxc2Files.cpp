@@ -98,7 +98,26 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
 }
 
 void Files::WritePreprocessFile(Compiler& compiler, const CompilerParams& params) const {
-
+    std::ofstream f;
+    f = std::ofstream(std::filesystem::path(preprocessFile ), std::ios::out | std::ios::binary);
+    if (!f.is_open()) {
+#ifdef _WIN32
+        std::wcerr << std::format(L"Can not open {}", preprocessFile.native());
+#else
+        std::cerr << std::format("Can not open {}", preprocessFile.native());
+#endif
+        exit(1);
+    }
+    size_t  outputLen = 0;
+    outputLen = compiler.WritePreprocessFile(f);
+    f.close();
+    if (params.get_verbose()) {
+#ifdef _WIN32
+        std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());
+#else
+        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());;
+#endif
+    }
 }
 
 void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {

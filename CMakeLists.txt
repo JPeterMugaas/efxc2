@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.9.175)
+set(EFXC2_VERSION 0.0.9.176)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -164,3 +164,6 @@ add_test(NAME includes.include_test_2
 add_test(NAME includes.include_test_2_FQN
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2
   COMMAND fxc BloomCombine.hlsl /debug /I ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2/include /E main /T ps_4_0_level_9_1 /Zi /Fo${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..cso)
+add_test(NAME includes.preprocess_test_2_FQN
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2
+  COMMAND fxc BloomCombine.hlsl /debug /I ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2/include /P${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..hlsl)
