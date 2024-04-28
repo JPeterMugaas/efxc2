@@ -57,4 +57,9 @@ CompilerAPIContainer::CompilerAPIContainer() {
         std::cerr << "Error: could not get the address of D3DCreateLinker.\n";
         print_windows_error();
     }
+    ptr_D3DPreprocess = (gD3DPreprocessp)GetProcAddress(h, "D3DPreprocess");
+    if (ptr_D3DPreprocess = nullptr) {
+        std::cerr << "Error: could not get the address of D3DPreprocess.\n";
+        print_windows_error();
+    }
 }

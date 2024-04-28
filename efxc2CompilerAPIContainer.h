@@ -22,6 +22,7 @@ public:
 	pD3DDisassembleg get_ptr_D3DDisassemble() const { return ptr_D3DDisassemble; }
 	gD3DLoadModulep get_ptr_D3DLoadModule() const { return ptr_D3DLoadModule;  }
 	gD3DCreateLinkerp get_ptr_D3DCreateLinker() const { return ptr_D3DCreateLinker;  }
+	gD3DPreprocessp get_ptr_D3DPreproces() const { return ptr_D3DPreprocess; }
 private:
 	HMODULE get_h() const { return h; }
 	HMODULE          h;
@@ -32,6 +33,7 @@ private:
 	pD3DDisassembleg ptr_D3DDisassemble;
 	gD3DLoadModulep ptr_D3DLoadModule;
 	gD3DCreateLinkerp ptr_D3DCreateLinker;
+	gD3DPreprocessp ptr_D3DPreprocess;
 };
 
 #endif /*EFXC2COMPILERAPICONTAINER_H_INCLUDED*/

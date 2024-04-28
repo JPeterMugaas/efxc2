@@ -249,6 +249,15 @@ typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
     );
 #endif
 
+typedef HRESULT(__stdcall* gD3DPreprocessp) (
+    _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+    _In_ SIZE_T SrcDataSize,
+    _In_opt_ LPCSTR pSourceName,
+    _In_opt_ CONST D3D_SHADER_MACRO* pDefines,
+    _In_opt_ ID3DInclude* pInclude,
+    _Out_ ID3DBlob** ppCodeText,
+    _Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorMsgs);
+
 // This struct represents the first four bytes of the name blob:
 struct ShaderDebugName
 {
@@ -275,6 +284,7 @@ constexpr auto CMD_WRITE_HEADER = 1;
 constexpr auto CMD_WRITE_OBJECT = 2;
 constexpr auto CMD_WRITE_PDB_FILE = 4;
 constexpr auto CMD_WRITE_ASSEMBLY_CODE = 8;
+constexpr auto CMD_PREPROCESS_FILE = 16;
 
 /* a good size for an error message */
 constexpr auto ERR_SIZE = 128;
