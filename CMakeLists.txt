@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.9.172)
+set(EFXC2_VERSION 0.0.9.173)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -154,13 +154,13 @@ add_test(NAME defines.2_define_2
   COMMAND fxc ${CMAKE_CURRENT_SOURCE_DIR}/tests/BC7Encode.hlsl /debug /DTEST_DEFINE=2 /D TEST_DEFINE2=2 /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /Fc${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/BC7Encode_TryMode456CS.asm /Fd${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)
 add_test(NAME includes.include_test_1
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_1
-  COMMAND fxc BloomCombine.hlsl /debug /E main /T ps_4_0_level_9_1 /Fh${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_1.inc)
+  COMMAND fxc BloomCombine.hlsl /debug /E main /T ps_4_0_level_9_1 /Zi /Fo${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_1..cso)
 add_test(NAME includes.include_test_1_reldir
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason
-  COMMAND fxc test_1/BloomCombine.hlsl /debug /E main /T ps_4_0_level_9_1 /Fh${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_1.inc)
+  COMMAND fxc test_1/BloomCombine.hlsl /debug /E main /T ps_4_0_level_9_1 /Zi /Fo${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_1..cso)
 add_test(NAME includes.include_test_2
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2
-  COMMAND fxc BloomCombine.hlsl /debug /I include /E main /T ps_4_0_level_9_1 /Fh${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2.inc)
+  COMMAND fxc BloomCombine.hlsl /debug /I include /E main /T ps_4_0_level_9_1 /Zi /Fo${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..cso)
 add_test(NAME includes.include_test_2_FQN
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2
-  COMMAND fxc BloomCombine.hlsl /debug /I ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2/include /E main /T ps_4_0_level_9_1 /Fh${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2.inc)
+  COMMAND fxc BloomCombine.hlsl /debug /I ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2/include /E main /T ps_4_0_level_9_1 /Zi /Fo${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..cso)

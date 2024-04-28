@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
     }
 
     /* scan for debug parameter*/
+    index = 0;
     while (index < args.size()) {
         /* Detect the end of the options. */
         if (parseOpt(M_DEBUG, args, &index, nullptr)) {
