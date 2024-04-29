@@ -134,6 +134,10 @@ add_test(NAME error.output_file_empty
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
   COMMAND fxc ${CMAKE_CURRENT_BINARY_DIR}/tests/Empty_file.hlsl /debug /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_4_0 /ETryMode456CS /Fh${CMAKE_CURRENT_BINARY_DIR}/not_found/Compiled/BC7Encode_TryMode456CS_cs40.inc /Fd${CMAKE_CURRENT_BINARY_DIR}/Compiled/BC7Encode_TryMode456CS.pdb /VnBC7Encode_TryMode456CS)
 set_tests_properties(error.output_file_empty PROPERTIES WILL_FAIL true)
+add_test(NAME error.preprocess_with_fo
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2
+  COMMAND fxc BloomCombine.hlsl /debug /I include /P ${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..hlsl /E main /T ps_4_0_level_9_1 /Zi /Fo${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..cso)
+set_tests_properties(error.preprocess_with_fo PROPERTIES WILL_FAIL true)
 add_test(NAME invalid_parameters_will_fail.DGSLEffect_fx
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc DGSLEffect.fx /debug /WX /Ges /Zi /Zpc /Qstrip_reflect /debug /Qstrip_debug /Tvs_4_0_level_9_1 /Emain4BonesVc "/Fh${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/DGSLEffect_main4BonesVc.inc" "/Fd${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/DGSLEffect_main4BonesVc.pdb" /VnDGSLEffect_main4BonesVc)
