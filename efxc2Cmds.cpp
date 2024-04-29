@@ -609,12 +609,10 @@ bool parseIgnoredOptions(
     else {
         return false;
     }
-
-    for (M_STRING CurrentEntry : g_IgnoredOptions) {
-        if (argument.compare(arg_idx, std::string::npos, CurrentEntry) == 0) {
-            option_ignored(argument, params);
-            return true;
-        }
+    if (M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); 
+          std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end())  {
+        option_ignored(argument, params);
+        return true;
     }
     return false;
 }
@@ -636,16 +634,15 @@ bool parseNotSupportedOptions(
     else {
         return false;
     }
-    for (M_STRING CurrentEntry : g_NotSupportedArgs) {
-        if (argument.compare(arg_idx, std::string::npos, CurrentEntry) == 0) {
+    if (M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
+        std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end()) {
 #ifdef _WIN32
-            std::wcerr << std::format(L"option -{} not supported", argument);
+        std::wcerr << std::format(L"option -{} not supported", argument);
 #else
-            std::cerr << std::format("option -{} not supported", argument);
+        std::cerr << std::format("option -{} not supported", argument);
 #endif
-            print_unsupported_arg_help();
-            return true;
-        }
+        print_unsupported_arg_help();
+        return true;
     }
     return false;
 }
