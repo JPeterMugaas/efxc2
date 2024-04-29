@@ -263,7 +263,7 @@ std::string wstring_to_utf8(std::wstring const& wstr)
     }
 
     auto str = std::make_unique<std::vector<char>>();
-    str->resize(nbytes + 1);
+    str->resize((size_t)nbytes + 1);
     str->data()[nbytes] = '\0';
 
     if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
@@ -283,7 +283,7 @@ std::wstring utf8_to_wstring(std::string const& str)
 
     auto _wstr = std::make_unique<std::vector<char>>();
     _wstr->resize(((size_t)nchars + 1) * sizeof(wchar_t));
-    auto* wstr = reinterpret_cast<wchar_t*>(_wstr->data());
+    auto* wstr = std::bit_cast<wchar_t*>(_wstr->data());
     wstr[nchars] = L'\0';
 
     if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,

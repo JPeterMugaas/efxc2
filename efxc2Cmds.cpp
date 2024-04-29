@@ -609,6 +609,7 @@ bool parseIgnoredOptions(
     else {
         return false;
     }
+
     for (M_STRING CurrentEntry : g_IgnoredOptions) {
         if (argument.compare(arg_idx, std::string::npos, CurrentEntry) == 0) {
             option_ignored(argument, params);
