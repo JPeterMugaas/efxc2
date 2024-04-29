@@ -249,30 +249,44 @@ void FixupFileName(_Inout_ std::string& FileName) {
 }
 #endif /* _WIN32 */
 
-/* from: https://stackoverflow.com/questions/4358870/convert-wstring-to-string-encoded-in-utf-8 */
 #ifdef _WIN32
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#endif
-std::string wstring_to_utf8(std::wstring const& str)
+std::string wstring_to_utf8(std::wstring const& wstr)
 {
-    std::wstring_convert<std::conditional_t<
-        sizeof(wchar_t) == 4,
-        std::codecvt_utf8<wchar_t>,
-        std::codecvt_utf8_utf16<wchar_t>>> converter;
-    return converter.to_bytes(str);
+    int nbytes = 0;
+    if ((nbytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
+        wstr.c_str(), (int)wstr.length(), nullptr, 0, nullptr, nullptr)) == 0) {
+        return "";
+    }
+
+    auto str = std::make_unique<std::vector<char>>();
+    str->resize(nbytes + 1);
+    str->data()[nbytes] = '\0';
+
+    if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
+        wstr.c_str(), (int)wstr.length(), str->data(), nbytes, nullptr, nullptr) == 0) {
+        return "";
+    }
+    return str->data();
 }
 
 std::wstring utf8_to_wstring(std::string const& str)
 {
-    std::wstring_convert<std::conditional_t<
-        sizeof(wchar_t) == 4,
-        std::codecvt_utf8<wchar_t>,
-        std::codecvt_utf8_utf16<wchar_t>>> converter;
-    return converter.from_bytes(str);
+    int nchars = 0;
+    if ((nchars = MultiByteToWideChar(CP_UTF8,
+        MB_ERR_INVALID_CHARS, str.c_str(), (int)str.length(), nullptr, 0)) == 0) {
+        return L"";
+    }
+
+    auto _wstr = std::make_unique<std::vector<char>>();
+    _wstr->resize(((size_t)nchars + 1) * sizeof(wchar_t));
+    auto* wstr = reinterpret_cast<wchar_t*>(_wstr->data());
+    wstr[nchars] = L'\0';
+
+    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+        str.c_str(), (int)str.length(), wstr, nchars) == 0) {
+        return L"";
+    }
+    return wstr;
 }
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+
 #endif

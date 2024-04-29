@@ -108,7 +108,7 @@ void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
     _In_ const std::string_view& variableName,
     _In_ const int outputHex);
 #ifdef _WIN32
-std::string wstring_to_utf8(std::wstring const& str);
+std::string wstring_to_utf8(std::wstring const& wstr);
 #endif
 
 #endif  /*EFXC2UTILS_H_INCLUDED*/
