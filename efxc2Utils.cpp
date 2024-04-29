@@ -250,6 +250,10 @@ void FixupFileName(_Inout_ std::string& FileName) {
 #endif /* _WIN32 */
 
 #ifdef _WIN32
+/*These functions are from:
+  https://stackoverflow.com/questions/215963/how-do-you-properly-use-widechartomultibyte
+*/
+
 std::string wstring_to_utf8(std::wstring const& wstr)
 {
     int nbytes = 0;
