@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.9.185)
+set(EFXC2_VERSION 0.0.9.186)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -171,3 +171,6 @@ add_test(NAME includes.include_test_2_FQN
 add_test(NAME includes.preprocess_test_2_FQN
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2
   COMMAND fxc BloomCombine.hlsl /debug /I ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2/include /P${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..hlsl)
+add_test(NAME library.compile.ReinhardEffect
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
+  COMMAND fxc /T lib_4_0 ReinhardEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "${CMAKE_CURRENT_BINARY_DIR}/tests/ReinhardEffect.fxlib" /nologo /I includes)

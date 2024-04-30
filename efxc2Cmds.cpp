@@ -651,14 +651,14 @@ bool parseNotSupportedOptions(
         return false;
     }
     if (M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
-        std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end()) {
+        std::ranges::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
 #ifdef _WIN32
-        std::wcerr << std::format(L"option -{} not supported", argument);
+          std::wcerr << std::format(L"option -{} not supported", argument);
 #else
-        std::cerr << std::format("option -{} not supported", argument);
+          std::cerr << std::format("option -{} not supported", argument);
 #endif
-        print_unsupported_arg_help();
-        return true;
+          print_unsupported_arg_help();
+          return true;
     }
     return false;
 }

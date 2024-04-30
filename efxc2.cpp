@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (parseNotSupportedOptions(args, &index)) {
-            /* If true, this will not return.  It exits the program .*/
+            exit(1);
         }
         else if (parseOpt(M_D, args, &index, &temp)) {
             cmd_D(params, temp);
