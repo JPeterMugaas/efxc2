@@ -52,6 +52,7 @@ public:
 	M_COMPILER_DEFINES get_defines() const { return defines; }
 	void add_define(const std::string_view& defineOption);
 	void LoadSourceCode(std::ifstream& f);
+	void LoadPrivateData(std::ifstream& f);
 	M_BUFFER get_SourceCode() const { return SourceCode; }
 	/* D3DStripShader parameters */
 	UINT get_strip_flags() const { return strip_flags; }
@@ -76,6 +77,7 @@ private:
 	std::string        inputFile = "";
 	std::string        variableName = "";
 	M_BUFFER           SourceCode = nullptr;
+	M_BUFFER           PrivateData = nullptr;
 	/* D3DStripShader parameters */
 	UINT               strip_flags = 0;
 	/* D3DDisassemble parameters */

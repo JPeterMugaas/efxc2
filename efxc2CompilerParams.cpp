@@ -33,3 +33,7 @@ void CompilerParams::add_define(const std::string_view& defineOption) {
 void CompilerParams::LoadSourceCode(std::ifstream& f) {
     readAll(f, SourceCode);
 }
+
+void CompilerParams::LoadPrivateData(std::ifstream& f) {
+    readAll(f, PrivateData);
+}

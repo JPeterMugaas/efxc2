@@ -18,7 +18,7 @@ void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& param
 #endif
     if ((params.get_commands() & CMD_PREPROCESS_FILE) == CMD_PREPROCESS_FILE) {
         if (params.get_commands() != CMD_PREPROCESS_FILE) {
-            std::cerr << "The /P option must be used alone.";
+            std::cerr << "The /P option may only be used with the /D and /I parameters.";
             exit(1);
         }
         compiler.Preprocess();

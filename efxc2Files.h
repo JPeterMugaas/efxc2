@@ -23,6 +23,8 @@ public:
     void set_DisassemblyFile(const M_STRING_VIEW& _DisassemblyFile) { DisassemblyFile = _DisassemblyFile; DisassemblyFile.make_preferred(); }
     std::filesystem::path get_inputFile() const { return inputFile;  }
     void set_inputFile(const M_STRING_VIEW& _inputFile) { inputFile = _inputFile; inputFile.make_preferred(); }
+    std::filesystem::path get_privateDataFile() const { return privateDataFile;  }
+    void set_privateDataFile(const M_STRING_VIEW& _privateDataFile) { privateDataFile = _privateDataFile; privateDataFile.make_preferred(); }
     std::filesystem::path get_IncludeFile() const { return IncludeFile; }
     void set_IncludeFile(const M_STRING_VIEW& _IncludeFile) { IncludeFile = _IncludeFile; IncludeFile.make_preferred(); }
     std::filesystem::path get_ObjectFile() const { return ObjectFile;  }
@@ -34,6 +36,7 @@ public:
         preprocessFile = _preprocessFile; preprocessFile.make_preferred();
     }
     void LoadInputFile(CompilerParams& params) const;
+    void LoadPrivateDataFile(CompilerParams& params) const;
     void WriteDisassembly(Compiler& compiler, const CompilerParams& params) const;
     void WriteIncludeFile(Compiler& compile, const CompilerParams& params) const;
     void WriteObjectFile(Compiler& compiler, const CompilerParams& params) const;
@@ -43,6 +46,7 @@ private:
 
     std::filesystem::path DisassemblyFile = M_STRING_INIT;
     std::filesystem::path inputFile = M_STRING_INIT;
+    std::filesystem::path privateDataFile = M_STRING_INIT;
     std::filesystem::path IncludeFile = M_STRING_INIT;
     std::filesystem::path ObjectFile = M_STRING_INIT;
     std::filesystem::path pdbFile = M_STRING_INIT;

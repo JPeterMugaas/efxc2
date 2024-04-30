@@ -28,6 +28,23 @@ void Files::LoadInputFile(CompilerParams& params) const {
     f.close();
 }
 
+void Files::LoadPrivateDataFile(CompilerParams& params) const
+{
+    std::ifstream f;
+    std::filesystem::path _path = privateDataFile;
+    f.open(_path);
+    if (!f.is_open()) {
+#ifdef _WIN32
+        std::wcerr << std::format(L"Can not open {}", privateDataFile.native());
+#else
+        std::cerr << std::format("Can not open {}", privateDataFile.native());
+#endif
+        exit(1);
+    }
+    params.LoadPrivateData(f);
+    f.close();
+}
+
 void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(DisassemblyFile), std::ios::out);

@@ -49,6 +49,7 @@ void cmd_Qstrip_priv(CompilerParams& params);
 void cmd_Qstrip_reflect(CompilerParams& params);
 void cmd_Qstrip_rootsignature(CompilerParams& params);
 void cmd_res_may_alias(CompilerParams& params);
+void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& inputfile);
 void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model);
 void cmd_Vd(CompilerParams& params);
 void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW& _variableName);
@@ -65,13 +66,14 @@ struct CompileFileEntry {
     gCompilerFilep* method;
 };
 
-constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 5;
+constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 6;
 const std::array <CompileFileEntry, COMPILER_FILE_ENTRIES_LENGTH> g_CompilerFileCall = { {
     { M_FC, cmd_Fc },
     { M_FD, cmd_Fd },
     { M_FH, cmd_Fh },
     { M_FO, cmd_Fo },
-    { M_P, cmd_P }
+    { M_P, cmd_P },
+    { M_SETPRIVATE, cmd_setprivate }
 } };
 
 bool parseCompilerFileCall(
@@ -144,7 +146,7 @@ bool parseNotSupportedOptions(
     _In_ const M_CMD_PARAMS& args,
     _In_ const size_t* index);
 
-constexpr auto NOT_SUPPORTED_LENGTH = 10;
+constexpr auto NOT_SUPPORTED_LENGTH = 9;
 #ifdef _WIN32
 const std::array <const std::wstring, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = { {
 #else
@@ -158,8 +160,7 @@ const std::array <const std::string, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = {
     M_FX,
     M_GETPRIVATE,
     M_MATCHUAVS,
-    M_MERGEUAVS,
-    M_SETPRIVATE
+    M_MERGEUAVS
 } };
 
 #endif /*EFXC2CMDS_H_INCLUDE*/

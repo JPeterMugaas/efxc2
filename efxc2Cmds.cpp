@@ -412,6 +412,22 @@ void cmd_res_may_alias(CompilerParams& params) {
     return;
 }
 
+void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& inputfile) {
+    files.set_privateDataFile(inputfile);
+    UINT cmd = params.get_commands();
+    cmd = cmd | CMD_PREPROCESS_FILE;
+    params.set_commands(cmd);
+    if (params.get_verbose() && params.get_debug()) {
+#ifdef _WIN32
+        std::wcout << std::format(L"option -setprivate (Input File) with arg {}\n", inputfile);
+#else
+        std::cout << std::format("option -setprivate (Input File) with arg {}\n", inputfile);
+#endif
+    }
+    files.LoadPrivateDataFile(params);
+    return;
+}
+
 void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model) {
 #ifdef _WIN32
     std::string model = wstring_to_utf8({ _model.data(), _model.size() });
