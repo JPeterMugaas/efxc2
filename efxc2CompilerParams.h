@@ -54,6 +54,7 @@ public:
 	void LoadSourceCode(std::ifstream& f);
 	void LoadPrivateData(std::ifstream& f);
 	M_BUFFER get_SourceCode() const { return SourceCode; }
+	M_BUFFER get_PrivateData() const { return SourceCode; }
 	/* D3DStripShader parameters */
 	UINT get_strip_flags() const { return strip_flags; }
 	void set_strip_flags(UINT _strip_flags) { strip_flags = _strip_flags; }

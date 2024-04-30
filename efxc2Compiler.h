@@ -21,6 +21,7 @@ public:
     void Compile();
     void Disassemble();
     void StripShader();
+    void EmbedPrivateData();
     size_t WriteIncludeFile(std::ofstream& f);
     size_t WriteObjectFile(std::ofstream& f);
     size_t WriteAssemblyCode(std::ofstream& f);

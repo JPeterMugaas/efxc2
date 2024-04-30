@@ -370,6 +370,40 @@ std::string Compiler::GetPDBFileName() {
     return pName;
 }
 
+void Compiler::EmbedPrivateData() {
+    auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
+    size_t compiledLen = compilerOutput->GetBufferSize();
+    auto private_data = params.get_PrivateData();
+    size_t private_data_size = private_data->size();
+    if (params.get_verbose() && params.get_debug()) {
+        std::cout << "Calling D3DSetBlobPart(\n";
+        std::cout << "\t compiledString,\n";
+        std::cout << std::format("\t {},\n", compiledLen);
+        std::cout << "\t D3D_BLOB_PRIVATE_DATA,\n";
+        std::cout << std::format("\t {:#08x},\n", 0);
+        std::cout << "\t pNameBlobContent,\n";
+        std::cout << std::format("\t {},\n", private_data_size);
+        std::cout << "\t &pShaderWithNewName);\n";
+    }
+    HRESULT hr;
+    auto ptr = api.get_ptr_D3DSetBlobPart();
+    hr = ptr(compiledString, compiledLen, D3D_BLOB_PRIVATE_DATA, 0, private_data->data(),
+        private_data_size, &pShaderWithNewName);
+    /*
+    HRESULT D3DSetBlobPart(
+    [in]  LPCVOID       pSrcData,
+    [in]  SIZE_T        SrcDataSize,
+    [in]  D3D_BLOB_PART Part,
+    [in]  UINT          Flags,
+    [in]  LPCVOID       pPart,
+    [in]  SIZE_T        PartSize,
+    [out] ID3DBlob      **ppNewShader);
+    */
+    if (FAILED(hr)) {
+        print_hresult_error(hr);
+    }
+}
+
 void Compiler::SetPDBFileName(_In_ const std::string_view& _fileName) {
     // Blobs are always a multiple of 4 bytes long. Since DxilShaderDebugName
     // is itself 4 bytes, we pad the storage of the string (not the string itself)
