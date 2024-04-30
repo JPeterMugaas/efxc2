@@ -15,7 +15,7 @@
 #include "efxc2Files.h"
 
 
-void FindNOLOGO(const M_CMD_PARAMS& args, CompilerParams& params) {
+static void FindNOLOGO(const M_CMD_PARAMS& args, CompilerParams& params) {
     /*first scan specifically for the nologo argument so no output
     is given regardless of parameter order*/
     size_t index = 0;
@@ -32,7 +32,7 @@ void FindNOLOGO(const M_CMD_PARAMS& args, CompilerParams& params) {
     return;
 }
 
-void FindDebug(const M_CMD_PARAMS& args, CompilerParams& params) {
+static void FindDebug(const M_CMD_PARAMS& args, CompilerParams& params) {
     /* scan for debug parameter*/
     size_t index = 0;
     while (index < args.size()) {

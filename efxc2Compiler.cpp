@@ -73,10 +73,6 @@ HRESULT D3DPreprocess(
 );
 */
     auto ptr = api.get_ptr_D3DPreprocess();
-    if (ptr == nullptr) {
-        std::cerr << "Error variable null when it should not be.";
-            exit(1);
-    }
     HRESULT hr = ptr(
         SourceCode.get()->data(),
         SourceLen,
@@ -178,10 +174,6 @@ void Compiler::Compile() {
      );
     */
     auto ptr = api.get_ptr_D3DCompile2();
-    if (ptr == nullptr) {
-        std::cerr << "Error variable null when it should not be.";
-        exit(1);
-    }
     HRESULT hr = ptr(
         SourceCode.get()->data(),
         SourceLen,
@@ -241,10 +233,6 @@ void Compiler::Disassemble() {
 #pragma warning( disable : 6387)
 #endif
     auto ptr = api.get_ptr_D3DDisassemble();
-    if (ptr == nullptr) {
-        std::cerr << "Error variable null when it should not be.";
-        exit(1);
-    }
     hr = ptr(compiledString, compiledLen, disassembly_flags, nullptr, &disassemblyCodeBlob);
 #ifdef _MSC_VER
 #pragma warning( pop )
@@ -281,10 +269,6 @@ void Compiler::StripShader() {
 #pragma warning( disable : 6387)
 #endif
         auto ptr = api.get_ptr_D3DStripShader();
-        if (ptr == nullptr) {
-            std::cerr << "Error variable null when it should not be.";
-            exit(1);
-        }
         hr = ptr(compiledString, compiledLen, strip_flags, &strippedBlob);
 #ifdef _MSC_VER
 #pragma warning( pop )
@@ -365,10 +349,6 @@ std::string Compiler::GetPDBFileName() {
         std::cout << "\t & pPDBName); \n";
     }
     auto ptr = api.get_ptr_D3DGetBlobPart();
-    if (ptr == nullptr) {
-        std::cerr << "Error variable null when it should not be.";
-        exit(1);
-    }
     hr = ptr(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, &pPDBName);
     /*
     HRESULT D3DGetBlobPart(
@@ -428,10 +408,6 @@ void Compiler::SetPDBFileName(_In_ const std::string_view& _fileName) {
     }
     HRESULT hr;
     auto ptr = api.get_ptr_D3DSetBlobPart();
-    if (ptr == nullptr) {
-        std::cerr << "Error variable null when it should not be.";
-        exit(1);
-    }
     hr = ptr(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, pNameBlobContent.data(),
         nameBlobPartSize, &pShaderWithNewName);
     /*
@@ -471,10 +447,6 @@ size_t Compiler::WritePDBFile(std::ofstream& f) {
         std::cout << "\t &PDBData);\n";
     }
     auto ptr = api.get_ptr_D3DGetBlobPart();
-    if (ptr == nullptr) {
-        std::cerr << "Error variable null when it should not be.";
-        exit(1);
-    }
     hr = ptr(compiledString, compiledLen, D3D_BLOB_PDB, 0, &PDBData);
     /*
     HRESULT D3DGetBlobPart(
