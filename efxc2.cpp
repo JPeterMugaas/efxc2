@@ -14,6 +14,40 @@
 #include "efxc2CompilerTasks.h"
 #include "efxc2Files.h"
 
+
+void FindNOLOGO(const M_CMD_PARAMS& args, CompilerParams& params) {
+    /*first scan specifically for the nologo argument so no output
+    is given regardless of parameter order*/
+    size_t index = 0;
+    while (index < args.size()) {
+        /* Detect the end of the options. */
+        if (parseOpt(M_NOLOGO, args, &index, nullptr)) {
+            params.set_verbose(false);
+            break;
+        }
+        else {
+            index++;
+        }
+    }
+    return;
+}
+
+void FindDebug(const M_CMD_PARAMS& args, CompilerParams& params) {
+    /* scan for debug parameter*/
+    size_t index = 0;
+    while (index < args.size()) {
+        /* Detect the end of the options. */
+        if (parseOpt(M_DEBUG, args, &index, nullptr)) {
+            params.set_debug(true);
+            break;
+        }
+        else {
+            index++;
+        }
+    }
+    return;
+}
+
 /*Cygwin and MSYS2 compilers amd linkers don't support
 the wmain -Municode entry-point*/
 
@@ -31,32 +65,10 @@ int main(int argc, char* argv[]) {
     CompilerParams params;
     Files files;
 
-    /*first scan specifically for the nologo argument so no output
-    is given regardless of parameter order*/
-    size_t index = 0;
-    while (index < args.size()) {
-        /* Detect the end of the options. */
-        if (parseOpt(M_NOLOGO, args, &index, nullptr)) {
-            params.set_verbose(false);
-            break;
-        }
-        else {
-            index++;
-        }
-    }
+    FindNOLOGO(args, params);
+    FindDebug(args, params);
 
-    /* scan for debug parameter*/
-    index = 0;
-    while (index < args.size()) {
-        /* Detect the end of the options. */
-        if (parseOpt(M_DEBUG, args, &index, nullptr)) {
-            params.set_debug(true);
-            break;
-        }
-        else {
-            index++;
-        }
-    }
+    size_t index = 0;
     /*now scan for all arguments and input file name*/
     index = 0;
     while (TRUE) {
