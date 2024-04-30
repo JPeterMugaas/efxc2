@@ -138,6 +138,10 @@ add_test(NAME error.preprocess_with_fo
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2
   COMMAND fxc BloomCombine.hlsl /debug /I include /P ${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..hlsl /E main /T ps_4_0_level_9_1 /Zi /Fo${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..cso)
 set_tests_properties(error.preprocess_with_fo PROPERTIES WILL_FAIL true)
+add_test(NAME error.not_supported_dumpbin
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
+  COMMAND fxc /dumpbin DGSLEffect.fx  /debug /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /Lx /FhCompiled/BC7Encode_hex.inc)
+set_tests_properties(error.not_supported_dumpbin PROPERTIES WILL_FAIL true)
 add_test(NAME invalid_parameters_will_fail.DGSLEffect_fx
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
   COMMAND fxc DGSLEffect.fx /debug /WX /Ges /Zi /Zpc /Qstrip_reflect /debug /Qstrip_debug /Tvs_4_0_level_9_1 /Emain4BonesVc "/Fh${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/DGSLEffect_main4BonesVc.inc" "/Fd${CMAKE_CURRENT_BINARY_DIR}/tests/Compiled/DGSLEffect_main4BonesVc.pdb" /VnDGSLEffect_main4BonesVc)
