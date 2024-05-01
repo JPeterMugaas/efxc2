@@ -182,7 +182,7 @@ add_test(NAME library.compile.ReinhardEffect
 add_test(NAME setprivate.compile.ReinhardEffect
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
   COMMAND fxc /T ps_4_0 ReinhardEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "${CMAKE_CURRENT_BINARY_DIR}/tests/ReinhardEffect.fxlib" /Fo "${CMAKE_CURRENT_BINARY_DIR}/tests/ReinhardEffect.cso" /Fh "${CMAKE_CURRENT_BINARY_DIR}/tests/ReinhardEffect.h" /debug /I includes)
-set_tests_properties(setprivate.compile.ReinhardEffect PROPERTIES DEPENDS setprivate.compile.ReinhardEffect)
+set_tests_properties(setprivate.compile.ReinhardEffect PROPERTIES DEPENDS library..compile.ReinhardEffect)
 
 add_test(NAME library.compile.FilmicEffect
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
@@ -190,15 +190,15 @@ add_test(NAME library.compile.FilmicEffect
 add_test(NAME setprivate.compile.FilmicEffect
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
   COMMAND fxc /T ps_4_0 FilmicEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "${CMAKE_CURRENT_BINARY_DIR}/tests/FilmicEffect.fxlib" /Fo "${CMAKE_CURRENT_BINARY_DIR}/tests/FilmicEffect.cso" /Fh "${CMAKE_CURRENT_BINARY_DIR}/tests/FilmicEffectShader.h" /debug /I includes)
-set_tests_properties(setprivate.compile.FilmicEffect PROPERTIES DEPENDS setprivate.compile.FilmicEffect)
+set_tests_properties(setprivate.compile.FilmicEffect PROPERTIES DEPENDS library.compile.FilmicEffect)
 
 add_test(NAME library.compile.SdrOverlayEffect
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
   COMMAND fxc /T lib_4_0 SdrOverlayEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffect.fxlib" /debug /I includes)
 add_test(NAME setprivate.compile.SdrOverlayEffect
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
-  COMMAND /T ps_4_0 SdrOverlayEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffect.fxlib" /Fo "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffect.cso" /Fh "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffectShader.h" /debug /I includes)
-set_tests_properties(setprivate.compile.SdrOverlayEffect PROPERTIES DEPENDS setprivate.compile.SdrOverlayEffect)
+  COMMAND fxc /T ps_4_0 SdrOverlayEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffect.fxlib" /Fo "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffect.cso" /Fh "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffectShader.h" /debug /I includes)
+set_tests_properties(setprivate.compile.SdrOverlayEffect PROPERTIES DEPENDS library.compile.SdrOverlayEffect)
 
 add_test(NAME library.compile.LuminanceHeatmapEffec
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
@@ -206,4 +206,4 @@ add_test(NAME library.compile.LuminanceHeatmapEffec
 add_test(NAME setprivate.compile.LuminanceHeatmapEffec
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
   COMMAND fxc /T ps_4_0 LuminanceHeatmapEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "${CMAKE_CURRENT_BINARY_DIR}/tests/LuminanceHeatmapEffect.fxlib" /Fo "${CMAKE_CURRENT_BINARY_DIR}/tests/LuminanceHeatmapEffect.cso" /Fh "${CMAKE_CURRENT_BINARY_DIR}/tests/LuminanceHeatmapEffectShader.h" /debug /I includes)
-set_tests_properties(setprivate.compile.LuminanceHeatmapEffec PROPERTIES DEPENDS setprivate.compile.LuminanceHeatmapEffec)
+set_tests_properties(setprivate.compile.LuminanceHeatmapEffec PROPERTIES DEPENDS library.compile.LuminanceHeatmapEffec)
