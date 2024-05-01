@@ -61,17 +61,17 @@ void Compiler::Preprocess() {
         std::cout << "\t &CompilerOutput,\n";
         std::cout << "\t &errors);\n";
     }
-/*
-HRESULT D3DPreprocess(
-  [in]            LPCVOID                pSrcData,
-  [in]            SIZE_T                 SrcDataSize,
-  [in, optional]  LPCSTR                 pSourceName,
-  [in, optional]  const D3D_SHADER_MACRO *pDefines,
-  [in, optional]  ID3DInclude            *pInclude,
-  [out]           ID3DBlob               **ppCodeText,
-  [out, optional] ID3DBlob               **ppErrorMsgs
-);
-*/
+    /*
+    HRESULT D3DPreprocess(
+      [in]            LPCVOID                pSrcData,
+      [in]            SIZE_T                 SrcDataSize,
+      [in, optional]  LPCSTR                 pSourceName,
+      [in, optional]  const D3D_SHADER_MACRO *pDefines,
+      [in, optional]  ID3DInclude            *pInclude,
+      [out]           ID3DBlob               **ppCodeText,
+      [out, optional] ID3DBlob               **ppErrorMsgs
+    );
+    */
     auto ptr = api.get_ptr_D3DPreprocess();
     HRESULT hr = ptr(
         SourceCode.get()->data(),
@@ -105,7 +105,10 @@ void Compiler::Compile() {
     auto secondary_flags = params.get_secondary_flags();
     auto  includeDirs = params.get_includeDirs();
     std::string _entryPoint = params.get_entryPoint();
-    const char* entryPoint = _entryPoint.c_str();
+    const char* entryPoint = nullptr;
+    if (_entryPoint != "") {
+       entryPoint = _entryPoint.c_str();
+    }
     std::string _model = params.get_model();
     const char* model = _model.c_str();
     std::string _inputFile = params.get_inputFile();
@@ -145,7 +148,12 @@ void Compiler::Compile() {
         std::cout << ",\n";
         /* done printing defines */
         std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
-        std::cout << std::format("\t {},\n", entryPoint);
+        if (entryPoint == nullptr) {
+            std::cout << std::format("\t nullptr,\n");
+        }
+        else {
+            std::cout << std::format("\t {},\n", entryPoint);
+        }
         std::cout << std::format("\t {},\n", model);
         std::cout << std::format("\t {:#08x},\n", sflags);
         std::cout << std::format("\t {:#08x},\n", eflags);

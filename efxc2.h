@@ -284,6 +284,7 @@ constexpr auto CMD_WRITE_OBJECT = 2;
 constexpr auto CMD_WRITE_PDB_FILE = 4;
 constexpr auto CMD_WRITE_ASSEMBLY_CODE = 8;
 constexpr auto CMD_PREPROCESS_FILE = 16;
+constexpr auto CMD_WRITE_LIBRARY_FILE = 32;
 
 /* a good size for an error message */
 constexpr auto ERR_SIZE = 128;

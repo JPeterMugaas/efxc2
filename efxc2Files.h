@@ -29,6 +29,8 @@ public:
     void set_IncludeFile(const M_STRING_VIEW& _IncludeFile) { IncludeFile = _IncludeFile; IncludeFile.make_preferred(); }
     std::filesystem::path get_ObjectFile() const { return ObjectFile;  }
     void set_ObjectFile(const M_STRING_VIEW& _ObjectFile) { ObjectFile = _ObjectFile;  ObjectFile.make_preferred();  }
+    std::filesystem::path get_LibraryFile() const { return LibraryFile; }
+    void set_LibraryFile(const M_STRING_VIEW& _LibraryFile) { LibraryFile = _LibraryFile;  LibraryFile.make_preferred(); }
     std::filesystem::path get_pdbFile() const { return pdbFile;  };
     void set_pdbFile(const M_STRING_VIEW& _pdbFile) { pdbFile = _pdbFile; pdbFile.make_preferred(); }
     std::filesystem::path get_preprocessFile() const { return preprocessFile; }
@@ -49,6 +51,7 @@ private:
     std::filesystem::path privateDataFile = M_STRING_INIT;
     std::filesystem::path IncludeFile = M_STRING_INIT;
     std::filesystem::path ObjectFile = M_STRING_INIT;
+    std::filesystem::path LibraryFile = M_STRING_INIT;
     std::filesystem::path pdbFile = M_STRING_INIT;
     std::filesystem::path preprocessFile = M_STRING_INIT;
     std::filesystem::path temp = M_STRING_INIT;

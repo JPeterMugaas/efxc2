@@ -25,6 +25,7 @@ void cmd_enable_unbounded_descriptor_tables(CompilerParams& params);
 void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& assemblyCodeFile);
 void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& pdbFile);
 void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
+void cmd_Fl(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
 void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
 void cmd_Gch(CompilerParams& params);
 void cmd_Gdp(CompilerParams& params);
@@ -66,11 +67,12 @@ struct CompileFileEntry {
     gCompilerFilep* method;
 };
 
-constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 6;
+constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 7;
 const std::array <CompileFileEntry, COMPILER_FILE_ENTRIES_LENGTH> g_CompilerFileCall = { {
     { M_FC, cmd_Fc },
     { M_FD, cmd_Fd },
     { M_FH, cmd_Fh },
+    { M_FL, cmd_Fl },
     { M_FO, cmd_Fo },
     { M_P, cmd_P },
     { M_SETPRIVATE, cmd_setprivate }
@@ -146,7 +148,7 @@ bool parseNotSupportedOptions(
     _In_ const M_CMD_PARAMS& args,
     _In_ const size_t* index);
 
-constexpr auto NOT_SUPPORTED_LENGTH = 9;
+constexpr auto NOT_SUPPORTED_LENGTH = 8;
 #ifdef _WIN32
 const std::array <const std::wstring, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = { {
 #else
@@ -156,7 +158,6 @@ const std::array <const std::string, NOT_SUPPORTED_LENGTH>g_NotSupportedArgs = {
     M_COMPRESS,
     M_DECOMPRESS,
     M_DUMPBIN,
-    M_FL,
     M_FX,
     M_GETPRIVATE,
     M_MATCHUAVS,

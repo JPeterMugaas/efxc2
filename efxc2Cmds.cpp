@@ -162,6 +162,21 @@ void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outp
     return;
 }
 
+void cmd_Fl(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile) {
+    files.set_LibraryFile(outputFile);
+    UINT cmd = params.get_commands();
+    cmd = cmd | CMD_WRITE_LIBRARY_FILE;
+    params.set_commands(cmd);
+    if (params.get_verbose() && params.get_debug()) {
+#ifdef _WIN32
+        std::wcout << std::format(L"option -Fl (Output File) with arg {}\n", outputFile);
+#else
+        std::cout << std::format("option -Fl (Output File) with arg {}\n", outputFile);
+#endif
+    }
+    return;
+}
+
 void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile) {
     files.set_ObjectFile(outputFile);
     UINT cmd = params.get_commands();

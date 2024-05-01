@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.9.186)
+set(EFXC2_VERSION 0.0.9.187)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -175,6 +175,35 @@ add_test(NAME includes.include_test_2_FQN
 add_test(NAME includes.preprocess_test_2_FQN
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2
   COMMAND fxc BloomCombine.hlsl /debug /I ${CMAKE_CURRENT_SOURCE_DIR}/tests//leason/test_2/include /P${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..hlsl)
+
 add_test(NAME library.compile.ReinhardEffect
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
-  COMMAND fxc /T lib_4_0 ReinhardEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "${CMAKE_CURRENT_BINARY_DIR}/tests/ReinhardEffect.fxlib" /nologo /I includes)
+  COMMAND fxc /T lib_4_0 ReinhardEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "${CMAKE_CURRENT_BINARY_DIR}/tests/ReinhardEffect.fxlib" /debug /I includes)
+add_test(NAME setprivate.compile.ReinhardEffect
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
+  COMMAND fxc /T ps_4_0 ReinhardEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "${CMAKE_CURRENT_BINARY_DIR}/tests/ReinhardEffect.fxlib" /Fo "${CMAKE_CURRENT_BINARY_DIR}/tests/ReinhardEffect.cso" /Fh "${CMAKE_CURRENT_BINARY_DIR}/tests/ReinhardEffect.h" /debug /I includes)
+set_tests_properties(setprivate.compile.ReinhardEffect PROPERTIES DEPENDS setprivate.compile.ReinhardEffect)
+
+add_test(NAME library.compile.FilmicEffect
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
+  COMMAND fxc /T lib_4_0 FilmicEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "${CMAKE_CURRENT_BINARY_DIR}/tests/FilmicEffect.fxlib" /debug /I includes)
+add_test(NAME setprivate.compile.FilmicEffect
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
+  COMMAND fxc /T ps_4_0 FilmicEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "${CMAKE_CURRENT_BINARY_DIR}/tests/FilmicEffect.fxlib" /Fo "${CMAKE_CURRENT_BINARY_DIR}/tests/FilmicEffect.cso" /Fh "${CMAKE_CURRENT_BINARY_DIR}/tests/FilmicEffectShader.h" /debug /I includes)
+set_tests_properties(setprivate.compile.FilmicEffect PROPERTIES DEPENDS setprivate.compile.FilmicEffect)
+
+add_test(NAME library.compile.SdrOverlayEffect
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
+  COMMAND fxc /T lib_4_0 SdrOverlayEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffect.fxlib" /debug /I includes)
+add_test(NAME setprivate.compile.SdrOverlayEffect
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
+  COMMAND /T ps_4_0 SdrOverlayEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffect.fxlib" /Fo "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffect.cso" /Fh "${CMAKE_CURRENT_BINARY_DIR}/tests/SdrOverlayEffectShader.h" /debug /I includes)
+set_tests_properties(setprivate.compile.SdrOverlayEffect PROPERTIES DEPENDS setprivate.compile.SdrOverlayEffect)
+
+add_test(NAME library.compile.LuminanceHeatmapEffec
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
+  COMMAND fxc /T lib_4_0 LuminanceHeatmapEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "${CMAKE_CURRENT_BINARY_DIR}/tests/LuminanceHeatmapEffect.fxlib" /debug /I includes)
+add_test(NAME setprivate.compile.LuminanceHeatmapEffec
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/D2DAdvancedColorImages/D2DAdvancedColorImages
+  COMMAND fxc /T ps_4_0 LuminanceHeatmapEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "${CMAKE_CURRENT_BINARY_DIR}/tests/LuminanceHeatmapEffect.fxlib" /Fo "${CMAKE_CURRENT_BINARY_DIR}/tests/LuminanceHeatmapEffect.cso" /Fh "${CMAKE_CURRENT_BINARY_DIR}/tests/LuminanceHeatmapEffectShader.h" /debug /I includes)
+set_tests_properties(setprivate.compile.LuminanceHeatmapEffec PROPERTIES DEPENDS setprivate.compile.LuminanceHeatmapEffec)
