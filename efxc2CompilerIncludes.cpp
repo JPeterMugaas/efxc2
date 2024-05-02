@@ -16,6 +16,20 @@ d3dcommon.h.
 
 #include "efxc2CompilerIncludes.h"
 
+static void TrimTrailingWhiteSpace(const char* buf, std::uintmax_t* fileSize) {
+    size_t tmp = *fileSize;
+    for (size_t i = *fileSize; i > 0; --i) {
+        if (buf[i - 1] >= 32) {
+            break;
+        }
+        else {
+            tmp--;
+        }
+    }
+    *fileSize = tmp;
+    return;
+}
+
 static int LoadFile(const std::filesystem::path& currentFile, int verbose, char** buf, std::uintmax_t* fileSize) {
     std::ifstream f;
     std::error_code ec;
@@ -30,10 +44,12 @@ static int LoadFile(const std::filesystem::path& currentFile, int verbose, char*
 #endif
         }
         *buf = new char[*fileSize];
+        memset(*buf, 0, *fileSize);
         f = std::ifstream(currentFile, std::ios::in);
         if (f.is_open()) {
             f.read(*buf, *fileSize);
             f.close();
+            TrimTrailingWhiteSpace(*buf, fileSize);
             return true;
         }
         else {

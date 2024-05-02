@@ -276,11 +276,21 @@ typedef HRESULT(__stdcall* gD3DLoadModulep) (
 typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
     __out interface ID3D11Linker** ppLinker
     );
+typedef HRESULT(__stdcall* gD3DCreateFunctionLinkingGraphp) (
+    _In_ UINT uFlags,
+    _Out_ interface ID3D11FunctionLinkingGraph** ppFunctionLinkingGraph
+    );
 #else
 typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
     _Out_ interface ID3D11Linker** ppLinker
     );
+typedef HRESULT(__stdcall* gD3DCreateFunctionLinkingGraphp) (
+    _In_ UINT uFlags,
+    _Out_ interface ID3D11FunctionLinkingGraph** ppFunctionLinkingGraph
+    );
 #endif
+
+
 
 typedef HRESULT(__stdcall* gD3DPreprocessp) (
     _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
