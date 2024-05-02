@@ -40,4 +40,7 @@ void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& param
         compiler.Disassemble();
         files.WriteDisassembly(compiler,params);
     }
+    if ((params.get_commands() & CMD_WRITE_LIBRARY_FILE) == CMD_WRITE_LIBRARY_FILE) {
+        compiler.Link();
+    }
 }

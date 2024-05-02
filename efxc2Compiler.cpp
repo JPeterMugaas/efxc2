@@ -85,12 +85,12 @@ void Compiler::Preprocess() {
         std::cerr << "Reprocess error";
         if (errors) {
             auto* error = (char*)errors->GetBufferPointer();
-            std::cout << std::format("Got an error while compiling:\n{}\n", error);
+            std::cout << std::format("Got an error while preprocessing:\n{}\n", error);
             errors->Release();
             std::cout << std::format("Error Code: {:#08x}", hr);
         }
         else {
-            std::cout << std::format("Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
+            std::cout << std::format("Got an error {:#08x} while preprocessing, but no error message from the function.\n", hr);
             print_hresult_error(hr);
         }
         exit(1);
@@ -208,6 +208,87 @@ void Compiler::Compile() {
         }
         else {
             std::cout << std::format( "Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
+            print_hresult_error(hr);
+        }
+        exit(1);
+    }
+}
+
+void Compiler::Link()
+{
+    auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
+    size_t compiledLen = compilerOutput->GetBufferSize();
+    ID3DBlob* errors = nullptr;
+    HRESULT hr = 0;
+    // Load the compiled library code into a module object.
+    if (params.get_verbose() && params.get_debug()) {
+        std::cout << "Calling D3DLoadModule(\n";
+        std::cout << "\t compiledString,\n";
+        std::cout << std::format("\t {},\n", compiledLen);
+        std::cout << "\t *pLibraryModule)\n";
+    }
+    auto ptr_D3DLoadModule = api.get_ptr_D3DLoadModule();
+    hr = ptr_D3DLoadModule(compiledString, compiledLen, &pLibraryModule);
+/*
+HRESULT D3DLoadModule(
+  [in]  LPCVOID      pSrcData,
+  [in]  SIZE_T       cbSrcDataSize,
+  [out] ID3D11Module **ppModule
+);
+*/
+    if (FAILED(hr)) {
+        print_hresult_error(hr);
+        exit(1);
+    }
+    ID3D11ModuleInstance* LibInstance;
+    hr = pLibraryModule->CreateInstance(nullptr, &LibInstance);
+        /*
+        HRESULT CreateInstance(
+          [in, optional] LPCSTR               pNamespace,
+          [out]          ID3D11ModuleInstance **ppModuleInstance
+        );
+        */
+    if (FAILED(hr)) {
+        print_hresult_error(hr);
+        exit(1);
+    }
+    ID3D11Linker* linker = nullptr;
+    if (params.get_verbose() && params.get_debug()) {
+        std::cout << "Calling D3DCreateLinker(\n";
+        std::cout << "\t &linker)\n";
+    }
+    auto ptr_D3DCreateLinker = api.get_ptr_D3DCreateLinker();
+    hr = ptr_D3DCreateLinker(&linker);
+/*
+HRESULT D3DCreateLinker(
+  [out] ID3D11Linker **ppLinker
+);
+*/
+    if (FAILED(hr)) {
+        print_hresult_error(hr);
+        exit(1);
+    }
+    hr = linker->Link(LibInstance, nullptr, nullptr, 0, &LinkedBlob, &errors);
+/*
+HRESULT Link(
+  [in]            ID3D11ModuleInstance *pEntry,
+  [in]            LPCSTR               pEntryName,
+  [in]            LPCSTR               pTargetName,
+  [in]            UINT                 uFlags,
+  [out]           ID3DBlob             **ppShaderBlob,
+  [out, optional] ID3DBlob             **ppErrorBuffer
+);
+*/
+    if (FAILED(hr)) {
+        std::cerr << "Link error";
+        if (errors) {
+            auto* error = (char*)errors->GetBufferPointer();
+            std::cout << std::format("Got an error while linking:\n{}\n", error);
+            errors->Release();
+            std::cout << std::format("Error Code: {:#08x}", hr);
+        }
+        else {
+            std::cout << std::format("Got an error {:#08x} while linking, but no error message from the function.\n", hr);
             print_hresult_error(hr);
         }
         exit(1);

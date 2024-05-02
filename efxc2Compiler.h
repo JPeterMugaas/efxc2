@@ -19,6 +19,7 @@ public:
     explicit Compiler(const CompilerAPIContainer& _api, const CompilerParams& _params) : api(_api), params(_params) { };
     void Preprocess();
     void Compile();
+    void Link();
     void Disassemble();
     void StripShader();
     void EmbedPrivateData();
@@ -39,6 +40,8 @@ private:
     ID3DBlob*        pPDBName = nullptr;
     ID3DBlob*        pShaderWithNewName = nullptr;
     ID3DBlob*        pPreprocessOutput = nullptr;
+    ID3D11Module*    pLibraryModule = nullptr;
+    ID3DBlob*        LinkedBlob = nullptr;
 };
 
 #endif /* EFXC2COMPILER_H_INCLUDED */

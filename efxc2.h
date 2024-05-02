@@ -187,6 +187,40 @@ constexpr auto DLL_NAME = L"d3dcompiler_47.dll";
 #define D3D_DISASM_PRINT_HEX_LITERALS           0x00000080
 #endif
 
+#ifndef _WIN32
+/* for some reason, this is not declared in MSYS's Win32 headers*/
+
+// {59A6CD0E-E10D-4C1F-88C0-63ABA1DAF30E}
+interface DECLSPEC_UUID("59A6CD0E-E10D-4C1F-88C0-63ABA1DAF30E") ID3D11Linker;
+DEFINE_GUID(IID_ID3D11Linker,
+    0x59a6cd0e, 0xe10d, 0x4c1f, 0x88, 0xc0, 0x63, 0xab, 0xa1, 0xda, 0xf3, 0xe);
+
+#undef INTERFACE
+#define INTERFACE ID3D11Linker
+
+DECLARE_INTERFACE_(ID3D11Linker, IUnknown)
+{
+    STDMETHOD(QueryInterface)(THIS_ _In_ REFIID iid, _Out_ LPVOID * ppv) PURE;
+    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+    STDMETHOD_(ULONG, Release)(THIS) PURE;
+
+    // Link the shader and produce a shader blob suitable to D3D runtime.
+    STDMETHOD(Link)(THIS_ _In_ interface ID3D11ModuleInstance* pEntry,
+        _In_ LPCSTR pEntryName,
+        _In_ LPCSTR pTargetName,
+        _In_ UINT uFlags,
+        _COM_Outptr_ ID3DBlob * *ppShaderBlob,
+        _Always_(_Outptr_opt_result_maybenull_) ID3DBlob * *ppErrorBuffer) PURE;
+
+    // Add an instance of a library module to be used for linking.
+    STDMETHOD(UseLibrary)(THIS_ _In_ interface ID3D11ModuleInstance* pLibraryMI) PURE;
+
+    // Add a clip plane with the plane coefficients taken from a cbuffer entry for 10L9 shaders.
+    STDMETHOD(AddClipPlaneFromCBuffer)(THIS_ _In_ UINT uCBufferSlot, _In_ UINT uCBufferEntry) PURE;
+};
+
+#endif
+
 typedef HRESULT(__stdcall* pD3DCompile2g)(
     _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
     _In_ SIZE_T SrcDataSize,
