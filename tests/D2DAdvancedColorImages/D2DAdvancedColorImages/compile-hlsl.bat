@@ -1,0 +1,9 @@
+mkdir Compiled
+"c:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\fxc.exe" /T lib_4_0 ReinhardEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "Compiled\ReinhardEffect.fxlib" /nologo /I includes
+"c:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\fxc.exe" /T ps_4_0 ReinhardEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "Compiled\ReinhardEffect.fxlib" /Fo "Compiled\ReinhardEffect.cso" /Fh "Compiled\ReinhardEffectShader.h" /nologo /I includes
+"c:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\fxc.exe" /T lib_4_0 FilmicEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "Compiled\FilmicEffect.fxlib" /nologo /I includes
+"c:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\fxc.exe" /T ps_4_0 FilmicEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "Compiled\FilmicEffect.fxlib" /Fo "Compiled\FilmicEffect.cso" /Fh "Compiled\FilmicEffectShader.h" /nologo /I includes
+"c:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\fxc.exe" /T lib_4_0 SdrOverlayEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "Compiled\SdrOverlayEffect.fxlib" /nologo /I includes
+"c:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\fxc.exe" /T ps_4_0 SdrOverlayEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "Compiled\SdrOverlayEffect.fxlib" /Fo "Compiled\SdrOverlayEffect.cso" /Fh "Compiled\SdrOverlayEffectShader.h" /nologo /I includes
+"c:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\fxc.exe" /T lib_4_0 LuminanceHeatmapEffect.hlsl /D D2D_FUNCTION /D D2D_ENTRY=main /Fl "Compiled\LuminanceHeatmapEffect.fxlib" /nologo /I includes
+"c:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\fxc.exe" /T ps_4_0 LuminanceHeatmapEffect.hlsl /D D2D_FULL_SHADER /D D2D_ENTRY=main /E main /setprivate "Compiled\LuminanceHeatmapEffect.fxlib" /Fo "Compiled\LuminanceHeatmapEffect.cso" /Fh "Compiled\LuminanceHeatmapEffectShader.h" /nologo /I includes
