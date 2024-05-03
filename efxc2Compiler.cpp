@@ -20,11 +20,12 @@ void Compiler::Preprocess() {
     auto _defines = params.get_defines();
     auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
     D3D_SHADER_MACRO _def = { nullptr, nullptr };
-    for (size_t i = 0; i < _defines->size(); i++) {
-        _def.Definition = _defines.get()->at(i).Definition.c_str();
-        _def.Name = _defines.get()->at(i).Name.c_str();
+
+    std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](CompilerDefine const& a) {
+        _def.Definition = a.Definition.c_str();
+        _def.Name = a.Name.c_str();
         defines->insert(defines->end(), _def);
-    }
+        });
     _def.Definition = nullptr;
     _def.Name = nullptr;
     defines->insert(defines->end(), _def);
@@ -114,11 +115,11 @@ void Compiler::Compile() {
     auto _defines = params.get_defines();
     auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
     D3D_SHADER_MACRO _def = { nullptr, nullptr };
-    for (size_t i = 0; i <  _defines->size(); i++) {
-        _def.Definition = _defines.get()->at(i).Definition.c_str();
-        _def.Name = _defines.get()->at(i).Name.c_str();
+    std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](CompilerDefine const& a) {
+        _def.Definition = a.Definition.c_str();
+        _def.Name = a.Name.c_str();
         defines->insert(defines->end(), _def);
-    }
+        });
     _def.Definition = nullptr;
     _def.Name = nullptr;
     defines->insert(defines->end(), _def);
@@ -219,7 +220,6 @@ void Compiler::Link()
 {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
-    ID3DBlob* errors = nullptr;
     ID3D11FunctionLinkingGraph* FLG = nullptr;
     HRESULT hr = 0;
     // Load the compiled library code into a module object.
