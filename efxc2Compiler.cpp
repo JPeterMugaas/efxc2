@@ -10,12 +10,6 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 
-static void DisplayDefine(D3D_SHADER_MACRO i) {
-    if (i.Name != nullptr && i.Definition != nullptr) {
-        std::cout << std::format("{}={}", i.Name, i.Definition);
-    }
-}
-
 void Compiler::Preprocess() {
     auto SourceCode = params.get_SourceCode();
     size_t SourceLen = SourceCode->size();
@@ -54,7 +48,11 @@ void Compiler::Preprocess() {
         std::cout << std::format("\t {}, \n", inputFile);
         /* print defines */
         std::cout << "\t";
-        std::ranges::for_each(defines->begin(), defines->end(), DisplayDefine);
+
+        std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
+            if (i.Name != nullptr && i.Definition != nullptr) {
+                std::cout << std::format(" {}={}", i.Name, i.Definition);
+            }});
         std::cout << ",\n";
         /* done printing defines */
         std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
@@ -144,7 +142,10 @@ void Compiler::Compile() {
         std::cout << std::format("\t {}, \n", inputFile);
         /* print defines */
         std::cout << "\t";
-        std::ranges::for_each(defines->begin(), defines->end(), DisplayDefine);
+        std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
+            if (i.Name != nullptr && i.Definition != nullptr) {
+                std::cout << std::format(" {}={}", i.Name, i.Definition);
+            }});
         std::cout << ",\n";
         /* done printing defines */
         std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
