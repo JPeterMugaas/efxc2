@@ -17,9 +17,9 @@
 class CompilerIncludes : public ID3DInclude
 {
     /* do not change this signature, it's part of an "inheritance" API. */
-    HRESULT Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) override;
+    __declspec(nothrow) HRESULT __stdcall Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) override;
     /* do not change this signature, it's part of an "inheritance" API. */
-    HRESULT Close(LPCVOID pData) override;
+    __declspec(nothrow) HRESULT __stdcall Close(LPCVOID pData) override;
 public:
     CompilerIncludes() = default;
     virtual ~CompilerIncludes() = default;

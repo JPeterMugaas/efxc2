@@ -61,7 +61,7 @@ static int LoadFile(const std::filesystem::path& currentFile, int verbose, char*
     }
 }
 
-HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) {
+__declspec(nothrow) HRESULT __stdcall CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) {
     *ppData = nullptr;
     *pBytes = 0;
     std::filesystem::path Filename = std::string(pFileName);
@@ -114,7 +114,7 @@ HRESULT CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, L
 }
 
 /* do not change this signature, it's part of an "inheritance" API. */
-HRESULT CompilerIncludes::Close(LPCVOID pData) {
+__declspec(nothrow) HRESULT __stdcall CompilerIncludes::Close(LPCVOID pData) {
     if (verbose && debug) {
         std::cout << "Called CompilerIncludes::Close(\n";
         if (pData != nullptr) {
