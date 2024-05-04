@@ -105,7 +105,7 @@ void Compiler::Compile() {
     auto  includeDirs = params.get_includeDirs();
     std::string _entryPoint = params.get_entryPoint();
     const char* entryPoint = nullptr;
-    if (_entryPoint != "") {
+    if (!_entryPoint.empty()) {
        entryPoint = _entryPoint.c_str();
     }
     std::string _model = params.get_model();
@@ -352,10 +352,10 @@ size_t Compiler::WriteIncludeFile(std::ofstream& f)
     auto variableName = params.get_variableName();
        
     //Default output variable name
-    if (variableName == "") {
+    if (variableName.empty() ) {
         std::string model = params.get_model();
         std::string entryPoint = params.get_entryPoint();
-        variableName = setupVariableName(model.c_str(), entryPoint.c_str());
+        variableName = setupVariableName(model, entryPoint);
     }
     ID3DBlob* data;
     if (strippedBlob == nullptr) {
@@ -460,7 +460,7 @@ void Compiler::EmbedPrivateData() {
     }
 }
 
-void Compiler::SetPDBFileName(_In_ const std::string_view& _fileName) {
+void Compiler::SetPDBFileName(_In_ const std::string_view _fileName) {
     // Blobs are always a multiple of 4 bytes long. Since DxilShaderDebugName
     // is itself 4 bytes, we pad the storage of the string (not the string itself)
     // to 4 bytes also.

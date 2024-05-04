@@ -15,18 +15,18 @@
 #include "efxc2CompilerParams.h"
 #include "efxc2Files.h"
 
-void option_ignored(_In_ const M_STRING_VIEW& Opt, _In_ const CompilerParams& params);
-void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params, Files& files);
+void option_ignored(_In_ const M_STRING_VIEW Opt, _In_ const CompilerParams& params);
+void parseInputFile(_In_ const M_STRING_VIEW parameter, CompilerParams& params, Files& files);
 void cmd_all_resources_bound(CompilerParams& params);
 void cmd_Cc(CompilerParams& params);
-void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW& _defineOption);
-void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW& _entryPoint);
+void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW _defineOption);
+void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW _entryPoint);
 void cmd_enable_unbounded_descriptor_tables(CompilerParams& params);
-void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& assemblyCodeFile);
-void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& pdbFile);
-void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
-void cmd_Fl(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
-void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
+void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW assemblyCodeFile);
+void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW pdbFile);
+void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile);
+void cmd_Fl(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile);
+void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile);
 void cmd_Gch(CompilerParams& params);
 void cmd_Gdp(CompilerParams& params);
 void cmd_Gec(CompilerParams& params);
@@ -34,7 +34,7 @@ void cmd_Ges(CompilerParams& params);
 void cmd_Gfa(CompilerParams& params);
 void cmd_Gis(CompilerParams& params);
 void cmd_Gpp(CompilerParams& params);
-void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW& _includeDir);
+void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW _includeDir);
 void cmd_Lx(CompilerParams& params);
 void cmd_Ni(CompilerParams& params);
 void cmd_No(CompilerParams& params);
@@ -44,16 +44,16 @@ void cmd_O2(CompilerParams& params);
 void cmd_O3(CompilerParams& params);
 void cmd_Od(CompilerParams& params);
 void cmd_Op(CompilerParams& params);
-void cmd_P(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile);
+void cmd_P(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile);
 void cmd_Qstrip_debug(CompilerParams& params);
 void cmd_Qstrip_priv(CompilerParams& params);
 void cmd_Qstrip_reflect(CompilerParams& params);
 void cmd_Qstrip_rootsignature(CompilerParams& params);
 void cmd_res_may_alias(CompilerParams& params);
-void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& inputfile);
-void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model);
+void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW inputfile);
+void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW _model);
 void cmd_Vd(CompilerParams& params);
-void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW& _variableName);
+void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW _variableName);
 void cmd_WX(CompilerParams& params);
 void cmd_Zi(CompilerParams& params);
 void cmd_Zpc(CompilerParams& params);
@@ -61,7 +61,7 @@ void cmd_Zpr(CompilerParams& params);
 void cmd_Zsb(CompilerParams& params);
 void cmd_Zss(CompilerParams& params);
 
-using gCompilerFilep = void(CompilerParams&, Files&, const M_STRING_VIEW&);
+using gCompilerFilep = void(CompilerParams&, Files&, const M_STRING_VIEW);
 struct CompileFileEntry {
     const M_STRING Param;
     gCompilerFilep* method;

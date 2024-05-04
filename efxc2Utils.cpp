@@ -73,8 +73,8 @@ void print_unsupported_arg_help() {
         nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
     std::string message(messageBuffer, size);
     LocalFree(messageBuffer);
-    std::cerr << std::format("Windows Error Message: {}\n", messageBuffer);
-    std::cout << std::format("Windows Error Message : {}\n", messageBuffer);
+    std::cerr << std::format("Windows Error Message: {}\n", message);
+    std::cout << std::format("Windows Error Message: {}\n", message);
     std::cout << std::format("Error Code: {:#08x}\n", hr);
     std::cout << std::format("Error Name: {}\n", HResultName(hr));
     exit(1);
@@ -112,7 +112,7 @@ void print_unsupported_arg_help() {
 }
 
  void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
-    _In_ const std::string_view& variableName,
+    _In_ const std::string_view variableName,
     _In_ const int outputHex) {
     auto* outString = (unsigned char*)data->GetBufferPointer();
     size_t len = data->GetBufferSize();
@@ -158,7 +158,7 @@ void print_unsupported_arg_help() {
      return READALL_OK;
  }
 
-bool parseOpt(_In_ const M_STRING_VIEW& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
+bool parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
     if (!index || *index >= args.size()) {
         return false;
     }
@@ -201,7 +201,7 @@ bool parseOpt(_In_ const M_STRING_VIEW& option, _In_ const M_CMD_PARAMS& args, _
     return true;
 }
 
-std::string setupVariableName(_In_ const std::string_view& model,
+std::string setupVariableName(_In_ const std::string_view model,
     _In_ const std::string& entryPoint) {
     std::string variableName = "";
     std::string prefix = "g";

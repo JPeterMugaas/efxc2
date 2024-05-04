@@ -23,7 +23,7 @@ class CompilerIncludes : public ID3DInclude
 public:
     CompilerIncludes() = default;
     virtual ~CompilerIncludes() = default;
-    void AddIncludeDir(const M_STRING_VIEW& _dir);
+    void AddIncludeDir(const M_STRING_VIEW _dir);
     void set_verbose(int _verbose) { verbose = _verbose;  }
     int get_verbose() const { return verbose; }
     void set_debug(int _debug) { debug = _debug; }

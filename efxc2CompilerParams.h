@@ -25,12 +25,12 @@ class CompilerParams{
 public:
 	explicit CompilerParams() { initializeDefines(); };
 	/* application flags and params */
-	int get_verbose() const { return verbose; }
-	void set_verbose(int _verbose) { verbose = _verbose; includeDirs.set_verbose(_verbose); }
-	int get_debug() const { return debug; }
-	void set_debug(int _debug) { debug = _debug; includeDirs.set_debug(_debug); }
-	int get_outputHex() const { return outputHex; }
-	void set_outputHex(int _outputHex) { outputHex = _outputHex; }
+	bool get_verbose() const { return verbose; }
+	void set_verbose(bool _verbose) { verbose = _verbose; includeDirs.set_verbose(_verbose); }
+	bool get_debug() const { return debug; }
+	void set_debug(bool _debug) { debug = _debug; includeDirs.set_debug(_debug); }
+	bool get_outputHex() const { return outputHex; }
+	void set_outputHex(bool _outputHex) { outputHex = _outputHex; }
 	UINT get_commands() const { return commands; }
 	void set_commands(UINT _commands) { commands = _commands;  }
 	/* D3DComppile2 parameters */
@@ -41,16 +41,16 @@ public:
 	UINT get_secondary_flags() const { return secondary_flags; }
 	void set_secondary_flags(UINT _secondary_flags) { secondary_flags = _secondary_flags; }
 	std::string get_model() const { return model; }
-	void set_model(const std::string_view& _model) { model = _model; }
+	void set_model(const std::string_view _model) { model = _model; }
 	std::string get_entryPoint() const { return entryPoint; }
-	void set_entryPoint(const std::string_view& _entryPoint) { entryPoint = _entryPoint;  }
+	void set_entryPoint(const std::string_view _entryPoint) { entryPoint = _entryPoint;  }
 	std::string get_variableName() const { return variableName; }
-	void set_variableName(const std::string_view& _variableName) { variableName = _variableName; }
+	void set_variableName(const std::string_view _variableName) { variableName = _variableName; }
 	std::string get_inputFile() const { return inputFile; }
-	void set_inputFile(const std::string_view& _inputFile) { inputFile = _inputFile; }
+	void set_inputFile(const std::string_view _inputFile) { inputFile = _inputFile; }
 	
 	M_COMPILER_DEFINES get_defines() const { return defines; }
-	void add_define(const std::string_view& defineOption);
+	void add_define(const std::string_view defineOption);
 	void LoadSourceCode(std::ifstream& f);
 	void LoadPrivateData(std::ifstream& f);
 	M_BUFFER get_SourceCode() const { return SourceCode; }
@@ -64,9 +64,9 @@ public:
 	CompilerIncludes* get_includeDirs() { return &includeDirs;  }
 private:
 	/* application flags */
-	int                verbose = 1;
-	int                debug = 0;
-	int                outputHex = 0;
+	bool                verbose = 1;
+	bool                debug = 0;
+	bool                outputHex = 0;
 	UINT               commands = 0;
 	/* D3DCompile2 parameters */
 	UINT               sflags = 0;

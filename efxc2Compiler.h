@@ -28,7 +28,7 @@ public:
     size_t WriteAssemblyCode(std::ofstream& f);
     size_t WritePreprocessFile(std::ofstream& f);
     std::string GetPDBFileName();
-    void SetPDBFileName(_In_ const std::string_view& _fileName);
+    void SetPDBFileName(_In_ const std::string_view _fileName);
     size_t WritePDBFile(std::ofstream& f);
 private:
     CompilerAPIContainer api;

@@ -20,21 +20,21 @@ public:
 #ifdef _WIN32
 #endif /* _WIN32 */
     std::filesystem::path get_DisassemblyFile() const { return DisassemblyFile; }
-    void set_DisassemblyFile(const M_STRING_VIEW& _DisassemblyFile) { DisassemblyFile = _DisassemblyFile; DisassemblyFile.make_preferred(); }
+    void set_DisassemblyFile(const M_STRING_VIEW _DisassemblyFile) { DisassemblyFile = _DisassemblyFile; DisassemblyFile.make_preferred(); }
     std::filesystem::path get_inputFile() const { return inputFile;  }
-    void set_inputFile(const M_STRING_VIEW& _inputFile) { inputFile = _inputFile; inputFile.make_preferred(); }
+    void set_inputFile(const M_STRING_VIEW _inputFile) { inputFile = _inputFile; inputFile.make_preferred(); }
     std::filesystem::path get_privateDataFile() const { return privateDataFile;  }
-    void set_privateDataFile(const M_STRING_VIEW& _privateDataFile) { privateDataFile = _privateDataFile; privateDataFile.make_preferred(); }
+    void set_privateDataFile(const M_STRING_VIEW _privateDataFile) { privateDataFile = _privateDataFile; privateDataFile.make_preferred(); }
     std::filesystem::path get_IncludeFile() const { return IncludeFile; }
-    void set_IncludeFile(const M_STRING_VIEW& _IncludeFile) { IncludeFile = _IncludeFile; IncludeFile.make_preferred(); }
+    void set_IncludeFile(const M_STRING_VIEW _IncludeFile) { IncludeFile = _IncludeFile; IncludeFile.make_preferred(); }
     std::filesystem::path get_ObjectFile() const { return ObjectFile;  }
-    void set_ObjectFile(const M_STRING_VIEW& _ObjectFile) { ObjectFile = _ObjectFile;  ObjectFile.make_preferred();  }
+    void set_ObjectFile(const M_STRING_VIEW _ObjectFile) { ObjectFile = _ObjectFile;  ObjectFile.make_preferred();  }
     std::filesystem::path get_LibraryFile() const { return LibraryFile; }
-    void set_LibraryFile(const M_STRING_VIEW& _LibraryFile) { LibraryFile = _LibraryFile;  LibraryFile.make_preferred(); }
+    void set_LibraryFile(const M_STRING_VIEW _LibraryFile) { LibraryFile = _LibraryFile;  LibraryFile.make_preferred(); }
     std::filesystem::path get_pdbFile() const { return pdbFile;  };
-    void set_pdbFile(const M_STRING_VIEW& _pdbFile) { pdbFile = _pdbFile; pdbFile.make_preferred(); }
+    void set_pdbFile(const M_STRING_VIEW _pdbFile) { pdbFile = _pdbFile; pdbFile.make_preferred(); }
     std::filesystem::path get_preprocessFile() const { return preprocessFile; }
-    void set_preprocessFile(const M_STRING_VIEW& _preprocessFile) {
+    void set_preprocessFile(const M_STRING_VIEW _preprocessFile) {
         preprocessFile = _preprocessFile; preprocessFile.make_preferred();
     }
     void LoadInputFile(CompilerParams& params) const;

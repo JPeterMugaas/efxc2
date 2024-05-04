@@ -14,7 +14,6 @@
 #include "efxc2CompilerTasks.h"
 #include "efxc2Files.h"
 
-
 static void FindNOLOGO(const M_CMD_PARAMS& args, CompilerParams& params) {
     /*first scan specifically for the nologo argument so no output
     is given regardless of parameter order*/

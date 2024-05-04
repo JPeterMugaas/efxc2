@@ -88,7 +88,7 @@ const std::array <ProfilePrefix, PROFILE_PREFIX_TABLE_LEN>g_profilePrefixTable =
 void FixupFileName(_Inout_ std::string& FileName);
 void FixupFileName(_Inout_ std::wstring& FileName);
 #endif /* _WIN32 */
-bool parseOpt(_In_ const M_STRING_VIEW& option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption);
+bool parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption);
 void print_copyright();
 [[noreturn]] void print_help_screen();
 [[noreturn]] void print_hresult_error(const HRESULT hr);
@@ -99,13 +99,13 @@ void print_unsupported_arg_help();
 [[noreturn]] void print_windows_error();
 int readAll(_In_ std::ifstream& in,
     _Out_ M_BUFFER& dataptr);
-std::string setupVariableName(_In_ const std::string_view& model,
+std::string setupVariableName(_In_ const std::string_view model,
     _In_ const std::string& entryPoint);
 #ifdef _WIN32
 std::wstring utf8_to_wstring(std::string const& str);
 #endif
 void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
-    _In_ const std::string_view& variableName,
+    _In_ const std::string_view variableName,
     _In_ const int outputHex);
 #ifdef _WIN32
 std::string wstring_to_utf8(std::wstring const& wstr);

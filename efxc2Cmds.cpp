@@ -11,7 +11,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-void option_ignored(_In_ const M_STRING_VIEW& Opt, _In_ const CompilerParams& params) {
+void option_ignored(_In_ const M_STRING_VIEW Opt, _In_ const CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"Option {} ignored", Opt);
@@ -22,7 +22,7 @@ void option_ignored(_In_ const M_STRING_VIEW& Opt, _In_ const CompilerParams& pa
     return;
 }
 
-void parseInputFile(_In_ const M_STRING_VIEW& parameter, CompilerParams& params, Files& files) {
+void parseInputFile(_In_ const M_STRING_VIEW parameter, CompilerParams& params, Files& files) {
     M_STRING inputFile = M_STRING_INIT;
 #ifdef _WIN32
     std::string c_inputFile = "";
@@ -80,7 +80,7 @@ void cmd_Cc(CompilerParams& params) {
     return;
 }
 
-void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW& _defineOption) {
+void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW _defineOption) {
 #ifdef _WIN32
     std::string defineOption = wstring_to_utf8({ _defineOption.data(), _defineOption.size() });
 #else
@@ -92,7 +92,7 @@ void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW& _defineOption) {
     }
 }
 
-void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW& _entryPoint) {
+void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW _entryPoint) {
 #ifdef _WIN32
     std::string entryPoint = wstring_to_utf8({ _entryPoint.data(), _entryPoint.size()});
 #else
@@ -115,7 +115,7 @@ void cmd_enable_unbounded_descriptor_tables(CompilerParams& params) {
     return;
 }
 
-void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& assemblyCodeFile) {
+void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW assemblyCodeFile) {
     files.set_DisassemblyFile(assemblyCodeFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_ASSEMBLY_CODE;
@@ -130,7 +130,7 @@ void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& asse
     return;
 }
 
-void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& pdbFile) {
+void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW pdbFile) {
     files.set_pdbFile(pdbFile);
 
     UINT cmd = params.get_commands();
@@ -147,7 +147,7 @@ void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& pdbF
     return;
 }
 
-void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile) {
+void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile) {
     files.set_IncludeFile(outputFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_HEADER;
@@ -162,7 +162,7 @@ void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outp
     return;
 }
 
-void cmd_Fl(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile) {
+void cmd_Fl(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile) {
     files.set_LibraryFile(outputFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_LIBRARY_FILE;
@@ -177,7 +177,7 @@ void cmd_Fl(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outp
     return;
 }
 
-void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile) {
+void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile) {
     files.set_ObjectFile(outputFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_OBJECT;
@@ -262,7 +262,7 @@ void cmd_Gpp(CompilerParams& params) {
     return;
 }
 
-void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW& _includeDir) {
+void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW _includeDir) {
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"option -I (Shader Include Dir) with arg {}\n", _includeDir);
@@ -362,7 +362,7 @@ void cmd_Op(CompilerParams& params) {
     return;
 }
 
-void cmd_P(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& outputFile) {
+void cmd_P(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile) {
     files.set_preprocessFile (outputFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_PREPROCESS_FILE;
@@ -427,7 +427,7 @@ void cmd_res_may_alias(CompilerParams& params) {
     return;
 }
 
-void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW& inputfile) {
+void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW inputfile) {
     files.set_privateDataFile(inputfile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_PREPROCESS_FILE;
@@ -443,7 +443,7 @@ void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VI
     return;
 }
 
-void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW& _model) {
+void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW _model) {
 #ifdef _WIN32
     std::string model = wstring_to_utf8({ _model.data(), _model.size() });
 #else
@@ -466,7 +466,7 @@ void cmd_Vd(CompilerParams& params) {
     return;
 }
 
-void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW& _variableName) {
+void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW _variableName) {
 #ifdef _WIN32
     std::string variableName = wstring_to_utf8({ _variableName.data(), _variableName.size() });
 #else
@@ -578,9 +578,6 @@ bool parseCompilerFileCall(
         return false;
     }
     M_STRING argumentOption = M_STRING_INIT;
-    if (!index || *index >= args.size()) {
-       return false;
-    }
 
     M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;

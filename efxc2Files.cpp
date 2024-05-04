@@ -138,13 +138,12 @@ void Files::WritePreprocessFile(Compiler& compiler, const CompilerParams& params
 }
 
 void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
-    std::ofstream f;
     size_t  outputLen = 0;
     /*write .PDB data if applicable*/
     if (pdbFile.empty() == false) {
-        if (!pdbFile.filename().empty() &&
-            (pdbFile.filename().string().compare(".") != 0) &&
-            (pdbFile.filename().string().compare("..") != 0)) {
+        if (std::string pdbFileStr = (pdbFile.filename().string()); !pdbFileStr.empty() &&
+            (pdbFileStr.compare(".") != 0) &&
+            (pdbFileStr.compare("..") != 0)) {
 #ifdef _WIN32
             auto c_pdbFile = wstring_to_utf8(pdbFile.filename().native());
             compiler.SetPDBFileName(c_pdbFile);
@@ -156,8 +155,9 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
             /* if only a dir was specified, use the default
             filename in the shader data. */
             auto pPDBFileName = compiler.GetPDBFileName();
-            if ((pdbFile.filename().string().compare(".") == 0) ||
-                (pdbFile.filename().string().compare("..") == 0)) {
+            pdbFileStr = pdbFile.filename().string();
+            if ((pdbFileStr.compare(".") == 0) ||
+                (pdbFileStr.compare("..") == 0)) {
                    pPDBFileName.insert(pPDBFileName.begin(), std::filesystem::path::preferred_separator);
             }
 #ifdef _WIN32
@@ -168,6 +168,7 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
             pdbFile = std::filesystem::path(c_pdbFile);
 #endif
         }
+        std::ofstream f;
         f = std::ofstream(pdbFile, std::ios::out | std::ios::binary);
         if (!f) {
 #ifdef _WIN32

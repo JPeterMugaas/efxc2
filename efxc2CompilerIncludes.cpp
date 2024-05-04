@@ -30,7 +30,7 @@ static void TrimTrailingWhiteSpace(const char* buf, std::uintmax_t* fileSize) {
     return;
 }
 
-static int LoadFile(const std::filesystem::path& currentFile, int verbose, char** buf, std::uintmax_t* fileSize) {
+static bool LoadFile(const std::filesystem::path& currentFile, int verbose, char** buf, std::uintmax_t* fileSize) {
     std::ifstream f;
     std::error_code ec;
     *fileSize = std::filesystem::file_size(currentFile, ec);
@@ -103,7 +103,7 @@ __declspec(nothrow) HRESULT __stdcall CompilerIncludes::Open(D3D_INCLUDE_TYPE In
         *pBytes = (UINT)fileSize;
         return S_OK;
     }
-    for (std::filesystem::path currentDir : dirs) {
+    for (std::filesystem::path& currentDir : dirs) {
         if (LoadFile(currentDir /= Filename, verbose, &buf, &fileSize)) {
             *ppData = buf;
             *pBytes = (UINT)fileSize;
@@ -130,7 +130,7 @@ __declspec(nothrow) HRESULT __stdcall CompilerIncludes::Close(LPCVOID pData) {
 }
 
 /* do not change this signature, it's part of an "inheritance" API. */
-void CompilerIncludes::AddIncludeDir(const M_STRING_VIEW& _dir)
+void CompilerIncludes::AddIncludeDir(const M_STRING_VIEW _dir)
 {
     M_STRING dir = { _dir.data(), _dir.size() };
 

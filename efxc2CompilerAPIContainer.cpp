@@ -38,7 +38,7 @@ CompilerAPIContainer::CompilerAPIContainer() {
         print_windows_error();
     }
     ptr_D3DSetBlobPart = (pD3DSetBlobPartg)GetProcAddress(h, "D3DSetBlobPart");
-    if (ptr_D3DGetBlobPart == nullptr) {
+    if (ptr_D3DSetBlobPart == nullptr) {
         std::cerr << "Error: could not get the address of D3DSetBlobPart.\n";
         print_windows_error();
     }
