@@ -15,7 +15,6 @@
 
 using M_BUFFER = std::shared_ptr<std::vector<char>>;
 
-
 #ifdef _WIN32
 using M_CMD_PARAMS = std::vector<std::wstring>;
 using M_STRING = std::wstring;

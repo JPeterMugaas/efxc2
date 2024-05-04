@@ -41,6 +41,7 @@
 #include <memory>
 #include <ranges>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <sal.h>
 

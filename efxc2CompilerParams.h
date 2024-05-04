@@ -64,9 +64,9 @@ public:
 	CompilerIncludes* get_includeDirs() { return &includeDirs;  }
 private:
 	/* application flags */
-	bool                verbose = 1;
-	bool                debug = 0;
-	bool                outputHex = 0;
+	bool                verbose = true;
+	bool                debug = false;
+	bool                outputHex = false;
 	UINT               commands = 0;
 	/* D3DCompile2 parameters */
 	UINT               sflags = 0;
