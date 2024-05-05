@@ -308,10 +308,6 @@ struct ShaderDebugName
     // Followed by [0-3] zero bytes to align to a 4-byte boundary.
 };
 
-#ifndef _countof
-#define _countof(a) (sizeof(a)/sizeof(*(a)))
-#endif
-
 /* command codes for internal use */
 constexpr auto CMD_WRITE_HEADER = 1;
 constexpr auto CMD_WRITE_OBJECT = 2;
