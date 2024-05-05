@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.9.195)
+set(EFXC2_VERSION 0.0.9.196)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -143,10 +143,15 @@ add_test(NAME error.not_supported_dumpbin
   COMMAND fxc /dumpbin DGSLEffect.fx  /debug /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /Lx /FhCompiled/BC7Encode_hex.inc)
 set_tests_properties(error.not_supported_dumpbin PROPERTIES WILL_FAIL true)
 
-add_test(NAME error.no_input_file_specified
+add_test(NAME error.compile_no_input_file_specified
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
   COMMAND fxc  /debug /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug /Tcs_5_0 /ETryMode456CS /Lx /FhCompiled/BC7Encode_hex.inc)
-set_tests_properties(error.no_input_file_specified PROPERTIES WILL_FAIL true)
+set_tests_properties(error.compile_no_input_file_specified PROPERTIES WILL_FAIL true)
+
+add_test(NAME error.preprocess_no_input_specified
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests
+  COMMAND fxc /P ${CMAKE_CURRENT_BINARY_DIR}/tests/BloomCombin_ps_2..hlsl /debug)
+set_tests_properties(error.preprocess_no_input_specified PROPERTIES WILL_FAIL true)
 
 add_test(NAME invalid_parameters_will_fail.DGSLEffect_fx
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests
