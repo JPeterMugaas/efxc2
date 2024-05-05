@@ -109,7 +109,7 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
 #ifdef _WIN32
         std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());
 #else
-        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());;
+        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());
 #endif
     }
 }
@@ -132,7 +132,7 @@ void Files::WritePreprocessFile(Compiler& compiler, const CompilerParams& params
 #ifdef _WIN32
         std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());
 #else
-        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());;
+        std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());
 #endif
     }
 }
