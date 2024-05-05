@@ -308,13 +308,6 @@ struct ShaderDebugName
     // Followed by [0-3] zero bytes to align to a 4-byte boundary.
 };
 
-/* helper macros for functions */
-#ifdef _WIN32
-#define M_WCSDUP _wcsdup
-#else  /* _WIN32 */
-#define M_WCSDUP wcsdup
-#endif /* _WIN32 */
-
 #ifndef _countof
 #define _countof(a) (sizeof(a)/sizeof(*(a)))
 #endif
