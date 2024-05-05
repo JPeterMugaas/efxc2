@@ -398,6 +398,13 @@ size_t Compiler::WritePreprocessFile(std::ofstream& f) {
 }
 
 std::string Compiler::GetPDBFileName() {
+    /*
+    This is based on code I found at:
+
+    https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
+
+    */
+
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
     HRESULT hr = 0;
@@ -467,6 +474,12 @@ void Compiler::EmbedPrivateData() {
 }
 
 void Compiler::SetPDBFileName(_In_ const std::string_view _fileName) {
+/*
+This is based on code I found at:
+
+https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
+
+*/
     // Blobs are always a multiple of 4 bytes long. Since DxilShaderDebugName
     // is itself 4 bytes, we pad the storage of the string (not the string itself)
     // to 4 bytes also.
@@ -485,7 +498,7 @@ void Compiler::SetPDBFileName(_In_ const std::string_view _fileName) {
     // declared length does not include the null terminator:
     header->NameLength = (uint16_t)fileNameLen - 1;
     // but the null terminator is expected to be present:
-    for (int i = 0; i < _fileName.length(); i++) {
+    for (int i = 0; i < fileNameLen; i++) {
         pNameBlobContent[sizeof(ShaderDebugName) + i] = _fileName[i];
     }
 
@@ -519,6 +532,7 @@ void Compiler::SetPDBFileName(_In_ const std::string_view _fileName) {
     if (FAILED(hr)) {
         print_hresult_error(hr);
     }
+
 }
 
 size_t Compiler::WritePDBFile(std::ofstream& f) {
