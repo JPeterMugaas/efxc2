@@ -58,6 +58,11 @@ void print_unsupported_arg_help() {
     exit(1);
 }
 
+[[noreturn]] void print_no_input_file() {
+    std::cerr << "You specified no input files.\n";
+    print_usage_arg();
+    exit(1);
+}
 [[noreturn]] void print_usage_toomany() {
     std::cerr << "You specified multiple input files.\n";
     std::cout << "We did not expect to receive this, and aren't prepared to handle multiple input\n";

@@ -12,6 +12,9 @@
 
 void Compiler::Preprocess() {
     auto SourceCode = params.get_SourceCode();
+    if (SourceCode == nullptr) {
+        print_no_input_file();
+    }
     size_t SourceLen = SourceCode->size();
     auto  includeDirs = params.get_includeDirs();
     std::string _inputFile = params.get_inputFile();
@@ -98,6 +101,9 @@ void Compiler::Preprocess() {
 
 void Compiler::Compile() {
     auto SourceCode = params.get_SourceCode();
+    if (SourceCode == nullptr) {
+        print_no_input_file();
+    }
     size_t SourceLen = SourceCode->size();
     auto eflags = params.get_eflags();
     auto sflags = params.get_sflags();

@@ -27,9 +27,6 @@
 #include "config.h"
 #include <d3dcompiler.h>
 #include <d3dcommon.h>
-#ifdef _WIN32
-#include <direct.h>
-#endif /* _WIN32 */
 #include <algorithm>
 #include <array>
 #include <bit>

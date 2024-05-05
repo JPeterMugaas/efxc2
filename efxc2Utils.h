@@ -91,6 +91,7 @@ bool parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _I
 void print_copyright();
 [[noreturn]] void print_help_screen();
 [[noreturn]] void print_hresult_error(const HRESULT hr);
+[[noreturn]] void print_no_input_file();
 void print_unsupported_arg_help();
 [[noreturn]] void print_usage_missing(const char* arg);
 [[noreturn]] void print_usage_toomany();
