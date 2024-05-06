@@ -26,6 +26,9 @@ void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& param
         exit(0);
     }
     compiler.Compile();
+    if (params.get_PrivateData() != nullptr) {
+        compiler.EmbedPrivateData();
+    }
     compiler.StripShader();
     if ((params.get_commands() & CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {
         files.WriteIncludeFile(compiler,params);

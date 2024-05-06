@@ -429,9 +429,6 @@ void cmd_res_may_alias(CompilerParams& params) {
 
 void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW inputfile) {
     files.set_privateDataFile(inputfile);
-    UINT cmd = params.get_commands();
-    cmd = cmd | CMD_PREPROCESS_FILE;
-    params.set_commands(cmd);
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"option -setprivate (Input File) with arg {}\n", inputfile);

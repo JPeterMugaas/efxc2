@@ -189,8 +189,8 @@ void Compiler::Compile() {
        [out, optional] ID3DBlob               **ppErrorMsgs
      );
     */
-    auto ptr = api.get_ptr_D3DCompile2();
-    HRESULT hr = ptr(
+    auto ptr_D3DCompile2 = api.get_ptr_D3DCompile2();
+    HRESULT hr = ptr_D3DCompile2(
         SourceCode.get()->data(),
         SourceLen,
         inputFile,
@@ -452,12 +452,12 @@ void Compiler::EmbedPrivateData() {
         std::cout << std::format("\t {:#08x},\n", 0);
         std::cout << "\t pNameBlobContent,\n";
         std::cout << std::format("\t {},\n", private_data_size);
-        std::cout << "\t &pShaderWithNewName);\n";
+        std::cout << "\t &compilerOutput);\n";
     }
     HRESULT hr;
     auto ptr = api.get_ptr_D3DSetBlobPart();
     hr = ptr(compiledString, compiledLen, D3D_BLOB_PRIVATE_DATA, 0, private_data->data(),
-        private_data_size, &pShaderWithNewName);
+        private_data_size, &compilerOutput);
     /*
     HRESULT D3DSetBlobPart(
     [in]  LPCVOID       pSrcData,
@@ -518,7 +518,7 @@ https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
     HRESULT hr;
     auto ptr = api.get_ptr_D3DSetBlobPart();
     hr = ptr(compiledString, compiledLen, D3D_BLOB_DEBUG_NAME, 0, pNameBlobContent.data(),
-        nameBlobPartSize, &pShaderWithNewName);
+        nameBlobPartSize, &compilerOutput );
     /*
     HRESULT D3DSetBlobPart(
     [in]  LPCVOID       pSrcData,
@@ -540,14 +540,8 @@ size_t Compiler::WritePDBFile(std::ofstream& f) {
     ID3DBlob* PDBData = nullptr;
     char const* compiledString = nullptr;
     size_t compiledLen = 0;
-    if (pShaderWithNewName == nullptr) {
-        compiledString = (char*)compilerOutput->GetBufferPointer();
-        compiledLen = compilerOutput->GetBufferSize();
-    }
-    else {
-        compiledString = (char*)pShaderWithNewName->GetBufferPointer();
-        compiledLen = pShaderWithNewName->GetBufferSize();
-    }
+    compiledString = (char*)compilerOutput->GetBufferPointer();
+    compiledLen = compilerOutput->GetBufferSize();
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DGetBlobPart(\n";
         std::cout << "\t compiledString,\n";

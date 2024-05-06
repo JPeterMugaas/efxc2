@@ -38,7 +38,6 @@ private:
     ID3DBlob*        disassemblyCodeBlob = nullptr;
     ID3DBlob*        strippedBlob = nullptr;
     ID3DBlob*        pPDBName = nullptr;
-    ID3DBlob*        pShaderWithNewName = nullptr;
     ID3DBlob*        pPreprocessOutput = nullptr;
     ID3D11Module*    pLibraryModule = nullptr;
     ID3DBlob*        LinkedBlob = nullptr;
