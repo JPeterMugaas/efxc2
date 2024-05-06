@@ -25,7 +25,6 @@ void cmd_enable_unbounded_descriptor_tables(CompilerParams& params);
 void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW assemblyCodeFile);
 void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW pdbFile);
 void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile);
-void cmd_Fl(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile);
 void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile);
 void cmd_Gch(CompilerParams& params);
 void cmd_Gdp(CompilerParams& params);
@@ -67,12 +66,11 @@ struct CompileFileEntry {
     gCompilerFilep* method;
 };
 
-constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 7;
+constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 6;
 const std::array <CompileFileEntry, COMPILER_FILE_ENTRIES_LENGTH> g_CompilerFileCall = { {
     { M_FC, cmd_Fc },
     { M_FD, cmd_Fd },
     { M_FH, cmd_Fh },
-    { M_FL, cmd_Fl },
     { M_FO, cmd_Fo },
     { M_P, cmd_P },
     { M_SETPRIVATE, cmd_setprivate }
@@ -129,13 +127,14 @@ bool  parseCompilerOnlyCall(
     _Inout_	size_t* index,
     CompilerParams& params);
 
-constexpr auto IGNORED_OPTS_LENGTH = 3;
+constexpr auto IGNORED_OPTS_LENGTH = 4;
 #ifdef _WIN32
 const std::array <const std::wstring, IGNORED_OPTS_LENGTH>g_IgnoredOptions = {
 #else
 const std::array <const std::string,IGNORED_OPTS_LENGTH>g_IgnoredOptions = {
 #endif
     M_FE,
+    M_FL,
     M_FORCE_ROOTSIG_VER,
     M_VI};
 

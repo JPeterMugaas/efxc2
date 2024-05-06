@@ -19,7 +19,6 @@ public:
     explicit Compiler(const CompilerAPIContainer& _api, const CompilerParams& _params) : api(_api), params(_params) { };
     void Preprocess();
     void Compile();
-    void Link();
     void Disassemble();
     void StripShader();
     void EmbedPrivateData();

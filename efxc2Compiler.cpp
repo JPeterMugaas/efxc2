@@ -222,52 +222,6 @@ void Compiler::Compile() {
     }
 }
 
-void Compiler::Link()
-{
-    auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
-    size_t compiledLen = compilerOutput->GetBufferSize();
-    ID3D11FunctionLinkingGraph* FLG = nullptr;
-    HRESULT hr = 0;
-    // Load the compiled library code into a module object.
-    if (params.get_verbose() && params.get_debug()) {
-        std::cout << "Calling D3DLoadModule(\n";
-        std::cout << "\t compiledString,\n";
-        std::cout << std::format("\t {},\n", compiledLen);
-        std::cout << "\t *pLibraryModule)\n";
-    }
-    auto ptr_D3DLoadModule = api.get_ptr_D3DLoadModule();
-    hr = ptr_D3DLoadModule(compiledString, compiledLen, &pLibraryModule);
-/*
-HRESULT D3DLoadModule(
-  [in]  LPCVOID      pSrcData,
-  [in]  SIZE_T       cbSrcDataSize,
-  [out] ID3D11Module **ppModule
-);
-*/
-    if (FAILED(hr)) {
-        print_hresult_error(hr);
-        exit(1);
-    }
-    ID3D11ModuleInstance* LibInstance;
-    hr = pLibraryModule->CreateInstance(nullptr, &LibInstance);
-        /*
-        HRESULT CreateInstance(
-          [in, optional] LPCSTR               pNamespace,
-          [out]          ID3D11ModuleInstance **ppModuleInstance
-        );
-        */
-    if (FAILED(hr)) {
-        print_hresult_error(hr);
-        exit(1);
-    }
-    auto ptr_D3DCreateFunctionLinkingGrap = api.get_ptr_D3DCreateFunctionLinkingGraph();
-    hr = ptr_D3DCreateFunctionLinkingGrap(0, &FLG);
-    if (FAILED(hr)) {
-        print_hresult_error(hr);
-        exit(1);
-    }
-}
-
 void Compiler::Disassemble() {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();

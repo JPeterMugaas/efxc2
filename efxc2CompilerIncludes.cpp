@@ -36,7 +36,6 @@ static bool LoadFile(const std::filesystem::path& currentFile, int verbose, char
     *fileSize = std::filesystem::file_size(currentFile, ec);
     if (ec.value() == 0) {
         if (verbose) {
-
 #ifdef _WIN32
             std::wcout << std::format(L"Found {}\n", currentFile.native());
 #else
