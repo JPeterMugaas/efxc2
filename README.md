@@ -33,7 +33,10 @@ A properly installed compiler that supports [C++20](https://isocpp.org/std/the-s
 * [Intel® oneAPI DPC++/C++ Compiler](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compiler.html#gs.6foy5x)
 * [Visual Studio](https://visualstudio.microsoft.com/)
 
-as well as [CMake](https://cmake.org/).
+as well as [CMake](https://cmake.org/).  You will often need a build system for CMake such as:
+
+* [Ninja](https://ninja-build.org/)
+* [GNU Make](https://www.gnu.org/software/make/)
 
 ### [Mingw-w64](https://www.mingw-w64.org/) under [MSYS2](https://www.msys2.org/)
 
