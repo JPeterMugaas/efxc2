@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.9.202)
+set(EFXC2_VERSION 0.0.9.203)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -27,7 +27,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-option(FXC_BUILD_STATIC "Build with static libraries (mingw only)." ON)
+option(FXC2_BUILD_STATIC "Build with static libraries (mingw only)." ON)
 
 set(EXEC_SOURCES efxc2.cpp
                  efxc2Cmds.h

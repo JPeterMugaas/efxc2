@@ -44,7 +44,7 @@ static bool LoadFile(const std::filesystem::path& currentFile, int verbose, char
         }
         *buf = new char[*fileSize];
         memset(*buf, 0, *fileSize);
-        f = std::ifstream(currentFile, std::ios::in);
+        f = std::ifstream(currentFile, std::ios::in | std::ios::binary);
         if (f.is_open()) {
             f.read(*buf, *fileSize);
             f.close();
