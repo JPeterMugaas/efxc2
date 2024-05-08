@@ -43,13 +43,13 @@ void print_unsupported_arg_help() {
     return;
 }
 
-[[noreturn]] void print_version() {
+[[noreturn]] void print_version() { //-V1082
     std::cout << PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n";
     std::cout << PROGRAM_COPYRIGHT "\n";
     exit(0);
 }
 
-[[noreturn]] void print_usage_missing(const char* arg) {
+[[noreturn]] void print_usage_missing(const char* arg) { //-V1082
     std::cerr << std::format("efxc2 is missing the {} argument.\n", arg);
     std::cout << "We expected to receive this, and it's likely things will not work correctly\n";
     std::cout << "without it.  Review efxc2 and make sure things will work.\n";
@@ -58,12 +58,12 @@ void print_unsupported_arg_help() {
     exit(1);
 }
 
-[[noreturn]] void print_no_input_file() {
+[[noreturn]] void print_no_input_file() { //-V1082
     std::cerr << "You specified no input files.\n";
     print_usage_arg();
     exit(1);
 }
-[[noreturn]] void print_usage_toomany() {
+[[noreturn]] void print_usage_toomany() { //-V1082
     std::cerr << "You specified multiple input files.\n";
     std::cout << "We did not expect to receive this, and aren't prepared to handle multiple input\n";
     std::cout << "files. You'll have to edit the source to behave the way you want.\n";
@@ -72,7 +72,7 @@ void print_unsupported_arg_help() {
     exit(1);
 }
 
-[[noreturn]] void print_hresult_error(const HRESULT hr) {
+[[noreturn]] void print_hresult_error(const HRESULT hr) { //-V1082
     LPSTR messageBuffer = nullptr;
     size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
@@ -85,7 +85,7 @@ void print_unsupported_arg_help() {
     exit(1);
 }
 
-[[noreturn]] void print_windows_error() {
+[[noreturn]] void print_windows_error() { //-V1082
     /*from: https://gist.github.com/Aaronontheweb/7461004#file-getlasterror-cpp */
     DWORD dLastError = GetLastError();
     LPCTSTR strErrorMessage = nullptr;
@@ -110,7 +110,7 @@ void print_unsupported_arg_help() {
     exit(1);
 }
 
-[[noreturn]] void print_help_screen() {
+[[noreturn]] void print_help_screen() { //-V1082
     print_copyright();
     print_usage_arg();
     exit(0);

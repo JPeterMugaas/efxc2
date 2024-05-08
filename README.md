@@ -84,3 +84,15 @@ where I am building from a subdirectory under the source-code.
 
 This program is licensed under the Mozilla Public License, v. 2.0.  A copy
 of that license is included in the license_MPL_2_0.txt file.
+
+## Tools I Use to Develop this Program
+
+These tools are **NOT** required to build this program or submit request.  I list them because they are helpful to me in developing this program.
+
+[Microsoft Visual Studio Community 2022](https://visualstudio.microsoft.com/vs/community/) - 
+
+[PVS-Studio](https://pvs-studio.com/pvs-studio/?utm_source=website&utm_medium=github&utm_campaign=open_source) - static analyzer for C, C++, C#, and Java code.
+
+[SonarCloud](https://www.sonarsource.com/products/sonarcloud/) - a cloud-based code review tool that integrates with DevOps platforms and CI/CD workflows.
+
+[SonarLint](https://www.sonarsource.com/products/sonarlint/) - an advanced linter in your IDE for Clean Code
