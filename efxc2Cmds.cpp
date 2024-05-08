@@ -11,7 +11,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-void option_ignored(_In_ const M_STRING_VIEW Opt, _In_ const CompilerParams& params) {
+void efxc2Cmds::option_ignored(_In_ const efxc2Utils::M_STRING_VIEW Opt, _In_ const efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"Option {} ignored", Opt);
@@ -22,8 +22,8 @@ void option_ignored(_In_ const M_STRING_VIEW Opt, _In_ const CompilerParams& par
     return;
 }
 
-void parseInputFile(_In_ const M_STRING_VIEW parameter, CompilerParams& params, Files& files) {
-    M_STRING inputFile = M_STRING_INIT;
+void efxc2Cmds::parseInputFile(_In_ const efxc2Utils::M_STRING_VIEW parameter, efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files) {
+    efxc2Utils::M_STRING inputFile = efxc2Utils::M_STRING_INIT;
 #ifdef _WIN32
     std::string c_inputFile = "";
 #endif
@@ -41,8 +41,8 @@ void parseInputFile(_In_ const M_STRING_VIEW parameter, CompilerParams& params, 
         }
         inputFile = parameter;
 #ifdef _WIN32
-        FixupFileName(inputFile);
-        c_inputFile = wstring_to_utf8(inputFile);
+        efxc2Utils::FixupFileName(inputFile);
+        c_inputFile = efxc2Utils::wstring_to_utf8(inputFile);
         params.set_inputFile(c_inputFile);
 #endif /* _WIN32 */
         files.set_inputFile(inputFile);
@@ -56,11 +56,11 @@ void parseInputFile(_In_ const M_STRING_VIEW parameter, CompilerParams& params, 
         files.LoadInputFile(params);
     }
     else {
-        print_usage_toomany();
+        efxc2Utils::print_usage_toomany();
     }
 }
 
-void cmd_all_resources_bound(CompilerParams& params) {
+void efxc2Cmds::cmd_all_resources_bound(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -all_resources_bound sflags | D3DCOMPILE_ALL_RESOURCES_BOUND\n";
     }
@@ -70,7 +70,7 @@ void cmd_all_resources_bound(CompilerParams& params) {
     return;
 }
 
-void cmd_Cc(CompilerParams& params) {
+void efxc2Cmds::cmd_Cc(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Cc | D3D_DISASM_ENABLE_COLOR_CODED\n";
     }
@@ -80,9 +80,9 @@ void cmd_Cc(CompilerParams& params) {
     return;
 }
 
-void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW _defineOption) {
+void efxc2Cmds::cmd_D(efxc2CompilerParams::CompilerParams& params, _In_ const efxc2Utils::M_STRING_VIEW _defineOption) {
 #ifdef _WIN32
-    std::string defineOption = wstring_to_utf8({ _defineOption.data(), _defineOption.size() });
+    std::string defineOption = efxc2Utils::wstring_to_utf8({ _defineOption.data(), _defineOption.size() });
 #else
     std::string defineOption = { _defineOption.data(), _defineOption.size()};
 #endif
@@ -92,9 +92,9 @@ void cmd_D(CompilerParams& params, _In_ const M_STRING_VIEW _defineOption) {
     }
 }
 
-void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW _entryPoint) {
+void efxc2Cmds::cmd_E(efxc2CompilerParams::CompilerParams& params, _In_ const efxc2Utils::M_STRING_VIEW _entryPoint) {
 #ifdef _WIN32
-    std::string entryPoint = wstring_to_utf8({ _entryPoint.data(), _entryPoint.size()});
+    std::string entryPoint = efxc2Utils::wstring_to_utf8({ _entryPoint.data(), _entryPoint.size()});
 #else
     std::string entryPoint = { _entryPoint.data(), _entryPoint.size()};
 #endif
@@ -105,7 +105,7 @@ void cmd_E(CompilerParams& params, _In_ const M_STRING_VIEW _entryPoint) {
     return;
 }
 
-void cmd_enable_unbounded_descriptor_tables(CompilerParams& params) {
+void efxc2Cmds::cmd_enable_unbounded_descriptor_tables(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose()) {
         std::cout << "option -enable_unbounded_descriptor_tables sflags | D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES\n";
     }
@@ -115,7 +115,7 @@ void cmd_enable_unbounded_descriptor_tables(CompilerParams& params) {
     return;
 }
 
-void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW assemblyCodeFile) {
+void efxc2Cmds::cmd_Fc(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW assemblyCodeFile) {
     files.set_DisassemblyFile(assemblyCodeFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_ASSEMBLY_CODE;
@@ -130,7 +130,7 @@ void cmd_Fc(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW assem
     return;
 }
 
-void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW pdbFile) {
+void efxc2Cmds::cmd_Fd(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW pdbFile) {
     files.set_pdbFile(pdbFile);
 
     UINT cmd = params.get_commands();
@@ -139,15 +139,15 @@ void cmd_Fd(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW pdbFi
 
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-        std::wcout << format(L"option -Fd (.PDB) with arg {}\n", pdbFile);
+        std::wcout << std::format(L"option -Fd (.PDB) with arg {}\n", pdbFile);
 #else
-        std::cout << format("option -Fd (.PDB) with arg {}\n", pdbFile);
+        std::cout << std::format("option -Fd (.PDB) with arg {}\n", pdbFile);
 #endif
     }
     return;
 }
 
-void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile) {
+void efxc2Cmds::cmd_Fh(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW outputFile) {
     files.set_IncludeFile(outputFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_HEADER;
@@ -162,22 +162,7 @@ void cmd_Fh(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outpu
     return;
 }
 
-void cmd_Fl(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile) {
-    files.set_LibraryFile(outputFile);
-    UINT cmd = params.get_commands();
-    cmd = cmd | CMD_WRITE_LIBRARY_FILE;
-    params.set_commands(cmd);
-    if (params.get_verbose() && params.get_debug()) {
-#ifdef _WIN32
-        std::wcout << std::format(L"option -Fl (Output File) with arg {}\n", outputFile);
-#else
-        std::cout << std::format("option -Fl (Output File) with arg {}\n", outputFile);
-#endif
-    }
-    return;
-}
-
-void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile) {
+void efxc2Cmds::cmd_Fo(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW outputFile) {
     files.set_ObjectFile(outputFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_WRITE_OBJECT;
@@ -192,7 +177,7 @@ void cmd_Fo(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outpu
     return;
 }
 
-void cmd_Gch(CompilerParams& params) {
+void efxc2Cmds::cmd_Gch(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gch eflags | D3DCOMPILE_EFFECT_CHILD_EFFECT";
     }
@@ -202,7 +187,7 @@ void cmd_Gch(CompilerParams& params) {
     return;
 }
 
-void cmd_Gdp(CompilerParams& params) {
+void efxc2Cmds::cmd_Gdp(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gdp eflags | D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS";
     }
@@ -212,7 +197,7 @@ void cmd_Gdp(CompilerParams& params) {
     return;
 }
 
-void cmd_Gec(CompilerParams& params) {
+void efxc2Cmds::cmd_Gec(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gec sflags | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY\n";
     }
@@ -222,7 +207,7 @@ void cmd_Gec(CompilerParams& params) {
     return;
 }
 
-void cmd_Ges(CompilerParams& params) {
+void efxc2Cmds::cmd_Ges(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Ges sflags | D3DCOMPILE_ENABLE_STRICTNESS\n";
     }
@@ -232,7 +217,7 @@ void cmd_Ges(CompilerParams& params) {
     return;
 }
 
-void cmd_Gfa(CompilerParams& params) {
+void efxc2Cmds::cmd_Gfa(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gfa sflags | D3DCOMPILE_AVOID_FLOW_CONTROL\n";
     }
@@ -242,7 +227,7 @@ void cmd_Gfa(CompilerParams& params) {
     return;
 }
 
-void cmd_Gis(CompilerParams& params) {
+void efxc2Cmds::cmd_Gis(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gis sflags | D3DCOMPILE_IEEE_STRICTNESS\n";
     }
@@ -252,7 +237,7 @@ void cmd_Gis(CompilerParams& params) {
     return;
 }
 
-void cmd_Gpp(CompilerParams& params) {
+void efxc2Cmds::cmd_Gpp(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Gpp sflags | D3DCOMPILE_PARTIAL_PRECISION\n";
     }
@@ -262,7 +247,7 @@ void cmd_Gpp(CompilerParams& params) {
     return;
 }
 
-void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW _includeDir) {
+void efxc2Cmds::cmd_I(efxc2CompilerParams::CompilerParams& params, _In_ const efxc2Utils::M_STRING_VIEW _includeDir) {
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
         std::wcout << std::format(L"option -I (Shader Include Dir) with arg {}\n", _includeDir);
@@ -274,7 +259,7 @@ void cmd_I(CompilerParams& params, _In_ const M_STRING_VIEW _includeDir) {
     return;
 }
 
-void cmd_Lx(CompilerParams& params) {
+void efxc2Cmds::cmd_Lx(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Lx - output hexidecimal literals\n";
     }
@@ -282,7 +267,7 @@ void cmd_Lx(CompilerParams& params) {
     return;
 }
 
-void cmd_Ni(CompilerParams& params) {
+void efxc2Cmds::cmd_Ni(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Cc | D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING\n";
     }
@@ -292,7 +277,7 @@ void cmd_Ni(CompilerParams& params) {
     return;
 }
 
-void cmd_No(CompilerParams& params) {
+void efxc2Cmds::cmd_No(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Cc | D3D_DISASM_ENABLE_INSTRUCTION_OFFSET\n";
     }
@@ -302,7 +287,7 @@ void cmd_No(CompilerParams& params) {
     return;
 }
 
-void cmd_O0(CompilerParams& params) {
+void efxc2Cmds::cmd_O0(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -O0 sflags | D3DCOMPILE_OPTIMIZATION_LEVEL0\n";
     }
@@ -312,7 +297,7 @@ void cmd_O0(CompilerParams& params) {
     return;
 }
 
-void cmd_O1(CompilerParams& params) {
+void efxc2Cmds::cmd_O1(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -O1 sflags | D3DCOMPILE_OPTIMIZATION_LEVEL1\n";
     }
@@ -322,7 +307,7 @@ void cmd_O1(CompilerParams& params) {
     return;
 }
 
-void cmd_O2(CompilerParams& params) {
+void efxc2Cmds::cmd_O2(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -O1 sflags | D3DCOMPILE_OPTIMIZATION_LEVEL2\n";
     }
@@ -332,7 +317,7 @@ void cmd_O2(CompilerParams& params) {
     return;
 }
 
-void cmd_O3(CompilerParams& params) {
+void efxc2Cmds::cmd_O3(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -O1 sflags | D3DCOMPILE_OPTIMIZATION_LEVEL3\n";
     }
@@ -342,7 +327,7 @@ void cmd_O3(CompilerParams& params) {
     return;
 }
 
-void cmd_Od(CompilerParams& params) {
+void efxc2Cmds::cmd_Od(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Od sflags | D3DCOMPILE_SKIP_OPTIMIZATION\n";
     }
@@ -352,7 +337,7 @@ void cmd_Od(CompilerParams& params) {
     return;
 }
 
-void cmd_Op(CompilerParams& params) {
+void efxc2Cmds::cmd_Op(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Op sflags | D3DCOMPILE_NO_PRESHADER\n";
     }
@@ -362,7 +347,7 @@ void cmd_Op(CompilerParams& params) {
     return;
 }
 
-void cmd_P(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW outputFile) {
+void efxc2Cmds::cmd_P(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW outputFile) {
     files.set_preprocessFile (outputFile);
     UINT cmd = params.get_commands();
     cmd = cmd | CMD_PREPROCESS_FILE;
@@ -377,7 +362,7 @@ void cmd_P(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW output
     return;
 }
 
-void cmd_Qstrip_debug(CompilerParams& params) {
+void efxc2Cmds::cmd_Qstrip_debug(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Qstrip_debug strip_flags | D3DCOMPILER_STRIP_DEBUG_INFO\n";
     }
@@ -387,7 +372,7 @@ void cmd_Qstrip_debug(CompilerParams& params) {
     return;
 }
 
-void cmd_Qstrip_priv(CompilerParams& params) {
+void efxc2Cmds::cmd_Qstrip_priv(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Qstrip_priv strip_flags | D3DCOMPILER_STRIP_PRIVATE_DATA\n";
     }
@@ -397,7 +382,7 @@ void cmd_Qstrip_priv(CompilerParams& params) {
     return;
 }
 
-void cmd_Qstrip_reflect(CompilerParams& params) {
+void efxc2Cmds::cmd_Qstrip_reflect(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Qstrip_reflect strip_flags | D3DCOMPILER_STRIP_REFLECTION_DATA\n";
     }
@@ -407,7 +392,7 @@ void cmd_Qstrip_reflect(CompilerParams& params) {
     return;
 }
 
-void cmd_Qstrip_rootsignature(CompilerParams& params) {
+void efxc2Cmds::cmd_Qstrip_rootsignature(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Qstrip_rootsignature strip_flags | D3DCOMPILER_STRIP_ROOT_SIGNATUR\n";
     }
@@ -417,7 +402,7 @@ void cmd_Qstrip_rootsignature(CompilerParams& params) {
     return;
 }
 
-void cmd_res_may_alias(CompilerParams& params) {
+void efxc2Cmds::cmd_res_may_alias(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -res_may_alias sflags | D3DCOMPILE_RESOURCES_MAY_ALIAS\n";
     }
@@ -427,7 +412,7 @@ void cmd_res_may_alias(CompilerParams& params) {
     return;
 }
 
-void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VIEW inputfile) {
+void efxc2Cmds::cmd_setprivate(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW inputfile) {
     files.set_privateDataFile(inputfile);
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
@@ -440,9 +425,9 @@ void cmd_setprivate(CompilerParams& params, Files& files, _In_ const M_STRING_VI
     return;
 }
 
-void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW _model) {
+void efxc2Cmds::cmd_T(efxc2CompilerParams::CompilerParams& params, _In_ const efxc2Utils::M_STRING_VIEW _model) {
 #ifdef _WIN32
-    std::string model = wstring_to_utf8({ _model.data(), _model.size() });
+    std::string model = efxc2Utils::wstring_to_utf8({ _model.data(), _model.size() });
 #else
     std::string model = { _model.data(), _model.size() };
 #endif
@@ -453,7 +438,7 @@ void cmd_T(CompilerParams& params, _In_ const M_STRING_VIEW _model) {
     return;
 }
 
-void cmd_Vd(CompilerParams& params) {
+void efxc2Cmds::cmd_Vd(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Vd sflags | D3DCOMPILE_SKIP_VALIDATION\n";
     }
@@ -463,9 +448,9 @@ void cmd_Vd(CompilerParams& params) {
     return;
 }
 
-void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW _variableName) {
+void efxc2Cmds::cmd_Vn(efxc2CompilerParams::CompilerParams& params, _In_ const efxc2Utils::M_STRING_VIEW _variableName) {
 #ifdef _WIN32
-    std::string variableName = wstring_to_utf8({ _variableName.data(), _variableName.size() });
+    std::string variableName = efxc2Utils::wstring_to_utf8({ _variableName.data(), _variableName.size() });
 #else
     std::string variableName = { _variableName.data(), _variableName.size()};
 #endif
@@ -476,7 +461,7 @@ void cmd_Vn(CompilerParams& params, _In_ const M_STRING_VIEW _variableName) {
     return;
 }
 
-void cmd_WX(CompilerParams& params) {
+void efxc2Cmds::cmd_WX(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -WX sflags |  D3DCOMPILE_WARNINGS_ARE_ERRORS\n";
     }
@@ -486,7 +471,7 @@ void cmd_WX(CompilerParams& params) {
     return;
 }
 
-void cmd_Zi(CompilerParams& params) {
+void efxc2Cmds::cmd_Zi(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zi sflags | D3DCOMPILE_DEBUG\n";
     }
@@ -496,7 +481,7 @@ void cmd_Zi(CompilerParams& params) {
     return;
 }
 
-void cmd_Zpc(CompilerParams& params) {
+void efxc2Cmds::cmd_Zpc(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zpc sflags | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR\n";
     }
@@ -506,7 +491,7 @@ void cmd_Zpc(CompilerParams& params) {
     return;
 }
 
-void cmd_Zpr(CompilerParams& params) {
+void efxc2Cmds::cmd_Zpr(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zpr sflags | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR\n";
     }
@@ -516,7 +501,7 @@ void cmd_Zpr(CompilerParams& params) {
     return;
 }
 
-void cmd_Zsb(CompilerParams& params) {
+void efxc2Cmds::cmd_Zsb(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zsb sflags | D3DCOMPILE_DEBUG_NAME_FOR_BINARY\n";
     }
@@ -526,7 +511,7 @@ void cmd_Zsb(CompilerParams& params) {
     return;
 }
 
-void cmd_Zss(CompilerParams& params) {
+void efxc2Cmds::cmd_Zss(efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "option -Zss sflags | D3DCOMPILE_DEBUG_NAME_FOR_SOURCE\n";
     }
@@ -536,14 +521,14 @@ void cmd_Zss(CompilerParams& params) {
     return;
 }
 
-bool  parseCompilerOnlyCall(
-    _In_ const M_CMD_PARAMS& args,
+bool  efxc2Cmds::parseCompilerOnlyCall(
+    _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	size_t* index,
-    CompilerParams& params) {
+    efxc2CompilerParams::CompilerParams& params) {
     if (!index || *index >= args.size()) {
         return false;
     }
-    const M_STRING argument = args[*index];
+    const efxc2Utils::M_STRING argument = args[*index];
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
         arg_idx++;
@@ -566,17 +551,17 @@ bool  parseCompilerOnlyCall(
     return false;
 }
 
-bool parseCompilerFileCall(
-    _In_ const M_CMD_PARAMS& args,
+bool efxc2Cmds::parseCompilerFileCall(
+    _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	size_t* index,
-    CompilerParams& params,
-    Files& files) {
+    efxc2CompilerParams::CompilerParams& params,
+    efxc2Files::Files& files) {
     if (!index || *index >= args.size()) {
         return false;
     }
-    M_STRING argumentOption = M_STRING_INIT;
+    efxc2Utils::M_STRING argumentOption = efxc2Utils::M_STRING_INIT;
 
-    M_STRING_VIEW argument = args[*index];
+    efxc2Utils::M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
         arg_idx++;
@@ -616,14 +601,14 @@ bool parseCompilerFileCall(
     return false;
 }
 
-bool parseIgnoredOptions(
-    _In_ const M_CMD_PARAMS& args,
+bool efxc2Cmds::parseIgnoredOptions(
+    _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	const size_t* index,
-    const CompilerParams& params) {
+    const efxc2CompilerParams::CompilerParams& params) {
     if (!index || *index >= args.size()) {
         return false;
     }
-    const M_STRING_VIEW argument = args[*index];
+    const efxc2Utils::M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
         arg_idx++;
@@ -634,7 +619,7 @@ bool parseIgnoredOptions(
     else {
         return false;
     }
-    if (M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); 
+    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
           std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end())  {
         option_ignored(argument, params);
         return true;
@@ -642,13 +627,13 @@ bool parseIgnoredOptions(
     return false;
 }
 
-bool parseNotSupportedOptions(
-    _In_ const M_CMD_PARAMS& args,
+bool efxc2Cmds::parseNotSupportedOptions(
+    _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _In_ const size_t* index) {
     if (!index || *index >= args.size()) {
         return false;
     }
-    const M_STRING_VIEW argument = args[*index];
+    const efxc2Utils::M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;
     if (argument[0] == '-' || argument[0] == '/') {
         arg_idx++;
@@ -659,14 +644,14 @@ bool parseNotSupportedOptions(
     else {
         return false;
     }
-    if (M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
+    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
         std::ranges::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
 #ifdef _WIN32
           std::wcerr << std::format(L"option -{} not supported", argument);
 #else
           std::cerr << std::format("option -{} not supported", argument);
 #endif
-          print_unsupported_arg_help();
+          efxc2Utils::print_unsupported_arg_help();
           return true;
     }
     return false;

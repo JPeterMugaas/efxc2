@@ -10,10 +10,10 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 
-void Compiler::Preprocess() {
+void efxc2Compiler::Compiler::Preprocess() {
     auto SourceCode = params.get_SourceCode();
     if (SourceCode == nullptr) {
-        print_no_input_file();
+        efxc2Utils::print_no_input_file();
     }
     size_t SourceLen = SourceCode->size();
     auto  includeDirs = params.get_includeDirs();
@@ -24,7 +24,7 @@ void Compiler::Preprocess() {
     auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
     D3D_SHADER_MACRO _def = { nullptr, nullptr };
 
-    std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](CompilerDefine const& a) {
+    std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
         _def.Definition = a.Definition.c_str();
         _def.Name = a.Name.c_str();
         defines->insert(defines->end(), _def);
@@ -93,16 +93,16 @@ void Compiler::Preprocess() {
         }
         else {
             std::cout << std::format("Got an error {:#08x} while preprocessing, but no error message from the function.\n", hr);
-            print_hresult_error(hr);
+            efxc2Utils::print_hresult_error(hr);
         }
         exit(1);
     }
 }
 
-void Compiler::Compile() {
+void efxc2Compiler::Compiler::Compile() {
     auto SourceCode = params.get_SourceCode();
     if (SourceCode == nullptr) {
-        print_no_input_file();
+        efxc2Utils::print_no_input_file();
     }
     size_t SourceLen = SourceCode->size();
     auto eflags = params.get_eflags();
@@ -121,7 +121,7 @@ void Compiler::Compile() {
     auto _defines = params.get_defines();
     auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
     D3D_SHADER_MACRO _def = { nullptr, nullptr };
-    std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](CompilerDefine const& a) {
+    std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
         _def.Definition = a.Definition.c_str();
         _def.Name = a.Name.c_str();
         defines->insert(defines->end(), _def);
@@ -216,13 +216,13 @@ void Compiler::Compile() {
         }
         else {
             std::cout << std::format( "Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
-            print_hresult_error(hr);
+            efxc2Utils::print_hresult_error(hr);
         }
         exit(1);
     }
 }
 
-void Compiler::Disassemble() {
+void efxc2Compiler::Compiler::Disassemble() {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
     auto disassembly_flags = params.get_disassembly_flags();
@@ -254,11 +254,11 @@ void Compiler::Disassemble() {
 #pragma warning( pop )
 #endif
     if (FAILED(hr)) {
-        print_hresult_error(hr);
+        efxc2Utils::print_hresult_error(hr);
     }
 }
 
-void Compiler::StripShader() {
+void efxc2Compiler::Compiler::StripShader() {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
     auto strip_flags = params.get_strip_flags();
@@ -290,12 +290,12 @@ void Compiler::StripShader() {
 #pragma warning( pop )
 #endif
         if (FAILED(hr)) {
-            print_hresult_error(hr);
+            efxc2Utils::print_hresult_error(hr);
         }
     }
 }
 
-size_t Compiler::WriteAssemblyCode(std::ofstream& f) {
+size_t efxc2Compiler::Compiler::WriteAssemblyCode(std::ofstream& f) {
     char const* outputString = nullptr;
     size_t outputLen = 0;
 
@@ -307,7 +307,7 @@ size_t Compiler::WriteAssemblyCode(std::ofstream& f) {
     return outputLen;
 }
 
-size_t Compiler::WriteIncludeFile(std::ofstream& f)
+size_t efxc2Compiler::Compiler::WriteIncludeFile(std::ofstream& f)
 {
     auto variableName = params.get_variableName();
        
@@ -315,7 +315,7 @@ size_t Compiler::WriteIncludeFile(std::ofstream& f)
     if (variableName.empty() ) {
         std::string model = params.get_model();
         std::string entryPoint = params.get_entryPoint();
-        variableName = setupVariableName(model, entryPoint);
+        variableName = efxc2Utils::setupVariableName(model, entryPoint);
     }
     ID3DBlob* data;
     if (strippedBlob == nullptr) {
@@ -324,11 +324,11 @@ size_t Compiler::WriteIncludeFile(std::ofstream& f)
     else {
         data = strippedBlob;
     }
-    WriteByteArrayConst(f, data, variableName, params.get_outputHex());
+    efxc2Utils::WriteByteArrayConst(f, data, variableName, params.get_outputHex());
     return data->GetBufferSize();
 }
 
-size_t Compiler::WriteObjectFile(std::ofstream& f) {
+size_t efxc2Compiler::Compiler::WriteObjectFile(std::ofstream& f) {
     char const* outputString;
     size_t outputLen = 0;
     if (strippedBlob == nullptr) {
@@ -343,7 +343,7 @@ size_t Compiler::WriteObjectFile(std::ofstream& f) {
     return outputLen;
 }
 
-size_t Compiler::WritePreprocessFile(std::ofstream& f) {
+size_t efxc2Compiler::Compiler::WritePreprocessFile(std::ofstream& f) {
     char const* outputString;
     outputString = (char*)pPreprocessOutput->GetBufferPointer();
     size_t outputLen = pPreprocessOutput->GetBufferSize();
@@ -351,7 +351,7 @@ size_t Compiler::WritePreprocessFile(std::ofstream& f) {
     return outputLen;
 }
 
-std::string Compiler::GetPDBFileName() {
+std::string efxc2Compiler::Compiler::GetPDBFileName() {
     /*
     This is based on code I found at:
 
@@ -383,7 +383,7 @@ std::string Compiler::GetPDBFileName() {
     );
     */
     if (FAILED(hr)) {
-        print_hresult_error(hr);
+        efxc2Utils::print_hresult_error(hr);
     }
     auto pDebugNameData = (ShaderDebugName*)(pPDBName->GetBufferPointer());
     auto pName = (char*)(pDebugNameData + 1);
@@ -393,7 +393,7 @@ std::string Compiler::GetPDBFileName() {
     return pName;
 }
 
-void Compiler::EmbedPrivateData() {
+void efxc2Compiler::Compiler::EmbedPrivateData() {
     auto const* compiledString = (unsigned char*)compilerOutput->GetBufferPointer();
     size_t compiledLen = compilerOutput->GetBufferSize();
     auto private_data = params.get_PrivateData();
@@ -423,11 +423,11 @@ void Compiler::EmbedPrivateData() {
     [out] ID3DBlob      **ppNewShader);
     */
     if (FAILED(hr)) {
-        print_hresult_error(hr);
+        efxc2Utils::print_hresult_error(hr);
     }
 }
 
-void Compiler::SetPDBFileName(_In_ const std::string_view _fileName) {
+void efxc2Compiler::Compiler::SetPDBFileName(_In_ const std::string_view _fileName) {
 /*
 This is based on code I found at:
 
@@ -484,12 +484,12 @@ https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
     [out] ID3DBlob      **ppNewShader);
     */
     if (FAILED(hr)) {
-        print_hresult_error(hr);
+        efxc2Utils::print_hresult_error(hr);
     }
 
 }
 
-size_t Compiler::WritePDBFile(std::ofstream& f) {
+size_t efxc2Compiler::Compiler::WritePDBFile(std::ofstream& f) {
     HRESULT hr = 0;
     ID3DBlob* PDBData = nullptr;
     char const* compiledString = nullptr;
@@ -515,7 +515,7 @@ size_t Compiler::WritePDBFile(std::ofstream& f) {
     [out] ID3DBlob      **ppPart);
     */
     if (FAILED(hr)) {
-        print_hresult_error(hr);
+        efxc2Utils::print_hresult_error(hr);
     }
     auto outputString = (char*)PDBData->GetBufferPointer();
     size_t outputLen = PDBData->GetBufferSize();

@@ -7,14 +7,15 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //--------------------------------------------------------------------------------------
+#include "efxc2CompilerTasks.h"
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 #include "efxc2Files.h"
 
 #ifdef _WIN32
-void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& params) {
+void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2Files::Files& files, const efxc2CompilerParams::CompilerParams& params) {
 #else
-void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& params) {
+void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2Files::Files& files, const efxc2CompilerParams::CompilerParams& params) {
 #endif
     if ((params.get_commands() & CMD_PREPROCESS_FILE) == CMD_PREPROCESS_FILE) {
         if (params.get_commands() != CMD_PREPROCESS_FILE) {

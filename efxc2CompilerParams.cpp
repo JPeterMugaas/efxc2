@@ -11,12 +11,12 @@
 #include "efxc2CompilerParams.h"
 #include "efxc2Utils.h"
 
-void CompilerParams::initializeDefines() {
-    defines = std::make_shared<std::vector < CompilerDefine >> ();
+void efxc2CompilerParams::CompilerParams::initializeDefines() {
+    defines = std::make_shared<std::vector < efxc2Utils::CompilerDefine >> ();
 }
 
-void CompilerParams::add_define(const std::string_view defineOption) {
-    CompilerDefine _def;
+void efxc2CompilerParams::CompilerParams::add_define(const std::string_view defineOption) {
+    efxc2Utils::CompilerDefine _def;
     _def.Definition = "1";
 
     if (size_t Dellin_pos = defineOption.find('='); Dellin_pos == std::string::npos) {
@@ -30,10 +30,10 @@ void CompilerParams::add_define(const std::string_view defineOption) {
     defines->insert(defines->begin(), _def);
 }
 
-void CompilerParams::LoadSourceCode(std::ifstream& f) {
-    readAll(f, SourceCode);
+void efxc2CompilerParams::CompilerParams::LoadSourceCode(std::ifstream& f) {
+    efxc2Utils::readAll(f, SourceCode);
 }
 
-void CompilerParams::LoadPrivateData(std::ifstream& f) {
-    readAll(f, PrivateData);
+void efxc2CompilerParams::CompilerParams::LoadPrivateData(std::ifstream& f) {
+    efxc2Utils::readAll(f, PrivateData);
 }

@@ -10,23 +10,23 @@
 
 #include "efxc2Utils.h"
 
-static std::string HResultName(_In_ const HRESULT hr) {
-    for (int i = 0; i < ERROR_TABLE_LENGTH; i++) {
-        if (hr == g_ErrorTable[i].ErrorCode ) {
-            return  g_ErrorTable[i].ErrorName;
+std::string efxc2Utils::HResultName(_In_ const HRESULT hr) {
+    for (int i = 0; i < efxc2Utils::ERROR_TABLE_LENGTH; i++) {
+        if (hr == efxc2Utils::g_ErrorTable[i].ErrorCode ) {
+            return  efxc2Utils::g_ErrorTable[i].ErrorName;
         }
     }
     return "Unknown Error Name";
 }
 
-void print_copyright() {
+void efxc2Utils::print_copyright() {
     std::cout << PROGRAM_DESCRIPTION " " PROGRAM_VERSION "\n";
     std::cout << PROGRAM_COPYRIGHT "\n";
     std::cout << "This program is licensed under the Mozilla Public License, v. 2.0.\n";
     return;
 }
 
-void print_usage_arg() {
+void efxc2Utils::print_usage_arg() {
     std::cout << "\n";
     std::cout << "More information about valid parameters is available at Microsoft's website \n";
     std::cout << "\n";
@@ -34,7 +34,7 @@ void print_usage_arg() {
     return;
 }
 
-void print_unsupported_arg_help() {
+void efxc2Utils::print_unsupported_arg_help() {
     std::cout << "This isn't a sign of disaster, odds are it will be very easy to add support for\n";
     std::cout << "this argument.  Review the meaning of the argument in the real fxc program, and\n";
     std::cout << "then add it into efxc2.\n";
@@ -43,13 +43,13 @@ void print_unsupported_arg_help() {
     return;
 }
 
-[[noreturn]] void print_version() { //-V1082
+[[noreturn]] void efxc2Utils::print_version() { //-V1082
     std::cout << PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n";
     std::cout << PROGRAM_COPYRIGHT "\n";
     exit(0);
 }
 
-[[noreturn]] void print_usage_missing(const char* arg) { //-V1082
+[[noreturn]] void efxc2Utils::print_usage_missing(const char* arg) { //-V1082
     std::cerr << std::format("efxc2 is missing the {} argument.\n", arg);
     std::cout << "We expected to receive this, and it's likely things will not work correctly\n";
     std::cout << "without it.  Review efxc2 and make sure things will work.\n";
@@ -58,12 +58,12 @@ void print_unsupported_arg_help() {
     exit(1);
 }
 
-[[noreturn]] void print_no_input_file() { //-V1082
+[[noreturn]] void efxc2Utils::print_no_input_file() { //-V1082
     std::cerr << "You specified no input files.\n";
     print_usage_arg();
     exit(1);
 }
-[[noreturn]] void print_usage_toomany() { //-V1082
+[[noreturn]] void efxc2Utils::print_usage_toomany() { //-V1082
     std::cerr << "You specified multiple input files.\n";
     std::cout << "We did not expect to receive this, and aren't prepared to handle multiple input\n";
     std::cout << "files. You'll have to edit the source to behave the way you want.\n";
@@ -72,7 +72,7 @@ void print_unsupported_arg_help() {
     exit(1);
 }
 
-[[noreturn]] void print_hresult_error(const HRESULT hr) { //-V1082
+[[noreturn]] void efxc2Utils::print_hresult_error(const HRESULT hr) { //-V1082
     LPSTR messageBuffer = nullptr;
     size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
@@ -85,7 +85,7 @@ void print_unsupported_arg_help() {
     exit(1);
 }
 
-[[noreturn]] void print_windows_error() { //-V1082
+[[noreturn]] void efxc2Utils::print_windows_error() { //-V1082
     /*from: https://gist.github.com/Aaronontheweb/7461004#file-getlasterror-cpp */
     DWORD dLastError = GetLastError();
     LPCTSTR strErrorMessage = nullptr;
@@ -110,13 +110,13 @@ void print_unsupported_arg_help() {
     exit(1);
 }
 
-[[noreturn]] void print_help_screen() { //-V1082
+[[noreturn]] void efxc2Utils::print_help_screen() { //-V1082
     print_copyright();
     print_usage_arg();
     exit(0);
 }
 
- void WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
+ void efxc2Utils::WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
     _In_ const std::string_view variableName,
     _In_ const int outputHex) {
     auto* outString = (unsigned char*)data->GetBufferPointer();
@@ -140,8 +140,8 @@ void print_unsupported_arg_help() {
     return;
 }
 
- int readAll(_In_ std::ifstream& in,
-     _Out_ M_BUFFER& dataptr) {
+ int efxc2Utils::readAll(_In_ std::ifstream& in,
+     _Out_ efxc2Utils::M_BUFFER& dataptr) {
      dataptr = std::make_shared<std::vector<char>>();
      auto temp = std::make_unique<std::vector<char>>();
      size_t used = 0;
@@ -163,7 +163,7 @@ void print_unsupported_arg_help() {
      return READALL_OK;
  }
 
-bool parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
+bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
     if (!index || *index >= args.size()) {
         return false;
     }
@@ -206,7 +206,7 @@ bool parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _I
     return true;
 }
 
-std::string setupVariableName(_In_ const std::string_view model,
+std::string efxc2Utils::setupVariableName(_In_ const std::string_view model,
     _In_ const std::string& entryPoint) {
     std::string variableName = "";
     std::string prefix = "g";
@@ -221,7 +221,7 @@ std::string setupVariableName(_In_ const std::string_view model,
 }
 
 #ifdef _WIN32
-void FixupFileName(_Inout_ std::wstring& FileName) {
+void efxc2Utils::FixupFileName(_Inout_ std::wstring& FileName) {
     if (FileName.empty()) {
         return;
     }
@@ -237,7 +237,7 @@ void FixupFileName(_Inout_ std::wstring& FileName) {
     return;
 }
 
-void FixupFileName(_Inout_ std::string& FileName) {
+void efxc2Utils::FixupFileName(_Inout_ std::string& FileName) {
     if (FileName.empty()) {
         return;
     }
@@ -259,7 +259,7 @@ void FixupFileName(_Inout_ std::string& FileName) {
   https://stackoverflow.com/questions/215963/how-do-you-properly-use-widechartomultibyte
 */
 
-std::string wstring_to_utf8(std::wstring const& wstr)
+std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
 {
     int nbytes = 0;
     if ((nbytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
@@ -278,7 +278,7 @@ std::string wstring_to_utf8(std::wstring const& wstr)
     return str->data();
 }
 
-std::wstring utf8_to_wstring(std::string const& str)
+std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
 {
     int nchars = 0;
     if ((nchars = MultiByteToWideChar(CP_UTF8,

@@ -10,10 +10,10 @@
 #include "efxc2CompilerAPIContainer.h"
 #include "efxc2Utils.h"
 
-CompilerAPIContainer::CompilerAPIContainer() {
+efxc2CompilerAPIContainer::CompilerAPIContainer::CompilerAPIContainer() {
     h = LoadLibrary(DLL_NAME);
     if (h == nullptr) {
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -25,46 +25,46 @@ CompilerAPIContainer::CompilerAPIContainer() {
 #endif
     if (ptr_D3DCompile2 == nullptr) {
         std::cerr << "Error: could not get the address of D3DCompile2.\n";
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
     ptr_D3DStripShader = (pD3DStripShaderg)GetProcAddress(h, "D3DStripShader");
     if (ptr_D3DStripShader == nullptr) {
         std::cerr << "Error: could not get the address of D3DStripShader.\n";
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
     ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart");
     if (ptr_D3DGetBlobPart == nullptr) {
         std::cerr << "Error: could not get the address of D3DGetBlobPart.\n";
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
     ptr_D3DSetBlobPart = (pD3DSetBlobPartg)GetProcAddress(h, "D3DSetBlobPart");
     if (ptr_D3DSetBlobPart == nullptr) {
         std::cerr << "Error: could not get the address of D3DSetBlobPart.\n";
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
     ptr_D3DDisassemble = (pD3DDisassembleg)GetProcAddress(h, "D3DDisassemble");
     if (ptr_D3DDisassemble == nullptr) {
         std::cerr << "Error: could not get the address of D3DDisassemble.\n";
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
     ptr_D3DLoadModule = (gD3DLoadModulep)GetProcAddress(h, "D3DLoadModule");
     if (ptr_D3DLoadModule == nullptr) {
         std::cerr << "Error: could not get the address of D3DLoadModule.\n";
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
     ptr_D3DCreateLinker = (gD3DCreateLinkerp)GetProcAddress(h, "D3DCreateLinker");
     if (ptr_D3DCreateLinker == nullptr) {
         std::cerr << "Error: could not get the address of D3DCreateLinker.\n";
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
     ptr_D3DCreateFunctionLinkingGraph = (gD3DCreateFunctionLinkingGraphp)GetProcAddress(h, "D3DCreateFunctionLinkingGraph");
     if (ptr_D3DCreateFunctionLinkingGraph == nullptr) {
         std::cerr << "Error: could not get the address of D3DCreateFunctionLinkingGraph.\n";
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
     ptr_D3DPreprocess = (gD3DPreprocessp)GetProcAddress(h, "D3DPreprocess");
     if (ptr_D3DPreprocess == nullptr) {
         std::cerr << "Error: could not get the address of D3DPreprocess.\n";
-        print_windows_error();
+        efxc2Utils::print_windows_error();
     }
 }

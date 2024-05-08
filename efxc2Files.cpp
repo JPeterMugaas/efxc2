@@ -11,7 +11,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
-void Files::LoadInputFile(CompilerParams& params) const {
+void efxc2Files::Files::LoadInputFile(efxc2CompilerParams::CompilerParams& params) const {
     std::ifstream f;
     std::filesystem::path _path = inputFile;
     f.open(_path);
@@ -28,7 +28,7 @@ void Files::LoadInputFile(CompilerParams& params) const {
     f.close();
 }
 
-void Files::LoadPrivateDataFile(CompilerParams& params) const
+void efxc2Files::Files::LoadPrivateDataFile(efxc2CompilerParams::CompilerParams& params) const
 {
     std::ifstream f;
     std::filesystem::path _path = privateDataFile;
@@ -45,7 +45,7 @@ void Files::LoadPrivateDataFile(CompilerParams& params) const
     f.close();
 }
 
-void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) const {
+void efxc2Files::Files::WriteDisassembly(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(DisassemblyFile), std::ios::out);
     if (!f.is_open()) {
@@ -68,7 +68,7 @@ void Files::WriteDisassembly(Compiler& compiler, const CompilerParams& params) c
     }
 }
 
-void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) const {
+void efxc2Files::Files::WriteIncludeFile(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(IncludeFile), std::ios::out);
     if (!f.is_open()) {
@@ -91,7 +91,7 @@ void Files::WriteIncludeFile(Compiler& compiler, const CompilerParams& params) c
     }
 }
 
-void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) const {
+void efxc2Files::Files::WriteObjectFile(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(ObjectFile), std::ios::out | std::ios::binary);
     if (!f.is_open()) {
@@ -114,7 +114,7 @@ void Files::WriteObjectFile(Compiler& compiler, const CompilerParams& params) co
     }
 }
 
-void Files::WritePreprocessFile(Compiler& compiler, const CompilerParams& params) const {
+void efxc2Files::Files::WritePreprocessFile(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) const {
     std::ofstream f;
     f = std::ofstream(std::filesystem::path(preprocessFile ), std::ios::out | std::ios::binary);
     if (!f.is_open()) {
@@ -137,7 +137,7 @@ void Files::WritePreprocessFile(Compiler& compiler, const CompilerParams& params
     }
 }
 
-void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
+void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) {
     size_t  outputLen = 0;
     /*write .PDB data if applicable*/
     if (pdbFile.empty() == false) {
@@ -145,7 +145,7 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
             (pdbFileStr.compare(".") != 0) &&
             (pdbFileStr.compare("..") != 0)) {
 #ifdef _WIN32
-            auto c_pdbFile = wstring_to_utf8(pdbFile.filename().native());
+            auto c_pdbFile = efxc2Utils::wstring_to_utf8(pdbFile.filename().native());
             compiler.SetPDBFileName(c_pdbFile);
 #else
             compiler.SetPDBFileName(pdbFile.filename().native());
@@ -161,7 +161,7 @@ void Files::WritePDBFile(Compiler& compiler, const CompilerParams& params) {
                    pPDBFileName.insert(pPDBFileName.begin(), std::filesystem::path::preferred_separator);
             }
 #ifdef _WIN32
-            auto w_pdbFile = pdbFile.native() + utf8_to_wstring(pPDBFileName);
+            auto w_pdbFile = pdbFile.native() + efxc2Utils::utf8_to_wstring(pPDBFileName);
             pdbFile = std::filesystem::path(w_pdbFile);
 #else
             auto c_pdbFile = pdbFile.native() + pPDBFileName;

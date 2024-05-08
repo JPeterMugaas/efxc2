@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------
-// File: efxc2CompilerTasks.cpp
+// File: efxc2CompilerTasks.h
 //
 // Copyright (c) J. Peter Mugaas
 //
@@ -14,11 +14,14 @@
 #include "efxc2.h"
 #include "efxc2Compiler.h"
 #include "efxc2CompilerParams.h"
+#include "efxc2Files.h"
 
+namespace efxc2CompilerTasks {
 #ifdef _WIN32
-void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& params);
+	void CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2Files::Files& files, const efxc2CompilerParams::CompilerParams& params);
 #else
-void CompilerTasks(Compiler& compiler, Files& files, const CompilerParams& params);
+	void CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2Files::Files& files, const efxc2CompilerParams::CompilerParams& params);
 #endif
+}
 
 #endif /* EFXC2COMPILERTASKS_H_INCLUDED */
