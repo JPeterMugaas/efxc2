@@ -46,7 +46,7 @@ void efxc2Utils::print_unsupported_arg_help() {
 [[noreturn]] void efxc2Utils::print_version() { //-V1082
     std::cout << PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n";
     std::cout << PROGRAM_COPYRIGHT "\n";
-    exit(0);
+    exit(0); //-V2014
 }
 
 [[noreturn]] void efxc2Utils::print_usage_missing(const char* arg) { //-V1082
@@ -55,13 +55,13 @@ void efxc2Utils::print_unsupported_arg_help() {
     std::cout << "without it.  Review efxc2 and make sure things will work.\n";
     std::cout << "\n";
     print_usage_arg();
-    exit(1);
+    exit(1);  //-V2014
 }
 
 [[noreturn]] void efxc2Utils::print_no_input_file() { //-V1082
     std::cerr << "You specified no input files.\n";
     print_usage_arg();
-    exit(1);
+    exit(1);  //-V2014
 }
 [[noreturn]] void efxc2Utils::print_usage_toomany() { //-V1082
     std::cerr << "You specified multiple input files.\n";
@@ -69,20 +69,20 @@ void efxc2Utils::print_unsupported_arg_help() {
     std::cout << "files. You'll have to edit the source to behave the way you want.\n";
     std::cout << "\n";
     print_usage_arg();
-    exit(1);
+    exit(1);  //-V2014
 }
 
 [[noreturn]] void efxc2Utils::print_hresult_error(const HRESULT hr) { //-V1082
     LPSTR messageBuffer = nullptr;
     size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-        nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, nullptr);
+        nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), std::bit_cast<char*>(&messageBuffer), 0, nullptr);
     std::string message(messageBuffer, size);
     LocalFree(messageBuffer);
     std::cerr << std::format("Windows Error Message: {}\n", message);
     std::cout << std::format("Windows Error Message: {}\n", message);
     std::cout << std::format("Error Code: {:#08x}\n", hr);
     std::cout << std::format("Error Name: {}\n", HResultName(hr));
-    exit(1);
+    exit(1); //-V2014
 }
 
 [[noreturn]] void efxc2Utils::print_windows_error() { //-V1082
@@ -95,7 +95,7 @@ void efxc2Utils::print_unsupported_arg_help() {
         nullptr,
         dLastError,
         0,
-        (LPWSTR)&strErrorMessage,
+        std::bit_cast<wchar_t*>(&strErrorMessage),
         0,
         nullptr);
 
@@ -107,19 +107,19 @@ void efxc2Utils::print_unsupported_arg_help() {
 #if defined(_MSC_VER)
 # pragma warning(pop)
 #endif /* _MSC_VER */
-    exit(1);
+    exit(1);  //-V2014
 }
 
 [[noreturn]] void efxc2Utils::print_help_screen() { //-V1082
     print_copyright();
     print_usage_arg();
-    exit(0);
+    exit(0);  //-V2014
 }
 
  void efxc2Utils::WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
     _In_ const std::string_view variableName,
     _In_ const int outputHex) {
-    auto* outString = (unsigned char*)data->GetBufferPointer();
+    auto* outString = std::bit_cast<unsigned char*>(data->GetBufferPointer());
     size_t len = data->GetBufferSize();
     f << std::format("const BYTE {}[] =\n{{\n", variableName);
     for (size_t i = 0; i < len; i++) {
@@ -264,7 +264,7 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
     if (err != 0) {
         std::cerr << "_wcstombs_s_l failed." << std::endl;
         _free_locale(locale);
-        exit(1);
+        exit(1);  //-V2014
     }
     if (nbytes == 0) { 
         _free_locale(locale); //-V586
@@ -277,7 +277,7 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
     err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(),wstr.length() + 1, locale);
     if (err != 0) {
         std::cerr << "_wcstombs_s_l failed." << std::endl;
-        exit(1);
+        exit(1);  //-V2014
     }
     if (nbytes == 0) {
         _free_locale(locale); //-V586
@@ -297,7 +297,7 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
     if (err != 0) {
         std::cerr << "_mbstowcs_s_l failed." << std::endl;
         _free_locale(locale);
-        exit(1);
+        exit(1);  //-V2014
     }
     if (nchars == 0) {
         _free_locale(locale); //-V586
@@ -311,7 +311,7 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
     err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale);
     if (err != 0) {
         std::cerr << "_mbstowcs_s_l failed." << std::endl;
-        exit(1);
+        exit(1);  //-V2014
     }
     _free_locale(locale);
     return wstr;

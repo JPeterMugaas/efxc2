@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (efxc2Cmds::parseNotSupportedOptions(args, &index)) {
-            exit(1);
+            exit(1);  //-V2014
         }
         else if (efxc2Utils::parseOpt(efxc2Cmds::M_D, args, &index, &temp)) {
             efxc2Cmds::cmd_D(params, temp);

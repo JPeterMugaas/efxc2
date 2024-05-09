@@ -86,7 +86,7 @@ void efxc2Compiler::Compiler::Preprocess() {
     if (FAILED(hr)) {
         std::cerr << "Reprocess error";
         if (errors) {
-            auto* error = (char*)errors->GetBufferPointer();
+            auto* error = std::bit_cast<char*>(errors->GetBufferPointer());
             std::cout << std::format("Got an error while preprocessing:\n{}\n", error);
             errors->Release();
             std::cout << std::format("Error Code: {:#08x}", hr);
@@ -95,7 +95,7 @@ void efxc2Compiler::Compiler::Preprocess() {
             std::cout << std::format("Got an error {:#08x} while preprocessing, but no error message from the function.\n", hr);
             efxc2Utils::print_hresult_error(hr);
         }
-        exit(1);
+        exit(1); //-V2014
     }
 }
 
@@ -209,7 +209,7 @@ void efxc2Compiler::Compiler::Compile() {
     if (FAILED(hr)) {
         std::cerr << "Compile error";
         if (errors) {
-            auto* error = (char*)errors->GetBufferPointer();
+            auto* error = std::bit_cast<char*>(errors->GetBufferPointer());
             std::cout << std::format("Got an error while compiling:\n{}\n", error);
             errors->Release();
             std::cout << std::format( "Error Code: {:#08x}", hr);
@@ -218,7 +218,7 @@ void efxc2Compiler::Compiler::Compile() {
             std::cout << std::format( "Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
             efxc2Utils::print_hresult_error(hr);
         }
-        exit(1);
+        exit(1); //-V2014
     }
 }
 
@@ -459,7 +459,7 @@ https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
 
     header->Flags = 0;
     // declared length does not include the null terminator:
-    header->NameLength = (uint16_t)fileNameLen - 1;
+    header->NameLength = (uint16_t)(fileNameLen - 1); //-V2005
     // but the null terminator is expected to be present:
     for (size_t i = 0; i < fileNameLen; i++) {
         pNameBlobContent[sizeof(ShaderDebugName) + i] = _fileName[i];

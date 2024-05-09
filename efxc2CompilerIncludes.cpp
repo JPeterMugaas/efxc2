@@ -94,18 +94,18 @@ __declspec(nothrow) HRESULT __stdcall efxc2CompilerIncludes::CompilerIncludes::O
     if  ((!input_parent_path.empty()) &&
         (LoadFile(input_parent_path /= Filename, verbose, &buf, &fileSize))) {
         *ppData = buf;
-        *pBytes = (UINT)fileSize;
+        *pBytes = (UINT)fileSize; //-V2005
         return S_OK;
     }
     if (LoadFile(Filename, verbose, &buf, &fileSize)) {
         *ppData = buf;
-        *pBytes = (UINT)fileSize;
+        *pBytes = (UINT)fileSize; //-V2005
         return S_OK;
     }
     for (std::filesystem::path& currentDir : dirs) {
         if (LoadFile(currentDir /= Filename, verbose, &buf, &fileSize)) {
             *ppData = buf;
-            *pBytes = (UINT)fileSize;
+            *pBytes = (UINT)fileSize; //-V2005
             return S_OK;
         }
     }
@@ -123,7 +123,7 @@ __declspec(nothrow) HRESULT __stdcall efxc2CompilerIncludes::CompilerIncludes::C
             std::cout << "\tpData: nullptr\n";
         }
     }
-    auto buf = (char*)pData;
+    auto buf = std::bit_cast<char*>(pData);  //-V2018
     delete[] buf;
     return S_OK;
 }
