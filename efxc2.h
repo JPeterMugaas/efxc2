@@ -37,6 +37,7 @@
 #include <iostream>
 #include <memory>
 #include <ranges>
+#include <stdlib.h>
 #include <string>
 #include <string_view>
 #include <vector>

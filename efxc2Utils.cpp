@@ -261,40 +261,63 @@ void efxc2Utils::FixupFileName(_Inout_ std::string& FileName) {
 
 std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
 {
-    int nbytes = 0;
-    if ((nbytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-        wstr.c_str(), (int)wstr.length(), nullptr, 0, nullptr, nullptr)) == 0) {
-        return "";
+    _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8");
+    size_t nbytes = 0;
+    errno_t err = 0;
+    err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale);
+    if (err != 0) {
+        std::cerr << "_wcstombs_s_l failed." << std::endl;
+        _free_locale(locale);
+        exit(1);
+    }
+    if (nbytes == 0) { 
+        _free_locale(locale); //-V586
+        return ""; 
     }
 
     auto str = std::make_unique<std::vector<char>>();
-    str->resize((size_t)nbytes + 1);
+    str->resize(nbytes + 1);
     str->data()[nbytes] = '\0';
-
-    if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
-        wstr.c_str(), (int)wstr.length(), str->data(), nbytes, nullptr, nullptr) == 0) {
+    err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(),wstr.length() + 1, locale);
+    if (err != 0) {
+        std::cerr << "_wcstombs_s_l failed." << std::endl;
+        exit(1);
+    }
+    if (nbytes == 0) {
+        _free_locale(locale); //-V586
         return "";
     }
+
+    _free_locale(locale); //-V586
     return str->data();
 }
 
 std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
 {
-    int nchars = 0;
-    if ((nchars = MultiByteToWideChar(CP_UTF8,
-        MB_ERR_INVALID_CHARS, str.c_str(), (int)str.length(), nullptr, 0)) == 0) {
+    _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8");
+    size_t nchars = 0;
+    errno_t err = 0;
+    err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale);
+    if (err != 0) {
+        std::cerr << "_mbstowcs_s_l failed." << std::endl;
+        _free_locale(locale);
+        exit(1);
+    }
+    if (nchars == 0) {
+        _free_locale(locale); //-V586
         return L"";
     }
-
     auto _wstr = std::make_unique<std::vector<char>>();
-    _wstr->resize(((size_t)nchars + 1) * sizeof(wchar_t));
+    _wstr->resize((nchars + 1) * sizeof(wchar_t));
     auto* wstr = std::bit_cast<wchar_t*>(_wstr->data());
     wstr[nchars] = L'\0';
 
-    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
-        str.c_str(), (int)str.length(), wstr, nchars) == 0) {
-        return L"";
+    err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale);
+    if (err != 0) {
+        std::cerr << "_mbstowcs_s_l failed." << std::endl;
+        exit(1);
     }
+    _free_locale(locale);
     return wstr;
 }
 
