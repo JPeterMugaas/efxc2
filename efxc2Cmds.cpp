@@ -118,7 +118,7 @@ void efxc2Cmds::cmd_enable_unbounded_descriptor_tables(efxc2CompilerParams::Comp
 void efxc2Cmds::cmd_Fc(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW assemblyCodeFile) {
     files.set_DisassemblyFile(assemblyCodeFile);
     UINT cmd = params.get_commands();
-    cmd = cmd | CMD_WRITE_ASSEMBLY_CODE;
+    cmd = cmd | efxc2Utils::CMD_WRITE_ASSEMBLY_CODE;
     params.set_commands(cmd);
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
@@ -134,7 +134,7 @@ void efxc2Cmds::cmd_Fd(efxc2CompilerParams::CompilerParams& params, efxc2Files::
     files.set_pdbFile(pdbFile);
 
     UINT cmd = params.get_commands();
-    cmd = cmd | CMD_WRITE_PDB_FILE;
+    cmd = cmd | efxc2Utils::CMD_WRITE_PDB_FILE;
     params.set_commands(cmd);
 
     if (params.get_verbose() && params.get_debug()) {
@@ -150,7 +150,7 @@ void efxc2Cmds::cmd_Fd(efxc2CompilerParams::CompilerParams& params, efxc2Files::
 void efxc2Cmds::cmd_Fh(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW outputFile) {
     files.set_IncludeFile(outputFile);
     UINT cmd = params.get_commands();
-    cmd = cmd | CMD_WRITE_HEADER;
+    cmd = cmd | efxc2Utils::CMD_WRITE_HEADER;
     params.set_commands(cmd);
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
@@ -165,7 +165,7 @@ void efxc2Cmds::cmd_Fh(efxc2CompilerParams::CompilerParams& params, efxc2Files::
 void efxc2Cmds::cmd_Fo(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW outputFile) {
     files.set_ObjectFile(outputFile);
     UINT cmd = params.get_commands();
-    cmd = cmd | CMD_WRITE_OBJECT;
+    cmd = cmd | efxc2Utils::CMD_WRITE_OBJECT;
     params.set_commands(cmd);
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
@@ -350,7 +350,7 @@ void efxc2Cmds::cmd_Op(efxc2CompilerParams::CompilerParams& params) {
 void efxc2Cmds::cmd_P(efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files, _In_ const efxc2Utils::M_STRING_VIEW outputFile) {
     files.set_preprocessFile (outputFile);
     UINT cmd = params.get_commands();
-    cmd = cmd | CMD_PREPROCESS_FILE;
+    cmd = cmd | efxc2Utils::CMD_PREPROCESS_FILE;
     params.set_commands(cmd);
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
@@ -542,8 +542,7 @@ bool  efxc2Cmds::parseCompilerOnlyCall(
 
     for (CompilerOnlyEntry currentEntry : g_CompilerOnlyCall) {
         if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) == 0) {
-            auto ptr = (gCompilerp*)currentEntry.method;
-            ptr(params);
+            currentEntry.method(params);
             *index += 1;
             return true;
         }
@@ -593,8 +592,7 @@ bool efxc2Cmds::parseCompilerFileCall(
         else {
             argumentOption = argument.substr(arg_idx, argument.size());
         }
-        auto ptr = (gCompilerFilep*)currentEntry.method;
-        ptr(params, files, argumentOption);
+        currentEntry.method(params, files, argumentOption);
         *index += 1;
         return true;
     }

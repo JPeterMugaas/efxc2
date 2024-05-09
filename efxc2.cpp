@@ -20,7 +20,7 @@ static void FindNOLOGO(const efxc2Utils::M_CMD_PARAMS& args, efxc2CompilerParams
     size_t index = 0;
     while (index < args.size()) {
         /* Detect the end of the options. */
-        if (efxc2Utils::parseOpt(M_NOLOGO, args, &index, nullptr)) {
+        if (efxc2Utils::parseOpt(efxc2Cmds::M_NOLOGO, args, &index, nullptr)) {
             params.set_verbose(false);
             break;
         }
@@ -36,7 +36,7 @@ static void FindDebug(const efxc2Utils::M_CMD_PARAMS& args, efxc2CompilerParams:
     size_t index = 0;
     while (index < args.size()) {
         /* Detect the end of the options. */
-        if (efxc2Utils::parseOpt(M_DEBUG, args, &index, nullptr)) {
+        if (efxc2Utils::parseOpt(efxc2Cmds::M_DEBUG, args, &index, nullptr)) {
             params.set_debug(true);
             break;
         }
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
         if (index >= args.size()) {
             break;
         }
-        else if (efxc2Utils::parseOpt(M_QUESTION_MARK, args, &index, nullptr)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_QUESTION_MARK, args, &index, nullptr)) {
             efxc2Utils::print_help_screen();
         }
         else if (efxc2Cmds::parseCompilerOnlyCall(args, &index, params)) {
@@ -87,38 +87,38 @@ int main(int argc, char* argv[]) {
         else if (efxc2Cmds::parseNotSupportedOptions(args, &index)) {
             exit(1);
         }
-        else if (efxc2Utils::parseOpt(M_D, args, &index, &temp)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_D, args, &index, &temp)) {
             efxc2Cmds::cmd_D(params, temp);
             continue;
         }
-        else if (efxc2Utils::parseOpt(M_E_, args, &index, &temp)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_E_, args, &index, &temp)) {
             efxc2Cmds::cmd_E(params, temp);
             continue;
         }
         else if (efxc2Cmds::parseCompilerFileCall(args, &index, params, files)) {
             continue;
         }
-        else if (efxc2Utils::parseOpt(M_HELP, args, &index, nullptr)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_HELP, args, &index, nullptr)) {
             efxc2Utils::print_help_screen();
         }
-        else if (efxc2Utils::parseOpt(M_I, args, &index, &temp)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_I, args, &index, &temp)) {
             efxc2Cmds::cmd_I(params, temp);
             continue;
         }
-        else if (efxc2Utils::parseOpt(M_NOLOGO, args, &index, nullptr)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_NOLOGO, args, &index, nullptr)) {
             continue;
         }
-        else if (efxc2Utils::parseOpt(M_DEBUG, args, &index, nullptr)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_DEBUG, args, &index, nullptr)) {
             continue;
         }
-        else if (efxc2Utils::parseOpt(M_T, args, &index, &temp)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_T, args, &index, &temp)) {
             efxc2Cmds::cmd_T(params, temp);
             continue;
         }
-        else if (efxc2Utils::parseOpt(M_VERSION, args, &index, nullptr)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_VERSION, args, &index, nullptr)) {
             efxc2Utils::print_version();
         }
-        else if (efxc2Utils::parseOpt(M_VN, args, &index, &temp)) {
+        else if (efxc2Utils::parseOpt(efxc2Cmds::M_VN, args, &index, &temp)) {
             efxc2Cmds::cmd_Vn(params, temp);
             continue;
         }

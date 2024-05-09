@@ -54,16 +54,16 @@ namespace efxc2Utils {
     constexpr auto ERROR_TABLE_LENGTH = 11;
 
     const std::array <ErrorTableEntry, ERROR_TABLE_LENGTH >g_ErrorTable = { {
-        { (HRESULT)0x887C0002, "D3D11_ERROR_FILE_NOT_FOUND" },
-        { (HRESULT)0x887C0001, "D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS" },
-        { (HRESULT)0x887C0003, "D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS" },
-        { (HRESULT)0x887C0004, "D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD" },
-        { (HRESULT)0x887A0001, "D3DERR_INVALIDCALL (replaced with DXGI_ERROR_INVALID_CALL)" },
-        { (HRESULT)0x887A000A, "D3DERR_WASSTILLDRAWING (replaced with DXGI_ERROR_WAS_STILL_DRAWING)" },
-        { (HRESULT)0x80004005, "E_FAIL" },
-        { (HRESULT)0x80070057, "E_INVALIDARG" },
-        { (HRESULT)0x8007000E, "E_OUTOFMEMORY" },
-        { (HRESULT)0x80004001, "E_NOTIMPL" },
+        { std::bit_cast<HRESULT>(0x887C0002), "D3D11_ERROR_FILE_NOT_FOUND" },
+        { std::bit_cast<HRESULT>(0x887C0001), "D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS" },
+        { std::bit_cast<HRESULT>(0x887C0003), "D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS" },
+        { std::bit_cast<HRESULT>(0x887C0004), "D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD" },
+        { std::bit_cast<HRESULT>(0x887A0001), "D3DERR_INVALIDCALL (replaced with DXGI_ERROR_INVALID_CALL)" },
+        { std::bit_cast<HRESULT>(0x887A000A), "D3DERR_WASSTILLDRAWING (replaced with DXGI_ERROR_WAS_STILL_DRAWING)" },
+        { std::bit_cast<HRESULT>(0x80004005), "E_FAIL" },
+        { std::bit_cast<HRESULT>(0x80070057), "E_INVALIDARG" },
+        { std::bit_cast<HRESULT>(0x8007000E), "E_OUTOFMEMORY" },
+        { std::bit_cast<HRESULT>(0x80004001), "E_NOTIMPL" },
         { 1L, "S_FALSE ((HRESULT)" }
     } };
 
@@ -89,6 +89,17 @@ namespace efxc2Utils {
       { "vs_3_0", "g_vs30"},
       { "vs_3_sw", "g_vs3ff"},
     } };
+
+    /* command codes for internal use */
+    constexpr auto CMD_WRITE_HEADER = 1;
+    constexpr auto CMD_WRITE_OBJECT = 2;
+    constexpr auto CMD_WRITE_PDB_FILE = 4;
+    constexpr auto CMD_WRITE_ASSEMBLY_CODE = 8;
+    constexpr auto CMD_PREPROCESS_FILE = 16;
+    constexpr auto CMD_WRITE_LIBRARY_FILE = 32;
+
+    /* a good size for an error message */
+    constexpr auto ERR_SIZE = 128;
 
 #ifdef _WIN32
     void FixupFileName(_Inout_ std::string& FileName);

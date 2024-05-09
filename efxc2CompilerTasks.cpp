@@ -17,8 +17,8 @@ void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2F
 #else
 void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2Files::Files& files, const efxc2CompilerParams::CompilerParams& params) {
 #endif
-    if ((params.get_commands() & CMD_PREPROCESS_FILE) == CMD_PREPROCESS_FILE) {
-        if (params.get_commands() != CMD_PREPROCESS_FILE) {
+    if ((params.get_commands() & efxc2Utils::CMD_PREPROCESS_FILE) == efxc2Utils::CMD_PREPROCESS_FILE) {
+        if (params.get_commands() != efxc2Utils::CMD_PREPROCESS_FILE) {
             std::cerr << "The /P option may only be used with the /D and /I parameters.";
             exit(1);
         }
@@ -31,16 +31,16 @@ void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2F
         compiler.EmbedPrivateData();
     }
     compiler.StripShader();
-    if ((params.get_commands() & CMD_WRITE_HEADER) == CMD_WRITE_HEADER) {
+    if ((params.get_commands() & efxc2Utils::CMD_WRITE_HEADER) == efxc2Utils::CMD_WRITE_HEADER) {
         files.WriteIncludeFile(compiler,params);
     }
-    if ((params.get_commands() & CMD_WRITE_PDB_FILE) == CMD_WRITE_PDB_FILE) {
+    if ((params.get_commands() & efxc2Utils::CMD_WRITE_PDB_FILE) == efxc2Utils::CMD_WRITE_PDB_FILE) {
         files.WritePDBFile(compiler, params);
     }
-    if ((params.get_commands() & CMD_WRITE_OBJECT) == CMD_WRITE_OBJECT) {
+    if ((params.get_commands() & efxc2Utils::CMD_WRITE_OBJECT) == efxc2Utils::CMD_WRITE_OBJECT) {
         files.WriteObjectFile(compiler,params);
     }
-    if ((params.get_commands() & CMD_WRITE_ASSEMBLY_CODE) == CMD_WRITE_ASSEMBLY_CODE) {
+    if ((params.get_commands() & efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) == efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) {
         compiler.Disassemble();
         files.WriteDisassembly(compiler,params);
     }
