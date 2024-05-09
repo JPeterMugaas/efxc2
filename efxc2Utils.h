@@ -43,7 +43,7 @@ namespace efxc2Utils {
     const int  READALL_INVALID = -1;  /* Invalid parameters */
     const int  READALL_ERROR = -2;  /* Stream error */
     const int  READALL_TOOMUCH = -3;  /* Too much input */
-    const int  READALL_NOMEM = -4;  /* Out of memory */
+    const int  READALL_NOMEM = -4;  /* Out of memory */  //-V112
 
     /* Helper D3D error lookup table*/
     struct ErrorTableEntry {

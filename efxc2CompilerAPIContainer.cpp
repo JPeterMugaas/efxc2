@@ -27,32 +27,32 @@ efxc2CompilerAPIContainer::CompilerAPIContainer::CompilerAPIContainer() {
         std::cerr << "Error: could not get the address of D3DCompile2.\n";
         efxc2Utils::print_windows_error();
     }
-    ptr_D3DStripShader = (pD3DStripShaderg)GetProcAddress(h, "D3DStripShader");
+    ptr_D3DStripShader = (pD3DStripShaderg)GetProcAddress(h, "D3DStripShader"); 
     if (ptr_D3DStripShader == nullptr) {
         std::cerr << "Error: could not get the address of D3DStripShader.\n";
         efxc2Utils::print_windows_error();
     }
-    ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart");
+    ptr_D3DGetBlobPart = (pD3DGetBlobPartg)GetProcAddress(h, "D3DGetBlobPart"); 
     if (ptr_D3DGetBlobPart == nullptr) {
         std::cerr << "Error: could not get the address of D3DGetBlobPart.\n";
         efxc2Utils::print_windows_error();
     }
-    ptr_D3DSetBlobPart = (pD3DSetBlobPartg)GetProcAddress(h, "D3DSetBlobPart");
+    ptr_D3DSetBlobPart = (pD3DSetBlobPartg)GetProcAddress(h, "D3DSetBlobPart"); 
     if (ptr_D3DSetBlobPart == nullptr) {
         std::cerr << "Error: could not get the address of D3DSetBlobPart.\n";
         efxc2Utils::print_windows_error();
     }
-    ptr_D3DDisassemble = (pD3DDisassembleg)GetProcAddress(h, "D3DDisassemble");
+    ptr_D3DDisassemble = (pD3DDisassembleg)GetProcAddress(h, "D3DDisassemble"); 
     if (ptr_D3DDisassemble == nullptr) {
         std::cerr << "Error: could not get the address of D3DDisassemble.\n";
         efxc2Utils::print_windows_error();
     }
-    ptr_D3DLoadModule = (gD3DLoadModulep)GetProcAddress(h, "D3DLoadModule");
+    ptr_D3DLoadModule = (gD3DLoadModulep)GetProcAddress(h, "D3DLoadModule"); 
     if (ptr_D3DLoadModule == nullptr) {
         std::cerr << "Error: could not get the address of D3DLoadModule.\n";
         efxc2Utils::print_windows_error();
     }
-    ptr_D3DCreateLinker = (gD3DCreateLinkerp)GetProcAddress(h, "D3DCreateLinker");
+    ptr_D3DCreateLinker = (gD3DCreateLinkerp)GetProcAddress(h, "D3DCreateLinker"); 
     if (ptr_D3DCreateLinker == nullptr) {
         std::cerr << "Error: could not get the address of D3DCreateLinker.\n";
         efxc2Utils::print_windows_error();

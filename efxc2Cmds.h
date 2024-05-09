@@ -64,7 +64,7 @@ namespace efxc2Cmds {
     using gCompilerFilep = void(efxc2CompilerParams::CompilerParams&, efxc2Files::Files&, const efxc2Utils::M_STRING_VIEW);
     struct CompileFileEntry {
         const efxc2Utils::M_STRING Param;
-        gCompilerFilep* method;
+        gCompilerFilep* method = nullptr; //-V122
     };
 
     constexpr auto COMPILER_FILE_ENTRIES_LENGTH = 6;
@@ -85,8 +85,8 @@ namespace efxc2Cmds {
 
     using gCompilerp = void(efxc2CompilerParams::CompilerParams&);
     struct CompilerOnlyEntry {
-        const efxc2Utils::M_STRING Param;
-        gCompilerp* method;
+        const efxc2Utils::M_STRING Param; //-V122
+        gCompilerp* method;  //-V122
     };
 
     constexpr auto COMPILER_ONLY_ENTRIES_LENGTH = 29;

@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.9.204)
+set(EFXC2_VERSION 0.0.9.205)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -105,7 +105,7 @@ include("${pvs_cmakemodule_SOURCE_DIR}/PVS-Studio.cmake")
 pvs_studio_add_target(TARGET fxc.analyze ALL
                       OUTPUT FORMAT errorfile
                       ANALYZE fxc
-                      MODE MISRA:1,2 GA:1,2
+                      MODE 64 GA:1,2
                       LOG target.err)
 endif()
 

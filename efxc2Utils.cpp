@@ -225,7 +225,7 @@ void efxc2Utils::FixupFileName(_Inout_ std::wstring& FileName) {
     if (FileName.empty()) {
         return;
     }
-    for (int i = 0; FileName[i] != '\0'; i++)
+    for (size_t i = 0; FileName[i] != '\0'; i++)
     {
         if (FileName[i] == '/') {
             FileName[i] = '\\';
@@ -241,7 +241,7 @@ void efxc2Utils::FixupFileName(_Inout_ std::string& FileName) {
     if (FileName.empty()) {
         return;
     }
-    for (int i = 0; FileName[i] != '\0'; i++)
+    for (size_t i = 0; FileName[i] != '\0'; i++)
     {
         if (FileName[i] == '/') {
             FileName[i] = '\\';

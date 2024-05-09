@@ -34,13 +34,13 @@ namespace efxc2Compiler {
         efxc2CompilerAPIContainer::CompilerAPIContainer api;
         efxc2CompilerParams::CompilerParams       params;
 
-        ID3DBlob* compilerOutput = nullptr;
-        ID3DBlob* disassemblyCodeBlob = nullptr;
-        ID3DBlob* strippedBlob = nullptr;
-        ID3DBlob* pPDBName = nullptr;
-        ID3DBlob* pPreprocessOutput = nullptr;
-        ID3D11Module* pLibraryModule = nullptr;
-        ID3DBlob* LinkedBlob = nullptr;
+        ID3DBlob* compilerOutput = nullptr; //-V122
+        ID3DBlob* disassemblyCodeBlob = nullptr; //-V122
+        ID3DBlob* strippedBlob = nullptr; //-V122
+        ID3DBlob* pPDBName = nullptr; //-V122
+        ID3DBlob* pPreprocessOutput = nullptr; //-V122
+        ID3D11Module* pLibraryModule = nullptr; //-V122
+        ID3DBlob* LinkedBlob = nullptr; //-V122
     };
 }
 

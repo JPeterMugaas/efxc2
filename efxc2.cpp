@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
     // ====================================================================================
     // Process Command Line Arguments
 
-    efxc2Utils::M_CMD_PARAMS args(argv + 1, argv + argc);
+    efxc2Utils::M_CMD_PARAMS args(argv + 1, argv + argc);  //-V104
     efxc2Utils::M_STRING temp = efxc2Utils::M_STRING_INIT;
     efxc2CompilerAPIContainer::CompilerAPIContainer api;
     efxc2CompilerParams::CompilerParams params;

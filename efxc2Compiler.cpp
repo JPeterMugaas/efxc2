@@ -452,7 +452,7 @@ https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
     // declared length does not include the null terminator:
     header->NameLength = (uint16_t)fileNameLen - 1;
     // but the null terminator is expected to be present:
-    for (int i = 0; i < fileNameLen; i++) {
+    for (size_t i = 0; i < fileNameLen; i++) {
         pNameBlobContent[sizeof(ShaderDebugName) + i] = _fileName[i];
     }
 
