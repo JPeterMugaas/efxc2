@@ -15,7 +15,7 @@ void efxc2Compiler::Compiler::Preprocess() {
     if (SourceCode == nullptr) {
         efxc2Utils::print_no_input_file();
     }
-    size_t SourceLen = SourceCode->size();
+    size_t SourceLen = SourceCode->size();  //-V2571  //-V3546
     auto  includeDirs = params.get_includeDirs();
     std::string _inputFile = params.get_inputFile();
     const char* inputFile = _inputFile.c_str();
@@ -104,7 +104,7 @@ void efxc2Compiler::Compiler::Compile() {
     if (SourceCode == nullptr) {
         efxc2Utils::print_no_input_file();
     }
-    size_t SourceLen = SourceCode->size();
+    size_t SourceLen = SourceCode->size(); //-V2571  //-V3546
     auto eflags = params.get_eflags();
     auto sflags = params.get_sflags();
     auto secondary_flags = params.get_secondary_flags();
@@ -397,7 +397,7 @@ void efxc2Compiler::Compiler::EmbedPrivateData() {
     auto const* compiledString = std::bit_cast<unsigned char*>(compilerOutput->GetBufferPointer());
     size_t compiledLen = compilerOutput->GetBufferSize();
     auto private_data = params.get_PrivateData();
-    size_t private_data_size = private_data->size();
+    size_t private_data_size = private_data->size(); //-V2571  //-V3546
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DSetBlobPart(\n";
         std::cout << "\t compiledString,\n";

@@ -56,10 +56,6 @@ void efxc2Cmds::option_ignored(_In_ const efxc2Utils::M_STRING_VIEW Opt, _In_ co
 }
 
 void efxc2Cmds::parseInputFile(_In_ const efxc2Utils::M_STRING_VIEW parameter, efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files) {
-    efxc2Utils::M_STRING inputFile = efxc2Utils::M_STRING_INIT;
-#ifdef _WIN32
-    std::string c_inputFile = "";
-#endif
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 6001)
@@ -72,6 +68,10 @@ void efxc2Cmds::parseInputFile(_In_ const efxc2Utils::M_STRING_VIEW parameter, e
         if (params.get_verbose() && params.get_debug()) {
             std::cout << "Parse input file name\n";
         }
+        efxc2Utils::M_STRING inputFile = efxc2Utils::M_STRING_INIT;
+#ifdef _WIN32
+        std::string c_inputFile = "";
+#endif
         inputFile = parameter;
 #ifdef _WIN32
         efxc2Utils::FixupFileName(inputFile);
@@ -606,10 +606,10 @@ bool efxc2Cmds::parseCompilerFileCall( //-V2506
     }
 
     for (CompileFileEntry currentEntry : g_CompilerFileCall) {
-        if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) {
+        if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) { //-V2571 //-V3546
             continue;
         }
-        arg_idx += currentEntry.Param.size();
+        arg_idx += currentEntry.Param.size(); //-V2571 //-V3546
         if (arg_idx >= argument.size()) {
             *index += 1;
             if (*index >= args.size()) {
@@ -650,7 +650,7 @@ bool efxc2Cmds::parseIgnoredOptions( //-V2506
     else {
         return false; //-V2506
     }
-    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
+    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); //-V2571 //-V3546
           std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end())  {
         option_ignored(argument, params);
         return true;
@@ -658,7 +658,7 @@ bool efxc2Cmds::parseIgnoredOptions( //-V2506
     return false;
 }
 
-bool efxc2Cmds::parseNotSupportedOptions( //-V2506
+bool efxc2Cmds::parseNotSupportedOptions( //-V2506 
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _In_ const size_t* index) {
     if (!index || *index >= args.size()) {
@@ -675,7 +675,7 @@ bool efxc2Cmds::parseNotSupportedOptions( //-V2506
     else {
         return false;
     }
-    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
+    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); //-V2571 //-V3546
         std::ranges::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
 #ifdef _WIN32
           std::wcerr << std::format(L"option -{} not supported", argument);

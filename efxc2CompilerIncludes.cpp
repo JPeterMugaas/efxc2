@@ -140,7 +140,7 @@ namespace efxc2CompilerIncludes {
         efxc2Utils::M_STRING dir = { _dir.data(), _dir.size() };
 
         (void) dirs.emplace(dirs.end(), dir);
-        (void) dirs[dirs.size() - 1].make_preferred();
+        (void) dirs[dirs.size() - 1].make_preferred();  //-V2563 //-V3539
     }
 
 }
