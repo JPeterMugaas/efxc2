@@ -5,6 +5,39 @@ https://github.com/JPeterMugaas/efxc2
 Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2/releases)
 
 ## Release History
+### May 10, 2024
+* Add debug option for very verbose output and make sure that it is honored throughout the source-code.  New default:  Without debug being specified, only minimal output is given.  This is in contrast to /nologo where no output is given.
+* Fix for handling -debug parameter. Include tests now output an object (-Fo).
+* Fix clang warning "codecvt_utf8<wchar_t>' is deprecated" by replacing it with the old code that uses "MultiByteToWideChar" and "WideCharToMultiByte". See: https://en.cppreference.com/w/cpp/header/codecvt .
+* Add a test for /P parameter used with /Fo. This is not allowed and the test is expected to fail.
+* Full /P parameter support for preprocessing .HLSL files.
+* Replace some for loops with std::ranges::find.
+* Refactor nologo and debug checks out of wmain.
+* Some sample shaders that I found at [Windows-universal-samples](https://github.com/microsoft/Windows-universal-samples/tree/main/Samples/D2DAdvancedColorImages/cpp) and a hlsli from the Windows SDK.
+* Fixed issue with "unsupported" parameters. They weren't handled properly.
+* Add test specifically for unsupported option, terminate program.
+* add precomppiled shaders and the batch file I used to create them using the original fxc program.
+* Convert DisplayDefines into lambdas.
+* Convert a couple of for loops into for_each with lambdas and remove an unused variable.
+* Changed open and close overrides to match what is in the d3dcommon.h header.
+* Fix for various issues found by [PVS-Studio](https://pvs-studio.com/).
+* Fixed Access Violation if no input file was specified.
+* efxc2CompilerIncludes.h - make verbose and debug bools
+* CMakeLists.txt - add test for preprocess requests with no input filename since that's separate code.
+* Remove an old macro that referenced wcsdup function. We do not use that directly any more.
+* add a comment about where some source-code is based on for later reference.
+* /setprivate now works.
+* eliminated pShaderWithNewName variable.  Results now go into CompilerOutput variable so that the write procedures should work with it.
+* Input streams need to be read with the std::ios::binary flag. Otherwise, an implementation might change the EOL and throw things off.
+* Add option to check the code with [PVS-Studio](https://pvs-studio.com/). This is set to OFF since PVS Studio is not required to build the software. It's just something to help me code.
+* Suppress some PVS warnings about an issue with "[noreturn]" functions.  I double-checked the code and the issue does not apply.
+* Issue detected by [PVS-Studio](https://pvs-studio.com/). The global namespace should only contain 'main', namespace declarations and 'extern "C"' declarations.
+* Fix a few errors related to 64-bit types thanks to [PVS-Studio](https://pvs-studio.com/) and suppress some warnings for things I do not think are an issue.
+* [PVS-Studio](https://pvs-studio.com/) warned me about where an int was used for potentially 64-bit indexes (an int is 32-bits). Unfortunately, the WideCharToMultiByte and MultiByteToWideChar Win32 API functions take a char count that is only an int. I was using them to convert things from Unicode to UTF8 and back. The fix is to switch to the _wcstombs_s_l and _mbstowcs_s_l specifying a UTF8 locale.
+* The readall call can fail. 
+* Sometimes, we don't use results of a function so those should be typecast to void.
+* Use Win32 API constants in the g_ErrorTable table instead of hard-coding the values.
+
 ### April 24, 2024
 * Convert some strings and wstrings to std::filesystem::path.
 * Get rid of GetFileName and c_pdbFile.
