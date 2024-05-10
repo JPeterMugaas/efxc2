@@ -20,7 +20,7 @@ namespace efxc2CompilerIncludes {
     static void TrimTrailingWhiteSpace(const char* buf, std::uintmax_t* fileSize) {
         size_t tmp = *fileSize;
         for (size_t i = *fileSize; i > 0; --i) {
-            if (buf[(i - 1)] >= 32) {  //-V3539 //-V2563
+            if (buf[i - 1] >= 32) {  //-V3539 //-V2563
                 break;
             }
             else {
