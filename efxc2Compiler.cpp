@@ -27,11 +27,11 @@ void efxc2Compiler::Compiler::Preprocess() {
     (void)std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
         _def.Definition = a.Definition.c_str();
         _def.Name = a.Name.c_str();
-        defines->insert(defines->end(), _def);
+        (void)defines->insert(defines->end(), _def);
         });
     _def.Definition = nullptr;
     _def.Name = nullptr;
-    defines->insert(defines->end(), _def);
+    (void)defines->insert(defines->end(), _def);
     ID3DBlob* errors = nullptr;
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DPreprocess(\n";
@@ -95,7 +95,7 @@ void efxc2Compiler::Compiler::Preprocess() {
             std::cout << std::format("Got an error {:#08x} while preprocessing, but no error message from the function.\n", hr);
             efxc2Utils::print_hresult_error(hr);
         }
-        exit(1); //-V2014
+        exit(1); //-V2014 //-V3506 //-V2509
     }
 }
 
@@ -124,11 +124,11 @@ void efxc2Compiler::Compiler::Compile() {
     (void)std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
         _def.Definition = a.Definition.c_str();
         _def.Name = a.Name.c_str();
-        defines->insert(defines->end(), _def);
+        (void)defines->insert(defines->end(), _def);
         });
     _def.Definition = nullptr;
     _def.Name = nullptr;
-    defines->insert(defines->end(), _def);
+    (void)defines->insert(defines->end(), _def);
     ID3DBlob* errors = nullptr;
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DCompile2(\n";
@@ -218,7 +218,7 @@ void efxc2Compiler::Compiler::Compile() {
             std::cout << std::format( "Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
             efxc2Utils::print_hresult_error(hr);
         }
-        exit(1); //-V2014
+        exit(1); //-V2014 //-V3506 //-V2509
     }
 }
 
@@ -259,16 +259,14 @@ void efxc2Compiler::Compiler::Disassemble() {
 }
 
 void efxc2Compiler::Compiler::StripShader() {
-    auto const* compiledString = std::bit_cast<char*>(compilerOutput->GetBufferPointer());
-    size_t compiledLen = compilerOutput->GetBufferSize();
     auto strip_flags = params.get_strip_flags();
-    HRESULT hr = 0;
     strippedBlob = nullptr;
+   
     if (strip_flags != 0) {
         if (params.get_verbose() && params.get_debug()) {
             std::cout << "Calling D3DStripShader(\n";
             std::cout << "\t compiledString,\n";
-            std::cout << std::format("\t {},\n", compiledLen);
+            std::cout << std::format("\t {},\n", compilerOutput->GetBufferSize());
             std::cout << std::format("\t {:#08x},\n", strip_flags);
             std::cout << "\t &strippedBlob);\n";
         }
@@ -284,6 +282,9 @@ void efxc2Compiler::Compiler::StripShader() {
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif
+        auto const* compiledString = std::bit_cast<char*>(compilerOutput->GetBufferPointer());
+        size_t compiledLen = compilerOutput->GetBufferSize();
+        HRESULT hr = 0;
         auto ptr = api.get_ptr_D3DStripShader();
         hr = ptr(compiledString, compiledLen, strip_flags, &strippedBlob);
 #ifdef _MSC_VER
@@ -385,7 +386,7 @@ std::string efxc2Compiler::Compiler::GetPDBFileName() {
         efxc2Utils::print_hresult_error(hr);
     }
     auto pDebugNameData = std::bit_cast<ShaderDebugName*>(pPDBName->GetBufferPointer());
-    auto pName = std::bit_cast<char*>(pDebugNameData + 1);
+    auto pName = std::bit_cast<char*>(&pDebugNameData[1]); //-V3539 //-V2563
     if (params.get_verbose()) {
         std::cout << std::format(".PDB Data Name: {}\n", pName);
     }
@@ -449,7 +450,7 @@ https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
 
     header->Flags = 0;
     // declared length does not include the null terminator:
-    header->NameLength = (uint16_t)(fileNameLen - 1); //-V2005
+    header->NameLength = (uint16_t)(fileNameLen - 1); //-V2005 //-V2533
     // but the null terminator is expected to be present:
     for (size_t i = 0; i < fileNameLen; i++) {
         pNameBlobContent[sizeof(ShaderDebugName) + i] = _fileName[i];

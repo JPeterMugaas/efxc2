@@ -20,11 +20,11 @@ void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2F
     if ((params.get_commands() & efxc2Utils::CMD_PREPROCESS_FILE) == efxc2Utils::CMD_PREPROCESS_FILE) {
         if (params.get_commands() != efxc2Utils::CMD_PREPROCESS_FILE) {
             std::cerr << "The /P option may only be used with the /D and /I parameters.";
-            exit(1); //-V2014
+            exit(1); //-V2014 //-V3506 //-V2509
         }
         compiler.Preprocess();
         files.WritePreprocessFile(compiler, params);
-        exit(0); //-V2014
+        exit(0); //-V2014 //-V3506 //-V2509
     }
     compiler.Compile();
     if (params.get_PrivateData() != nullptr) {

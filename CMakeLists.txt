@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.9.209)
+set(EFXC2_VERSION 0.0.9.211)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -28,8 +28,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 option(EFXC2_BUILD_STATIC "Build with static libraries (mingw only)." ON)
-option(EFXC2_USE_PVE_STUDIO "Enable analysis with PVS-Studio" OFF)
-
+option(EFXC2_USE_PVS_STUDIO "Enable analysis with PVS-Studio" OFF)
+option(EFXC2_USE_ALL_RULES "Use all rules with PVS-Editor" OFF)
 
 set(EXEC_SOURCES efxc2.cpp
                  efxc2Cmds.h
@@ -93,20 +93,28 @@ install(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/HISTORY.md
   DESTINATION ${CMAKE_INSTALL_DOCDIR})
 
-if(EFXC2_USE_PVE_STUDIO)
-include(FetchContent)
-FetchContent_Declare(
-    PVS_CMakeModule
-    GIT_REPOSITORY "https://github.com/viva64/pvs-studio-cmake-module.git"
-    GIT_TAG        "master" 
-)
-FetchContent_MakeAvailable(PVS_CMakeModule)
-include("${pvs_cmakemodule_SOURCE_DIR}/PVS-Studio.cmake")
-pvs_studio_add_target(TARGET fxc.analyze ALL
+if(EFXC2_USE_PVS_STUDIO)
+  include(FetchContent)
+  FetchContent_Declare(
+     PVS_CMakeModule
+     GIT_REPOSITORY "https://github.com/viva64/pvs-studio-cmake-module.git"
+     GIT_TAG        "master" 
+  )
+  FetchContent_MakeAvailable(PVS_CMakeModule)
+  include("${pvs_cmakemodule_SOURCE_DIR}/PVS-Studio.cmake")
+  if (EFXC2_USE_ALL_RULES)
+     pvs_studio_add_target(TARGET fxc.analyze ALL
                       OUTPUT FORMAT errorfile
                       ANALYZE fxc
-                      MODE 64 GA:1,2 OWASP 
+                      MODE 64 GA:1,2 CS OWASP AUTOSAR MISRA 
                       LOG target.err)
+  else()
+    pvs_studio_add_target(TARGET fxc.analyze ALL
+                      OUTPUT FORMAT errorfile
+                      ANALYZE fxc
+                      MODE 64 GA:1,2 
+                      LOG target.err)
+  endif()
 endif()
 
 include(CPack)

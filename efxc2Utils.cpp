@@ -10,10 +10,10 @@
 
 #include "efxc2Utils.h"
 
-std::string efxc2Utils::HResultName(_In_ const HRESULT hr) {
+std::string efxc2Utils::HResultName(_In_ const HRESULT hr) { //-V2506
     for (int i = 0; i < efxc2Utils::ERROR_TABLE_LENGTH; i++) {
         if (hr == efxc2Utils::g_ErrorTable[i].ErrorCode ) {
-            return  efxc2Utils::g_ErrorTable[i].ErrorName;
+            return  efxc2Utils::g_ErrorTable[i].ErrorName; //-V2506 //-V2506
         }
     }
     return "Unknown Error Name";
@@ -46,7 +46,7 @@ void efxc2Utils::print_unsupported_arg_help() {
 [[noreturn]] void efxc2Utils::print_version() { //-V1082
     std::cout << PROGRAM_DESCRIPTION " version "  PROGRAM_VERSION "\n";
     std::cout << PROGRAM_COPYRIGHT "\n";
-    exit(0); //-V2014
+    exit(0); //-V2014 //-V3506 //-V2509
 }
 
 [[noreturn]] void efxc2Utils::print_usage_missing(const char* arg) { //-V1082
@@ -55,13 +55,13 @@ void efxc2Utils::print_unsupported_arg_help() {
     std::cout << "without it.  Review efxc2 and make sure things will work.\n";
     std::cout << "\n";
     print_usage_arg();
-    exit(1);  //-V2014
+    exit(1);  //-V2014 //-V3506 //-V2509
 }
 
 [[noreturn]] void efxc2Utils::print_no_input_file() { //-V1082
     std::cerr << "You specified no input files.\n";
     print_usage_arg();
-    exit(1);  //-V2014
+    exit(1);  //-V2014 //-V3506 //-V2509
 }
 [[noreturn]] void efxc2Utils::print_usage_toomany() { //-V1082
     std::cerr << "You specified multiple input files.\n";
@@ -69,7 +69,7 @@ void efxc2Utils::print_unsupported_arg_help() {
     std::cout << "files. You'll have to edit the source to behave the way you want.\n";
     std::cout << "\n";
     print_usage_arg();
-    exit(1);  //-V2014
+    exit(1);  //-V2014 //-V3506 //-V2509
 }
 
 [[noreturn]] void efxc2Utils::print_hresult_error(const HRESULT hr) { //-V1082
@@ -89,7 +89,7 @@ void efxc2Utils::print_unsupported_arg_help() {
     std::cout << std::format("Windows Error Message: {}\n", message);
     std::cout << std::format("Error Code: {:#08x}\n", hr);
     std::cout << std::format("Error Name: {}\n", HResultName(hr));
-    exit(1); //-V2014
+    exit(1); //-V2014 //-V3506 //-V2509
 }
 
 [[noreturn]] void efxc2Utils::print_windows_error() { //-V1082
@@ -114,13 +114,13 @@ void efxc2Utils::print_unsupported_arg_help() {
 #if defined(_MSC_VER)
 # pragma warning(pop)
 #endif /* _MSC_VER */
-    exit(1);  //-V2014
+    exit(1);  //-V2014 //-V3506 //-V2509
 }
 
 [[noreturn]] void efxc2Utils::print_help_screen() { //-V1082
     print_copyright();
     print_usage_arg();
-    exit(0);  //-V2014
+    exit(0);  //-V2014 //-V3506 //-V2509
 }
 
  void efxc2Utils::WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
@@ -131,10 +131,10 @@ void efxc2Utils::print_unsupported_arg_help() {
     f << std::format("const BYTE {}[] =\n{{\n", variableName);
     for (size_t i = 0; i < len; i++) {
         if (outputHex) {
-            f << std::format(" 0x{:>02x}", outString[i]);
+            f << std::format(" 0x{:>02x}", outString[i]); //-V3539 //-V2563
         }
         else {
-            f << std::format("{:>4}", outString[i]);
+            f << std::format("{:>4}", outString[i]); //-V3539 //-V2563
         }
         if (i != len - 1) {
             f << ",";
@@ -147,14 +147,14 @@ void efxc2Utils::print_unsupported_arg_help() {
     return;
 }
 
- bool efxc2Utils::readAll(_In_ std::ifstream& in,
+ bool efxc2Utils::readAll(_In_ std::ifstream& in, //-V2506
      _Out_ efxc2Utils::M_BUFFER& dataptr) {
      dataptr = std::make_shared<std::vector<char>>();
      auto temp = std::make_unique<std::vector<char>>();
      size_t used = 0;
      size_t n = 0;
      if (dataptr == nullptr) {
-         return false;
+         return false; //-V2506
      }
      while (TRUE) {
          temp->resize(READALL_CHUNK);
@@ -170,9 +170,9 @@ void efxc2Utils::print_unsupported_arg_help() {
      return true;
  }
 
-bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
+bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) { //-V2506
     if (!index || *index >= args.size()) {
-        return false;
+        return false; //-V2506
     }
 
     M_STRING_VIEW argument = args[*index];
@@ -184,7 +184,7 @@ bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARA
         }
     }
     else {
-        return false;
+        return false; //-V2506 //-V2506
     }
 
     if (argument.compare(arg_idx, option.size(), option) != 0) {
@@ -228,9 +228,9 @@ std::string efxc2Utils::setupVariableName(_In_ const std::string_view model,
 }
 
 #ifdef _WIN32
-void efxc2Utils::FixupFileName(_Inout_ std::wstring& FileName) {
+void efxc2Utils::FixupFileName(_Inout_ std::wstring& FileName) { //-V2506
     if (FileName.empty()) {
-        return;
+        return; //-V2506
     }
     for (size_t i = 0; FileName[i] != '\0'; i++)
     {
@@ -244,9 +244,9 @@ void efxc2Utils::FixupFileName(_Inout_ std::wstring& FileName) {
     return;
 }
 
-void efxc2Utils::FixupFileName(_Inout_ std::string& FileName) {
+void efxc2Utils::FixupFileName(_Inout_ std::string& FileName) { //-V2506
     if (FileName.empty()) {
-        return;
+        return; //-V2506 
     }
     for (size_t i = 0; FileName[i] != '\0'; i++)
     {
@@ -262,29 +262,29 @@ void efxc2Utils::FixupFileName(_Inout_ std::string& FileName) {
 #endif /* _WIN32 */
 
 #ifdef _WIN32
-std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
+std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr) //-V2506
 {
-    _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8");
+    _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8");  //-V3551 //-V2578
     size_t nbytes = 0;
     errno_t err = 0;
     err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale);
     if (err != 0) {
         std::cerr << "_wcstombs_s_l failed." << std::endl;
         _free_locale(locale);
-        exit(1);  //-V2014
+        exit(1);  //-V2014 //-V3506 //-V2509
     }
     if (nbytes == 0) { 
-        _free_locale(locale); //-V586
+        _free_locale(locale); //-V586 
         return ""; 
     }
 
     auto str = std::make_unique<std::vector<char>>();
     str->resize(nbytes + 1);
-    str->data()[nbytes] = '\0';
+    str->data()[nbytes] = '\0';  //-V3539 //-V2563
     err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(),wstr.length() + 1, locale);
     if (err != 0) {
         std::cerr << "_wcstombs_s_l failed." << std::endl;
-        exit(1);  //-V2014
+        exit(1);  //-V2014 //-V3506 //-V2509
     }
     if (nbytes == 0) {
         _free_locale(locale); //-V586
@@ -295,30 +295,30 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
     return str->data();
 }
 
-std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
+std::wstring efxc2Utils::utf8_to_wstring(std::string const& str) //-V2506
 {
-    _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8");
+    _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8");  //-V3551 //-V2578
     size_t nchars = 0;
     errno_t err = 0;
     err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale);
     if (err != 0) {
         std::cerr << "_mbstowcs_s_l failed." << std::endl;
         _free_locale(locale);
-        exit(1);  //-V2014
+        exit(1);  //-V2014 //-V3506 //-V2509
     }
     if (nchars == 0) {
         _free_locale(locale); //-V586
-        return L"";
+        return L""; //-V2506
     }
     auto _wstr = std::make_unique<std::vector<char>>();
     _wstr->resize((nchars + 1) * sizeof(wchar_t));
     auto* wstr = std::bit_cast<wchar_t*>(_wstr->data());
-    wstr[nchars] = L'\0';
+    wstr[nchars] = L'\0'; //-V3539 //-V2563
 
     err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale);
     if (err != 0) {
         std::cerr << "_mbstowcs_s_l failed." << std::endl;
-        exit(1);  //-V2014
+        exit(1);  //-V2014 //-V3506 //-V2509
     }
     _free_locale(locale);
     return wstr;

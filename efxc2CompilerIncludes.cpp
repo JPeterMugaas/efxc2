@@ -20,7 +20,7 @@ namespace efxc2CompilerIncludes {
     static void TrimTrailingWhiteSpace(const char* buf, std::uintmax_t* fileSize) {
         size_t tmp = *fileSize;
         for (size_t i = *fileSize; i > 0; --i) {
-            if (buf[i - 1] >= 32) {
+            if (buf[(i - 1)] >= 32) {  //-V3539 //-V2563
                 break;
             }
             else {
@@ -31,7 +31,7 @@ namespace efxc2CompilerIncludes {
         return;
     }
 
-    static bool LoadFile(const std::filesystem::path& currentFile, int verbose, char** buf, std::uintmax_t* fileSize) {
+    static bool LoadFile(const std::filesystem::path& currentFile, int verbose, char** buf, std::uintmax_t* fileSize) { //-V2506
         std::ifstream f;
         std::error_code ec;
         *fileSize = std::filesystem::file_size(currentFile, ec);
@@ -43,7 +43,7 @@ namespace efxc2CompilerIncludes {
                 std::cout << std::format("Found {}\n", currentFile.native());
 #endif
             }
-            *buf = new char[*fileSize];
+            *buf = new char[*fileSize];  //-V2511
             (void)memset(*buf, 0, *fileSize);
             f = std::ifstream(currentFile, std::ios::in | std::ios::binary);
             if (f.is_open()) {
@@ -61,7 +61,7 @@ namespace efxc2CompilerIncludes {
         }
     }
 
-    __declspec(nothrow) HRESULT __stdcall efxc2CompilerIncludes::CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) {
+    __declspec(nothrow) HRESULT __stdcall efxc2CompilerIncludes::CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) { //-V2506
         *ppData = nullptr;
         *pBytes = 0;
         std::filesystem::path Filename = std::string(pFileName);
@@ -95,27 +95,27 @@ namespace efxc2CompilerIncludes {
         }
         std::filesystem::path TryInputFile = "";
         if (!input_parent_path.empty()) {
-            TryInputFile = input_parent_path /= Filename;  //-V3538
+            TryInputFile = input_parent_path /= Filename;  //-V3538 //-V2561
             if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
                 *ppData = buf;
-                *pBytes = (UINT)fileSize; //-V2005
-                return S_OK;
+                *pBytes = (UINT)fileSize; //-V2005  //-V2533
+                return S_OK; //-V2506
             }
         }
         if (LoadFile(Filename, verbose, &buf, &fileSize)) {
             *ppData = buf;
-            *pBytes = (UINT)fileSize; //-V2005
-            return S_OK;
+            *pBytes = (UINT)fileSize; //-V2005  //-V2533
+            return S_OK; //-V2506
         }
         for (std::filesystem::path& currentDir : dirs) {
-            TryInputFile = currentDir /= Filename;  //-V3538
+            TryInputFile = currentDir /= Filename;  //-V3538 //-V2561
             if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
                 *ppData = buf;
-                *pBytes = (UINT)fileSize; //-V2005
+                *pBytes = (UINT)fileSize; //-V2005 //-V2533
                 return S_OK;
             }
         }
-        return E_FAIL;
+        return E_FAIL;  //-V3515 //-V2523
     }
 
     /* do not change this signature, it's part of an "inheritance" API. */
@@ -130,7 +130,7 @@ namespace efxc2CompilerIncludes {
             }
         }
         auto buf = std::bit_cast<char*>(pData);  //-V2018
-        delete[] buf;
+        delete[] buf; //-V2511
         return S_OK;
     }
 

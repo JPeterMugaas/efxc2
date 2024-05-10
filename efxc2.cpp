@@ -19,14 +19,14 @@
 the wmain -Municode entry-point*/
 
 #ifdef _WIN32
-int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
+int wmain(int argc, wchar_t* argv[]) {
 #else  /* _WIN32 */
 int main(int argc, char* argv[]) {
 #endif /* _WIN32 */
     // ====================================================================================
     // Process Command Line Arguments
 
-    efxc2Utils::M_CMD_PARAMS args(argv + 1, argv + argc);  //-V104
+    efxc2Utils::M_CMD_PARAMS args(&argv[1], argv + argc);  //-V104 //-V3539 //-V2563
     efxc2Utils::M_STRING temp = efxc2Utils::M_STRING_INIT;
     efxc2CompilerAPIContainer::CompilerAPIContainer api;
     efxc2CompilerParams::CompilerParams params;
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
         else if (efxc2Cmds::parseNotSupportedOptions(args, &index)) {
-            exit(1);  //-V2014
+            exit(1);  //-V2014 //-V3506 //-V2509
         }
         else if (efxc2Utils::parseOpt(efxc2Cmds::M_D, args, &index, &temp)) {
             efxc2Cmds::cmd_D(params, temp);

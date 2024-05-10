@@ -554,12 +554,12 @@ void efxc2Cmds::cmd_Zss(efxc2CompilerParams::CompilerParams& params) {
     return;
 }
 
-bool  efxc2Cmds::parseCompilerOnlyCall(
+bool  efxc2Cmds::parseCompilerOnlyCall( //-V2506
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	size_t* index,
     efxc2CompilerParams::CompilerParams& params) {
     if (!index || *index >= args.size()) {
-        return false;
+        return false; //-V2506
     }
     const efxc2Utils::M_STRING argument = args[*index];
     size_t arg_idx = 0;
@@ -583,7 +583,7 @@ bool  efxc2Cmds::parseCompilerOnlyCall(
     return false;
 }
 
-bool efxc2Cmds::parseCompilerFileCall(
+bool efxc2Cmds::parseCompilerFileCall( //-V2506
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	size_t* index,
     efxc2CompilerParams::CompilerParams& params,
@@ -632,12 +632,12 @@ bool efxc2Cmds::parseCompilerFileCall(
     return false;
 }
 
-bool efxc2Cmds::parseIgnoredOptions(
+bool efxc2Cmds::parseIgnoredOptions( //-V2506
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	const size_t* index,
     const efxc2CompilerParams::CompilerParams& params) {
     if (!index || *index >= args.size()) {
-        return false;
+        return false; //-V2506
     }
     const efxc2Utils::M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;
@@ -648,7 +648,7 @@ bool efxc2Cmds::parseIgnoredOptions(
         }
     }
     else {
-        return false;
+        return false; //-V2506
     }
     if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
           std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end())  {
@@ -658,7 +658,7 @@ bool efxc2Cmds::parseIgnoredOptions(
     return false;
 }
 
-bool efxc2Cmds::parseNotSupportedOptions(
+bool efxc2Cmds::parseNotSupportedOptions( //-V2506
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _In_ const size_t* index) {
     if (!index || *index >= args.size()) {

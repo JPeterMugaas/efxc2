@@ -8,9 +8,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //--------------------------------------------------------------------------------------
 #pragma once
-#ifdef __MINGW32__
-#define __USE_MINGW_ANSI_STDIO 1
-#endif
 
 #ifdef  _MSC_VER
 #pragma warning(push)
