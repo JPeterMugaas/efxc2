@@ -105,7 +105,7 @@ include("${pvs_cmakemodule_SOURCE_DIR}/PVS-Studio.cmake")
 pvs_studio_add_target(TARGET fxc.analyze ALL
                       OUTPUT FORMAT errorfile
                       ANALYZE fxc
-                      MODE 64 GA:1,2
+                      MODE 64 GA:1,2 OWASP 
                       LOG target.err)
 endif()
 

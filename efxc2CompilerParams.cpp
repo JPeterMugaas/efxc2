@@ -12,7 +12,7 @@
 #include "efxc2Utils.h"
 
 void efxc2CompilerParams::CompilerParams::initializeDefines() {
-    defines = std::make_shared<std::vector < efxc2Utils::CompilerDefine >> ();
+    defines = std::make_shared<std::vector < efxc2Utils::CompilerDefine >>();
 }
 
 void efxc2CompilerParams::CompilerParams::add_define(const std::string_view defineOption) {
@@ -26,14 +26,21 @@ void efxc2CompilerParams::CompilerParams::add_define(const std::string_view defi
         _def.Name = defineOption.substr(0, Dellin_pos);
         _def.Definition = defineOption.substr(Dellin_pos + 1, defineOption.length() - 1);
     }
-    
+
     defines->insert(defines->begin(), _def);
 }
 
 void efxc2CompilerParams::CompilerParams::LoadSourceCode(std::ifstream& f) {
-    efxc2Utils::readAll(f, SourceCode);
+    if (efxc2Utils::readAll(f, SourceCode) == false) {
+        std::cerr << "Error reading file." << std::endl;
+        exit(1); //-V2014
+    }
+
 }
 
 void efxc2CompilerParams::CompilerParams::LoadPrivateData(std::ifstream& f) {
-    efxc2Utils::readAll(f, PrivateData);
+    if (efxc2Utils::readAll(f, PrivateData) == false) {
+        std::cerr << "Error reading file." << std::endl;
+        exit(1);//-V2014
+    }
 }

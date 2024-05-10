@@ -138,7 +138,7 @@ void efxc2Files::Files::WritePreprocessFile(efxc2Compiler::Compiler& compiler, c
 }
 
 void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) {
-    size_t  outputLen = 0;
+    
     /*write .PDB data if applicable*/
     if (pdbFile.empty() == false) {
         if (std::string pdbFileStr = (pdbFile.filename().string()); !pdbFileStr.empty() &&
@@ -178,6 +178,7 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
 #endif
             exit(1);  //-V2014
         }
+        size_t  outputLen = 0;
         outputLen = compiler.WritePDBFile(f);
         f.close();
         if (params.get_verbose()) {

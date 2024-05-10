@@ -147,14 +147,14 @@ void efxc2Utils::print_unsupported_arg_help() {
     return;
 }
 
- int efxc2Utils::readAll(_In_ std::ifstream& in,
+ bool efxc2Utils::readAll(_In_ std::ifstream& in,
      _Out_ efxc2Utils::M_BUFFER& dataptr) {
      dataptr = std::make_shared<std::vector<char>>();
      auto temp = std::make_unique<std::vector<char>>();
      size_t used = 0;
      size_t n = 0;
      if (dataptr == nullptr) {
-         return READALL_INVALID;
+         return false;
      }
      while (TRUE) {
          temp->resize(READALL_CHUNK);
@@ -167,7 +167,7 @@ void efxc2Utils::print_unsupported_arg_help() {
          temp->resize(n);
          dataptr->insert(dataptr->end(), temp->begin(), temp->end());
      }
-     return READALL_OK;
+     return true;
  }
 
 bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {

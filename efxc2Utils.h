@@ -39,12 +39,6 @@ namespace efxc2Utils {
        read and allocate for. */
     const size_t  READALL_CHUNK = 262144;
 
-    const int  READALL_OK = 0;  /* Success */
-    const int  READALL_INVALID = -1;  /* Invalid parameters */
-    const int  READALL_ERROR = -2;  /* Stream error */
-    const int  READALL_TOOMUCH = -3;  /* Too much input */
-    const int  READALL_NOMEM = -4;  /* Out of memory */  //-V112
-
     /* Helper D3D error lookup table*/
     struct ErrorTableEntry {
         HRESULT ErrorCode;
@@ -117,7 +111,7 @@ namespace efxc2Utils {
     [[noreturn]] void print_usage_toomany();
     [[noreturn]] void print_version();
     [[noreturn]] void print_windows_error();
-    int readAll(_In_ std::ifstream& in,
+    bool readAll(_In_ std::ifstream& in,
         _Out_ M_BUFFER& dataptr);
     std::string setupVariableName(_In_ const std::string_view model,
         _In_ const std::string& entryPoint);
