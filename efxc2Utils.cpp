@@ -76,7 +76,14 @@ void efxc2Utils::print_unsupported_arg_help() {
     LPSTR messageBuffer = nullptr;
     size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), std::bit_cast<char*>(&messageBuffer), 0, nullptr);
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(suppress : 6387)
+#endif
     std::string message(messageBuffer, size);
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
     LocalFree(messageBuffer);
     std::cerr << std::format("Windows Error Message: {}\n", message);
     std::cout << std::format("Windows Error Message: {}\n", message);
