@@ -44,10 +44,10 @@ namespace efxc2CompilerIncludes {
 #endif
             }
             *buf = new char[*fileSize];
-            memset(*buf, 0, *fileSize);
+            (void)memset(*buf, 0, *fileSize);
             f = std::ifstream(currentFile, std::ios::in | std::ios::binary);
             if (f.is_open()) {
-                f.read(*buf, *fileSize);
+                (void)f.read(*buf, *fileSize);
                 f.close();
                 TrimTrailingWhiteSpace(*buf, fileSize);
                 return true;
@@ -79,6 +79,7 @@ namespace efxc2CompilerIncludes {
                 /* D3D10_INCLUDE_LOCAL is an alias for D3D_INCLUDE_LOCAL.
                    D3D10_INCLUDE_SYSTEM is an alias for D3D_INCLUDE_SYSTEM  */
             default:;
+                break;
             }
 #ifdef _WIN32
             std::wcout << std::format(L"\tpFileName: {}\n", Filename.native());
@@ -92,11 +93,14 @@ namespace efxc2CompilerIncludes {
                 std::cout << "\tpParentData: nullptr)\n";
             }
         }
-        if ((!input_parent_path.empty()) &&
-            (LoadFile(input_parent_path /= Filename, verbose, &buf, &fileSize))) {
-            *ppData = buf;
-            *pBytes = (UINT)fileSize; //-V2005
-            return S_OK;
+        std::filesystem::path TryInputFile = "";
+        if (!input_parent_path.empty()) {
+            TryInputFile = input_parent_path /= Filename;  //-V3538
+            if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
+                *ppData = buf;
+                *pBytes = (UINT)fileSize; //-V2005
+                return S_OK;
+            }
         }
         if (LoadFile(Filename, verbose, &buf, &fileSize)) {
             *ppData = buf;
@@ -104,7 +108,8 @@ namespace efxc2CompilerIncludes {
             return S_OK;
         }
         for (std::filesystem::path& currentDir : dirs) {
-            if (LoadFile(currentDir /= Filename, verbose, &buf, &fileSize)) {
+            TryInputFile = currentDir /= Filename;  //-V3538
+            if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
                 *ppData = buf;
                 *pBytes = (UINT)fileSize; //-V2005
                 return S_OK;
@@ -134,8 +139,8 @@ namespace efxc2CompilerIncludes {
     {
         efxc2Utils::M_STRING dir = { _dir.data(), _dir.size() };
 
-        dirs.emplace(dirs.end(), dir);
-        dirs[dirs.size() - 1].make_preferred();
+        (void) dirs.emplace(dirs.end(), dir);
+        (void) dirs[dirs.size() - 1].make_preferred();
     }
 
 }

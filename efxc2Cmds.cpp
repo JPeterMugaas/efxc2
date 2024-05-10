@@ -11,6 +11,39 @@
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
 
+void efxc2Cmds::FindNOLOGO(const efxc2Utils::M_CMD_PARAMS& args, efxc2CompilerParams::CompilerParams& params) {
+    /*first scan specifically for the nologo argument so no output
+    is given regardless of parameter order*/
+    size_t index = 0;
+    while (index < args.size()) {
+        /* Detect the end of the options. */
+        if (efxc2Utils::parseOpt(efxc2Cmds::M_NOLOGO, args, &index, nullptr)) {
+            params.set_verbose(false);
+            break;
+        }
+        else {
+            index++;
+        }
+    }
+    return;
+}
+
+void efxc2Cmds::FindDebug(const efxc2Utils::M_CMD_PARAMS& args, efxc2CompilerParams::CompilerParams& params) {
+    /* scan for debug parameter*/
+    size_t index = 0;
+    while (index < args.size()) {
+        /* Detect the end of the options. */
+        if (efxc2Utils::parseOpt(efxc2Cmds::M_DEBUG, args, &index, nullptr)) {
+            params.set_debug(true);
+            break;
+        }
+        else {
+            index++;
+        }
+    }
+    return;
+}
+
 void efxc2Cmds::option_ignored(_In_ const efxc2Utils::M_STRING_VIEW Opt, _In_ const efxc2CompilerParams::CompilerParams& params) {
     if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32

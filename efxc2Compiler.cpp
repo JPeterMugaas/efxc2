@@ -24,7 +24,7 @@ void efxc2Compiler::Compiler::Preprocess() {
     auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
     D3D_SHADER_MACRO _def = { nullptr, nullptr };
 
-    std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
+    (void)std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
         _def.Definition = a.Definition.c_str();
         _def.Name = a.Name.c_str();
         defines->insert(defines->end(), _def);
@@ -53,7 +53,7 @@ void efxc2Compiler::Compiler::Preprocess() {
         /* print defines */
         std::cout << "\t";
 
-        std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
+        (void)std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
             if (i.Name != nullptr && i.Definition != nullptr) {
                 std::cout << std::format(" {}={}", i.Name, i.Definition);
             }});
@@ -88,7 +88,7 @@ void efxc2Compiler::Compiler::Preprocess() {
         if (errors) {
             auto* error = std::bit_cast<char*>(errors->GetBufferPointer());
             std::cout << std::format("Got an error while preprocessing:\n{}\n", error);
-            errors->Release();
+            (void) errors->Release();
             std::cout << std::format("Error Code: {:#08x}", hr);
         }
         else {
@@ -121,7 +121,7 @@ void efxc2Compiler::Compiler::Compile() {
     auto _defines = params.get_defines();
     auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
     D3D_SHADER_MACRO _def = { nullptr, nullptr };
-    std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
+    (void)std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
         _def.Definition = a.Definition.c_str();
         _def.Name = a.Name.c_str();
         defines->insert(defines->end(), _def);
@@ -149,7 +149,7 @@ void efxc2Compiler::Compiler::Compile() {
         std::cout << std::format("\t {}, \n", inputFile);
         /* print defines */
         std::cout << "\t";
-        std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
+        (void)std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
             if (i.Name != nullptr && i.Definition != nullptr) {
                 std::cout << std::format(" {}={}", i.Name, i.Definition);
             }});
@@ -211,7 +211,7 @@ void efxc2Compiler::Compiler::Compile() {
         if (errors) {
             auto* error = std::bit_cast<char*>(errors->GetBufferPointer());
             std::cout << std::format("Got an error while compiling:\n{}\n", error);
-            errors->Release();
+            (void)errors->Release();
             std::cout << std::format( "Error Code: {:#08x}", hr);
         }
         else {
@@ -302,7 +302,7 @@ size_t efxc2Compiler::Compiler::WriteAssemblyCode(std::ofstream& f) {
     if (disassemblyCodeBlob != nullptr) {
         outputString = std::bit_cast<char*>(disassemblyCodeBlob->GetBufferPointer());
         outputLen = disassemblyCodeBlob->GetBufferSize();
-        f.write(outputString, outputLen);
+        (void) f.write(outputString, outputLen);
     }
     return outputLen;
 }
@@ -339,26 +339,16 @@ size_t efxc2Compiler::Compiler::WriteObjectFile(std::ofstream& f) {
         outputString = std::bit_cast<char*>(strippedBlob->GetBufferPointer());
         outputLen = strippedBlob->GetBufferSize();
     }
-    f.write(outputString, outputLen);
+    (void)f.write(outputString, outputLen);
     return outputLen;
 }
 
 size_t efxc2Compiler::Compiler::WritePreprocessFile(std::ofstream& f) {
     const char* outputString = std::bit_cast<char*>(pPreprocessOutput->GetBufferPointer());
     size_t outputLen = pPreprocessOutput->GetBufferSize();
-    f.write(outputString, outputLen);
+    (void)f.write(outputString, outputLen);
     return outputLen;
 }
-
-// This struct represents the first four bytes of the name blob:
-struct ShaderDebugName
-{
-    uint16_t Flags;       // Reserved, must be set to zero.
-    uint16_t NameLength;  // Length of the debug name, without null terminator.
-    // Followed by NameLength bytes of the UTF-8-encoded name.
-    // Followed by a null terminator.
-    // Followed by [0-3] zero bytes to align to a 4-byte boundary.
-};
 
 std::string efxc2Compiler::Compiler::GetPDBFileName() {
     /*
@@ -528,6 +518,6 @@ size_t efxc2Compiler::Compiler::WritePDBFile(std::ofstream& f) {
     }
     auto outputString = std::bit_cast<char*>(PDBData->GetBufferPointer());
     size_t outputLen = PDBData->GetBufferSize();
-    f.write(outputString, outputLen);
+    (void)f.write(outputString, outputLen);
     return compiledLen;
 }

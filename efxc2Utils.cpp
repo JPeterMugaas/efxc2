@@ -84,7 +84,7 @@ void efxc2Utils::print_unsupported_arg_help() {
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-    LocalFree(messageBuffer);
+    (void) LocalFree(messageBuffer);
     std::cerr << std::format("Windows Error Message: {}\n", message);
     std::cout << std::format("Windows Error Message: {}\n", message);
     std::cout << std::format("Error Code: {:#08x}\n", hr);
@@ -97,7 +97,7 @@ void efxc2Utils::print_unsupported_arg_help() {
     DWORD dLastError = GetLastError();
     LPCTSTR strErrorMessage = nullptr;
 
-    FormatMessageW(
+    (void) FormatMessageW(
         FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ARGUMENT_ARRAY | FORMAT_MESSAGE_ALLOCATE_BUFFER,
         nullptr,
         dLastError,
@@ -158,14 +158,14 @@ void efxc2Utils::print_unsupported_arg_help() {
      }
      while (TRUE) {
          temp->resize(READALL_CHUNK);
-         in.read(temp->data(), READALL_CHUNK);
+         (void) in.read(temp->data(), READALL_CHUNK);
          n = in.gcount();
          if (n == 0) {
              break;
          }
          used += n;
          temp->resize(n);
-         dataptr->insert(dataptr->end(), temp->begin(), temp->end());
+         (void)dataptr->insert(dataptr->end(), temp->begin(), temp->end());
      }
      return true;
  }

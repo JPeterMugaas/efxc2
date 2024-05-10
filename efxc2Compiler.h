@@ -15,6 +15,15 @@
 #include "efxc2CompilerParams.h"
 
 namespace efxc2Compiler {
+    // This struct represents the first four bytes of the name blob:
+    struct ShaderDebugName
+    {
+        uint16_t Flags;       // Reserved, must be set to zero.
+        uint16_t NameLength;  // Length of the debug name, without null terminator.
+        // Followed by NameLength bytes of the UTF-8-encoded name.
+        // Followed by a null terminator.
+        // Followed by [0-3] zero bytes to align to a 4-byte boundary.
+    };
     class Compiler {
     public:
         explicit Compiler(const efxc2CompilerAPIContainer::CompilerAPIContainer& _api, const efxc2CompilerParams::CompilerParams& _params) : api(_api), params(_params) { };

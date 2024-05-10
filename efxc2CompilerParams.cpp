@@ -27,7 +27,7 @@ void efxc2CompilerParams::CompilerParams::add_define(const std::string_view defi
         _def.Definition = defineOption.substr(Dellin_pos + 1, defineOption.length() - 1);
     }
 
-    defines->insert(defines->begin(), _def);
+    (void)defines->insert(defines->begin(), _def);
 }
 
 void efxc2CompilerParams::CompilerParams::LoadSourceCode(std::ifstream& f) {

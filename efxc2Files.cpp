@@ -158,7 +158,7 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
             pdbFileStr = pdbFile.filename().string();
             if ((pdbFileStr.compare(".") == 0) ||
                 (pdbFileStr.compare("..") == 0)) {
-                   pPDBFileName.insert(pPDBFileName.begin(), std::filesystem::path::preferred_separator);
+                   (void)pPDBFileName.insert(pPDBFileName.begin(), std::filesystem::path::preferred_separator);
             }
 #ifdef _WIN32
             auto w_pdbFile = pdbFile.native() + efxc2Utils::utf8_to_wstring(pPDBFileName);

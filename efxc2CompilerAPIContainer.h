@@ -13,6 +13,7 @@
 #include "efxc2.h"
 
 namespace efxc2CompilerAPIContainer {
+	constexpr auto DLL_NAME = L"d3dcompiler_47.dll";
 	class CompilerAPIContainer {
 	public:
 		explicit CompilerAPIContainer();

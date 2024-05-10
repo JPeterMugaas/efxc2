@@ -16,6 +16,8 @@
 #include "efxc2Files.h"
 
 namespace efxc2Cmds {
+    void FindNOLOGO(const efxc2Utils::M_CMD_PARAMS& args, efxc2CompilerParams::CompilerParams& params);
+    void FindDebug(const efxc2Utils::M_CMD_PARAMS& args, efxc2CompilerParams::CompilerParams& params);
     void option_ignored(_In_ const efxc2Utils::M_STRING_VIEW Opt, _In_ const efxc2CompilerParams::CompilerParams& params);
     void parseInputFile(_In_ const efxc2Utils::M_STRING_VIEW parameter, efxc2CompilerParams::CompilerParams& params, efxc2Files::Files& files);
     void cmd_all_resources_bound(efxc2CompilerParams::CompilerParams& params);
