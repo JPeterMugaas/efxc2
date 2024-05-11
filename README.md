@@ -60,6 +60,23 @@ enter `makepkg-mingw` to build efxc2.
 enter `makepkg` to build efxc2.
 4. Install the packages you created using `pacman -U efxc2`. 
 
+### [Cygwin](https://www.cygwin.com/)
+
+The Cygwin version of this program requires GNU C++ 13.1 or greater.  Thus, this program requires that you install a test version of GNU GCC from the Cygwin setup utility.
+
+1. To compile this program for Cygwin, make a directory for building the files then enter:
+```
+cmake -GNinja [source directory]
+cmake --build .
+```
+2. To run tests on this build, enter the following:
+```
+cmake --build . --target test
+```
+3. To install this program, enter the following:
+```
+DESTDIR="[installation prefix of your choice]" cmake --install .
+```
 ### Other Environments
 
 To compile this program:
