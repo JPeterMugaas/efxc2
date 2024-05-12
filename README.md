@@ -30,7 +30,7 @@ A properly installed compiler that supports [C++20](https://isocpp.org/std/the-s
 
 * [Clang](http://www.clang.org) 17.0.0 or greater
 * [GCC](https://gcc.gnu.org/) 13.1.0 or greater
-* [Intel® oneAPI DPC++/C++ Compiler](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compiler.html#gs.6foy5x)
+* [Intel® oneAPI DPC++/C++ Compiler](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compiler.html#gs.6foy5x) 2022.2.1 or greater
 * [Visual Studio](https://visualstudio.microsoft.com/) 2019 version 16.11.2 or greater
 
 as well as [CMake](https://cmake.org/).  You will often need a build system for CMake such as:
