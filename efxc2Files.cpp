@@ -14,7 +14,7 @@
 void efxc2Files::Files::LoadInputFile(efxc2CompilerParams::CompilerParams& params) const {
     std::ifstream f;
     std::filesystem::path _path = inputFile;
-    f.open(_path);
+    (void)f.open(_path);
     if (!f.is_open()) {
 #ifdef _WIN32
         std::wcerr << std::format(L"Can not open {}", inputFile.native());
@@ -32,7 +32,7 @@ void efxc2Files::Files::LoadPrivateDataFile(efxc2CompilerParams::CompilerParams&
 {
     std::ifstream f;
     std::filesystem::path _path = privateDataFile;
-    f.open(_path);
+    (void)f.open(_path);
     if (!f.is_open()) {
 #ifdef _WIN32
         std::wcerr << std::format(L"Can not open {}", privateDataFile.native());

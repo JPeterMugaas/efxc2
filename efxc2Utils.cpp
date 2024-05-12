@@ -267,7 +267,7 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr) //-V2506
     _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8");  //-V3551 //-V2578
     size_t nbytes = 0;
     errno_t err = 0;
-    err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale); //-V2563 //-V3539
+    err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale); //-V2563 //-V3539 //-V2571 //-V3546
     if (err != 0) {
         std::cerr << "_wcstombs_s_l failed." << std::endl;
         _free_locale(locale);
@@ -281,7 +281,7 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr) //-V2506
     auto str = std::make_unique<std::vector<char>>();
     str->resize(nbytes + 1);
     str->data()[nbytes] = '\0';  //-V3539 //-V2563
-    err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(),wstr.length() + 1, locale); //-V2563 //-V3539
+    err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(),wstr.length() + 1, locale); //-V2563 //-V3539 //-V774 //-V2571 //-V3546
     if (err != 0) {
         std::cerr << "_wcstombs_s_l failed." << std::endl;
         exit(1);  //-V2014 //-V3506 //-V2509
@@ -300,7 +300,7 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str) //-V2506
     _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8");  //-V3551 //-V2578
     size_t nchars = 0;
     errno_t err = 0;
-    err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale); //-V2563 //-V3539
+    err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale); //-V2563 //-V3539 //-V2571 //-V3546
     if (err != 0) {
         std::cerr << "_mbstowcs_s_l failed." << std::endl;
         _free_locale(locale);
@@ -315,12 +315,12 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str) //-V2506
     auto* wstr = std::bit_cast<wchar_t*>(_wstr->data());
     wstr[nchars] = L'\0'; //-V3539 //-V2563
 
-    err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale); //-V2563 //-V3539
+    err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale); //-V2563 //-V3539 //-V774 //-V2571 //-V3546
     if (err != 0) {
         std::cerr << "_mbstowcs_s_l failed." << std::endl;
         exit(1);  //-V2014 //-V3506 //-V2509
     }
-    _free_locale(locale);
+    _free_locale(locale); //-V586
     return wstr;
 }
 
