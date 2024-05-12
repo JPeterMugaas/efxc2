@@ -1,0 +1,98 @@
+# Maintainer: J. Peter Mugaas <jpmugaas@suddenlink.net>
+
+_realname=efxc2
+pkgbase=mingw-w64-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+provides=("${MINGW_PACKAGE_PREFIX}-${_realname}-git")
+conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+           "${MINGW_PACKAGE_PREFIX}-fxc2")
+replaces=("${MINGW_PACKAGE_PREFIX}-${_realname}-git")
+pkgver=0.0.10.214
+pkgrel=1
+pkgdesc="Enhanced version of fxc2 (mingw-w64)"
+arch=('any')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32' 'clangarm64')
+url='https://github.com/mozilla/fxc2/'
+license=('spdx:MPL-2.0')
+options=('strip' 'staticlibs')
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
+             "git")
+
+pkgver() {
+  cd "${srcdir}"
+  grep -m 1 "EFXC2_VERSION" ../../CMakeLists.txt | sed 's/[^0-9.]*//g' | cut -c2-
+}
+
+prepare() {
+  mkdir -p "${srcdir}"/${_realname}
+  cd "${srcdir}"/${_realname}
+  cp ../../../*.cpp .
+  cp ../../../*.h .
+  cp ../../../CMakeLists.txt .
+  cp ../../../*.md .
+  cp ../../../*.txt .
+  cp ../../../*.manifest .
+  mkdir -p build
+  cd build
+  cp ../../../../build/*.in .
+  cd ..
+  mkdir -p tests
+  cd tests
+  cp -r ../../../../tests/* .
+}
+
+build() {
+  cd "${srcdir}/${_realname}"
+  mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+
+  declare -a extra_config
+  if check_option "debug" "n"; then
+    extra_config+=("-DCMAKE_BUILD_TYPE=Release")
+  else
+    extra_config+=("-DCMAKE_BUILD_TYPE=Debug")
+  fi
+
+  DIRECTXMESH_MEDIA_PATH=/home/jpmugaas/git/directxmeshmedia \
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+    "${MINGW_PREFIX}"/bin/cmake.exe \
+      -GNinja \
+      -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+      -DEFXC2_USE_PVS_STUDIO=ON \
+      -DEFXC2_USE_ALL_RULES=ON \
+      "${extra_config[@]}" \
+      ../${_realname}
+
+  "${MINGW_PREFIX}"/bin/cmake.exe --build .
+}
+
+check() {
+  cd "${srcdir}/build-${MSYSTEM}"
+
+  DIRECTXMESH_MEDIA_PATH=/home/jpmugaas/git/directxmeshmedia \
+    "${MINGW_PREFIX}"/bin/cmake.exe --build . --target test || true
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+
+  DESTDIR="${pkgdir}" "${MINGW_PREFIX}"/bin/cmake.exe --install .
+  mkdir -p zip
+  cd zip
+  cp "${pkgdir}/${MINGW_PREFIX}"/bin/*.exe .
+  cp "${pkgdir}/${MINGW_PREFIX}/share/doc/${_realname}"/*.md .
+  cp "${pkgdir}/${MINGW_PREFIX}/share/doc/${_realname}"/*.txt .
+  case ${CARCH} in
+     "i686")
+	    _OS="win32"
+	 ;;
+	 "aarch64")
+	    _OS="win64"
+	 ;;
+	 "x86_64")
+        _OS="win64"
+	 ;;
+	 *) 
+  esac	 
+  zip -t $(date '+%m%d%Y') "${_realname}-${CARCH}-${_OS}-${pkgver}.zip" *.exe *.txt *.md
+  cp *.zip ../../../
+ }
