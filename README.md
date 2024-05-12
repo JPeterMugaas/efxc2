@@ -28,10 +28,10 @@ This program aims to be compatible with the syntax used by Microsoft's
 
 A properly installed compiler that supports [C++20](https://isocpp.org/std/the-standard) such as:
 
-* [Clang](http://www.clang.org)
-* [GCC](https://gcc.gnu.org/)
+* [Clang](http://www.clang.org) 17.0.0 or greater
+* [GCC](https://gcc.gnu.org/) 13.1.0 or greater
 * [Intel® oneAPI DPC++/C++ Compiler](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compiler.html#gs.6foy5x)
-* [Visual Studio](https://visualstudio.microsoft.com/)
+* [Visual Studio](https://visualstudio.microsoft.com/) 2019 version 16.11.2 or greater
 
 as well as [CMake](https://cmake.org/).  You will often need a build system for CMake such as:
 
@@ -62,7 +62,7 @@ enter `makepkg` to build efxc2.
 
 ### [Cygwin](https://www.cygwin.com/)
 
-The Cygwin version of this program requires GNU C++ 13.1 or greater.  Thus, this program requires that you install a test version of GNU GCC from the Cygwin setup utility.
+TUnfortunately, the Cygwin release version of GCC is 11.4.0 so you need to install a test version of GNU GCC from the Cygwin setup utility.
 
 1. To compile this program for Cygwin, make a directory for building the files then enter:
 ```
