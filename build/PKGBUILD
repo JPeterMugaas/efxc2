@@ -1,5 +1,27 @@
-# Maintainer: J. Peter Mugaas <jpmugaas@suddenlink.net>
+#--------------------------------------------------------------------
+# File: PKGBUILD
+#
+# Copyright (c) J. Peter Mugaas
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#--------------------------------------------------------------------
 
+# Important!!!
+#
+# This is NOT meant for general usage or deployment.  It should
+# never be in the MSYS2 archives.  It's for internal use.
+#
+# It's purpose is to:
+# 1) Test compile the program for mingw64, clang64, and ucrt64
+#    using the MSYS2 makepkg-mingw command.
+# 2) Run the CMake tests.
+# 3) Create a general purpose Windows distribution of this program.
+#    This is a .ZIP containing a statically linked version of the
+#    program along with the associated documentation.
+#
+# If you do not have PVS-Studio (https://www.pvs-studio.com/), disable it by setting "EFXC2_USE_PVS_STUDIO" to "OFF".
 _realname=efxc2
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
@@ -16,7 +38,8 @@ url='https://github.com/mozilla/fxc2/'
 license=('spdx:MPL-2.0')
 options=('strip' 'staticlibs')
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
-             "git")
+             "${MINGW_PACKAGE_PREFIX}-cmake"
+             "zip")
 
 pkgver() {
   cd "${srcdir}"
@@ -31,6 +54,7 @@ prepare() {
   cp ../../../CMakeLists.txt .
   cp ../../../*.md .
   cp ../../../*.txt .
+  cp ../../../*.ico .
   cp ../../../*.manifest .
   mkdir -p build
   cd build
@@ -95,4 +119,8 @@ package() {
   esac	 
   zip -t $(date '+%m%d%Y') "${_realname}-${CARCH}-${_OS}-${pkgver}.zip" *.exe *.txt *.md
   cp *.zip ../../../
+  cd ..
+  if [ -f target.err ]; then
+    cp target.err ../../${MSYSTEM}-efxc2.err
+  fi
  }

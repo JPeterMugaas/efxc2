@@ -1,0 +1,83 @@
+#--------------------------------------------------------------------
+# File: PKGBUILD
+#
+# Copyright (c) J. Peter Mugaas
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#--------------------------------------------------------------------
+#
+# This is NOT meant for general usage or deployment.  It should
+# never be in the MSYS2 archives.  It's for internal use.
+#
+# Its purpose is to test compile efxc2 for the MSYS platform.
+_realname=efxc2
+pkgbase=${_realname}
+pkgname=("${_realname}")
+pkgver=0.0.10.214
+pkgrel=1
+pkgdesc="Enhanced version of fxc2 (mingw-w64)"
+arch=('any')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32' 'clangarm64')
+url='https://github.com/mozilla/fxc2/'
+license=('spdx:MPL-2.0')
+options=('strip' 'staticlibs')
+makedepends=("cmake")
+
+pkgver() {
+  cd "${srcdir}/${_realname}"
+  grep -m 1 "EFXC2_VERSION" CMakeLists.txt | sed 's/[^0-9.]*//g' | cut -c2-
+}
+
+prepare() {
+  mkdir -p "${srcdir}"/${_realname}
+  cd "${srcdir}"/${_realname}
+  cp ../../../../*.cpp .
+  cp ../../../../*.h .
+  cp ../../../../CMakeLists.txt .
+  cp ../../../../*.md .
+  cp ../../../../*.txt .
+  cp ../../../../*.ico .
+  cp ../../../../*.manifest .
+  mkdir -p build
+  cd build
+  cp ../../../../../build/*.in .
+  cd ..
+  mkdir -p tests
+  cd tests
+  cp -r ../../../../../tests/* .
+}
+
+build() {
+  cd "${srcdir}/${_realname}"
+  mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+
+  declare -a extra_config
+  if check_option "debug" "n"; then
+    extra_config+=("-DCMAKE_BUILD_TYPE=Release")
+  else
+    extra_config+=("-DCMAKE_BUILD_TYPE=Debug")
+  fi
+
+  cmake.exe \
+      -GNinja \
+      -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+      -DEFXC2_BUILD_STATIC=OFF \
+      "${extra_config[@]}" \
+      ../${_realname}
+
+  cmake.exe --build .
+}
+
+check() {
+  cd "${srcdir}/build-${MSYSTEM}"
+
+  cmake.exe --build . --target test || true
+}
+
+package() {
+  cd "${srcdir}/build-${MSYSTEM}"
+
+  DESTDIR="${pkgdir}" cmake.exe --install .
+}
