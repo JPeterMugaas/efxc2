@@ -86,7 +86,7 @@ endif()
 
 install(TARGETS fxc RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-if(MSVC)
+if(_MSC_VER)
   target_compile_options(fxc PUBLIC "/ZI")
   target_link_options(fxc PUBLIC "/INCREMENTAL")
 endif()
@@ -98,14 +98,7 @@ install(FILES
   DESTINATION ${CMAKE_INSTALL_DOCDIR})
 
 if(EFXC2_USE_PVS_STUDIO)
-  include(FetchContent)
-  FetchContent_Declare(
-     PVS_CMakeModule
-     GIT_REPOSITORY "https://github.com/viva64/pvs-studio-cmake-module.git"
-     GIT_TAG        "master" 
-  )
-  FetchContent_MakeAvailable(PVS_CMakeModule)
-  include("${pvs_cmakemodule_SOURCE_DIR}/PVS-Studio.cmake")
+  include(${CMAKE_SOURCE_DIR}/build/PVS-Studio.cmake) 
   if (EFXC2_USE_ALL_RULES)
      pvs_studio_add_target(TARGET fxc.analyze ALL
                       OUTPUT FORMAT errorfile
@@ -114,9 +107,9 @@ if(EFXC2_USE_PVS_STUDIO)
                       LOG target.err)
   else()
     pvs_studio_add_target(TARGET fxc.analyze ALL
-                      OUTPUT FORMAT errorfile
+                      OUTPUT FORMAT errorfile       
                       ANALYZE fxc
-                      MODE 64 GA:1,2 
+                      MODE 64 GA:1,2 CS
                       LOG target.err)
   endif()
 endif()

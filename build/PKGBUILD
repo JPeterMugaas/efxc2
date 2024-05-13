@@ -29,7 +29,7 @@ provides=("${MINGW_PACKAGE_PREFIX}-${_realname}-git")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}-git"
            "${MINGW_PACKAGE_PREFIX}-fxc2")
 replaces=("${MINGW_PACKAGE_PREFIX}-${_realname}-git")
-pkgver=0.0.10.214
+pkgver=0.0.10.215
 pkgrel=1
 pkgdesc="Enhanced version of fxc2 (mingw-w64)"
 arch=('any')
@@ -59,6 +59,7 @@ prepare() {
   mkdir -p build
   cd build
   cp ../../../../build/*.in .
+  cp ../../../../build/*.cmake .
   cd ..
   mkdir -p tests
   cd tests
@@ -82,7 +83,7 @@ build() {
       -GNinja \
       -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       -DEFXC2_USE_PVS_STUDIO=ON \
-      -DEFXC2_USE_ALL_RULES=ON \
+      -DEFXC2_USE_ALL_RULES=OFF \
       "${extra_config[@]}" \
       ../${_realname}
 
