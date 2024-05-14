@@ -70,13 +70,15 @@ void efxc2Utils::print_errno_value(errno_t err) {
 #ifdef _WIN32    
     std::wstring errmsg;
     errmsg.resize(ERRNO_BUFF_SIZE);
-    _wcserror_s(errmsg.data(), ERRNO_BUFF_SIZE, err);
-    std::wcout << errmsg.c_str() << std::endl;
+    if (_wcserror_s(errmsg.data(), ERRNO_BUFF_SIZE, err) == 0) {
+        std::wcout << errmsg.c_str() << std::endl;
+    }
 #else
     std::string errmsg;
     errmsg.resize(ERRNO_BUFF_SIZE);
-    strerror_s(errmsg.data(), ERRNO_BUFF_SIZE, err);
-    std::cout << errmsg.c_str() << std::endl;
+    if (strerror_s(errmsg.data(), ERRNO_BUFF_SIZE, err) = 0) {
+        std::cout << errmsg.c_str() << std::endl;
+    }
 #endif
     return;
 }
@@ -128,7 +130,7 @@ void efxc2Utils::print_windows_error() {
 
 void efxc2Utils::print_help_screen() { 
     print_copyright();
-    print_usage_arg();
+    std::cout << print_usage_arg();
     return;
 }
 
@@ -277,7 +279,7 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
     if (wstr.empty()) {
         return "";
     }
-    _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8");  
+    _locale_t locale = _create_locale(LC_ALL, (const char*)"en_US.UTF-8");  
     size_t nbytes = 0;
     errno_t err = 0;
     err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale);
@@ -316,7 +318,7 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
     if (str.empty()) {
         return L"";
     }
-    _locale_t locale = _create_locale(LC_ALL, "en_US.UTF-8"); 
+    _locale_t locale = _create_locale(LC_ALL, (const char*)"en_US.UTF-8"); 
     size_t nchars = 0;
     errno_t err = 0;
     err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale); 

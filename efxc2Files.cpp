@@ -147,9 +147,11 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
     
     /*write .PDB data if applicable*/
     if (pdbFile.empty() == false) {
+        std::string dot = ".";
+        std::string double_dot = "..";
         if (std::string pdbFileStr = (pdbFile.filename().string()); !pdbFileStr.empty() &&
-            (pdbFileStr.compare(".") != 0) &&    
-            (pdbFileStr.compare("..") != 0)) {   
+            (pdbFileStr.compare(dot) != 0) &&    
+            (pdbFileStr.compare(double_dot) != 0)) {
 #ifdef _WIN32
             auto c_pdbFile = efxc2Utils::wstring_to_utf8(pdbFile.filename().native());
             compiler.SetPDBFileName(c_pdbFile);
@@ -162,8 +164,8 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
             filename in the shader data. */
             auto pPDBFileName = compiler.GetPDBFileName();
             pdbFileStr = pdbFile.filename().string();
-            if ((pdbFileStr.compare(".") == 0) ||  
-                (pdbFileStr.compare("..") == 0)) { 
+            if ((pdbFileStr.compare(dot) == 0) ||  
+                (pdbFileStr.compare(double_dot) == 0)) { 
                    (void)pPDBFileName.insert(pPDBFileName.begin(), std::filesystem::path::preferred_separator);
             }
 #ifdef _WIN32

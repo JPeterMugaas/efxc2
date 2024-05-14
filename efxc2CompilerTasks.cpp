@@ -45,4 +45,5 @@ void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2F
         compiler.Disassemble();
         files.WriteDisassembly(compiler,params);
     }
+    return;
 }

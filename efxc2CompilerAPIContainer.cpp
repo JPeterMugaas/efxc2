@@ -19,7 +19,7 @@ efxc2CompilerAPIContainer::CompilerAPIContainer::CompilerAPIContainer() {
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif
-    ptr_D3DCompile2 = std::bit_cast<pD3DCompile2g>(GetProcAddress(h, "D3DCompile2")); 
+    ptr_D3DCompile2 = std::bit_cast<pD3DCompile2g>(GetProcAddress(h, (const char*)"D3DCompile2")); 
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
@@ -28,49 +28,49 @@ efxc2CompilerAPIContainer::CompilerAPIContainer::CompilerAPIContainer() {
         efxc2Utils::print_windows_error();
         throw efxc2Exception::Win32APIFailure();
     }
-    ptr_D3DStripShader = std::bit_cast<pD3DStripShaderg>(GetProcAddress(h, "D3DStripShader")); 
+    ptr_D3DStripShader = std::bit_cast<pD3DStripShaderg>(GetProcAddress(h, (const char*)"D3DStripShader"));
     if (ptr_D3DStripShader == nullptr) {
         std::cerr << "Error: could not get the address of D3DStripShader.\n";
         efxc2Utils::print_windows_error();
         throw efxc2Exception::Win32APIFailure();
     }
-    ptr_D3DGetBlobPart = std::bit_cast<pD3DGetBlobPartg>(GetProcAddress(h, "D3DGetBlobPart")); 
+    ptr_D3DGetBlobPart = std::bit_cast<pD3DGetBlobPartg>(GetProcAddress(h, (const char*)"D3DGetBlobPart"));
     if (ptr_D3DGetBlobPart == nullptr) {
         std::cerr << "Error: could not get the address of D3DGetBlobPart.\n";
         efxc2Utils::print_windows_error();
         throw efxc2Exception::Win32APIFailure();
     }
-    ptr_D3DSetBlobPart = std::bit_cast<pD3DSetBlobPartg>(GetProcAddress(h, "D3DSetBlobPart")); 
+    ptr_D3DSetBlobPart = std::bit_cast<pD3DSetBlobPartg>(GetProcAddress(h, (const char*)"D3DSetBlobPart"));
     if (ptr_D3DSetBlobPart == nullptr) {
         std::cerr << "Error: could not get the address of D3DSetBlobPart.\n";
         efxc2Utils::print_windows_error();
         throw efxc2Exception::Win32APIFailure();
     }
-    ptr_D3DDisassemble = std::bit_cast<pD3DDisassembleg>(GetProcAddress(h, "D3DDisassemble")); 
+    ptr_D3DDisassemble = std::bit_cast<pD3DDisassembleg>(GetProcAddress(h, (const char*)"D3DDisassemble")); 
     if (ptr_D3DDisassemble == nullptr) {
         std::cerr << "Error: could not get the address of D3DDisassemble.\n";
         efxc2Utils::print_windows_error();
         throw efxc2Exception::Win32APIFailure();
     }
-    ptr_D3DLoadModule = std::bit_cast<gD3DLoadModulep>(GetProcAddress(h, "D3DLoadModule")); 
+    ptr_D3DLoadModule = std::bit_cast<gD3DLoadModulep>(GetProcAddress(h, (const char*)"D3DLoadModule"));
     if (ptr_D3DLoadModule == nullptr) {
         std::cerr << "Error: could not get the address of D3DLoadModule.\n";
         efxc2Utils::print_windows_error();
         throw efxc2Exception::Win32APIFailure();
     }
-    ptr_D3DCreateLinker = std::bit_cast<gD3DCreateLinkerp>(GetProcAddress(h, "D3DCreateLinker")); 
+    ptr_D3DCreateLinker = std::bit_cast<gD3DCreateLinkerp>(GetProcAddress(h, (const char*)"D3DCreateLinker"));
     if (ptr_D3DCreateLinker == nullptr) {
         std::cerr << "Error: could not get the address of D3DCreateLinker.\n";
         efxc2Utils::print_windows_error();
         throw efxc2Exception::Win32APIFailure();
     }
-    ptr_D3DCreateFunctionLinkingGraph = std::bit_cast<gD3DCreateFunctionLinkingGraphp>(GetProcAddress(h, "D3DCreateFunctionLinkingGraph")); 
+    ptr_D3DCreateFunctionLinkingGraph = std::bit_cast<gD3DCreateFunctionLinkingGraphp>(GetProcAddress(h, (const char*)"D3DCreateFunctionLinkingGraph"));
     if (ptr_D3DCreateFunctionLinkingGraph == nullptr) {
         std::cerr << "Error: could not get the address of D3DCreateFunctionLinkingGraph.\n";
         efxc2Utils::print_windows_error();
         throw efxc2Exception::Win32APIFailure();
     }
-    ptr_D3DPreprocess = std::bit_cast<gD3DPreprocessp>(GetProcAddress(h, "D3DPreprocess")); 
+    ptr_D3DPreprocess = std::bit_cast<gD3DPreprocessp>(GetProcAddress(h, (const char*)"D3DPreprocess"));
     if (ptr_D3DPreprocess == nullptr) {
         std::cerr << "Error: could not get the address of D3DPreprocess.\n";
         efxc2Utils::print_windows_error();
