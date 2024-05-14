@@ -102,11 +102,8 @@ int main(int argc, char* argv[]) {
         efxc2CompilerTasks::CompilerTasks(compiler, files, params);
         return 0;
     }
-    catch (const std::exception& e)
-    {
-      return 1;
-    }
     catch (...) {
+        /*We already reported the error to the user. */
         return 1;
     }
 }

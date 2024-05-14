@@ -128,7 +128,7 @@ void efxc2Files::Files::WritePreprocessFile(efxc2Compiler::Compiler& compiler, c
 #else
         std::cerr << std::format("Can not open {}", preprocessFile.native());
 #endif
-        throw std::runtime_error("");
+        throw efxc2Exception::FileOpenWriteError();
     }
     size_t  outputLen = 0;
     outputLen = compiler.WritePreprocessFile(f);
