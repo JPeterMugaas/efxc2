@@ -23,6 +23,7 @@ int wmain(int argc, wchar_t* argv[]) {
 #else  /* _WIN32 */
 int main(int argc, char* argv[]) {
 #endif /* _WIN32 */
+    int result = 0;
     try {
         // ====================================================================================
         // Process Command Line Arguments
@@ -35,18 +36,20 @@ int main(int argc, char* argv[]) {
 
         efxc2Cmds::FindNOLOGO(args, params);
         efxc2Cmds::FindDebug(args, params);
+        int immediate_exit = 0;
 
         size_t index = 0;
         /*now scan for all arguments and input file name*/
         index = 0;
         while (TRUE) {
             /* Detect the end of the options. */
-            if (index >= args.size()) {
+            if ((index >= args.size()) || (immediate_exit > 0)) {
                 break;
             }
             else if (efxc2Utils::parseOpt(efxc2Cmds::M_QUESTION_MARK, args, &index, nullptr)) {
                 efxc2Utils::print_help_screen();
-                return 1;
+                immediate_exit = 1;
+                continue;
             }
             else if (efxc2Cmds::parseCompilerOnlyCall(args, &index, params)) {
                 continue;
@@ -55,7 +58,9 @@ int main(int argc, char* argv[]) {
                 continue;
             }
             else if (efxc2Cmds::parseNotSupportedOptions(args, &index)) {
-                return 1;
+                result = 1;
+                immediate_exit = 1;
+                continue;
             }
             else if (efxc2Utils::parseOpt(efxc2Cmds::M_D, args, &index, &temp)) {
                 efxc2Cmds::cmd_D(params, temp);
@@ -70,7 +75,8 @@ int main(int argc, char* argv[]) {
             }
             else if (efxc2Utils::parseOpt(efxc2Cmds::M_HELP, args, &index, nullptr)) {
                 efxc2Utils::print_help_screen();
-                return 0;
+                immediate_exit = 1;
+                continue;
             }
             else if (efxc2Utils::parseOpt(efxc2Cmds::M_I, args, &index, &temp)) {
                 efxc2Cmds::cmd_I(params, temp);
@@ -88,6 +94,8 @@ int main(int argc, char* argv[]) {
             }
             else if (efxc2Utils::parseOpt(efxc2Cmds::M_VERSION, args, &index, nullptr)) {
                 efxc2Utils::print_version();
+                immediate_exit = 1;
+                continue;
             }
             else if (efxc2Utils::parseOpt(efxc2Cmds::M_VN, args, &index, &temp)) {
                 efxc2Cmds::cmd_Vn(params, temp);
@@ -98,12 +106,14 @@ int main(int argc, char* argv[]) {
                 index += 1;
             }
         }
-        efxc2Compiler::Compiler compiler(api, params);
-        efxc2CompilerTasks::CompilerTasks(compiler, files, params);
-        return 0;
+        if (immediate_exit == 0) {
+           efxc2Compiler::Compiler compiler(api, params);
+           efxc2CompilerTasks::CompilerTasks(compiler, files, params);
+        }
     }
     catch (...) {
         /*We already reported the error to the user. */
-        return 1;
+        result = 1;
     }
+    return result;
 }

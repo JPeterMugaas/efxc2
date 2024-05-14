@@ -11,12 +11,14 @@
 #include "efxc2Utils.h"
 
 std::string efxc2Utils::HResultName(_In_ const HRESULT hr) { 
+    std::string result = "Unknown Error Name";
     for (int i = 0; i < efxc2Utils::ERROR_TABLE_LENGTH; i++) {
         if (hr == efxc2Utils::g_ErrorTable[i].ErrorCode ) {
             return  efxc2Utils::g_ErrorTable[i].ErrorName; 
+            break;
         }
     }
-    return "Unknown Error Name";
+    return result;
 }
 
 void efxc2Utils::print_copyright() {
@@ -164,65 +166,67 @@ void efxc2Utils::print_help_screen() {
      auto temp = std::make_unique<std::vector<char>>();
      size_t used = 0;
      size_t n = 0;
-     if (dataptr == nullptr) {
-         return false; 
-     }
-     while (TRUE) {
-         temp->resize(READALL_CHUNK);
-         (void) in.read(temp->data(), READALL_CHUNK);
-         n = in.gcount();
-         if (n == 0) {
-             break;
+     bool result = false;
+     if (dataptr != nullptr) {
+         while (TRUE) {
+             temp->resize(READALL_CHUNK);
+             (void)in.read(temp->data(), READALL_CHUNK);
+             n = in.gcount();
+             if (n == 0) {
+                 break;
+             }
+             used += n;
+             temp->resize(n);
+             (void)dataptr->insert(dataptr->end(), temp->begin(), temp->end());
          }
-         used += n;
-         temp->resize(n);
-         (void)dataptr->insert(dataptr->end(), temp->begin(), temp->end());
+         result = true;
      }
+     return result;
+ }
+
+ bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
+     if (!index || *index >= args.size()) {
+         return false;
+     }
+
+     M_STRING_VIEW argument = args[*index];
+     size_t arg_idx = 0;
+     if (argument[0] == '-' || argument[0] == '/') {
+         arg_idx++;
+         if (argument[arg_idx] == '-') {
+             arg_idx++;
+         }
+     }
+     else {
+         return false;
+     }
+
+     if (argument.compare(arg_idx, option.size(), option) != 0) {
+         return false;
+     }
+
+     if (argumentOption) {
+         arg_idx += option.size();
+         if (arg_idx >= argument.size()) {
+             *index += 1;
+             if (*index >= args.size()) {
+#ifdef _WIN32
+                 std::wcerr << std::format(L"Error: missing required argument for option {}\n", option);
+#else
+                 std::cerr << std::format("Error: missing required argument for option {}\n", option);
+#endif
+                 return false;
+             }
+             *argumentOption = args[*index];
+         }
+         else {
+             *argumentOption = argument.substr(arg_idx, argument.size());
+         }
+     }
+     *index += 1;
      return true;
  }
 
-bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) { 
-    if (!index || *index >= args.size()) {
-        return false; 
-    }
-
-    M_STRING_VIEW argument = args[*index];
-    size_t arg_idx = 0;
-    if (argument[0] == '-' || argument[0] == '/') {
-        arg_idx++;
-        if (argument[arg_idx] == '-') {
-            arg_idx++;
-        }
-    }
-    else {
-        return false; 
-    }
-
-    if (argument.compare(arg_idx, option.size(), option) != 0) {
-        return false;
-    }
-
-    if (argumentOption) {
-        arg_idx += option.size();
-        if (arg_idx >= argument.size()) {
-            *index += 1;
-            if (*index >= args.size() ) {
-#ifdef _WIN32
-                std::wcerr << std::format(L"Error: missing required argument for option {}\n", option);
-#else
-                std::cerr << std::format("Error: missing required argument for option {}\n", option);
-#endif
-                return false;
-            }
-            *argumentOption = args[*index];
-        }
-        else {
-            *argumentOption = argument.substr(arg_idx, argument.size());
-        }
-    }
-    *index += 1;
-    return true;
-}
 
 std::string efxc2Utils::setupVariableName(_In_ const std::string_view model,
     _In_ const std::string& entryPoint) {
@@ -240,32 +244,30 @@ std::string efxc2Utils::setupVariableName(_In_ const std::string_view model,
 
 #ifdef _WIN32
 void efxc2Utils::FixupFileName(_Inout_ std::wstring& FileName) { 
-    if (FileName.empty()) {
-        return; 
-    }
-    for (size_t i = 0; FileName[i] != '\0'; i++)
-    {
-        if (FileName[i] == '/') {
-            FileName[i] = '\\';
-        }
-        else {
-            continue;
+    if (FileName.empty() == false) {
+        for (size_t i = 0; FileName[i] != '\0'; i++)
+        {
+            if (FileName[i] == '/') {
+                FileName[i] = '\\';
+            }
+            else {
+                continue;
+            }
         }
     }
     return;
 }
 
 void efxc2Utils::FixupFileName(_Inout_ std::string& FileName) { 
-    if (FileName.empty()) {
-        return; 
-    }
-    for (size_t i = 0; FileName[i] != '\0'; i++)
-    {
-        if (FileName[i] == '/') {
-            FileName[i] = '\\';
-        }
-        else {
-            continue;
+    if (FileName.empty() == false) {
+        for (size_t i = 0; FileName[i] != '\0'; i++)
+        {
+            if (FileName[i] == '/') {
+                FileName[i] = '\\';
+            }
+            else {
+                continue;
+            }
         }
     }
     return;
@@ -318,10 +320,10 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
     if (str.empty()) {
         return L"";
     }
-    _locale_t locale = _create_locale(LC_ALL, (const char*)"en_US.UTF-8"); 
+    _locale_t locale = _create_locale(LC_ALL, (const char*)"en_US.UTF-8");
     size_t nchars = 0;
     errno_t err = 0;
-    err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale); 
+    err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale);
     if (err != 0) {
         _free_locale(locale);
         std::cerr << "_mbstowcs_s_l failed.";
@@ -329,8 +331,8 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
         throw efxc2Exception::Win32APIFailure();
     }
     if (nchars == 0) {
-        _free_locale(locale); 
-        return L""; 
+        _free_locale(locale);
+        return L"";
     }
     auto _wstr = std::make_unique<std::vector<char>>();
     _wstr->resize((nchars + 1) * sizeof(wchar_t));

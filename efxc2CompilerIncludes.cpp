@@ -122,7 +122,8 @@ namespace efxc2CompilerIncludes {
                 return S_OK;
             }
         }
-        return E_FAIL; 
+        /* E_FAIL eas defined without a suffix in the Win32 API.*/
+        return E_FAIL;  //-V3515 //-V2523
     }
 
     /* do not change this signature, it's part of an "inheritance" API. */
