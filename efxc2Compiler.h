@@ -42,14 +42,14 @@ namespace efxc2Compiler {
     private:
         efxc2CompilerAPIContainer::CompilerAPIContainer api;
         efxc2CompilerParams::CompilerParams       params;
-
-        ID3DBlob* compilerOutput = nullptr; //-V122
-        ID3DBlob* disassemblyCodeBlob = nullptr; //-V122
-        ID3DBlob* strippedBlob = nullptr; //-V122
-        ID3DBlob* pPDBName = nullptr; //-V122
-        ID3DBlob* pPreprocessOutput = nullptr; //-V122
-        ID3D11Module* pLibraryModule = nullptr; //-V122
-        ID3DBlob* LinkedBlob = nullptr; //-V122
+        /*mark these as will not serialize*/
+        ID3DBlob* compilerOutput = nullptr;  //-V122_NOPTR
+        ID3DBlob* disassemblyCodeBlob = nullptr;  //-V122_NOPTR
+        ID3DBlob* strippedBlob = nullptr;  //-V122_NOPTR
+        ID3DBlob* pPDBName = nullptr;  //-V122_NOPTR
+        ID3DBlob* pPreprocessOutput = nullptr;  //-V122_NOPTR
+        ID3D11Module* pLibraryModule = nullptr;  //-V122_NOPTR
+        ID3DBlob* LinkedBlob = nullptr;  //-V122_NOPTR
     };
 }
 

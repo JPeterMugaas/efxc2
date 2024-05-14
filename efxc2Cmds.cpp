@@ -10,6 +10,7 @@
 #include "efxc2Cmds.h"
 #include "efxc2Utils.h"
 #include "efxc2Files.h"
+#include "efxc2Exception.h"
 
 void efxc2Cmds::FindNOLOGO(const efxc2Utils::M_CMD_PARAMS& args, efxc2CompilerParams::CompilerParams& params) {
     /*first scan specifically for the nologo argument so no output
@@ -90,6 +91,7 @@ void efxc2Cmds::parseInputFile(_In_ const efxc2Utils::M_STRING_VIEW parameter, e
     }
     else {
         efxc2Utils::print_usage_toomany();
+        throw efxc2Exception::TooManyParameters();
     }
 }
 
@@ -554,12 +556,12 @@ void efxc2Cmds::cmd_Zss(efxc2CompilerParams::CompilerParams& params) {
     return;
 }
 
-bool  efxc2Cmds::parseCompilerOnlyCall( //-V2506
+bool  efxc2Cmds::parseCompilerOnlyCall( 
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	size_t* index,
     efxc2CompilerParams::CompilerParams& params) {
     if (!index || *index >= args.size()) {
-        return false; //-V2506
+        return false; 
     }
     const efxc2Utils::M_STRING argument = args[*index];
     size_t arg_idx = 0;
@@ -583,7 +585,7 @@ bool  efxc2Cmds::parseCompilerOnlyCall( //-V2506
     return false;
 }
 
-bool efxc2Cmds::parseCompilerFileCall( //-V2506
+bool efxc2Cmds::parseCompilerFileCall( 
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	size_t* index,
     efxc2CompilerParams::CompilerParams& params,
@@ -606,10 +608,10 @@ bool efxc2Cmds::parseCompilerFileCall( //-V2506
     }
 
     for (CompileFileEntry currentEntry : g_CompilerFileCall) {
-        if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) { //-V2571 //-V3546
+        if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) { 
             continue;
         }
-        arg_idx += currentEntry.Param.size(); //-V2571 //-V3546
+        arg_idx += currentEntry.Param.size(); 
         if (arg_idx >= argument.size()) {
             *index += 1;
             if (*index >= args.size()) {
@@ -632,12 +634,12 @@ bool efxc2Cmds::parseCompilerFileCall( //-V2506
     return false;
 }
 
-bool efxc2Cmds::parseIgnoredOptions( //-V2506
+bool efxc2Cmds::parseIgnoredOptions( 
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	const size_t* index,
     const efxc2CompilerParams::CompilerParams& params) {
     if (!index || *index >= args.size()) {
-        return false; //-V2506
+        return false; 
     }
     const efxc2Utils::M_STRING_VIEW argument = args[*index];
     size_t arg_idx = 0;
@@ -648,9 +650,9 @@ bool efxc2Cmds::parseIgnoredOptions( //-V2506
         }
     }
     else {
-        return false; //-V2506
+        return false; 
     }
-    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); //-V2571 //-V3546
+    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); 
           std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end())  {
         option_ignored(argument, params);
         return true;
@@ -658,7 +660,7 @@ bool efxc2Cmds::parseIgnoredOptions( //-V2506
     return false;
 }
 
-bool efxc2Cmds::parseNotSupportedOptions( //-V2506 
+bool efxc2Cmds::parseNotSupportedOptions( 
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _In_ const size_t* index) {
     if (!index || *index >= args.size()) {
@@ -675,14 +677,14 @@ bool efxc2Cmds::parseNotSupportedOptions( //-V2506
     else {
         return false;
     }
-    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); //-V2571 //-V3546
+    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); 
         std::ranges::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
 #ifdef _WIN32
           std::wcerr << std::format(L"option -{} not supported", argument);
 #else
           std::cerr << std::format("option -{} not supported", argument);
 #endif
-          efxc2Utils::print_unsupported_arg_help();
+          std::cout << efxc2Utils::print_unsupported_arg_help();
           return true;
     }
     return false;

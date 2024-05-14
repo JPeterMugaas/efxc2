@@ -20,7 +20,7 @@ namespace efxc2CompilerIncludes {
     static void TrimTrailingWhiteSpace(const char* buf, std::uintmax_t* fileSize) {
         size_t tmp = *fileSize;
         for (size_t i = *fileSize; i > 0; --i) {
-            if (buf[i - 1] >= 32) {  //-V3539 //-V2563
+            if (buf[i - 1] >= 32) {  
                 break;
             }
             else {
@@ -31,7 +31,7 @@ namespace efxc2CompilerIncludes {
         return;
     }
 
-    static bool LoadFile(const std::filesystem::path& currentFile, int verbose, char** buf, std::uintmax_t* fileSize) { //-V2506
+    static bool LoadFile(const std::filesystem::path& currentFile, int verbose, char** buf, std::uintmax_t* fileSize) { 
         std::ifstream f;
         std::error_code ec;
         *fileSize = std::filesystem::file_size(currentFile, ec);
@@ -43,7 +43,7 @@ namespace efxc2CompilerIncludes {
                 std::cout << std::format("Found {}\n", currentFile.native());
 #endif
             }
-            *buf = new char[*fileSize];  //-V2511
+            *buf = new char[*fileSize];  
             (void)memset(*buf, 0, *fileSize);
             f = std::ifstream(currentFile, std::ios::in | std::ios::binary);
             if (f.is_open()) {
@@ -61,7 +61,11 @@ namespace efxc2CompilerIncludes {
         }
     }
 
-    __declspec(nothrow) HRESULT __stdcall efxc2CompilerIncludes::CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) { //-V2506
+    __declspec(nothrow) HRESULT __stdcall efxc2CompilerIncludes::CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType,
+        LPCSTR pFileName, 
+        LPCVOID pParentData, 
+        LPCVOID* ppData, UINT* pBytes) { 
+
         *ppData = nullptr;
         *pBytes = 0;
         std::filesystem::path Filename = std::string(pFileName);
@@ -95,27 +99,30 @@ namespace efxc2CompilerIncludes {
         }
         std::filesystem::path TryInputFile = "";
         if (!input_parent_path.empty()) {
-            TryInputFile = input_parent_path /= Filename;  //-V3538 //-V2561
+            TryInputFile = input_parent_path /= Filename; 
             if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
                 *ppData = buf;
-                *pBytes = (UINT)fileSize; //-V2005  //-V2533
-                return S_OK; //-V2506
+                /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
+                *pBytes = (UINT)fileSize;  //-V2005
+                return S_OK; 
             }
         }
         if (LoadFile(Filename, verbose, &buf, &fileSize)) {
             *ppData = buf;
-            *pBytes = (UINT)fileSize; //-V2005  //-V2533
-            return S_OK; //-V2506
+            /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
+            *pBytes = (UINT)fileSize;  //-V2005
+            return S_OK; 
         }
         for (std::filesystem::path& currentDir : dirs) {
-            TryInputFile = currentDir /= Filename;  //-V3538 //-V2561
+            TryInputFile = currentDir /= Filename;  
             if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
                 *ppData = buf;
-                *pBytes = (UINT)fileSize; //-V2005 //-V2533
+                /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
+                *pBytes = (UINT)fileSize;  //-V2005
                 return S_OK;
             }
         }
-        return E_FAIL;  //-V3515 //-V2523
+        return E_FAIL; 
     }
 
     /* do not change this signature, it's part of an "inheritance" API. */
@@ -129,8 +136,8 @@ namespace efxc2CompilerIncludes {
                 std::cout << "\tpData: nullptr\n";
             }
         }
-        auto buf = std::bit_cast<char*>(pData);  //-V2018
-        delete[] buf; //-V2511
+        auto buf = std::bit_cast<char*>(pData);  
+        delete[] buf; 
         return S_OK;
     }
 
@@ -140,7 +147,7 @@ namespace efxc2CompilerIncludes {
         efxc2Utils::M_STRING dir = { _dir.data(), _dir.size() };
 
         (void) dirs.emplace(dirs.end(), dir);
-        (void) dirs[dirs.size() - 1].make_preferred();  //-V2563 //-V3539
+        (void) dirs[dirs.size() - 1].make_preferred();  
     }
 
 }

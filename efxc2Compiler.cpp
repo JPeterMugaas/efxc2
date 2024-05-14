@@ -9,13 +9,15 @@
 //--------------------------------------------------------------------------------------
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
+#include "efxc2Exception.h"
 
 void efxc2Compiler::Compiler::Preprocess() {
     auto SourceCode = params.get_SourceCode();
     if (SourceCode == nullptr) {
         efxc2Utils::print_no_input_file();
+        throw efxc2Exception::NoInputFile();
     }
-    size_t SourceLen = SourceCode->size();  //-V2571  //-V3546
+    size_t SourceLen = SourceCode->size();  
     auto  includeDirs = params.get_includeDirs();
     std::string _inputFile = params.get_inputFile();
     const char* inputFile = _inputFile.c_str();
@@ -95,7 +97,7 @@ void efxc2Compiler::Compiler::Preprocess() {
             std::cout << std::format("Got an error {:#08x} while preprocessing, but no error message from the function.\n", hr);
             efxc2Utils::print_hresult_error(hr);
         }
-        exit(1); //-V2014 //-V3506 //-V2509
+        throw efxc2Exception::PreprocessError();
     }
 }
 
@@ -103,8 +105,9 @@ void efxc2Compiler::Compiler::Compile() {
     auto SourceCode = params.get_SourceCode();
     if (SourceCode == nullptr) {
         efxc2Utils::print_no_input_file();
+        throw efxc2Exception::NoInputFile();
     }
-    size_t SourceLen = SourceCode->size(); //-V2571  //-V3546
+    size_t SourceLen = SourceCode->size(); 
     auto eflags = params.get_eflags();
     auto sflags = params.get_sflags();
     auto secondary_flags = params.get_secondary_flags();
@@ -218,8 +221,9 @@ void efxc2Compiler::Compiler::Compile() {
             std::cout << std::format( "Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
             efxc2Utils::print_hresult_error(hr);
         }
-        exit(1); //-V2014 //-V3506 //-V2509
+        throw efxc2Exception::CompileError();
     }
+    return;
 }
 
 void efxc2Compiler::Compiler::Disassemble() {
@@ -255,7 +259,9 @@ void efxc2Compiler::Compiler::Disassemble() {
 #endif
     if (FAILED(hr)) {
         efxc2Utils::print_hresult_error(hr);
+        throw efxc2Exception::Win32HLSLFailure();
     }
+    return;
 }
 
 void efxc2Compiler::Compiler::StripShader() {
@@ -292,8 +298,10 @@ void efxc2Compiler::Compiler::StripShader() {
 #endif
         if (FAILED(hr)) {
             efxc2Utils::print_hresult_error(hr);
+            throw efxc2Exception::Win32HLSLFailure();
         }
     }
+    return;
 }
 
 size_t efxc2Compiler::Compiler::WriteAssemblyCode(std::ofstream& f) {
@@ -384,9 +392,10 @@ std::string efxc2Compiler::Compiler::GetPDBFileName() {
     */
     if (FAILED(hr)) {
         efxc2Utils::print_hresult_error(hr);
+        throw efxc2Exception::Win32HLSLFailure();
     }
     auto pDebugNameData = std::bit_cast<ShaderDebugName*>(pPDBName->GetBufferPointer());
-    auto pName = std::bit_cast<char*>(&pDebugNameData[1]); //-V3539 //-V2563
+    auto pName = std::bit_cast<char*>(&pDebugNameData[1]); 
     if (params.get_verbose()) {
         std::cout << std::format(".PDB Data Name: {}\n", pName);
     }
@@ -397,7 +406,7 @@ void efxc2Compiler::Compiler::EmbedPrivateData() {
     auto const* compiledString = std::bit_cast<unsigned char*>(compilerOutput->GetBufferPointer());
     size_t compiledLen = compilerOutput->GetBufferSize();
     auto private_data = params.get_PrivateData();
-    size_t private_data_size = private_data->size(); //-V2571  //-V3546
+    size_t private_data_size = private_data->size(); 
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DSetBlobPart(\n";
         std::cout << "\t compiledString,\n";
@@ -424,6 +433,7 @@ void efxc2Compiler::Compiler::EmbedPrivateData() {
     */
     if (FAILED(hr)) {
         efxc2Utils::print_hresult_error(hr);
+        throw efxc2Exception::Win32HLSLFailure();
     }
 }
 
@@ -450,7 +460,9 @@ https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
 
     header->Flags = 0;
     // declared length does not include the null terminator:
-    header->NameLength = (uint16_t)(fileNameLen - 1); //-V2005 //-V2533
+    // The typcast to uint16_t is deliberate because that struct stores a 16 bit value
+    // so let's mark this as a false positive.
+    header->NameLength = (uint16_t)(fileNameLen - 1);  //-V2005
     // but the null terminator is expected to be present:
     for (size_t i = 0; i < fileNameLen; i++) {
         pNameBlobContent[sizeof(ShaderDebugName) + i] = _fileName[i];
@@ -485,6 +497,7 @@ https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
     */
     if (FAILED(hr)) {
         efxc2Utils::print_hresult_error(hr);
+        throw efxc2Exception::Win32HLSLFailure();
     }
 
 }
@@ -516,6 +529,7 @@ size_t efxc2Compiler::Compiler::WritePDBFile(std::ofstream& f) {
     */
     if (FAILED(hr)) {
         efxc2Utils::print_hresult_error(hr);
+        throw efxc2Exception::Win32HLSLFailure();
     }
     auto outputString = std::bit_cast<char*>(PDBData->GetBufferPointer());
     size_t outputLen = PDBData->GetBufferSize();

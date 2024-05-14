@@ -28,6 +28,8 @@
 #include <array>
 #include <bit>
 #include <cassert>
+#include <errno.h>
+#include <exception>
 #include <format>
 #include <fstream>
 #include <filesystem>
@@ -36,9 +38,13 @@
 #include <ranges>
 #include <stdlib.h>
 #include <string>
+#include <string.h>
 #include <string_view>
 #include <vector>
 #include <sal.h>
+#ifdef _WIN32
+#include <wchar.h>
+#endif
 
 extern "C" {
 #ifndef D3D_COMPILE_STANDARD_FILE_INCLUDE

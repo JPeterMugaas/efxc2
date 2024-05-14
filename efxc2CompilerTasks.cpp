@@ -11,6 +11,7 @@
 #include "efxc2Utils.h"
 #include "efxc2Compiler.h"
 #include "efxc2Files.h"
+#include "efxc2Exception.h"
 
 #ifdef _WIN32
 void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2Files::Files& files, const efxc2CompilerParams::CompilerParams& params) {
@@ -20,11 +21,11 @@ void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2F
     if ((params.get_commands() & efxc2Utils::CMD_PREPROCESS_FILE) == efxc2Utils::CMD_PREPROCESS_FILE) {
         if (params.get_commands() != efxc2Utils::CMD_PREPROCESS_FILE) {
             std::cerr << "The /P option may only be used with the /D and /I parameters.";
-            exit(1); //-V2014 //-V3506 //-V2509
+            throw efxc2Exception::InvalidPOption();
         }
         compiler.Preprocess();
         files.WritePreprocessFile(compiler, params);
-        exit(0); //-V2014 //-V3506 //-V2509
+        return;
     }
     compiler.Compile();
     if (params.get_PrivateData() != nullptr) {

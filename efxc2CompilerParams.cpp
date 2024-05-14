@@ -10,6 +10,7 @@
 
 #include "efxc2CompilerParams.h"
 #include "efxc2Utils.h"
+#include "efxc2Exception.h"
 
 void efxc2CompilerParams::CompilerParams::initializeDefines() {
     defines = std::make_shared<std::vector < efxc2Utils::CompilerDefine >>();
@@ -33,7 +34,7 @@ void efxc2CompilerParams::CompilerParams::add_define(const std::string_view defi
 void efxc2CompilerParams::CompilerParams::LoadSourceCode(std::ifstream& f) {
     if (efxc2Utils::readAll(f, SourceCode) == false) {
         std::cerr << "Error reading file." << std::endl;
-        exit(1); //-V2014 //-V3506 //-V2509
+        throw efxc2Exception::FileReadError();
     }
 
 }
@@ -41,6 +42,6 @@ void efxc2CompilerParams::CompilerParams::LoadSourceCode(std::ifstream& f) {
 void efxc2CompilerParams::CompilerParams::LoadPrivateData(std::ifstream& f) {
     if (efxc2Utils::readAll(f, PrivateData) == false) {
         std::cerr << "Error reading file." << std::endl;
-        exit(1);//-V2014 //-V3506 //-V2509
+        throw efxc2Exception::FileReadError();
     }
 }

@@ -21,11 +21,12 @@ void efxc2Files::Files::LoadInputFile(efxc2CompilerParams::CompilerParams& param
 #else
         std::cerr << std::format("Can not open {}", inputFile.native());
 #endif
-        exit(1);  //-V2014 //-V3506 //-V2509
+        throw efxc2Exception::FileReadError();
     }
     params.get_includeDirs()->set_input_parent_path(_path.parent_path());
     params.LoadSourceCode(f);
     f.close();
+    return;
 }
 
 void efxc2Files::Files::LoadPrivateDataFile(efxc2CompilerParams::CompilerParams& params) const
@@ -39,10 +40,11 @@ void efxc2Files::Files::LoadPrivateDataFile(efxc2CompilerParams::CompilerParams&
 #else
         std::cerr << std::format("Can not open {}", privateDataFile.native());
 #endif
-        exit(1); //-V2014  //-V3506 //-V2509
+        throw efxc2Exception::FileReadError();
     }
     params.LoadPrivateData(f);
     f.close();
+    return;
 }
 
 void efxc2Files::Files::WriteDisassembly(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) const {
@@ -54,7 +56,7 @@ void efxc2Files::Files::WriteDisassembly(efxc2Compiler::Compiler& compiler, cons
 #else
         std::cerr << std::format("Can not open {}", DisassemblyFile.native());
 #endif
-        exit(1); //-V2014 //-V2509 //-V3506
+        throw efxc2Exception::FileOpenWriteError();
     }
     size_t  outputLen = 0;
     outputLen = compiler.WriteAssemblyCode(f);
@@ -66,6 +68,7 @@ void efxc2Files::Files::WriteDisassembly(efxc2Compiler::Compiler& compiler, cons
         std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile.native());
 #endif
     }
+    return;
 }
 
 void efxc2Files::Files::WriteIncludeFile(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) const {
@@ -77,7 +80,7 @@ void efxc2Files::Files::WriteIncludeFile(efxc2Compiler::Compiler& compiler, cons
 #else
         std::cerr << std::format("Can not open {}", IncludeFile.native());
 #endif
-        exit(1); //-V2014  //-V3506 //-V2509
+        throw efxc2Exception::FileOpenWriteError();
     }
     size_t  outputLen = 0;
     outputLen = compiler.WriteIncludeFile(f);
@@ -89,6 +92,7 @@ void efxc2Files::Files::WriteIncludeFile(efxc2Compiler::Compiler& compiler, cons
         std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile.native());
 #endif
     }
+    return;
 }
 
 void efxc2Files::Files::WriteObjectFile(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) const {
@@ -100,7 +104,7 @@ void efxc2Files::Files::WriteObjectFile(efxc2Compiler::Compiler& compiler, const
 #else
         std::cerr << std::format("Can not open {}", ObjectFile.native());
 #endif
-        exit(1);  //-V2014 //-V3506 //-V2509
+        throw efxc2Exception::FileOpenWriteError();
     }
     size_t  outputLen = 0;
     outputLen = compiler.WriteObjectFile(f);
@@ -112,6 +116,7 @@ void efxc2Files::Files::WriteObjectFile(efxc2Compiler::Compiler& compiler, const
         std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());
 #endif
     }
+    return;
 }
 
 void efxc2Files::Files::WritePreprocessFile(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) const {
@@ -123,7 +128,7 @@ void efxc2Files::Files::WritePreprocessFile(efxc2Compiler::Compiler& compiler, c
 #else
         std::cerr << std::format("Can not open {}", preprocessFile.native());
 #endif
-        exit(1); //-V2014  //-V3506 //-V2509
+        throw std::runtime_error("");
     }
     size_t  outputLen = 0;
     outputLen = compiler.WritePreprocessFile(f);
@@ -135,6 +140,7 @@ void efxc2Files::Files::WritePreprocessFile(efxc2Compiler::Compiler& compiler, c
         std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());
 #endif
     }
+    return;
 }
 
 void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const efxc2CompilerParams::CompilerParams& params) {
@@ -142,8 +148,8 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
     /*write .PDB data if applicable*/
     if (pdbFile.empty() == false) {
         if (std::string pdbFileStr = (pdbFile.filename().string()); !pdbFileStr.empty() &&
-            (pdbFileStr.compare(".") != 0) &&    //-V3551 //-V2578
-            (pdbFileStr.compare("..") != 0)) {   //-V3551 //-V2578
+            (pdbFileStr.compare(".") != 0) &&    
+            (pdbFileStr.compare("..") != 0)) {   
 #ifdef _WIN32
             auto c_pdbFile = efxc2Utils::wstring_to_utf8(pdbFile.filename().native());
             compiler.SetPDBFileName(c_pdbFile);
@@ -156,8 +162,8 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
             filename in the shader data. */
             auto pPDBFileName = compiler.GetPDBFileName();
             pdbFileStr = pdbFile.filename().string();
-            if ((pdbFileStr.compare(".") == 0) ||   //-V3551 //-V2578
-                (pdbFileStr.compare("..") == 0)) {  //-V3551 //-V2578
+            if ((pdbFileStr.compare(".") == 0) ||  
+                (pdbFileStr.compare("..") == 0)) { 
                    (void)pPDBFileName.insert(pPDBFileName.begin(), std::filesystem::path::preferred_separator);
             }
 #ifdef _WIN32
@@ -176,7 +182,7 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
 #else
             std::cerr << std::format("Can not open {}", pdbFile.native());
 #endif
-            exit(1);  //-V2014  //-V3506 //-V2509
+            throw efxc2Exception::FileOpenWriteError();
         }
         size_t  outputLen = 0;
         outputLen = compiler.WritePDBFile(f);
@@ -189,4 +195,5 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
 #endif
         }
     }
+    return;
 }

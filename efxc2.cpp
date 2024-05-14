@@ -23,79 +23,90 @@ int wmain(int argc, wchar_t* argv[]) {
 #else  /* _WIN32 */
 int main(int argc, char* argv[]) {
 #endif /* _WIN32 */
-    // ====================================================================================
-    // Process Command Line Arguments
+    try {
+        // ====================================================================================
+        // Process Command Line Arguments
 
-    efxc2Utils::M_CMD_PARAMS args(&argv[1], argv + argc);  //-V104 //-V3539 //-V2563
-    efxc2Utils::M_STRING temp = efxc2Utils::M_STRING_INIT;
-    efxc2CompilerAPIContainer::CompilerAPIContainer api;
-    efxc2CompilerParams::CompilerParams params;
-    efxc2Files::Files files;
+        efxc2Utils::M_CMD_PARAMS args(&argv[1], &argv[argc]);
+        efxc2Utils::M_STRING temp = efxc2Utils::M_STRING_INIT;
+        efxc2CompilerAPIContainer::CompilerAPIContainer api;
+        efxc2CompilerParams::CompilerParams params;
+        efxc2Files::Files files;
 
-    efxc2Cmds::FindNOLOGO(args, params);
-    efxc2Cmds::FindDebug(args, params);
+        efxc2Cmds::FindNOLOGO(args, params);
+        efxc2Cmds::FindDebug(args, params);
 
-    size_t index = 0;
-    /*now scan for all arguments and input file name*/
-    index = 0;
-    while (TRUE) {
-        /* Detect the end of the options. */
-        if (index >= args.size()) {
-            break;
+        size_t index = 0;
+        /*now scan for all arguments and input file name*/
+        index = 0;
+        while (TRUE) {
+            /* Detect the end of the options. */
+            if (index >= args.size()) {
+                break;
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_QUESTION_MARK, args, &index, nullptr)) {
+                efxc2Utils::print_help_screen();
+                return 1;
+            }
+            else if (efxc2Cmds::parseCompilerOnlyCall(args, &index, params)) {
+                continue;
+            }
+            else if (efxc2Cmds::parseIgnoredOptions(args, &index, params)) {
+                continue;
+            }
+            else if (efxc2Cmds::parseNotSupportedOptions(args, &index)) {
+                return 1;
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_D, args, &index, &temp)) {
+                efxc2Cmds::cmd_D(params, temp);
+                continue;
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_E_, args, &index, &temp)) {
+                efxc2Cmds::cmd_E(params, temp);
+                continue;
+            }
+            else if (efxc2Cmds::parseCompilerFileCall(args, &index, params, files)) {
+                continue;
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_HELP, args, &index, nullptr)) {
+                efxc2Utils::print_help_screen();
+                return 0;
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_I, args, &index, &temp)) {
+                efxc2Cmds::cmd_I(params, temp);
+                continue;
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_NOLOGO, args, &index, nullptr)) {
+                continue;
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_DEBUG, args, &index, nullptr)) {
+                continue;
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_T, args, &index, &temp)) {
+                efxc2Cmds::cmd_T(params, temp);
+                continue;
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_VERSION, args, &index, nullptr)) {
+                efxc2Utils::print_version();
+            }
+            else if (efxc2Utils::parseOpt(efxc2Cmds::M_VN, args, &index, &temp)) {
+                efxc2Cmds::cmd_Vn(params, temp);
+                continue;
+            }
+            else {
+                efxc2Cmds::parseInputFile(args[index], params, files);
+                index += 1;
+            }
         }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_QUESTION_MARK, args, &index, nullptr)) {
-            efxc2Utils::print_help_screen();
-        }
-        else if (efxc2Cmds::parseCompilerOnlyCall(args, &index, params)) {
-            continue;
-        }
-        else if (efxc2Cmds::parseIgnoredOptions(args, &index, params)) {
-            continue;
-        }
-        else if (efxc2Cmds::parseNotSupportedOptions(args, &index)) {
-            exit(1);  //-V2014 //-V3506 //-V2509
-        }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_D, args, &index, &temp)) {
-            efxc2Cmds::cmd_D(params, temp);
-            continue;
-        }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_E_, args, &index, &temp)) {
-            efxc2Cmds::cmd_E(params, temp);
-            continue;
-        }
-        else if (efxc2Cmds::parseCompilerFileCall(args, &index, params, files)) {
-            continue;
-        }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_HELP, args, &index, nullptr)) {
-            efxc2Utils::print_help_screen();
-        }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_I, args, &index, &temp)) {
-            efxc2Cmds::cmd_I(params, temp);
-            continue;
-        }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_NOLOGO, args, &index, nullptr)) {
-            continue;
-        }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_DEBUG, args, &index, nullptr)) {
-            continue;
-        }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_T, args, &index, &temp)) {
-            efxc2Cmds::cmd_T(params, temp);
-            continue;
-        }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_VERSION, args, &index, nullptr)) {
-            efxc2Utils::print_version();
-        }
-        else if (efxc2Utils::parseOpt(efxc2Cmds::M_VN, args, &index, &temp)) {
-            efxc2Cmds::cmd_Vn(params, temp);
-            continue;
-        }
-        else {
-            efxc2Cmds::parseInputFile(args[index], params, files);
-            index += 1;
-        }
+        efxc2Compiler::Compiler compiler(api, params);
+        efxc2CompilerTasks::CompilerTasks(compiler, files, params);
+        return 0;
     }
-    efxc2Compiler::Compiler compiler(api, params);
-    efxc2CompilerTasks::CompilerTasks(compiler, files, params);
-    return 0;
+    catch (const std::exception& e)
+    {
+      return 1;
+    }
+    catch (...) {
+        return 1;
+    }
 }

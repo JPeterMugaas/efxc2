@@ -12,6 +12,7 @@
 #ifndef EFXC2UTILS_H_INCLUDED
 #define EFXC2UTILS_H_INCLUDED
 #include "efxc2.h"
+#include "efxc2Exception.h"
 
 namespace efxc2Utils {
     using M_BUFFER = std::shared_ptr<std::vector<char>>;
@@ -48,16 +49,16 @@ namespace efxc2Utils {
     constexpr auto ERROR_TABLE_LENGTH = 11;
 
     const std::array <ErrorTableEntry, ERROR_TABLE_LENGTH >g_ErrorTable = { {
-        { D3D11_ERROR_FILE_NOT_FOUND, "D3D11_ERROR_FILE_NOT_FOUND" },  //-V3515 //-V2523
-        { D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS, "D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS" }, //-V3515 //-V2523
-        { D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS, "D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS" }, //-V3515 //-V2523
-        { D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD, "D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD" }, //-V3515 //-V2523
-        { DXGI_ERROR_INVALID_CALL, "D3DERR_INVALIDCALL (replaced with DXGI_ERROR_INVALID_CALL)" }, //-V3515 //-V2523
-        { DXGI_ERROR_WAS_STILL_DRAWING, "D3DERR_WASSTILLDRAWING (replaced with DXGI_ERROR_WAS_STILL_DRAWING)" }, //-V3515 //-V2523
-        { E_FAIL, "E_FAIL" }, //-V3515 //-V2523
-        { E_INVALIDARG, "E_INVALIDARG" }, //-V3515 //-V2523
-        { E_OUTOFMEMORY, "E_OUTOFMEMORY" }, //-V3515 //-V2523
-        { E_NOTIMPL, "E_NOTIMPL" }, //-V3515 //-V2523
+        { D3D11_ERROR_FILE_NOT_FOUND, "D3D11_ERROR_FILE_NOT_FOUND" },  
+        { D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS, "D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS" }, 
+        { D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS, "D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS" }, 
+        { D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD, "D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD" }, 
+        { DXGI_ERROR_INVALID_CALL, "D3DERR_INVALIDCALL (replaced with DXGI_ERROR_INVALID_CALL)" }, 
+        { DXGI_ERROR_WAS_STILL_DRAWING, "D3DERR_WASSTILLDRAWING (replaced with DXGI_ERROR_WAS_STILL_DRAWING)" }, 
+        { E_FAIL, "E_FAIL" }, 
+        { E_INVALIDARG, "E_INVALIDARG" }, 
+        { E_OUTOFMEMORY, "E_OUTOFMEMORY" }, 
+        { E_NOTIMPL, "E_NOTIMPL" }, 
         { S_FALSE, "S_FALSE ((HRESULT)" } 
     } };
 
@@ -95,6 +96,8 @@ namespace efxc2Utils {
     /* a good size for an error message */
     constexpr auto ERR_SIZE = 128;
 
+    constexpr size_t ERRNO_BUFF_SIZE = 256;
+
 #ifdef _WIN32
     void FixupFileName(_Inout_ std::string& FileName);
     void FixupFileName(_Inout_ std::wstring& FileName);
@@ -102,15 +105,15 @@ namespace efxc2Utils {
     std::string HResultName(_In_ const HRESULT hr);
     bool parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption);
     void print_copyright();
-    [[noreturn]] void print_help_screen();
-    [[noreturn]] void print_hresult_error(const HRESULT hr);
-    [[noreturn]] void print_no_input_file();
-    void print_unsupported_arg_help();
-    void print_usage_arg();
-    [[noreturn]] void print_usage_missing(const char* arg);
-    [[noreturn]] void print_usage_toomany();
-    [[noreturn]] void print_version();
-    [[noreturn]] void print_windows_error();
+    void print_errno_value(errno_t err);
+    void print_help_screen();
+    void print_hresult_error(const HRESULT hr);
+    void print_no_input_file();
+    std::string print_unsupported_arg_help();
+    std::string print_usage_arg();
+    void print_usage_toomany();
+    void print_version();
+    void print_windows_error();
     bool readAll(_In_ std::ifstream& in,
         _Out_ M_BUFFER& dataptr);
     std::string setupVariableName(_In_ const std::string_view model,
