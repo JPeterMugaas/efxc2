@@ -184,47 +184,64 @@ void efxc2Utils::print_help_screen() {
      return result;
  }
 
- bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
-     if (!index || *index >= args.size()) {
-         return false;
-     }
-
-     M_STRING_VIEW argument = args[*index];
-     size_t arg_idx = 0;
-     if (argument[0] == '-' || argument[0] == '/') {
-         arg_idx++;
-         if (argument[arg_idx] == '-') {
-             arg_idx++;
-         }
-     }
-     else {
-         return false;
-     }
-
-     if (argument.compare(arg_idx, option.size(), option) != 0) {
-         return false;
-     }
-
-     if (argumentOption) {
-         arg_idx += option.size();
-         if (arg_idx >= argument.size()) {
-             *index += 1;
-             if (*index >= args.size()) {
+ void  efxc2Utils::checkForMissingArg(M_STRING_VIEW option, _In_ size_t index, const M_CMD_PARAMS& args) {
+     if (index >= args.size()) {
 #ifdef _WIN32
-                 std::wcerr << std::format(L"Error: missing required argument for option {}\n", option);
+         std::wcerr << std::format(L"Error: missing required argument for option {}\n", option);
 #else
-                 std::cerr << std::format("Error: missing required argument for option {}\n", option);
+         std::cerr << std::format("Error: missing required argument for option {}\n", option);
 #endif
-                 throw efxc2Exception::MissingArgument();
+         throw efxc2Exception::MissingArgument();
+     }
+ }
+
+ bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
+     bool terminate_routine = false;
+     bool result = false;
+     if (!index || *index >= args.size()) {
+         terminate_routine = true;
+     }
+     M_STRING_VIEW argument;
+     size_t arg_idx = 0;
+     if (terminate_routine == false) {
+         argument = args[*index];
+         arg_idx = 0;
+         if (argument[0] == '-' || argument[0] == '/') {
+             arg_idx++;
+             if (argument[arg_idx] == '-') {
+                 arg_idx++;
              }
-             *argumentOption = args[*index];
          }
          else {
-             *argumentOption = argument.substr(arg_idx, argument.size());
+             terminate_routine = true;
          }
      }
-     *index += 1;
-     return true;
+
+     if (terminate_routine == false) {
+         if (argument.compare(arg_idx, option.size(), option) != 0) {
+             terminate_routine = true;
+         }
+         else {
+             result = true;
+         }
+     }
+
+     if (terminate_routine == false) {
+         if (argumentOption) {
+             arg_idx += option.size();
+             if (arg_idx >= argument.size()) {
+                 *index += 1;
+                 checkForMissingArg(option, *index, args);
+                 *argumentOption = args[*index];
+             }
+             else {
+                 *argumentOption = argument.substr(arg_idx, argument.size());
+             }
+         }
+         *index += 1;
+         result = true;
+     }
+     return result;
  }
 
 

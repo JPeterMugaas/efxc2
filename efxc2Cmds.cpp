@@ -625,14 +625,7 @@ bool efxc2Cmds::parseCompilerFileCall(
             arg_idx += currentEntry.Param.size();
             if (arg_idx >= argument.size()) {
                 *index += 1;
-                if (*index >= args.size()) {
-#ifdef _WIN32
-                    std::wcerr << std::format(L"Error: missing required argument for option {}\n", currentEntry.Param);
-#else
-                    std::cerr << std::format("Error: missing required argument for option {}\n", currentEntry.Param);
-#endif
-                    throw efxc2Exception::MissingArgument();
-                }
+                efxc2Utils::checkForMissingArg(currentEntry.Param, *index, args);
                 argumentOption = args[*index];
             }
             else {

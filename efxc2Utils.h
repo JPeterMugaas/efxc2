@@ -100,6 +100,7 @@ namespace efxc2Utils {
 
     constexpr size_t ERRNO_BUFF_SIZE = 256;
 
+    void  checkForMissingArg(M_STRING_VIEW option, _In_ size_t index, const M_CMD_PARAMS& args);
 #ifdef _WIN32
     void FixupFileName(_Inout_ std::string& FileName);
     void FixupFileName(_Inout_ std::wstring& FileName);
