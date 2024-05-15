@@ -105,12 +105,14 @@ if(EFXC2_USE_PVS_STUDIO)
                       OUTPUT FORMAT html
                       ANALYZE fxc
                       MODE 64;GA:1,2;CS;OWASP;AUTOSAR;MISRA 
+                      LOG pvs-studio.html
                       CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/Filters.pvsconfig)
   else()
     pvs_studio_add_target(TARGET fxc.analyze ALL
                       OUTPUT FORMAT html      
                       ANALYZE fxc
                       MODE 64;GA:1,2;CS
+                      LOG pvs-studio.html
                       CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/Filters.pvsconfig
                       LOG pvs-studio.html)
   endif()
