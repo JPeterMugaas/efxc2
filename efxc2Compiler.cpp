@@ -17,7 +17,7 @@ void efxc2Compiler::Compiler::Preprocess() {
         efxc2Utils::print_no_input_file();
         throw efxc2Exception::NoInputFile();
     }
-    size_t SourceLen = SourceCode->size();  
+    size_t SourceLen = SourceCode->size();  //-	V2571 //-V3546 //-V2571
     auto  includeDirs = params.get_includeDirs();
     std::string _inputFile = params.get_inputFile();
     const char* inputFile = _inputFile.c_str();
@@ -107,7 +107,7 @@ void efxc2Compiler::Compiler::Compile() {
         efxc2Utils::print_no_input_file();
         throw efxc2Exception::NoInputFile();
     }
-    size_t SourceLen = SourceCode->size(); 
+    size_t SourceLen = SourceCode->size();  //-V2571 //-V3546
     auto eflags = params.get_eflags();
     auto sflags = params.get_sflags();
     auto secondary_flags = params.get_secondary_flags();
@@ -395,7 +395,7 @@ std::string efxc2Compiler::Compiler::GetPDBFileName() {
         throw efxc2Exception::Win32HLSLFailure();
     }
     auto pDebugNameData = std::bit_cast<ShaderDebugName*>(pPDBName->GetBufferPointer());
-    auto pName = std::bit_cast<char*>(&pDebugNameData[1]); 
+    auto pName = std::bit_cast<char*>(&pDebugNameData[1]);  //-V2563 //-V3539
     if (params.get_verbose()) {
         std::cout << std::format(".PDB Data Name: {}\n", pName);
     }
@@ -406,7 +406,7 @@ void efxc2Compiler::Compiler::EmbedPrivateData() {
     auto const* compiledString = std::bit_cast<unsigned char*>(compilerOutput->GetBufferPointer());
     size_t compiledLen = compilerOutput->GetBufferSize();
     auto private_data = params.get_PrivateData();
-    size_t private_data_size = private_data->size(); 
+    size_t private_data_size = private_data->size();  //-V2571 //-V3546
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DSetBlobPart(\n";
         std::cout << "\t compiledString,\n";
@@ -462,7 +462,7 @@ https://devblogs.microsoft.com/pix/using-automatic-shader-pdb-resolution-in-pix/
     // declared length does not include the null terminator:
     // The typcast to uint16_t is deliberate because that struct stores a 16 bit value
     // so let's mark this as a false positive.
-    header->NameLength = (uint16_t)(fileNameLen - 1);  //-V2005
+    header->NameLength = (uint16_t)(fileNameLen - 1);  //-V2005 //-V2533
     // but the null terminator is expected to be present:
     for (size_t i = 0; i < fileNameLen; i++) {
         pNameBlobContent[sizeof(ShaderDebugName) + i] = _fileName[i];

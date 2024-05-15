@@ -144,10 +144,10 @@ void efxc2Utils::print_help_screen() {
     f << std::format("const BYTE {}[] =\n{{\n", variableName);
     for (size_t i = 0; i < len; i++) {
         if (outputHex) {
-            f << std::format(" 0x{:>02x}", outString[i]); 
+            f << std::format(" 0x{:>02x}", outString[i]);  //-V3539 //-V2563
         }
         else {
-            f << std::format("{:>4}", outString[i]); 
+            f << std::format("{:>4}", outString[i]);   //-V3539 //-V2563
         }
         if (i != len - 1) {
             f << ",";
@@ -198,13 +198,13 @@ void efxc2Utils::print_help_screen() {
  bool efxc2Utils::parseOpt(_In_ const M_STRING_VIEW option, _In_ const M_CMD_PARAMS& args, _Inout_ size_t* index, _Inout_opt_ M_STRING* argumentOption) {
      bool terminate_routine = false;
      bool result = false;
-     if (!index || *index >= args.size()) {
+     if (index == nullptr || *index >= args.size()) {
          terminate_routine = true;
      }
      M_STRING_VIEW argument;
      size_t arg_idx = 0;
      if (terminate_routine == false) {
-         argument = args[*index];
+         argument = args[*index]; //-V1004 // This is a false-positive since we check for a nullptr above.
          arg_idx = 0;
          if (argument[0] == '-' || argument[0] == '/') {
              arg_idx++;
@@ -296,14 +296,14 @@ void efxc2Utils::FixupFileName(_Inout_ std::string& FileName) {
 std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
 {
     bool terminate_function = false;
-    _locale_t locale = _create_locale(LC_ALL, (const char*)"en_US.UTF-8");
+    _locale_t locale = _create_locale(LC_ALL, utf8_locale.c_str());
     size_t nbytes = 0;
     errno_t err = 0;
     if (wstr.empty()) {
         terminate_function = true;
     }
     if (terminate_function == false) {
-        err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale);
+        err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale); //-V2563 //-	V3539 //-V3539 //-V2571 //-V3546
         if (err != 0) {
             _free_locale(locale);
             std::cerr << "_wcstombs_s_l failed.";
@@ -317,9 +317,9 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
     auto str = std::make_unique<std::vector<char>>();
     if (terminate_function == false) {        
         str->resize(nbytes + 1);
-        str->data()[nbytes] = '\0';
+        str->data()[nbytes] = '\0'; //-V2563 //-V3539
         /* The locale still is not freed.  */
-        err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(), wstr.length() + 1, locale); //-V774
+        err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(), wstr.length() + 1, locale); //-V774 //-V2563 //-V3539 //-V2571 //-V3546
         if (err != 0) {
             std::cerr << "_wcstombs_s_l failed.";
             print_errno_value(err);
@@ -341,7 +341,7 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
 std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
 {
     bool terminate_function = false;
-    _locale_t locale = _create_locale(LC_ALL, (const char*)"en_US.UTF-8");
+    _locale_t locale = _create_locale(LC_ALL, utf8_locale.c_str());
     size_t nchars = 0;
     errno_t err = 0;
     if (str.empty()) {
@@ -349,7 +349,7 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
     }
     if (terminate_function == false) {
 
-        err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale);
+        err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale); //-V2563  //-V3539	 //-V2571 //-V3546
         if (err != 0) {
             _free_locale(locale);
             std::cerr << "_mbstowcs_s_l failed.";
@@ -363,9 +363,9 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
     auto _wstr = std::make_unique<std::vector<char>>();
     _wstr->resize((nchars + 1) * sizeof(wchar_t));
     auto* wstr = std::bit_cast<wchar_t*>(_wstr->data());
-    wstr[nchars] = L'\0';
+    wstr[nchars] = L'\0';   //-V3539 //-V2563
     if (terminate_function == false) {
-        err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale);  //-V774 
+        err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale);  //-V774  //-V2563 //-V3539 //-V2571 //-V3546
         if (err != 0) {
             std::cerr << "_mbstowcs_s_l failed.";
             print_errno_value(err);

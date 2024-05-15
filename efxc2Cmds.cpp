@@ -619,10 +619,10 @@ bool efxc2Cmds::parseCompilerFileCall(
     }
     if (terminate_routine == false) {
         for (CompileFileEntry currentEntry : g_CompilerFileCall) {
-            if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) {
+            if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) { //-V2571 //V3546 //-V3546	
                 continue;
             }
-            arg_idx += currentEntry.Param.size();
+            arg_idx += currentEntry.Param.size(); //-V2571 //V3546 //-V3546	
             if (arg_idx >= argument.size()) {
                 *index += 1;
                 efxc2Utils::checkForMissingArg(currentEntry.Param, *index, args);
@@ -661,7 +661,7 @@ bool efxc2Cmds::parseIgnoredOptions(
             terminate_routine = true;
         }
         if (terminate_routine == false) {
-            if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
+            if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); //-V2571 //V3546 //-V3546	
                 std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end()) {
                     option_ignored(argument, params);
                     result = true;
@@ -692,7 +692,7 @@ bool efxc2Cmds::parseNotSupportedOptions(
             terminate_routine = true;
         }
         if (terminate_routine == false) {
-            if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
+            if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); //-V2571 //V3546 //-V3546
                 std::ranges::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
 #ifdef _WIN32
                   std::wcerr << std::format(L"option -{} not supported", argument);

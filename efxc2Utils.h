@@ -98,6 +98,10 @@ namespace efxc2Utils {
     /* a good size for an error message */
     constexpr auto ERR_SIZE = 128;
 
+#ifdef _WIN32
+    const std::string utf8_locale = "en_US.UTF-8";
+#endif
+
     constexpr size_t ERRNO_BUFF_SIZE = 256;
 
     void  checkForMissingArg(M_STRING_VIEW option, _In_ size_t index, const M_CMD_PARAMS& args);

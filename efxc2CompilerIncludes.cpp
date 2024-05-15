@@ -20,7 +20,7 @@ namespace efxc2CompilerIncludes {
     static void TrimTrailingWhiteSpace(const char* buf, std::uintmax_t* fileSize) {
         size_t tmp = *fileSize;
         for (size_t i = *fileSize; i > 0; --i) {
-            if (buf[i - 1] >= 32) {  
+            if (buf[i - 1] >= 32) {   //-V2563 //-V3539
                 break;
             }
             else {
@@ -44,7 +44,7 @@ namespace efxc2CompilerIncludes {
                 std::cout << std::format("Found {}\n", currentFile.native());
 #endif
             }
-            *buf = new char[*fileSize];  
+            *buf = new char[*fileSize];  //-V2511
             (void)memset(*buf, 0, *fileSize);
             f = std::ifstream(currentFile, std::ios::in | std::ios::binary);
             if (f.is_open()) {
@@ -103,27 +103,27 @@ namespace efxc2CompilerIncludes {
            define the E_FAIL constant with a U suffix. */
         auto result = E_FAIL;  //-V3515 //-V2523
         if (!input_parent_path.empty()) {
-            TryInputFile = input_parent_path /= Filename; 
+            TryInputFile = input_parent_path /= Filename;  //-V2561 //-V3538
             if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
                 *ppData = buf;
                 /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
-                *pBytes = (UINT)fileSize;  //-V2005
+                *pBytes = (UINT)fileSize;  //-V2005 //-V2533
                 result = S_OK;
             }
         }
         if ((result == E_FAIL) && (LoadFile(Filename, verbose, &buf, &fileSize))) {  //-V3515 //-V2523
             *ppData = buf;
             /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
-            *pBytes = (UINT)fileSize;  //-V2005
+            *pBytes = (UINT)fileSize;  //-V2005 //-V2533
             result = S_OK;
         }
         if (result == E_FAIL) {   //-V3515 //-V2523
             for (std::filesystem::path& currentDir : dirs) {
-                TryInputFile = currentDir /= Filename;
+                TryInputFile = currentDir /= Filename; //-V2561 //-V3538
                 if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
                     *ppData = buf;
                     /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
-                    *pBytes = (UINT)fileSize;  //-V2005
+                    *pBytes = (UINT)fileSize;  //-V2005 //-V2533
                     result = S_OK;
                 }
             }
@@ -143,7 +143,7 @@ namespace efxc2CompilerIncludes {
             }
         }
         auto buf = std::bit_cast<char*>(pData);  
-        delete[] buf; 
+        delete[] buf;  //-V2511
         return S_OK;
     }
 
@@ -153,7 +153,7 @@ namespace efxc2CompilerIncludes {
         efxc2Utils::M_STRING dir = { _dir.data(), _dir.size() };
 
         (void) dirs.emplace(dirs.end(), dir);
-        (void) dirs[dirs.size() - 1].make_preferred();  
+        (void) dirs[dirs.size() - 1].make_preferred();   //-V2563 //-V3539
     }
 
 }
