@@ -113,8 +113,7 @@ if(EFXC2_USE_PVS_STUDIO)
                       ANALYZE fxc
                       MODE 64;GA:1,2;CS
                       LOG pvs-studio.html
-                      CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/Filters.pvsconfig
-                      LOG pvs-studio.html)
+                      CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/Filters.pvsconfig)
   endif()
 endif()
 

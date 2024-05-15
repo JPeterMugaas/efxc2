@@ -76,11 +76,7 @@ void efxc2Utils::print_errno_value(errno_t err) {
         std::wcout << errmsg.c_str() << std::endl;
     }
 #else
-    std::string errmsg;
-    errmsg.resize(ERRNO_BUFF_SIZE);
-    if (strerror_s(errmsg.data(), ERRNO_BUFF_SIZE, err) == 0) {
-        std::cout << errmsg.c_str() << std::endl;
-    }
+    std::cout << strerror(err) << std::endl;
 #endif
     return;
 }
