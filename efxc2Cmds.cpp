@@ -560,29 +560,36 @@ bool  efxc2Cmds::parseCompilerOnlyCall(
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	size_t* index,
     efxc2CompilerParams::CompilerParams& params) {
+    bool terminate_routine = false;
+    bool result = false;
     if (!index || *index >= args.size()) {
-        return false; 
+        terminate_routine = true;
     }
-    const efxc2Utils::M_STRING argument = args[*index];
+    efxc2Utils::M_STRING argument;
     size_t arg_idx = 0;
-    if (argument[0] == '-' || argument[0] == '/') {
-        arg_idx++;
-        if (argument[arg_idx] == '-') {
+    if (terminate_routine == false) {
+        argument = args[*index];
+        if (argument[0] == '-' || argument[0] == '/') {
             arg_idx++;
+            if (argument[arg_idx] == '-') {
+                arg_idx++;
+            }
+        }
+        else {
+            terminate_routine = true;
         }
     }
-    else {
-        return false;
-    }
-
-    for (CompilerOnlyEntry currentEntry : g_CompilerOnlyCall) {
-        if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) == 0) {
-            currentEntry.method(params);
-            *index += 1;
-            return true;
+    if (terminate_routine == false) {
+        for (CompilerOnlyEntry currentEntry : g_CompilerOnlyCall) {
+            if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) == 0) {
+                currentEntry.method(params);
+                *index += 1;
+                result = true;
+                break;
+            }
         }
     }
-    return false;
+    return result;
 }
 
 bool efxc2Cmds::parseCompilerFileCall( 
@@ -590,102 +597,119 @@ bool efxc2Cmds::parseCompilerFileCall(
     _Inout_	size_t* index,
     efxc2CompilerParams::CompilerParams& params,
     efxc2Files::Files& files) {
+    bool terminate_routine = false;
+    bool result = false;
     if (!index || *index >= args.size()) {
-        return false;
+        terminate_routine = true;
     }
     efxc2Utils::M_STRING argumentOption = efxc2Utils::M_STRING_INIT;
-
-    efxc2Utils::M_STRING_VIEW argument = args[*index];
+    efxc2Utils::M_STRING_VIEW argument;
     size_t arg_idx = 0;
-    if (argument[0] == '-' || argument[0] == '/') {
-        arg_idx++;
-        if (argument[arg_idx] == '-') {
-           arg_idx++;
-        }
-    }
-    else {
-        return false;
-    }
-
-    for (CompileFileEntry currentEntry : g_CompilerFileCall) {
-        if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) { 
-            continue;
-        }
-        arg_idx += currentEntry.Param.size(); 
-        if (arg_idx >= argument.size()) {
-            *index += 1;
-            if (*index >= args.size()) {
-#ifdef _WIN32
-                std::wcerr << std::format(L"Error: missing required argument for option {}\n", currentEntry.Param);
-#else
-                std::cerr << std::format("Error: missing required argument for option {}\n", currentEntry.Param );
-#endif
-                return false;
+    if (terminate_routine == false) {
+        argument = args[*index];
+        if (argument[0] == '-' || argument[0] == '/') {
+            arg_idx++;
+            if (argument[arg_idx] == '-') {
+                arg_idx++;
             }
-            argumentOption = args[*index];
         }
         else {
-            argumentOption = argument.substr(arg_idx, argument.size());
+            terminate_routine = true;
         }
-        currentEntry.method(params, files, argumentOption);
-        *index += 1;
-        return true;
     }
-    return false;
+    if (terminate_routine == false) {
+        for (CompileFileEntry currentEntry : g_CompilerFileCall) {
+            if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) {
+                continue;
+            }
+            arg_idx += currentEntry.Param.size();
+            if (arg_idx >= argument.size()) {
+                *index += 1;
+                if (*index >= args.size()) {
+#ifdef _WIN32
+                    std::wcerr << std::format(L"Error: missing required argument for option {}\n", currentEntry.Param);
+#else
+                    std::cerr << std::format("Error: missing required argument for option {}\n", currentEntry.Param);
+#endif
+                    throw efxc2Exception::MissingArgument();
+                }
+                argumentOption = args[*index];
+            }
+            else {
+                argumentOption = argument.substr(arg_idx, argument.size());
+            }
+            currentEntry.method(params, files, argumentOption);
+            *index += 1;
+            result = true;
+        }
+    }
+    return result;
 }
 
 bool efxc2Cmds::parseIgnoredOptions( 
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	const size_t* index,
     const efxc2CompilerParams::CompilerParams& params) {
-    if (!index || *index >= args.size()) {
-        return false; 
+    bool terminate_routine = false;
+    bool result = false;
+    if ((index == nullptr) || (*index >= args.size())) {
+        terminate_routine = true;
     }
-    const efxc2Utils::M_STRING_VIEW argument = args[*index];
-    size_t arg_idx = 0;
-    if (argument[0] == '-' || argument[0] == '/') {
-        arg_idx++;
-        if (argument[arg_idx] == '-') {
+    if (terminate_routine == false) {
+        const efxc2Utils::M_STRING_VIEW argument = args[*index];
+        size_t arg_idx = 0;
+        if (argument[0] == '-' || argument[0] == '/') {
             arg_idx++;
+            if (argument[arg_idx] == '-') {
+                arg_idx++;
+            }
+        }
+        else {
+            terminate_routine = true;
+        }
+        if (terminate_routine == false) {
+            if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
+                std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end()) {
+                    option_ignored(argument, params);
+                    result = true;
+            }
         }
     }
-    else {
-        return false; 
-    }
-    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); 
-          std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end())  {
-        option_ignored(argument, params);
-        return true;
-    }
-    return false;
+    return result;
 }
 
-bool efxc2Cmds::parseNotSupportedOptions( 
+bool efxc2Cmds::parseNotSupportedOptions(
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _In_ const size_t* index) {
+    bool terminate_routine = false;
+    bool result = false;
     if (!index || *index >= args.size()) {
-        return false;
+        terminate_routine = true;
     }
-    const efxc2Utils::M_STRING_VIEW argument = args[*index];
-    size_t arg_idx = 0;
-    if (argument[0] == '-' || argument[0] == '/') {
-        arg_idx++;
-        if (argument[arg_idx] == '-') {
+    if (terminate_routine == false) {
+        const efxc2Utils::M_STRING_VIEW argument = args[*index];
+        size_t arg_idx = 0;
+        if (argument[0] == '-' || argument[0] == '/') {
             arg_idx++;
+            if (argument[arg_idx] == '-') {
+                arg_idx++;
+            }
+        }
+        else {
+            terminate_routine = true;
+        }
+        if (terminate_routine == false) {
+            if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
+                std::ranges::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
+#ifdef _WIN32
+                  std::wcerr << std::format(L"option -{} not supported", argument);
+#else
+                  std::cerr << std::format("option -{} not supported", argument);
+#endif
+                  std::cout << efxc2Utils::print_unsupported_arg_help();
+                  result = true;
+            }
         }
     }
-    else {
-        return false;
-    }
-    if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); 
-        std::ranges::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
-#ifdef _WIN32
-          std::wcerr << std::format(L"option -{} not supported", argument);
-#else
-          std::cerr << std::format("option -{} not supported", argument);
-#endif
-          std::cout << efxc2Utils::print_unsupported_arg_help();
-          return true;
-    }
-    return false;
+    return result;
 }

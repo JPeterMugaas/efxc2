@@ -14,7 +14,7 @@ std::string efxc2Utils::HResultName(_In_ const HRESULT hr) {
     std::string result = "Unknown Error Name";
     for (int i = 0; i < efxc2Utils::ERROR_TABLE_LENGTH; i++) {
         if (hr == efxc2Utils::g_ErrorTable[i].ErrorCode ) {
-            return  efxc2Utils::g_ErrorTable[i].ErrorName; 
+            result =  efxc2Utils::g_ErrorTable[i].ErrorName; 
             break;
         }
     }
@@ -215,7 +215,7 @@ void efxc2Utils::print_help_screen() {
 #else
                  std::cerr << std::format("Error: missing required argument for option {}\n", option);
 #endif
-                 return false;
+                 throw efxc2Exception::MissingArgument();
              }
              *argumentOption = args[*index];
          }
@@ -276,77 +276,92 @@ void efxc2Utils::FixupFileName(_Inout_ std::string& FileName) {
 
 #ifdef _WIN32
 /* In these routines,locale is freed ONCE, just before returning or exiting the program */
-std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr) 
+std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
 {
-    if (wstr.empty()) {
-        return "";
-    }
-    _locale_t locale = _create_locale(LC_ALL, (const char*)"en_US.UTF-8");  
+    bool terminate_function = false;
+    _locale_t locale = _create_locale(LC_ALL, (const char*)"en_US.UTF-8");
     size_t nbytes = 0;
     errno_t err = 0;
-    err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale);
-    if (err != 0) {
-        _free_locale(locale);
-        std::cerr << "_wcstombs_s_l failed.";
-        print_errno_value(err);
-        throw efxc2Exception::Win32APIFailure();
+    if (wstr.empty()) {
+        terminate_function = true;
     }
-    if (nbytes == 0) { 
-        _free_locale(locale); //-V586
-        return ""; 
+    if (terminate_function == false) {
+        err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale);
+        if (err != 0) {
+            _free_locale(locale);
+            std::cerr << "_wcstombs_s_l failed.";
+            print_errno_value(err);
+            throw efxc2Exception::Win32APIFailure();
+        }
+        if (nbytes == 0) {
+            terminate_function = true;
+        }
     }
-
     auto str = std::make_unique<std::vector<char>>();
-    str->resize(nbytes + 1);
-    str->data()[nbytes] = '\0'; 
-    /* The locale still is not freed.  */
-    err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(),wstr.length() + 1, locale); //-V774
-    if (err != 0) {
-        std::cerr << "_wcstombs_s_l failed.";
-        print_errno_value(err);
-        throw efxc2Exception::Win32APIFailure();
+    if (terminate_function == false) {        
+        str->resize(nbytes + 1);
+        str->data()[nbytes] = '\0';
+        /* The locale still is not freed.  */
+        err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(), wstr.length() + 1, locale); //-V774
+        if (err != 0) {
+            std::cerr << "_wcstombs_s_l failed.";
+            print_errno_value(err);
+            throw efxc2Exception::Win32APIFailure();
+        }
+        if (nbytes == 0) {
+            terminate_function = true;
+        }
     }
-    if (nbytes == 0) {
-        _free_locale(locale);  //-V586
-        return "";
-    }
-
     _free_locale(locale);   //-V586
-    return str->data();
+    std::string result = "";
+    if (terminate_function == false) {
+        result = str->data();
+    }
+    
+    return result;
 }
 
-std::wstring efxc2Utils::utf8_to_wstring(std::string const& str) 
+std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
 {
-    if (str.empty()) {
-        return L"";
-    }
+    bool terminate_function = false;
     _locale_t locale = _create_locale(LC_ALL, (const char*)"en_US.UTF-8");
     size_t nchars = 0;
     errno_t err = 0;
-    err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale);
-    if (err != 0) {
-        _free_locale(locale);
-        std::cerr << "_mbstowcs_s_l failed.";
-        print_errno_value(err);
-        throw efxc2Exception::Win32APIFailure();
+    if (str.empty()) {
+        terminate_function = true;
     }
-    if (nchars == 0) {
-        _free_locale(locale);
-        return L"";
+    if (terminate_function == false) {
+
+        err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale);
+        if (err != 0) {
+            _free_locale(locale);
+            std::cerr << "_mbstowcs_s_l failed.";
+            print_errno_value(err);
+            throw efxc2Exception::Win32APIFailure();
+        }
+        if (nchars == 0) {
+            terminate_function = true;
+        }
     }
     auto _wstr = std::make_unique<std::vector<char>>();
     _wstr->resize((nchars + 1) * sizeof(wchar_t));
     auto* wstr = std::bit_cast<wchar_t*>(_wstr->data());
     wstr[nchars] = L'\0';
-
-    err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale);  //-V774
-    _free_locale(locale);   //-V586
-    if (err != 0) {
-        std::cerr << "_mbstowcs_s_l failed.";
-        print_errno_value(err);
-        throw efxc2Exception::Win32APIFailure();
+    if (terminate_function == false) {
+        err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale);  //-V774 
+        if (err != 0) {
+            std::cerr << "_mbstowcs_s_l failed.";
+            print_errno_value(err);
+            _free_locale(locale);   //-V586
+            throw efxc2Exception::Win32APIFailure();
+        }
     }
-    return wstr;
+    _free_locale(locale);   //-V586
+    std::wstring result = L"";
+    if (terminate_function == false) {
+        result = wstr;
+    }
+    return result;
 }
 
 #endif

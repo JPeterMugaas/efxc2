@@ -34,6 +34,7 @@ namespace efxc2CompilerIncludes {
     static bool LoadFile(const std::filesystem::path& currentFile, int verbose, char** buf, std::uintmax_t* fileSize) { 
         std::ifstream f;
         std::error_code ec;
+        bool result = true;
         *fileSize = std::filesystem::file_size(currentFile, ec);
         if (ec.value() == 0) {
             if (verbose) {
@@ -50,15 +51,15 @@ namespace efxc2CompilerIncludes {
                 (void)f.read(*buf, *fileSize);
                 f.close();
                 TrimTrailingWhiteSpace(*buf, fileSize);
-                return true;
             }
             else {
-                return false;
+                result = false;
             }
         }
         else {
-            return false;
+            result = false;
         }
+        return result;
     }
 
     __declspec(nothrow) HRESULT __stdcall efxc2CompilerIncludes::CompilerIncludes::Open(D3D_INCLUDE_TYPE IncludeType,
@@ -98,32 +99,36 @@ namespace efxc2CompilerIncludes {
             }
         }
         std::filesystem::path TryInputFile = "";
+        /* In this function, we have to disable V3515 because the Win32 API headers did not
+           define the E_FAIL constant with a U suffix. */
+        auto result = E_FAIL;  //-V3515 //-V2523
         if (!input_parent_path.empty()) {
             TryInputFile = input_parent_path /= Filename; 
             if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
                 *ppData = buf;
                 /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
                 *pBytes = (UINT)fileSize;  //-V2005
-                return S_OK; 
+                result = S_OK;
             }
         }
-        if (LoadFile(Filename, verbose, &buf, &fileSize)) {
+        if ((result == E_FAIL) && (LoadFile(Filename, verbose, &buf, &fileSize))) {  //-V3515 //-V2523
             *ppData = buf;
             /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
             *pBytes = (UINT)fileSize;  //-V2005
-            return S_OK; 
+            result = S_OK;
         }
-        for (std::filesystem::path& currentDir : dirs) {
-            TryInputFile = currentDir /= Filename;  
-            if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
-                *ppData = buf;
-                /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
-                *pBytes = (UINT)fileSize;  //-V2005
-                return S_OK;
+        if (result == E_FAIL) {   //-V3515 //-V2523
+            for (std::filesystem::path& currentDir : dirs) {
+                TryInputFile = currentDir /= Filename;
+                if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
+                    *ppData = buf;
+                    /* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
+                    *pBytes = (UINT)fileSize;  //-V2005
+                    result = S_OK;
+                }
             }
         }
-        /* E_FAIL eas defined without a suffix in the Win32 API.*/
-        return E_FAIL;  //-V3515 //-V2523
+        return result; 
     }
 
     /* do not change this signature, it's part of an "inheritance" API. */

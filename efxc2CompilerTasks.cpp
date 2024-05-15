@@ -25,25 +25,26 @@ void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2F
         }
         compiler.Preprocess();
         files.WritePreprocessFile(compiler, params);
-        return;
     }
-    compiler.Compile();
-    if (params.get_PrivateData() != nullptr) {
-        compiler.EmbedPrivateData();
-    }
-    compiler.StripShader();
-    if ((params.get_commands() & efxc2Utils::CMD_WRITE_HEADER) == efxc2Utils::CMD_WRITE_HEADER) {
-        files.WriteIncludeFile(compiler,params);
-    }
-    if ((params.get_commands() & efxc2Utils::CMD_WRITE_PDB_FILE) == efxc2Utils::CMD_WRITE_PDB_FILE) {
-        files.WritePDBFile(compiler, params);
-    }
-    if ((params.get_commands() & efxc2Utils::CMD_WRITE_OBJECT) == efxc2Utils::CMD_WRITE_OBJECT) {
-        files.WriteObjectFile(compiler,params);
-    }
-    if ((params.get_commands() & efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) == efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) {
-        compiler.Disassemble();
-        files.WriteDisassembly(compiler,params);
+    else {
+        compiler.Compile();
+        if (params.get_PrivateData() != nullptr) {
+            compiler.EmbedPrivateData();
+        }
+        compiler.StripShader();
+        if ((params.get_commands() & efxc2Utils::CMD_WRITE_HEADER) == efxc2Utils::CMD_WRITE_HEADER) {
+            files.WriteIncludeFile(compiler, params);
+        }
+        if ((params.get_commands() & efxc2Utils::CMD_WRITE_PDB_FILE) == efxc2Utils::CMD_WRITE_PDB_FILE) {
+            files.WritePDBFile(compiler, params);
+        }
+        if ((params.get_commands() & efxc2Utils::CMD_WRITE_OBJECT) == efxc2Utils::CMD_WRITE_OBJECT) {
+            files.WriteObjectFile(compiler, params);
+        }
+        if ((params.get_commands() & efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) == efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) {
+            compiler.Disassemble();
+            files.WriteDisassembly(compiler, params);
+        }
     }
     return;
 }
