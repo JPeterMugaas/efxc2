@@ -22,8 +22,7 @@ jobs:
         shell: bash
       - name: Install tools
         run: |
-          PVS-Studio_setup.exe /verysilent /suppressmsgboxes /nocloseapplications /norestart /components= Core, 
-Standalone
+          PVS-Studio_setup.exe /verysilent /suppressmsgboxes /nocloseapplications /norestart /components= Core, Standalone
       - name: Build
         run: |
           cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=On -B build .
