@@ -46,7 +46,7 @@ jobs:
           "PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}.
     - name: Analyze
       run: |
-          "\CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
+          "CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
       shell: cmd
     - name: Convert report
       run: |
