@@ -10,7 +10,7 @@ jobs:
         run: |
           curl -L https://cdn.pvs-studio.com/PVS-Studio_setup.exe \
           -o PVS-Studio_setup.exe
-          PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
+          ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
           /components= Core, Standalone
           pvs-studio-analyzer credentials ${{ secrets.PVS_STUDIO_CREDENTIALS }}
