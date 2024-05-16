@@ -46,9 +46,11 @@ jobs:
     - name: Analyze
       run: |
           "C:\Program Files (x86)\PVS-Studio/CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
+      shell: cmd
     - name: Convert report
       run: |
           "C:\Program Files (x86)\PVS-Studio/PlogConverter.exe" -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
+      shell: cmd
     - name: Publish report
       uses: github/codeql-action/upload-sarif@v1
       with:
