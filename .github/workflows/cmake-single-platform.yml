@@ -37,8 +37,8 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}}
     - name: Download PVS-Studio
-      run: curl -L https://cdn.pvs-studio.com/PVS-Studio_setup.exe \
-          -o PVS-Studio_setup.exe
+      run: curl -L "https://cdn.pvs-studio.com/PVS-Studio_setup.exe" \
+          -o "PVS-Studio_setup.exe"
     - name: Install PVS-Studio
       run: PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
