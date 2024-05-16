@@ -42,13 +42,13 @@ jobs:
       run: ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
           /components= Core, Standalone
-          ./PVS-Studio_Cmd.exe --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}.
+          "C:\Program Files (x86)\PVS-Studio/PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}.
     - name: Analyze
       run: |
-          ./CompilerCommandsAnalyzer.exe analyze -f build/compile_commands.json -j
+          "C:\Program Files (x86)\PVS-Studio/CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
     - name: Convert report
       run: |
-          ./PlogConverter.exe -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
+          "C:\Program Files (x86)\PVS-Studio/PlogConverter.exe" -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
     - name: Publish report
       uses: github/codeql-action/upload-sarif@v1
       with:
