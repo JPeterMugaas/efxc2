@@ -22,8 +22,7 @@ jobs:
         shell: bash
       - name: Install tools
         run: |
-          PVS-Studio_setup.exe /verysilent /suppressmsgboxes 
-/nocloseapplications /norestart /components= Core, 
+          PVS-Studio_setup.exe /verysilent /suppressmsgboxes /nocloseapplications /norestart /components= Core, 
 Standalone
       - name: Build
         run: |
