@@ -16,7 +16,7 @@ jobs:
           /nocloseapplications /norestart \
           /components= Core, Standalone
           pvs-studio-analyzer credentials ${{ secrets.PVS_STUDIO_CREDENTIALS }}
-        shell: cmd 
+        shell: bash
       - name: Build
         run: |
           cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=On -B build .
