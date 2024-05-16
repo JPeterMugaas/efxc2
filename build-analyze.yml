@@ -10,13 +10,11 @@ jobs:
         run: |
           curl -L https://cdn.pvs-studio.com/PVS-Studio_setup.exe \
           -o PVS-Studio_setup.exe
-          chmod +x PVS-Studio_setup.exe
-          whoami
+          sudo chmod +x PVS-Studio_setup.exe
           sudo ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
           /components= Core, Standalone
           pvs-studio-analyzer credentials ${{ secrets.PVS_STUDIO_CREDENTIALS }}
-        shell: bash
       - name: Build
         run: |
           cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=On -B build .
