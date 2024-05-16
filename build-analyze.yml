@@ -11,6 +11,7 @@ jobs:
           curl -L https://cdn.pvs-studio.com/PVS-Studio_setup.exe \
           -o PVS-Studio_setup.exe
           chmod +x PVS-Studio_setup.exe
+          whoami
           sudo ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
           /components= Core, Standalone
