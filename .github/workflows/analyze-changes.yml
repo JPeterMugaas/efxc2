@@ -5,6 +5,7 @@ on:
       - '**.h'
       - '**.c'
       - '**.cpp'
+  workflow_dispatch:
 jobs:
   analyze-changes:
     runs-on: windows-latest
@@ -40,3 +41,4 @@ jobs:
         with:
           sarif_file: pvs-report.sarif
           category: PVS-Studio
+          
