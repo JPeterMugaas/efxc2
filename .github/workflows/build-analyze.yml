@@ -1,0 +1,30 @@
+name: PVS-Studio build analysis
+on: workflow_dispatch
+jobs:
+  build-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install tools
+        run: |
+          curl -L https://cdn.pvs-studio.com/PVS-Studio_setup.exe
+          PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
+          /nocloseapplications /norestart \
+          /components= Core, Standalone
+          pvs-studio-analyzer credentials ${{ secrets.PVS_STUDIO_CREDENTIALS }}
+      - name: Build
+        run: |
+          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=On -B build .
+          cmake --build build -j
+      - name: Analyze
+        run: |
+          pvs-studio-analyzer analyze -f build/compile_commands.json -j
+      - name: Convert report
+        run: |
+          plog-converter -t sarif -o pvs-report.sarif PVS-Studio.log
+      - name: Publish report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: pvs-report.sarif
+          category: PVS-Studio
