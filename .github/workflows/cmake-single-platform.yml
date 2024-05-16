@@ -39,7 +39,7 @@ jobs:
     - name: Download PVS-Studio
       run: curl -L "https://cdn.pvs-studio.com/PVS-Studio_setup.exe" -o PVS-Studio_setup.exe
     - name: Install PVS-Studio
-      run: PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
+      run: ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
           /components= Core, Standalone
           PVS-Studio_Cmd.exe --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}.
