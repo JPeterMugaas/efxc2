@@ -2,7 +2,7 @@ name: PVS-Studio build analysis
 on: workflow_dispatch
 jobs:
   build-analyze:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -10,21 +10,21 @@ jobs:
         run: |
           curl -L https://cdn.pvs-studio.com/PVS-Studio_setup.exe \
           -o PVS-Studio_setup.exe
-          sudo chmod +x PVS-Studio_setup.exe
-          sudo ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
+          chmod +x PVS-Studio_setup.exe
+          PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
           /components= Core, Standalone
-          pvs-studio-analyzer credentials ${{ secrets.PVS_STUDIO_CREDENTIALS }}
+          PVS-Studio_Cmd.exe --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}. 
       - name: Build
         run: |
           cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=On -B build .
           cmake --build build -j
       - name: Analyze
         run: |
-          pvs-studio-analyzer analyze -f build/compile_commands.json -j
+          CompilerCommandsAnalyzer.exe analyze -f build/compile_commands.json -j
       - name: Convert report
         run: |
-          plog-converter -t sarif -o pvs-report.sarif PVS-Studio.log
+          PlogConverter.exe -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
       - name: Publish report
         uses: github/codeql-action/upload-sarif@v1
         with:
