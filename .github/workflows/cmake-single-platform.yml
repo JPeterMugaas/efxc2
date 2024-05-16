@@ -46,6 +46,7 @@ jobs:
           "C:\Program Files (x86)\PVS-Studio/PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}.
     - name: Analyze
       run: |
+          dir "C:\Program Files (x86)\PVS-Studio\"
           "C:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
       shell: cmd
     - name: Convert report
