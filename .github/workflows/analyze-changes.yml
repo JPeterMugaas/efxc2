@@ -1,0 +1,43 @@
+name: PVS-Studio analyze changes
+on:
+  push:
+    paths:
+      - '**.h'
+      - '**.c'
+      - '**.cpp'
+jobs:
+  analyze-changes:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Get list of changed source files
+        run: |
+          echo "$(git diff --name-only \
+            ${{ github.event.before }}..${{ github.event.after }})" \
+            > source-files.txt
+          cat source-files.txt
+      - name: Download PVS-Studio
+        run: curl -L https://cdn.pvs-studio.com/PVS-Studio_setup.exe
+        shell: bash
+      - name: Install tools
+        run: |
+          PVS-Studio_setup.exe /verysilent /suppressmsgboxes 
+/nocloseapplications /norestart /components= Core, 
+Standalone
+      - name: Build
+        run: |
+          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=On -B build .
+          cmake --build build -j
+      - name: Analyze
+        run: |
+          pvs-studio-analyzer analyze -f build/compile_commands.json \
+                                      -S source-files.txt -j
+      - name: Convert report
+        run: |
+          plog-converter -t sarif -o pvs-report.sarif PVS-Studio.log
+      - name: Publish report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: pvs-report.sarif
+          category: PVS-Studio
