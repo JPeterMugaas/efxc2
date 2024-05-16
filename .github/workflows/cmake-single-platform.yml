@@ -46,11 +46,11 @@ jobs:
           "C:\Program Files (x86)\PVS-Studio/PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}.
     - name: Analyze
       run: |
-          "C:\Program Files (x86)\PVS-Studio/CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
+          "C:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
       shell: cmd
     - name: Convert report
       run: |
-          "C:\Program Files (x86)\PVS-Studio/PlogConverter.exe" -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
+          "C:\Program Files (x86)\PVS-Studio\logConverter.exe" -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
       shell: cmd
     - name: Publish report
       uses: github/codeql-action/upload-sarif@v1
