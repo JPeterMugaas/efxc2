@@ -36,4 +36,23 @@ jobs:
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}}
+    - name: Download PVS-Studio
+      run: curl -L https://cdn.pvs-studio.com/PVS-Studio_setup.exe \
+          -o PVS-Studio_setup.exe
+    - name: Install PVS-Studio
+      run: PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
+          /nocloseapplications /norestart \
+          /components= Core, Standalone
+          PVS-Studio_Cmd.exe --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}.
+    - name: Analyze
+      run: |
+          CompilerCommandsAnalyzer.exe analyze -f build/compile_commands.json -j
+    - name: Convert report
+      run: |
+          PlogConverter.exe -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
+    - name: Publish report
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+          sarif_file: pvs-report.sarif
+          category: PVS-Studio
 
