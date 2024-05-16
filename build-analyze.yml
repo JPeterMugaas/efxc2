@@ -10,11 +10,11 @@ jobs:
         run: |
           curl -L https://cdn.pvs-studio.com/PVS-Studio_setup.exe \
           -o PVS-Studio_setup.exe
-          chmod +x PVS-Studio_setup.exe
           PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
           /components= Core, Standalone
-          PVS-Studio_Cmd.exe --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}. 
+          PVS-Studio_Cmd.exe --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}.
+        shell: cmd
       - name: Build
         run: |
           cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=On -B build .
