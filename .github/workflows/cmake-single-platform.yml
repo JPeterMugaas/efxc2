@@ -42,16 +42,16 @@ jobs:
     - name: Install PVS-Studio
       run: ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
-          /components=Core, Standalone
-          "PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
+          /components=Core,Standalone
+          "C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
     - name: Analyze
       run: |
           Reg Query "HKLM\SOFTWARE\WOW6432Node\ProgramVerificationSystems\PVS-Studio"
-          "CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
+          "C:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
       shell: cmd
     - name: Convert report
       run: |
-          "logConverter.exe" -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
+          "C:\Program Files (x86)\PVS-Studio\logConverter.exe" -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
       shell: cmd
     - name: Publish report
       uses: github/codeql-action/upload-sarif@v1
