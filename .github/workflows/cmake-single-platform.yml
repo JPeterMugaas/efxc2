@@ -33,10 +33,10 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: ctest -C ${{env.BUILD_TYPE}}
       - name: Run Analysis
-        run: "C:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f
+        run: "\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f
           build/compile_commands.json -j
       - name: Convert Report
-        run: "C:\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif -o
+        run: "\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif -o
           pvs-report.sarif PVS-Studio.log
       - name: Publish report
         uses: github/codeql-action/upload-sarif@v1
