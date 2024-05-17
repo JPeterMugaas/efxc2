@@ -38,26 +38,21 @@ jobs:
       run: ctest -C ${{env.BUILD_TYPE}}
 # The rest is commented out until I hear back from PVS-Studio support about an issue I'm having.
 
-#    - name: Download PVS-Studio
-#      run: curl -L "https://cdn.pvs-studio.com/PVS-Studio_setup.exe" -o PVS-Studio_setup.exe
-#      shell: cmd
-#    - name: Install PVS-Studio
-#      run: ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
-#          /nocloseapplications /norestart \
-#          /components=Core,Standalone
-#          "C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
-#    - name: Analyze
-#      run: |
-#          Reg Query "HKLM\SOFTWARE\WOW6432Node\ProgramVerificationSystems\PVS-Studio"
-#          "C:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
-#      shell: cmd
-#    - name: Convert report
-#      run: |
-#          "C:\Program Files (x86)\PVS-Studio\logConverter.exe" -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
-#      shell: cmd
-#    - name: Publish report
-#      uses: github/codeql-action/upload-sarif@v1
-#      with:
-#          sarif_file: pvs-report.sarif
-#          category: PVS-Studio
+    - name: Install PVS-Studio
+      run: choco install pvs-studio
+          "C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
+    - name: Analyze
+      run: |
+          Reg Query "HKLM\SOFTWARE\WOW6432Node\ProgramVerificationSystems\PVS-Studio"
+          "C:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -j
+      shell: cmd
+    - name: Convert report
+      run: |
+          "C:\Program Files (x86)\PVS-Studio\logConverter.exe" -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
+      shell: cmd
+    - name: Publish report
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+          sarif_file: pvs-report.sarif
+          category: PVS-Studio
 
