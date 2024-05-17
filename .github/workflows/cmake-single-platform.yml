@@ -39,7 +39,7 @@ jobs:
 # The rest is commented out until I hear back from PVS-Studio support about an issue I'm having.
 
     - name: Install PVS-Studio
-      run: choco install pvs-studio
+      run: choco install pvs-studio --package-parameters="'/Standalone'
           "C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
     - name: Analyze
       run: |
