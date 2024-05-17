@@ -1,49 +1,45 @@
-# This starter workflow is for a CMake project running on a single platform. There is a different starter workflow if you need cross-platform coverage.
-# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
 name: CMake on a single platform
-
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
-
+    branches:
+      - main
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Enable Developer Command Prompt
-      uses: ilammy/msvc-dev-cmd@v1.13.0
-    - name: Install Ninja
-      run: choco install ninja
-    - name: Install PVS-Studio
-      run: choco install pvs-studio --package-parameters="/Standalone"
-    - name: Setup PVS-Studio License
-      run: C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
-    - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=On -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
-
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-      
-    - name: Create compile_commands.json
-      run: ninja -t compdb > compile_commands.json
-
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{env.BUILD_TYPE}}
-     -name: Run Analysis
-      run: C:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe analyze -f build/compile_commands.json -j
-     -name: Convert Report
-      run: C:\Program Files (x86)\PVS-Studio\PlogConverter.exe -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
-    - name: Publish report
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: pvs-report.sarif
-        category: PVS-Studio
+      - uses: actions/checkout@v4
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.13.0
+      - name: Install Ninja
+        run: choco install ninja
+      - name: Install PVS-Studio
+        run: choco install pvs-studio --package-parameters="/Standalone"
+      - name: Setup PVS-Studio License
+        run: C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe --userName ${{
+          secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=On
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      - name: Create compile_commands.json
+        run: ninja -t compdb > compile_commands.json
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{env.BUILD_TYPE}}
+      - name: Run Analysis
+        run: C:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe analyze -f
+          build/compile_commands.json -j
+      - name: Convert Report
+        run: C:\Program Files (x86)\PVS-Studio\PlogConverter.exe -a GA:1,2 -t Sarif -o
+          pvs-report.sarif PVS-Studio.log
+      - name: Publish report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: pvs-report.sarif
+          category: PVS-Studio
