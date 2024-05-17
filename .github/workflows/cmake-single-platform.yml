@@ -24,19 +24,34 @@ jobs:
     - name: Enable Developer Command Prompt
       uses: ilammy/msvc-dev-cmd@v1.13.0
     - name: Install Ninja
-      run:  choco install ninja
+      run: choco install ninja
+    - name: Install PVS-Studio
+      run: choco install pvs-studio --package-parameters="/Standalone"
+    - name: Setup PVS-Studio License
+      run: C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=On -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
 
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      
+    - name: Create compile_commands.json
+      run: ninja -t compdb > compile_commands.json
 
     - name: Test
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}}
-
+     -name: Run Analysis
+      run: C:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe analyze -f build/compile_commands.json -j
+     -name: Convert Report
+      run: C:\Program Files (x86)\PVS-Studio\PlogConverter.exe -a GA:1,2 -t Sarif -o pvs-report.sarif PVS-Studio.log
+    - name: Publish report
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: pvs-report.sarif
+        category: PVS-Studio
