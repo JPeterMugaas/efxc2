@@ -22,7 +22,6 @@ jobs:
         
       - name: Install PVS-Studio
         run: choco install pvs-studio --package-parameters='/Standalone'
-        shell: cmd
 
       - Name: PVS-Setup License
         run: \Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe \
