@@ -18,7 +18,7 @@ jobs:
       - name: Install Ninja
         run: choco install ninja
       - name: Install PVS-Studio
-        run: choco install pvs-studio --package-parameters="/Standalone"
+        run: choco install pvs-studio --package-parameters="//Standalone"
       - name: Setup PVS-Studio License
         run: "C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" --userName ${{
           secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
