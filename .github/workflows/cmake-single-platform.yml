@@ -24,12 +24,12 @@ jobs:
         run: choco install pvs-studio --package-parameters='/Standalone'
         shell: cmd
 
-      - name: Setup PVS-Studio License
-        run: "\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" --userName ${{
-          secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
+      - Name: PVS-Setup License
+        run: \Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe \
+           --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=On
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
 
       - name: Build
@@ -43,12 +43,12 @@ jobs:
         run: ctest -C ${{env.BUILD_TYPE}}
 
       - name: Run Analysis
-        run: "\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f
+        run: \Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe analyze -f
           build/compile_commands.json -j
 
       - name: Convert Report
-        run: "\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif -o
-          pvs-report.sarif PVS-Studio.log
+        run: \Program Files (x86)\PVS-Studio\PlogConverter.exe -a GA:1,2 -t Sarif \
+          -o pvs-report.sarif PVS-Studio.log
  
       - name: Publish report
         uses: github/codeql-action/upload-sarif@v1
