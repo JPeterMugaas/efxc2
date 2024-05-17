@@ -54,9 +54,11 @@ jobs:
           -o pvs-report.sarif PVS-Studio.log
         shell: cmd
       - name: Print Working dir
+        working-directory: ${{github.workspace}}/build
         run: cd
         shell: cmd
       - name: List Files
+        working-directory: ${{github.workspace}}/build
         run: dir
         shell: cmd
       - name: Publish report
