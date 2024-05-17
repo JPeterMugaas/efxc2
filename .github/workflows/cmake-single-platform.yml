@@ -40,6 +40,7 @@ jobs:
     - name: Install PVS-Studio
       run: choco install pvs-studio --package-parameters="'/Standalone'
           "C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
+      shell: cmd
     - name: Analyze
       run: |
           Reg Query "HKLM\SOFTWARE\WOW6432Node\ProgramVerificationSystems\PVS-Studio"
