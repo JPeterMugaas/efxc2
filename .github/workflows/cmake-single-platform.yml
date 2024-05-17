@@ -21,7 +21,7 @@ jobs:
         run: choco install ninja
         
       - name: Install PVS-Studio
-        run: choco install pvs-studio '--package-parameters='/Standalone''
+        run: choco install pvs-studio --package-parameters='/Standalone'
 
       - Name: PVS-Setup License
         run: '\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe' \
