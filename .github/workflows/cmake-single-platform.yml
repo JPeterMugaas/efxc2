@@ -25,7 +25,7 @@ jobs:
         shell: cmd
         
       - name: PVS-Setup License
-        run: \"Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" \
+        run: :"c:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" \
            --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
         shell: cmd
 
@@ -44,12 +44,12 @@ jobs:
         run: ctest -C ${{env.BUILD_TYPE}}
 
       - name: Run Analysis
-        run: \"Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f
+        run: :"c:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f
           build/compile_commands.json -j
         shell: cmd
 
       - name: Convert Report
-        run: \"Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif \
+        run: :"c:\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif \
           -o pvs-report.sarif PVS-Studio.log
         shell: cmd
         
