@@ -42,7 +42,7 @@ jobs:
     - name: Install PVS-Studio
       run: ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
-          /components= Core, Standalone
+          /components=Core, Standalone
           "PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
     - name: Analyze
       run: |
