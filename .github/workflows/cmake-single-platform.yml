@@ -43,7 +43,7 @@ jobs:
       run: ./PVS-Studio_setup.exe /verysilent /suppressmsgboxes \
           /nocloseapplications /norestart \
           /components= Core, Standalone
-          "PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}.
+          "PVS-Studio_Cmd.exe" --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
     - name: Analyze
       run: |
           Reg Query "HKLM\SOFTWARE\WOW6432Node\ProgramVerificationSystems\PVS-Studio"
