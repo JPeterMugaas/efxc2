@@ -53,8 +53,7 @@ jobs:
         shell: cmd
 
       - name: Convert Report
-        run: :"c:\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif \
-          -o ${{github.workspace}}\PVS_LOG\pvs-report.sarif ${{github.workspace}}\PVS_LOG\PVS-Studio.log
+        run: :"c:\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif -o ${{github.workspace}}\PVS_LOG\pvs-report.sarif ${{github.workspace}}\PVS_LOG\PVS-Studio.log
         shell: cmd
         
       - name: Print Working dir
