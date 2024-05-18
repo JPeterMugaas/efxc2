@@ -44,10 +44,12 @@ jobs:
         working-directory: ${{github.workspace}}/testbuild
         run: ctest -C ${{env.BUILD_TYPE}}
 
+      - name: Make Analysis Directory
+        run: mkdir ${{github.workspace}}\PVS_LOG
+        shell: cmd
+        
       - name: Run Analysis
-        run: mkdir ${{github.workspace}}/PVS_LOG
-        run: :"c:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f \
-          build/compile_commands.json -o ${{github.workspace}}/PVS_LOG/PVS-Studio.log -j
+        run: :"c:\\Program Files (x86)\PVS-Studio\\CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -o ${{github.workspace}}/PVS_LOG/PVS-Studio.log -j
         shell: cmd
 
       - name: Convert Report
