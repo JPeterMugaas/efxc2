@@ -45,7 +45,7 @@ jobs:
         run: ctest -C ${{env.BUILD_TYPE}}
 
       - name: Run Analysis
-        run: :"c:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f
+        run: :"c:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f \
           build/compile_commands.json -o ${{github.workspace}}/testbuild/PVS-Studio.log -j
         shell: cmd
 
