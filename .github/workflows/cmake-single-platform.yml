@@ -47,7 +47,6 @@ jobs:
       - name: Run Analysis
         run: :"c:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f \
           build/compile_commands.json -o ${{github.workspace}}/testbuild/PVS-Studio.log -j
-        shell: cmd
 
       - name: Convert Report
         run: :"c:\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif \
