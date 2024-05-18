@@ -26,7 +26,7 @@ jobs:
         
       - name: PVS-Setup License
         run: :"c:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe" \
-           --userName ${{ secrets.USER_NAME }} --licenseKey ${{ secrets.LICSESE_KEY }}
+           --userName ${{ secrets.PVS_STUDIO_USER_NAME }} --licenseKey ${{ secrets.PVS_STUDIO_LICSESE_KEY }}
         shell: cmd
 
       - name: Configure CMake
