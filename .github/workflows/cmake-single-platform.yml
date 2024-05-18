@@ -48,21 +48,19 @@ jobs:
         shell: cmd
         
       - name: Run Analysis
-        run: :"c:\\Program Files (x86)\PVS-Studio\\CompilerCommandsAnalyzer.exe" analyze -f build/compile_commands.json -o ${{github.workspace}}\PVS_LOG\PVS-Studio.log -j
+        run: :"c:\\Program Files (x86)\PVS-Studio\\CompilerCommandsAnalyzer.exe" analyze -f testbuild/compile_commands.json -o ${{github.workspace}}\PVS_LOG\PVS-Studio.log -j
         shell: cmd
 
       - name: Convert Report
         run: :"c:\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif -o ${{github.workspace}}\PVS_LOG\pvs-report.sarif ${{github.workspace}}\PVS_LOG\PVS-Studio.log
         shell: cmd
         
-      - name: Print Working dir
-        working-directory: ${{github.workspace}}/PVS_LOG
-        run: cd
-        shell: cmd
-        
       - name: List Files
         working-directory: ${{github.workspace}}/PVS_LOG
-        run: dir
+        steps: 
+          - run: dir
+          - run: dir ${{github.workspace}}
+          - run: dir 
         shell: cmd
         
       - name: Publish report
