@@ -39,6 +39,10 @@ jobs:
         working-directory: ${{github.workspace}}\testbuild
         run: ninja -t compdb > compile_commands.json
         
+      - name: Dir List
+        run: dir
+        working-directory: ${{github.workspace}}\testbuild
+        
       - name: See if Report Exists
         run: dir ${{github.workspace}}\testbuild\pvs-report.sarif
         
