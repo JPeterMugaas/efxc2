@@ -30,39 +30,39 @@ jobs:
         shell: cmd
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
+        run: cmake -B ${{github.workspace}}/testbuild -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja .
 
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        run: cmake --build ${{github.workspace}}/testbuild --config ${{env.BUILD_TYPE}}
  
       - name: Create compile_commands.json
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}/testbuild
         run: ninja -t compdb > compile_commands.json
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}/testbuild
         run: ctest -C ${{env.BUILD_TYPE}}
 
       - name: Run Analysis
         run: :"c:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f
-          build/compile_commands.json -o ${{github.workspace}}/build/PVS-Studio.log -j
+          build/compile_commands.json -o ${{github.workspace}}/testbuild/PVS-Studio.log -j
         shell: cmd
 
       - name: Convert Report
         run: :"c:\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif \
-          -o ${{github.workspace}}/build/pvs-report.sarif ${{github.workspace}}/build/PVS-Studio.log
+          -o ${{github.workspace}}/testbuild/pvs-report.sarif ${{github.workspace}}/testbuild/PVS-Studio.log
         shell: cmd
       - name: Print Working dir
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}/testbuild
         run: cd
         shell: cmd
       - name: List Files
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}/testbuild
         run: dir
         shell: cmd
       - name: Publish report
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{github.workspace}}/build/pvs-report.sarif
+          sarif_file: ${{github.workspace}}/testbuild/pvs-report.sarif
           category: PVS-Studio
