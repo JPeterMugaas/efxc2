@@ -39,7 +39,7 @@ jobs:
         working-directory: ${{github.workspace}}/testbuild
         run: ninja -t compdb > compile_commands.json
         
-        name: See if Report Exists
+      - name: See if Report Exists
         run: ${{github.workspace}}/testbuild/pvs-report.sarif
         
       - name: Publish report
