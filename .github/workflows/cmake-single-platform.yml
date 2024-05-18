@@ -28,11 +28,6 @@ jobs:
         run: |
           & 'C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe' credentials --userName ${{ secrets.PVS_STUDIO_USER_NAME }} --licenseKey ${{ secrets.PVS_STUDIO_LICSESE_KEY }}
         shell: pwsh
-
-      - name: PVS-Setup License Info
-        run: |
-          & 'C:\Program Files (x86)\PVS-Studio\PVS-Studio_Cmd.exe' credentials --licInfo
-        shell: pwsh
         
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/testbuild -DCMAKE_EXPORT_COMPILE_COMMANDS=On -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DEFXC2_USE_PVS_STUDIO=ON -DEFXC2_USE_ALL_RULES=ON -G Ninja .
@@ -43,6 +38,10 @@ jobs:
       - name: Create compile_commands.json
         working-directory: ${{github.workspace}}/testbuild
         run: ninja -t compdb > compile_commands.json
+        
+      - name: List directory
+        working-directory: ${{github.workspace}}/testbuild
+        run: dir
         
       - name: Publish report
         uses: github/codeql-action/upload-sarif@v3
