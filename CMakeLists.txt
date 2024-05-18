@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.10.224)
+set(EFXC2_VERSION 0.0.10.225)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -102,18 +102,16 @@ if(EFXC2_USE_PVS_STUDIO)
   include(${CMAKE_SOURCE_DIR}/build/PVS-Studio.cmake) 
   if (EFXC2_USE_ALL_RULES)
      pvs_studio_add_target(TARGET fxc.analyze ALL
-                      OUTPUT FORMAT html
+                      OUTPUT FORMAT sarif
                       ANALYZE fxc
                       MODE 64;GA:1,2;CS;OWASP;AUTOSAR;MISRA 
-                      LOG pvs-studio.html
-                      CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/Filters.pvsconfig)
+                      LOG pvs-studio.sarif)
   else()
     pvs_studio_add_target(TARGET fxc.analyze ALL
-                      OUTPUT FORMAT html      
+                      OUTPUT FORMAT sarif      
                       ANALYZE fxc
                       MODE 64;GA:1,2;CS
-                      LOG pvs-studio.html
-                      CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/Filters.pvsconfig)
+                      LOG pvs-studio.sarif)
   endif()
 endif()
 

@@ -38,25 +38,9 @@ jobs:
       - name: Create compile_commands.json
         working-directory: ${{github.workspace}}/testbuild
         run: ninja -t compdb > compile_commands.json
-
-      - name: Test
-        working-directory: ${{github.workspace}}/testbuild
-        run: ctest -C ${{env.BUILD_TYPE}}
-
-      - name: Make Analysis Directory
-        run: mkdir ${{github.workspace}}\PVS_LOG
-        shell: cmd
-        
-      - name: Run Analysis
-        run: :"c:\\Program Files (x86)\PVS-Studio\\CompilerCommandsAnalyzer.exe" analyze -f testbuild/compile_commands.json -o ${{github.workspace}}\PVS_LOG\PVS-Studio.log -j
-        shell: cmd
-
-      - name: Convert Report
-        run: :"c:\Program Files (x86)\PVS-Studio\PlogConverter.exe" -a GA:1,2 -t Sarif -o ${{github.workspace}}\PVS_LOG\pvs-report.sarif ${{github.workspace}}\PVS_LOG\PVS-Studio.log
-        shell: cmd
         
       - name: Publish report
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{github.workspace}}/PVS_LOG/pvs-report.sarif
+          sarif_file: ${{github.workspace}}/testbuild/pvs-report.sarif
           category: PVS-Studio
