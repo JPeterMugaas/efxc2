@@ -46,7 +46,7 @@ jobs:
 
       - name: Run Analysis
         run: :"c:\Program Files (x86)\PVS-Studio\CompilerCommandsAnalyzer.exe" analyze -f
-          build/compile_commands.json -j
+          build/compile_commands.json -o ${{github.workspace}}/build/PVS-Studio.log -j
         shell: cmd
 
       - name: Convert Report
