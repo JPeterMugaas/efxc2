@@ -40,7 +40,7 @@ jobs:
         run: ninja -t compdb > compile_commands.json
         
       - name: See if Report Exists
-        run: ${{github.workspace}}\testbuild\pvs-report.sarif
+        run: dir ${{github.workspace}}\testbuild\pvs-report.sarif
         
       - name: Publish report
         uses: github/codeql-action/upload-sarif@v3
