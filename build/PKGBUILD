@@ -56,7 +56,6 @@ prepare() {
   cp ../../../*.txt .
   cp ../../../*.ico .
   cp ../../../*.manifest .
-  cp ../../../Filters.pvsconfig .
   mkdir -p build
   cd build
   cp ../../../../build/*.in .
@@ -121,7 +120,7 @@ package() {
   zip -t $(date '+%m%d%Y') "${_realname}-${CARCH}-${_OS}-${pkgver}.zip" *.exe *.txt *.md
   cp *.zip ../../../
   cd ..
-  if [ -f pvs-studio.html ]; then
-    cp pvs-studio.html ../../pvs-studio-${MSYSTEM}.html
+  if [ -f pvs-studio.sarif ]; then
+    cp pvs-studio.sarif ../../pvs-studio-${MSYSTEM}.sarif
   fi
  }
