@@ -66,9 +66,8 @@ build() {
       -GNinja \
       -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       -DEFXC2_BUILD_STATIC=OFF \
-      -DEFXC2_USE_PVS_STUDIO=ON \
+      -DEFXC2_USE_PVS_STUDIO=OFF \
       -DEFXC2_USE_ALL_RULES=ON \
-      -DBIN="/c/Program\ Files\ \(x86\)/PVS-Studio/" \
       ${extra_config[@]} \
       ../${_realname}
 
