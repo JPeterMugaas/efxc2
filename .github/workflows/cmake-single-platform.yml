@@ -3,18 +3,23 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-env:
-  BUILD_TYPE: Release
-jobs:
-  build:
     paths:
       - '**.h'
       - '**.c'
       - '**.cpp'
-      - 'CMakeLists.txt'  
+      - 'CMakeLists.txt'    
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.h'
+      - '**.c'
+      - '**.cpp'
+      - 'CMakeLists.txt'       
+env:
+  BUILD_TYPE: Release
+jobs:
+  build: 
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
