@@ -22,7 +22,7 @@ This program aims to be compatible with the syntax used by Microsoft's
 
 [https://learn.microsoft.com/en-us/windows/win32/direct3dtools/fxc](https://learn.microsoft.com/en-us/windows/win32/direct3dtools/fxc)
 
-## Installation
+## Building and Installing This Program
 
 ### Requirements
 

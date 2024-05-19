@@ -568,7 +568,7 @@ bool  efxc2Cmds::parseCompilerOnlyCall(
     efxc2Utils::M_STRING argument;
     size_t arg_idx = 0;
     if (terminate_routine == false) {
-        argument = args[*index];
+        argument = args[*index];  //-V1004
         if (argument[0] == '-' || argument[0] == '/') {
             arg_idx++;
             if (argument[arg_idx] == '-') {
@@ -606,7 +606,7 @@ bool efxc2Cmds::parseCompilerFileCall(
     efxc2Utils::M_STRING_VIEW argument;
     size_t arg_idx = 0;
     if (terminate_routine == false) {
-        argument = args[*index];
+        argument = args[*index];  //-V1004
         if (argument[0] == '-' || argument[0] == '/') {
             arg_idx++;
             if (argument[arg_idx] == '-') {
@@ -643,13 +643,14 @@ bool efxc2Cmds::parseIgnoredOptions(
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _Inout_	const size_t* index,
     const efxc2CompilerParams::CompilerParams& params) {
+    /*supress warning /V1004 because we check the pointer for nullptr before using *index.*/
     bool terminate_routine = false;
     bool result = false;
     if ((index == nullptr) || (*index >= args.size())) {
         terminate_routine = true;
     }
     if (terminate_routine == false) {
-        const efxc2Utils::M_STRING_VIEW argument = args[*index];
+        const efxc2Utils::M_STRING_VIEW argument = args[*index]; //-V1004
         size_t arg_idx = 0;
         if (argument[0] == '-' || argument[0] == '/') {
             arg_idx++;
@@ -674,13 +675,14 @@ bool efxc2Cmds::parseIgnoredOptions(
 bool efxc2Cmds::parseNotSupportedOptions(
     _In_ const efxc2Utils::M_CMD_PARAMS& args,
     _In_ const size_t* index) {
+    /*supress warning /V1004 because we check the pointer for nullptr before using *index.*/
     bool terminate_routine = false;
     bool result = false;
     if (!index || *index >= args.size()) {
         terminate_routine = true;
     }
     if (terminate_routine == false) {
-        const efxc2Utils::M_STRING_VIEW argument = args[*index];
+        const efxc2Utils::M_STRING_VIEW argument = args[*index]; //-V1004
         size_t arg_idx = 0;
         if (argument[0] == '-' || argument[0] == '/') {
             arg_idx++;

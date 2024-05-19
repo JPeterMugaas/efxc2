@@ -15,7 +15,7 @@
 _realname=efxc2
 pkgbase=${_realname}
 pkgname=("${_realname}")
-pkgver=0.0.10.215
+pkgver=0.0.10.225
 pkgrel=1
 pkgdesc="Enhanced version of fxc2 (mingw-w64)"
 arch=('any')
@@ -61,11 +61,15 @@ build() {
     extra_config+=("-DCMAKE_BUILD_TYPE=Debug")
   fi
 
+  set PATH %PATH%:"/c/Program\ Files\ \(x86\)/PVS-Studio/" 
   cmake.exe \
       -GNinja \
       -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       -DEFXC2_BUILD_STATIC=OFF \
-      "${extra_config[@]}" \
+      -DEFXC2_USE_PVS_STUDIO=ON \
+      -DEFXC2_USE_ALL_RULES=ON \
+      -DBIN="/c/Program\ Files\ \(x86\)/PVS-Studio/" \
+      ${extra_config[@]} \
       ../${_realname}
 
   cmake.exe --build .

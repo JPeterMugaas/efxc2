@@ -188,7 +188,8 @@ extern "C" {
 #define D3D_DISASM_PRINT_HEX_LITERALS           0x00000080
 #endif
 
-#ifndef _WIN32
+/* Both MSYS2 and WIN32 define this structure. */
+#if defined(__CYGWIN) && !defined(__MSYS__)
 /* for some reason, this is not declared in MSYS's Win32 headers*/
 
 // {59A6CD0E-E10D-4C1F-88C0-63ABA1DAF30E}
