@@ -14,12 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1.13.0
-        
-      - name: Install Ninja
-        run: choco install ninja
-        
       - name: Install PVS-Studio
         run: choco install pvs-studio --package-parameters="'/standalone'"
         shell: cmd
@@ -30,21 +24,10 @@ jobs:
         shell: pwsh
         
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/testbuild -DCMAKE_EXPORT_COMPILE_COMMANDS=On -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DEFXC2_USE_PVS_STUDIO=ON -DEFXC2_USE_ALL_RULES=ON -G Ninja .
+        run: cmake -B ${{github.workspace}}/testbuild -DCMAKE_EXPORT_COMPILE_COMMANDS=On -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DEFXC2_USE_PVS_STUDIO=ON -DEFXC2_USE_ALL_RULES=ON
 
       - name: Build
         run: cmake --build ${{github.workspace}}/testbuild --config ${{env.BUILD_TYPE}}
- 
-      - name: Create compile_commands.json
-        working-directory: ${{github.workspace}}\testbuild
-        run: ninja -t compdb > compile_commands.json
-        
-      - name: Dir List
-        run: dir
-        working-directory: ${{github.workspace}}\testbuild
-        
-      - name: See if Report Exists
-        run: dir ${{github.workspace}}\testbuild\pvs-studio.sarif
         
       - name: Publish report
         uses: github/codeql-action/upload-sarif@v3
