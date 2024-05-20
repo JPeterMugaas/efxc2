@@ -23,6 +23,17 @@ int wmain(int argc, wchar_t* argv[]) {
 #else  /* _WIN32 */
 int main(int argc, char* argv[]) {
 #endif /* _WIN32 */
+    // ====================================================================================
+    // seetup console
+#ifdef _WIN32
+    HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    DWORD orig_console_mode = 0;
+    (void)GetConsoleMode(console_handle, &orig_console_mode);
+    DWORD new_console_mode = 0;
+    new_console_mode = orig_console_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    (void)SetConsoleMode(console_handle, new_console_mode);
+#endif
     int result = 0;
     try {
         // ====================================================================================
@@ -46,7 +57,8 @@ int main(int argc, char* argv[]) {
             if ((index >= args.size()) || (immediate_exit > 0)) {
                 break;
             }
-            else if (efxc2Utils::parseOpt(efxc2Cmds::M_QUESTION_MARK, args, &index, nullptr)) {
+            else if ((efxc2Utils::parseOpt(efxc2Cmds::M_QUESTION_MARK, args, &index, nullptr)) ||
+                (efxc2Utils::parseOpt(efxc2Cmds::M_HELP, args, &index, nullptr))) {
                 efxc2Utils::print_help_screen();
                 immediate_exit = 1;
                 continue;
@@ -71,11 +83,6 @@ int main(int argc, char* argv[]) {
                 continue;
             }
             else if (efxc2Cmds::parseCompilerFileCall(args, &index, params, files)) {
-                continue;
-            }
-            else if (efxc2Utils::parseOpt(efxc2Cmds::M_HELP, args, &index, nullptr)) {
-                efxc2Utils::print_help_screen();
-                immediate_exit = 1;
                 continue;
             }
             else if (efxc2Utils::parseOpt(efxc2Cmds::M_I, args, &index, &temp)) {
@@ -115,5 +122,8 @@ int main(int argc, char* argv[]) {
         /*We already reported the error to the user. */
         result = 1;
     }
+#ifdef _WIN32
+    (void)SetConsoleMode(console_handle, orig_console_mode);
+#endif
     return result;
 }
