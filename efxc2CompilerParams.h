@@ -68,7 +68,7 @@ namespace efxc2CompilerParams {
 		UINT               secondary_flags = 0;
 		efxc2Utils::M_COMPILER_DEFINES defines;
 		std::string        model = "";
-		std::string        entryPoint = "";
+		std::string        entryPoint = "main";
 		std::string        inputFile = "";
 		std::string        variableName = "";
 		efxc2Utils::M_BUFFER           SourceCode = nullptr;
