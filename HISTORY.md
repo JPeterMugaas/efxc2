@@ -5,6 +5,38 @@ https://github.com/JPeterMugaas/efxc2
 Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2/releases)
 
 ## Release History
+### May 21, 2024
+* Add instructions for installing efxc2 in Cygwin.
+* EFXC2_BUILD_STATIC now works for MSYS2 and Cygwin.
+* Clarify program build requirements.
+* added version requirement for Intel C++
+* PKGBUILD used for Internal testing with mingw64 and clang64, run PVS-Studio to report on the code, run the cmake tests.
+and Make a precompiled binary build for distribution.
+* added version requirement for Intel C++
+* EFXC2_BUILD_STATIC now works for MSYS2 and Cygwin.
+* Add instructions for installing efxc2 in Cygwin.
+* efxc2Files.cpp - typecast the result of open to void. Thanks to PVS-Studio.
+* efxc2Utils.cpp disable warnings generated when using PVS-Studio with a 32 bit compiler.
+* Fix issue with unused variable and with a generic exception being raised. Thanks to SonarCloud.
+* Fix various warnings from PVS-Studio including missing returns.
+* Start on making functions that have only one "return" at the end. Add PVS-Studio warning suppression for a constant defined without an integer suffix in the Win32 API.
+* Fix various warnings from PVS-Studio including missing returns.
+* got rid of all "exit" calls and replaced those with exception handling.  Thanks to PVS-Studio for pointing out the issue with "exit".
+* The UTF8 conversion routines will now print what errno reports.
+* add CMakeSettings.json.
+* ID3D11Linker is NOW already defined in MSYS2.
+* add CMakeSettings.json Visual Studio file to repository.
+* Add more settings to CMakeSettings.json.
+* Use "main" as default entry point.
+* Put console in ENABLE_VIRTUAL_TERMINAL_INPUT mode. 
+* Remove a duplicate code pointed out by SonarLint.
+* print most error info in a pink color.
+* Convert API definitions to "using" from "typedef".
+* Suppress PVS-Studio warning "V802" since we have no intention of serializing the structure to disk.
+* Move installation instructions to their own file to shorten the READM.md.
+* Loading .DLL failure will now raise an exception.
+* Add automation to the build process.
+
 ### May 10, 2024
 * Add debug option for very verbose output and make sure that it is honored throughout the source-code.  New default:  Without debug being specified, only minimal output is given.  This is in contrast to /nologo where no output is given.
 * Fix for handling -debug parameter. Include tests now output an object (-Fo).
