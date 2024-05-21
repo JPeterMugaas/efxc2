@@ -42,6 +42,9 @@
 #include <string_view>
 #include <vector>
 #include <sal.h>
+#ifndef _WIN32
+#include <unistd.h>
+#endif
 #ifdef _WIN32
 #include <wchar.h>
 #endif
@@ -51,7 +54,7 @@ extern "C" {
 #define D3D_COMPILE_STANDARD_FILE_INCLUDE ((ID3DInclude*)(UINT_PTR)1)
 #endif
 
-    // D3DCOMPILE flags1 parameters:
+	// D3DCOMPILE flags1 parameters:
 #ifndef D3DCOMPILE_DEBUG
 #define D3DCOMPILE_DEBUG                             (1 << 0)
 #endif
@@ -193,111 +196,110 @@ extern "C" {
 /* for some reason, this is not declared in MSYS's Win32 headers*/
 
 // {59A6CD0E-E10D-4C1F-88C0-63ABA1DAF30E}
-    interface DECLSPEC_UUID("59A6CD0E-E10D-4C1F-88C0-63ABA1DAF30E") ID3D11Linker;
-    DEFINE_GUID(IID_ID3D11Linker,
-        0x59a6cd0e, 0xe10d, 0x4c1f, 0x88, 0xc0, 0x63, 0xab, 0xa1, 0xda, 0xf3, 0xe);
+	interface DECLSPEC_UUID("59A6CD0E-E10D-4C1F-88C0-63ABA1DAF30E") ID3D11Linker;
+	DEFINE_GUID(IID_ID3D11Linker,
+		0x59a6cd0e, 0xe10d, 0x4c1f, 0x88, 0xc0, 0x63, 0xab, 0xa1, 0xda, 0xf3, 0xe);
 
 #define INTERFACE ID3D11Linker
 
-    DECLARE_INTERFACE_(ID3D11Linker, IUnknown)
-    {
-        STDMETHOD(QueryInterface)(THIS_ _In_ REFIID iid, _Out_ LPVOID * ppv) PURE;
-        STDMETHOD_(ULONG, AddRef)(THIS) PURE;
-        STDMETHOD_(ULONG, Release)(THIS) PURE;
+	DECLARE_INTERFACE_(ID3D11Linker, IUnknown)
+	{
+		STDMETHOD(QueryInterface)(THIS_ _In_ REFIID iid, _Out_ LPVOID * ppv) PURE;
+		STDMETHOD_(ULONG, AddRef)(THIS) PURE;
+		STDMETHOD_(ULONG, Release)(THIS) PURE;
 
-        // Link the shader and produce a shader blob suitable to D3D runtime.
-        STDMETHOD(Link)(THIS_ _In_ interface ID3D11ModuleInstance* pEntry,
-            _In_ LPCSTR pEntryName,
-            _In_ LPCSTR pTargetName,
-            _In_ UINT uFlags,
-            _COM_Outptr_ ID3DBlob * *ppShaderBlob,
-            _Always_(_Outptr_opt_result_maybenull_) ID3DBlob * *ppErrorBuffer) PURE;
+		// Link the shader and produce a shader blob suitable to D3D runtime.
+		STDMETHOD(Link)(THIS_ _In_ interface ID3D11ModuleInstance* pEntry,
+			_In_ LPCSTR pEntryName,
+			_In_ LPCSTR pTargetName,
+			_In_ UINT uFlags,
+			_COM_Outptr_ ID3DBlob * *ppShaderBlob,
+			_Always_(_Outptr_opt_result_maybenull_) ID3DBlob * *ppErrorBuffer) PURE;
 
-        // Add an instance of a library module to be used for linking.
-        STDMETHOD(UseLibrary)(THIS_ _In_ interface ID3D11ModuleInstance* pLibraryMI) PURE;
+		// Add an instance of a library module to be used for linking.
+		STDMETHOD(UseLibrary)(THIS_ _In_ interface ID3D11ModuleInstance* pLibraryMI) PURE;
 
-        // Add a clip plane with the plane coefficients taken from a cbuffer entry for 10L9 shaders.
-        STDMETHOD(AddClipPlaneFromCBuffer)(THIS_ _In_ UINT uCBufferSlot, _In_ UINT uCBufferEntry) PURE;
-    };
+		// Add a clip plane with the plane coefficients taken from a cbuffer entry for 10L9 shaders.
+		STDMETHOD(AddClipPlaneFromCBuffer)(THIS_ _In_ UINT uCBufferSlot, _In_ UINT uCBufferEntry) PURE;
+	};
 
 #endif
 
-    typedef HRESULT(__stdcall* pD3DCompile2g)(
-        _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
-        _In_ SIZE_T SrcDataSize,
-        _In_opt_ LPCSTR pSourceName,
-        _In_reads_opt_(_Inexpressible_(pDefines->Name != NULL)) CONST D3D_SHADER_MACRO* pDefines,
-        _In_opt_ ID3DInclude* pInclude,
-        _In_ LPCSTR pEntrypoint,
-        _In_ LPCSTR pTarget,
-        _In_ UINT Flags1,
-        _In_ UINT Flags2,
-        _In_ UINT SecondaryDataFlags,
-        _In_reads_bytes_opt_(SecondaryDataSize) LPCVOID pSecondaryData,
-        _In_ SIZE_T SecondaryDataSize,
-        _Out_ ID3DBlob** ppCode,
-        _Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorMsgs);
+	typedef HRESULT(__stdcall* pD3DCompile2g)(
+		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+		_In_ SIZE_T SrcDataSize,
+		_In_opt_ LPCSTR pSourceName,
+		_In_reads_opt_(_Inexpressible_(pDefines->Name != NULL)) CONST D3D_SHADER_MACRO* pDefines,
+		_In_opt_ ID3DInclude* pInclude,
+		_In_ LPCSTR pEntrypoint,
+		_In_ LPCSTR pTarget,
+		_In_ UINT Flags1,
+		_In_ UINT Flags2,
+		_In_ UINT SecondaryDataFlags,
+		_In_reads_bytes_opt_(SecondaryDataSize) LPCVOID pSecondaryData,
+		_In_ SIZE_T SecondaryDataSize,
+		_Out_ ID3DBlob** ppCode,
+		_Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorMsgs);
 
-    typedef HRESULT(__stdcall* pD3DStripShaderg) (
-        _In_reads_bytes_(BytecodeLength) LPCVOID pShaderBytecode,
-        _In_ SIZE_T BytecodeLength,
-        _In_ UINT uStripFlags,
-        _Out_ ID3DBlob** ppStrippedBlob);
+	typedef HRESULT(__stdcall* pD3DStripShaderg) (
+		_In_reads_bytes_(BytecodeLength) LPCVOID pShaderBytecode,
+		_In_ SIZE_T BytecodeLength,
+		_In_ UINT uStripFlags,
+		_Out_ ID3DBlob** ppStrippedBlob);
 
-    typedef HRESULT(__stdcall* pD3DGetBlobPartg) (
-        _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
-        _In_ SIZE_T SrcDataSize,
-        _In_ D3D_BLOB_PART Part,
-        _In_ UINT Flags,
-        _Out_ ID3DBlob** ppPart);
+	typedef HRESULT(__stdcall* pD3DGetBlobPartg) (
+		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+		_In_ SIZE_T SrcDataSize,
+		_In_ D3D_BLOB_PART Part,
+		_In_ UINT Flags,
+		_Out_ ID3DBlob** ppPart);
 
-    typedef HRESULT(__stdcall* pD3DSetBlobPartg) (
-        _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
-        _In_ SIZE_T SrcDataSize,
-        _In_ D3D_BLOB_PART Part,
-        _In_ UINT Flags,
-        _In_reads_bytes_(PartSize) LPCVOID pPart,
-        _In_ SIZE_T PartSize,
-        _Out_ ID3DBlob** ppNewShader);
+	typedef HRESULT(__stdcall* pD3DSetBlobPartg) (
+		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+		_In_ SIZE_T SrcDataSize,
+		_In_ D3D_BLOB_PART Part,
+		_In_ UINT Flags,
+		_In_reads_bytes_(PartSize) LPCVOID pPart,
+		_In_ SIZE_T PartSize,
+		_Out_ ID3DBlob** ppNewShader);
 
-    typedef HRESULT(__stdcall* pD3DDisassembleg) (
-        _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
-        _In_ SIZE_T SrcDataSize,
-        _In_ UINT Flags,
-        _In_opt_ LPCSTR szComments,
-        _Out_ ID3DBlob** ppDisassembly);
+	typedef HRESULT(__stdcall* pD3DDisassembleg) (
+		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+		_In_ SIZE_T SrcDataSize,
+		_In_ UINT Flags,
+		_In_opt_ LPCSTR szComments,
+		_Out_ ID3DBlob** ppDisassembly);
 
-    typedef HRESULT(__stdcall* gD3DLoadModulep) (
-        _In_ LPCVOID pSrcData,
-        _In_ SIZE_T cbSrcDataSize,
-        _Out_ interface ID3D11Module** ppModule
-        );
+	typedef HRESULT(__stdcall* gD3DLoadModulep) (
+		_In_ LPCVOID pSrcData,
+		_In_ SIZE_T cbSrcDataSize,
+		_Out_ interface ID3D11Module** ppModule
+		);
 
 #ifdef _MSC_VER
-    typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
-        __out interface ID3D11Linker** ppLinker
-        );
-    typedef HRESULT(__stdcall* gD3DCreateFunctionLinkingGraphp) (
-        _In_ UINT uFlags,
-        _Out_ interface ID3D11FunctionLinkingGraph** ppFunctionLinkingGraph
-        );
+	typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
+		__out interface ID3D11Linker** ppLinker
+		);
+	typedef HRESULT(__stdcall* gD3DCreateFunctionLinkingGraphp) (
+		_In_ UINT uFlags,
+		_Out_ interface ID3D11FunctionLinkingGraph** ppFunctionLinkingGraph
+		);
 #else
-    typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
-        _Out_ interface ID3D11Linker** ppLinker
-        );
-    typedef HRESULT(__stdcall* gD3DCreateFunctionLinkingGraphp) (
-        _In_ UINT uFlags,
-        _Out_ interface ID3D11FunctionLinkingGraph** ppFunctionLinkingGraph
-        );
+	typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
+		_Out_ interface ID3D11Linker** ppLinker
+		);
+	typedef HRESULT(__stdcall* gD3DCreateFunctionLinkingGraphp) (
+		_In_ UINT uFlags,
+		_Out_ interface ID3D11FunctionLinkingGraph** ppFunctionLinkingGraph
+		);
 #endif
 
-    typedef HRESULT(__stdcall* gD3DPreprocessp) (
-        _In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
-        _In_ SIZE_T SrcDataSize,
-        _In_opt_ LPCSTR pSourceName,
-        _In_opt_ CONST D3D_SHADER_MACRO* pDefines,
-        _In_opt_ ID3DInclude* pInclude,
-        _Out_ ID3DBlob** ppCodeText,
-        _Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorMsgs);
-
+	typedef HRESULT(__stdcall* gD3DPreprocessp) (
+		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
+		_In_ SIZE_T SrcDataSize,
+		_In_opt_ LPCSTR pSourceName,
+		_In_opt_ CONST D3D_SHADER_MACRO* pDefines,
+		_In_opt_ ID3DInclude* pInclude,
+		_Out_ ID3DBlob** ppCodeText,
+		_Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorMsgs);
 }

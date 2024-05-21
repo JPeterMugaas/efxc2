@@ -23,8 +23,8 @@ namespace efxc2Exception {
 	class FileWritedError : public ProgramExceptionBase {};
 	class InvalidPOption : public ProgramExceptionBase {};
 	class TooManyParameters : public ProgramExceptionBase {	};
-	class MissingArgument : public ProgramExceptionBase{};
+	class MissingArgument : public ProgramExceptionBase {};
 	class NoInputFile : public ProgramExceptionBase {};
-	class CompileError : public ProgramExceptionBase{};
+	class CompileError : public ProgramExceptionBase {};
 	class PreprocessError : public ProgramExceptionBase {};
 }

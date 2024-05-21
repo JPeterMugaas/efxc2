@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.10.228)
+set(EFXC2_VERSION 0.0.10.229)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -40,6 +40,7 @@ set(EXEC_SOURCES efxc2.cpp
                  efxc2CompilerAPIContainer.cpp
                  efxc2CompilerIncludes.h
                  efxc2CompilerIncludes.cpp
+                 efxc2Console.h
                  efxc2CompilerParams.h
                  efxc2CompilerParams.cpp
                  efxc2CompilerTasks.h

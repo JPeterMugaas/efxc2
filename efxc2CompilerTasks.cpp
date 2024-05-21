@@ -16,35 +16,38 @@
 #ifdef _WIN32
 void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2Files::Files& files, const efxc2CompilerParams::CompilerParams& params) {
 #else
-void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler& compiler, efxc2Files::Files& files, const efxc2CompilerParams::CompilerParams& params) {
+void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler & compiler, efxc2Files::Files & files, const efxc2CompilerParams::CompilerParams & params) {
 #endif
-    if ((params.get_commands() & efxc2Utils::CMD_PREPROCESS_FILE) == efxc2Utils::CMD_PREPROCESS_FILE) {
-        if (params.get_commands() != efxc2Utils::CMD_PREPROCESS_FILE) {
-            std::cerr << "The /P option may only be used with the /D and /I parameters.";
-            throw efxc2Exception::InvalidPOption();
-        }
-        compiler.Preprocess();
-        files.WritePreprocessFile(compiler, params);
-    }
-    else {
-        compiler.Compile();
-        if (params.get_PrivateData() != nullptr) {
-            compiler.EmbedPrivateData();
-        }
-        compiler.StripShader();
-        if ((params.get_commands() & efxc2Utils::CMD_WRITE_HEADER) == efxc2Utils::CMD_WRITE_HEADER) {
-            files.WriteIncludeFile(compiler, params);
-        }
-        if ((params.get_commands() & efxc2Utils::CMD_WRITE_PDB_FILE) == efxc2Utils::CMD_WRITE_PDB_FILE) {
-            files.WritePDBFile(compiler, params);
-        }
-        if ((params.get_commands() & efxc2Utils::CMD_WRITE_OBJECT) == efxc2Utils::CMD_WRITE_OBJECT) {
-            files.WriteObjectFile(compiler, params);
-        }
-        if ((params.get_commands() & efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) == efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) {
-            compiler.Disassemble();
-            files.WriteDisassembly(compiler, params);
-        }
-    }
-    return;
+	if ((params.get_commands() & efxc2Utils::CMD_PREPROCESS_FILE) == efxc2Utils::CMD_PREPROCESS_FILE) {
+		if (params.get_commands() != efxc2Utils::CMD_PREPROCESS_FILE) {
+			efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+			console.std_err_pink();
+			std::cerr << "The /P option may only be used with the /D and /I parameters.";
+			console.std_err_reset();
+			throw efxc2Exception::InvalidPOption();
+		}
+		compiler.Preprocess();
+		files.WritePreprocessFile(compiler, params);
+	}
+	else {
+		compiler.Compile();
+		if (params.get_PrivateData() != nullptr) {
+			compiler.EmbedPrivateData();
+		}
+		compiler.StripShader();
+		if ((params.get_commands() & efxc2Utils::CMD_WRITE_HEADER) == efxc2Utils::CMD_WRITE_HEADER) {
+			files.WriteIncludeFile(compiler, params);
+		}
+		if ((params.get_commands() & efxc2Utils::CMD_WRITE_PDB_FILE) == efxc2Utils::CMD_WRITE_PDB_FILE) {
+			files.WritePDBFile(compiler, params);
+		}
+		if ((params.get_commands() & efxc2Utils::CMD_WRITE_OBJECT) == efxc2Utils::CMD_WRITE_OBJECT) {
+			files.WriteObjectFile(compiler, params);
+		}
+		if ((params.get_commands() & efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) == efxc2Utils::CMD_WRITE_ASSEMBLY_CODE) {
+			compiler.Disassemble();
+			files.WriteDisassembly(compiler, params);
+		}
+	}
+	return;
 }
