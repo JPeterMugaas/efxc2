@@ -20,24 +20,23 @@ namespace efxc2Console {
         "[1;00";
     class Console {
     public:
-        Console() {
+        void Initialize() {
 #ifdef _WIN32
             std_output = GetStdHandle(STD_OUTPUT_HANDLE);
             std_error = GetStdHandle(STD_ERROR_HANDLE);
             (void)GetConsoleMode(std_output, &stdout_orig_console_mode);
             (void)GetConsoleMode(std_error, &stderr_orig_console_mode);
-#endif
-#ifdef _WIN32
             (void)SetConsoleMode(std_output, stdout_orig_console_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
             (void)SetConsoleMode(std_error, stderr_orig_console_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
-        };
-        virtual ~Console() {
+        }
+        void Shutdown() {
 #ifdef _WIN32
             (void)SetConsoleMode(std_output, stdout_orig_console_mode);
             (void)SetConsoleMode(std_error, stderr_orig_console_mode);
 #endif
-        };
+        }
+
         void std_out_pink() {
             if (IsStdOutputAConsole()) {
                 std::cout << term_printPink;
@@ -58,6 +57,14 @@ namespace efxc2Console {
                 std::cerr << term_printLtReset;
             }
         };
+        void PinkOutput() {
+            std_out_pink();
+            std_err_pink();
+        }
+        void ResetOutput() {
+            std_out_reset();
+            std_err_reset();
+        }
     private:
 #ifdef _WIN32
         HANDLE std_error = nullptr; //-V122

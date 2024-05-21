@@ -12,6 +12,7 @@
 #include "efxc2Compiler.h"
 #include "efxc2CompilerParams.h"
 #include "efxc2CompilerTasks.h"
+#include "efxc2Console.h"
 #include "efxc2Files.h"
 
 /*Cygwin and MSYS2 compilers amd linkers don't support
@@ -22,6 +23,8 @@ int wmain(int argc, wchar_t* argv[]) {
 #else  /* _WIN32 */
 int main(int argc, char* argv[]) {
 #endif /* _WIN32 */
+	efxc2Console::Console console;
+	console.Initialize();
 	int result = 0;
 	try {
 		// ====================================================================================
@@ -110,5 +113,6 @@ int main(int argc, char* argv[]) {
 		/*We already reported the error to the user. */
 		result = 1;
 	}
+	console.Shutdown();
 	return result;
 }
