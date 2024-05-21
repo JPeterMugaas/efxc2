@@ -225,7 +225,7 @@ extern "C" {
 
 #endif
 
-	typedef HRESULT(__stdcall* pD3DCompile2g)(
+	using pD3DCompile2g = HRESULT(__stdcall*) (
 		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
 		_In_ SIZE_T SrcDataSize,
 		_In_opt_ LPCSTR pSourceName,
@@ -241,20 +241,20 @@ extern "C" {
 		_Out_ ID3DBlob** ppCode,
 		_Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorMsgs);
 
-	typedef HRESULT(__stdcall* pD3DStripShaderg) (
+	using pD3DStripShaderg = HRESULT(__stdcall*) (
 		_In_reads_bytes_(BytecodeLength) LPCVOID pShaderBytecode,
 		_In_ SIZE_T BytecodeLength,
 		_In_ UINT uStripFlags,
 		_Out_ ID3DBlob** ppStrippedBlob);
 
-	typedef HRESULT(__stdcall* pD3DGetBlobPartg) (
+	using pD3DGetBlobPartg = HRESULT(__stdcall*) (
 		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
 		_In_ SIZE_T SrcDataSize,
 		_In_ D3D_BLOB_PART Part,
 		_In_ UINT Flags,
 		_Out_ ID3DBlob** ppPart);
 
-	typedef HRESULT(__stdcall* pD3DSetBlobPartg) (
+	using pD3DSetBlobPartg = HRESULT(__stdcall*) (
 		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
 		_In_ SIZE_T SrcDataSize,
 		_In_ D3D_BLOB_PART Part,
@@ -263,38 +263,38 @@ extern "C" {
 		_In_ SIZE_T PartSize,
 		_Out_ ID3DBlob** ppNewShader);
 
-	typedef HRESULT(__stdcall* pD3DDisassembleg) (
+	using pD3DDisassembleg = HRESULT(__stdcall*) (
 		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
 		_In_ SIZE_T SrcDataSize,
 		_In_ UINT Flags,
 		_In_opt_ LPCSTR szComments,
 		_Out_ ID3DBlob** ppDisassembly);
 
-	typedef HRESULT(__stdcall* gD3DLoadModulep) (
+	using gD3DLoadModulep = HRESULT(__stdcall*) (
 		_In_ LPCVOID pSrcData,
 		_In_ SIZE_T cbSrcDataSize,
 		_Out_ interface ID3D11Module** ppModule
 		);
 
 #ifdef _MSC_VER
-	typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
+	using gD3DCreateLinkerp = HRESULT(__stdcall*) (
 		__out interface ID3D11Linker** ppLinker
 		);
-	typedef HRESULT(__stdcall* gD3DCreateFunctionLinkingGraphp) (
+	using gD3DCreateFunctionLinkingGraphp = HRESULT(__stdcall*) (
 		_In_ UINT uFlags,
 		_Out_ interface ID3D11FunctionLinkingGraph** ppFunctionLinkingGraph
 		);
 #else
-	typedef HRESULT(__stdcall* gD3DCreateLinkerp) (
+	using gD3DCreateLinkerp = HRESULT(__stdcall*) (
 		_Out_ interface ID3D11Linker** ppLinker
 		);
-	typedef HRESULT(__stdcall* gD3DCreateFunctionLinkingGraphp) (
+	using gD3DCreateFunctionLinkingGraphp = HRESULT(__stdcall*) (
 		_In_ UINT uFlags,
 		_Out_ interface ID3D11FunctionLinkingGraph** ppFunctionLinkingGraph
 		);
 #endif
 
-	typedef HRESULT(__stdcall* gD3DPreprocessp) (
+	using gD3DPreprocessp = HRESULT(__stdcall*) (
 		_In_reads_bytes_(SrcDataSize) LPCVOID pSrcData,
 		_In_ SIZE_T SrcDataSize,
 		_In_opt_ LPCSTR pSourceName,
