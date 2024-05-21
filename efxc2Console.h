@@ -20,20 +20,26 @@ namespace efxc2Console {
         "[1;00";
     class Console {
     public:
-        void Initialize() {
+        
 #ifdef _WIN32
+        void Initialize() {
             std_output = GetStdHandle(STD_OUTPUT_HANDLE);
             std_error = GetStdHandle(STD_ERROR_HANDLE);
             (void)GetConsoleMode(std_output, &stdout_orig_console_mode);
             (void)GetConsoleMode(std_error, &stderr_orig_console_mode);
             (void)SetConsoleMode(std_output, stdout_orig_console_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
             (void)SetConsoleMode(std_error, stderr_orig_console_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+#else
+        void Initialize() const {
 #endif
         }
-        void Shutdown() {
+        
 #ifdef _WIN32
+        void Shutdown() {
             (void)SetConsoleMode(std_output, stdout_orig_console_mode);
             (void)SetConsoleMode(std_error, stderr_orig_console_mode);
+#else
+        void Shutdown() const {
 #endif
         }
 
