@@ -13,33 +13,33 @@
 #include "efxc2.h"
 
 namespace efxc2CompilerAPIContainer {
-	constexpr auto DLL_NAME = L"d3dcompiler_47.dll";
-	class CompilerAPIContainer {
-	public:
-		explicit CompilerAPIContainer();
-		pD3DCompile2g get_ptr_D3DCompile2() const { return  ptr_D3DCompile2; }
-		pD3DStripShaderg get_ptr_D3DStripShader() const { return ptr_D3DStripShader; }
-		pD3DGetBlobPartg get_ptr_D3DGetBlobPart() const { return ptr_D3DGetBlobPart; }
-		pD3DSetBlobPartg get_ptr_D3DSetBlobPart() const { return ptr_D3DSetBlobPart; }
-		pD3DDisassembleg get_ptr_D3DDisassemble() const { return ptr_D3DDisassemble; }
-		gD3DLoadModulep get_ptr_D3DLoadModule() const { return ptr_D3DLoadModule; }
-		gD3DCreateLinkerp get_ptr_D3DCreateLinker() const { return ptr_D3DCreateLinker; }
-		gD3DPreprocessp get_ptr_D3DPreprocess() const { return ptr_D3DPreprocess; }
-		gD3DCreateFunctionLinkingGraphp get_ptr_D3DCreateFunctionLinkingGraph() const { return ptr_D3DCreateFunctionLinkingGraph; }
-	private:
-		HMODULE get_h() const { return h; }
-		/*these need to be marked as will not serialize. */
-		HMODULE          h;  //-V122_NOPTR
-		pD3DCompile2g    ptr_D3DCompile2;  //-V122_NOPTR
-		pD3DStripShaderg ptr_D3DStripShader;  //-V122_NOPTR
-		pD3DGetBlobPartg ptr_D3DGetBlobPart;  //-V122_NOPTR
-		pD3DSetBlobPartg ptr_D3DSetBlobPart; //-V122_NOPTR
-		pD3DDisassembleg ptr_D3DDisassemble; //-V122_NOPTR
-		gD3DLoadModulep ptr_D3DLoadModule;  //-V122_NOPTR
-		gD3DCreateLinkerp ptr_D3DCreateLinker; //-V122_NOPTR
-		gD3DCreateFunctionLinkingGraphp ptr_D3DCreateFunctionLinkingGraph;  //-V122_NOPTR
-		gD3DPreprocessp ptr_D3DPreprocess; //-V122_NOPTR
-	};
+    constexpr auto DLL_NAME = L"d3dcompiler_47.dll";
+    class CompilerAPIContainer {
+    public:
+        explicit CompilerAPIContainer();
+        pD3DCompile2g get_ptr_D3DCompile2() const { return  ptr_D3DCompile2; }
+        pD3DStripShaderg get_ptr_D3DStripShader() const { return ptr_D3DStripShader; }
+        pD3DGetBlobPartg get_ptr_D3DGetBlobPart() const { return ptr_D3DGetBlobPart; }
+        pD3DSetBlobPartg get_ptr_D3DSetBlobPart() const { return ptr_D3DSetBlobPart; }
+        pD3DDisassembleg get_ptr_D3DDisassemble() const { return ptr_D3DDisassemble; }
+        gD3DLoadModulep get_ptr_D3DLoadModule() const { return ptr_D3DLoadModule; }
+        gD3DCreateLinkerp get_ptr_D3DCreateLinker() const { return ptr_D3DCreateLinker; }
+        gD3DPreprocessp get_ptr_D3DPreprocess() const { return ptr_D3DPreprocess; }
+        gD3DCreateFunctionLinkingGraphp get_ptr_D3DCreateFunctionLinkingGraph() const { return ptr_D3DCreateFunctionLinkingGraph; }
+    private:
+        HMODULE get_h() const { return h; }
+        /*these need to be marked as will not serialize. */
+        HMODULE          h;  //-V122_NOPTR
+        pD3DCompile2g    ptr_D3DCompile2;  //-V122_NOPTR
+        pD3DStripShaderg ptr_D3DStripShader;  //-V122_NOPTR
+        pD3DGetBlobPartg ptr_D3DGetBlobPart;  //-V122_NOPTR
+        pD3DSetBlobPartg ptr_D3DSetBlobPart; //-V122_NOPTR
+        pD3DDisassembleg ptr_D3DDisassemble; //-V122_NOPTR
+        gD3DLoadModulep ptr_D3DLoadModule;  //-V122_NOPTR
+        gD3DCreateLinkerp ptr_D3DCreateLinker; //-V122_NOPTR
+        gD3DCreateFunctionLinkingGraphp ptr_D3DCreateFunctionLinkingGraph;  //-V122_NOPTR
+        gD3DPreprocessp ptr_D3DPreprocess; //-V122_NOPTR
+    };
 }
 
 #endif /*EFXC2COMPILERAPICONTAINER_H_INCLUDED*/
