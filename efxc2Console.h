@@ -37,31 +37,31 @@ namespace efxc2Console {
 #endif
         }
 
-        void std_out_pink() {
+        void std_out_pink() const {
             if (IsStdOutputAConsole()) {
                 std::cout << term_printPink;
             }
         };
-        void std_out_reset()  {
+        void std_out_reset() const {
             if (IsStdOutputAConsole()) {
                 std::cout << term_printLtReset;
             }
         };
-        void std_err_pink() {
+        void std_err_pink() const {
             if (IsStdErrAConsole()) {
                 std::cerr << term_printPink;
             }
         };
-        void std_err_reset() {
+        void std_err_reset() const {
             if (IsStdErrAConsole()) {
                 std::cerr << term_printLtReset;
             }
         };
-        void PinkOutput() {
+        void PinkOutput() const {
             std_out_pink();
             std_err_pink();
         }
-        void ResetOutput() {
+        void ResetOutput() const {
             std_out_reset();
             std_err_reset();
         }
@@ -72,14 +72,14 @@ namespace efxc2Console {
         HANDLE std_output = nullptr; //-V122
         DWORD stdout_orig_console_mode = 0;
 #endif
-        bool IsStdErrAConsole() {
+        bool IsStdErrAConsole() const {
 #ifdef _WIN32
             return (GetFileType(std_output) == FILE_TYPE_CHAR);
 #else
             return (isatty(STDERR_FILENO));
 #endif
         }
-        bool IsStdOutputAConsole() {
+        bool IsStdOutputAConsole() const {
 #ifdef _WIN32
             return (GetFileType(std_error) == FILE_TYPE_CHAR);
 #else
