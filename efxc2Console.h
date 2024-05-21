@@ -18,7 +18,7 @@ namespace efxc2Console {
         "[38;5;210m";
     const std::string term_printLtReset = "\x1b"
         "[1;00";
-    class Console {
+    class Console { //-V802
     public:
         
 #ifdef _WIN32
