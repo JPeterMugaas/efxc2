@@ -33,6 +33,7 @@ file(WRITE
   "int main()\r\n"
   "{\r\n"
   "    std::cout << std::format(\"Hello {}\", \"world\");\r\n"
+  "    return 0;"
   "}")
 try_compile(FORMAT_SUPPORTED
   ${CMAKE_BINARY_DIR}
