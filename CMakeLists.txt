@@ -24,6 +24,24 @@ set(PROJECT_COPYRIGHT "Copyright (c) 2024 ${PROJECT_COMPANY}")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+message(STATUS "Check for C++20 formatting library")
+file(WRITE
+  ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
+  "#include <iostream>\r\n"
+  "#include <format>\r\n"
+  "\r\n"
+  "int main()\r\n"
+  "{\r\n"
+  "    std::cout << std::format(\"Hello {}\", \"world\");\r\n"
+  "}")
+try_compile(FORMAT_SUPPORTED
+  ${CMAKE_BINARY_DIR}
+  ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
+  OUTPUT_VARIABLE OUTPUT)
+message(STATUS "Check for C++20 formatting library  - done")
+if (NOT FORMAT_SUPPORTED)
+    message(FATAL_ERROR "C++20 formatting not available.")
+endif()
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
