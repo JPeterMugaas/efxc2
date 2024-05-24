@@ -9,6 +9,8 @@
 //--------------------------------------------------------------------------------------
 
 #pragma once
+#ifndef EFXC2CONSOLE_H_INCLUDED
+#define EFXC2CONSOLE_H_INCLUDED
 #include "efxc2.h"
 
 namespace efxc2Console {
@@ -35,7 +37,7 @@ namespace efxc2Console {
         }
         
 #ifdef _WIN32
-        void Shutdown() {
+        void Shutdown() const {
             (void)SetConsoleMode(std_output, stdout_orig_console_mode);
             (void)SetConsoleMode(std_error, stderr_orig_console_mode);
 #else
@@ -95,3 +97,4 @@ namespace efxc2Console {
     };
      const Console console;
 }
+#endif

@@ -180,7 +180,6 @@ bool efxc2Utils::readAll(_In_ std::ifstream& in,
 	_Out_ efxc2Utils::M_BUFFER& dataptr) {
 	dataptr = std::make_shared<std::vector<char>>();
 	auto temp = std::make_unique<std::vector<char>>();
-	size_t used = 0;
 	size_t n = 0;
 	bool result = false;
 	if (dataptr != nullptr) {
@@ -191,7 +190,6 @@ bool efxc2Utils::readAll(_In_ std::ifstream& in,
 			if (n == 0) {
 				break;
 			}
-			used += n;
 			temp->resize(n);
 			(void)dataptr->insert(dataptr->end(), temp->begin(), temp->end());
 		}

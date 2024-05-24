@@ -9,6 +9,9 @@
 //--------------------------------------------------------------------------------------
 
 #pragma once
+
+#ifndef EFXC2EXCEPTION_H_INCLUDED
+#define EFXC2EXCEPTION_H_INCLUDED
 #include "efxc2.h"
 
 namespace efxc2Exception {
@@ -28,3 +31,4 @@ namespace efxc2Exception {
 	class CompileError : public ProgramExceptionBase {};
 	class PreprocessError : public ProgramExceptionBase {};
 }
+#endif
