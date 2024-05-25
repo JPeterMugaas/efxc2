@@ -2,7 +2,7 @@
 
 ## Requirements
 
-A properly installed compiler that supports [C++20](https://isocpp.org/std/the-standard) such as:
+A properly installed compiler that supports [C++20](https://isocpp.org/std/the-standard) including [Text Formatting](https://en.cppreference.com/w/cpp/utility/format/format) such as:
 
 * [Clang](http://www.clang.org) 17.0.0 or greater
 * [GCC](https://gcc.gnu.org/) 13.1.0 or greater
