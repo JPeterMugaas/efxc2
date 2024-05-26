@@ -38,7 +38,7 @@ enter `makepkg` to build efxc2.
 
 ## [Cygwin](https://www.cygwin.com/)
 
-TUnfortunately, the Cygwin release version of GCC is 11.4.0 so you need to install a test version of GNU GCC from the Cygwin setup utility.
+Unfortunately, the Cygwin release version of GCC is 11.4.0 so you need to install a test version of GNU GCC from the Cygwin setup utility.
 
 1. To compile this program for Cygwin, make a directory for building the files then enter:
 ```
