@@ -33,7 +33,7 @@ of that license is included in the license_MPL_2_0.txt file.
 
 ## Tools I Use to Develop this Program
 
-These tools are **NOT** required to build this program or submit request.  I list them because they are helpful to me in developing this program.
+These tools are **NOT** required to build this program or submit pull requests.  I list them because they are helpful to me in developing this program.
 
 [Microsoft Visual Studio Community 2022](https://visualstudio.microsoft.com/vs/community/)
 
