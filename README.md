@@ -4,7 +4,7 @@ efxc2 is an enhanced version of fxc2.  The original fxc2 program
 is described as "A wine-runnable version of Microsofts Shader Compiler fxc" and 
 is available at [https://github.com/mozilla/fxc2](https://github.com/mozilla/fxc2).  Unfortunately,
 fxc2 does not appear to be maintained and I have encountered
-quite a few issues using that program. I needed a .HLSL compiler that
+quite a few issues using that program. I needed a .HLSL (High-level shader language) compiler that
 was open-source and would adequately fulfill my needs.  So I decided
 to make my own modifications to the original fxc2 source-code including a pull 
 request, [https://github.com/mozilla/fxc2/pull/3](https://github.com/mozilla/fxc2/pull/3) into my own enhanced program (efxc2).
