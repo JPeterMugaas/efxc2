@@ -4,26 +4,24 @@ efxc2 is an enhanced version of fxc2.  The original fxc2 program
 is described as "A wine-runnable version of Microsofts Shader Compiler fxc" and 
 is available at [https://github.com/mozilla/fxc2](https://github.com/mozilla/fxc2).  Unfortunately,
 fxc2 does not appear to be maintained and I have encountered
-quite a few issues using that program. I needed a .HLSL (High-level shader language) compiler that
-was open-source and would adequately fulfill my needs.  So I decided
-to make my own modifications to the original fxc2 source-code including a pull 
-request, [https://github.com/mozilla/fxc2/pull/3](https://github.com/mozilla/fxc2/pull/3) into my own enhanced program (efxc2).
+quite a few issues using that program. I needed a High-Level Shader Language (HLSL) compiler that
+was open-source.  So I made my own modifications to the original fxc2 source-code including a pull request, [https://github.com/mozilla/fxc2/pull/3](https://github.com/mozilla/fxc2/pull/3) into my own enhanced program (efxc2).
 
 This program works by using the d3dcompiler_47.dll included in Windows 
-using the API as described by:
+using the Application Programing Interface (API) as described by:
 
 [https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/](https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/)
 
 ## Usage:
 
-This program aims to be compatible with the syntax used by Microsoft's 
+This program is compatible with the syntax used by Microsoft's 
 *Effect-Compiler Tool* (fxc).  That program is documented at:
 
 [https://learn.microsoft.com/en-us/windows/win32/direct3dtools/fxc](https://learn.microsoft.com/en-us/windows/win32/direct3dtools/fxc)
 
 ## Installing the Downloaded Program
 
-Simply open the .ZIP file and extract the files to a directory of your choice.
+Open the .ZIP file and extract the files to a directory of your choice.
 
 ## Building and Installing This Program
 
