@@ -18,8 +18,6 @@
 namespace efxc2Files {
 	class Files {
 	public:
-#ifdef _WIN32
-#endif /* _WIN32 */
 		std::filesystem::path get_DisassemblyFile() const { return DisassemblyFile; }
 		void set_DisassemblyFile(const efxc2Utils::M_STRING_VIEW _DisassemblyFile) { DisassemblyFile = _DisassemblyFile; (void)DisassemblyFile.make_preferred(); }
 		std::filesystem::path get_inputFile() const { return inputFile; }
