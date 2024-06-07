@@ -14,6 +14,16 @@
 
 namespace efxc2CompilerAPIContainer {
     constexpr auto DLL_NAME = L"d3dcompiler_47.dll";
+    constexpr const char* FCN_D3DCompile2 = "D3DCompile2";
+    constexpr const char* FCN_D3DStripShader = "D3DStripShader";
+    constexpr const char* FCN_D3DGetBlobPart = "D3DGetBlobPart";
+    constexpr const char* FCN_D3DSetBlobPart = "D3DSetBlobPart";
+    constexpr const char* FCN_D3DDisassemble = "D3DDisassemble";
+    constexpr const char* FCN_D3DLoadModule = "D3DLoadModule";
+    constexpr const char* FCN_D3DCreateLinker = "D3DCreateLinker";
+    constexpr const char* FCN_D3DCreateFunctionLinkingGraph = "D3DCreateFunctionLinkingGraph";
+    constexpr const char* FCN_D3DPreprocess = "D3DPreprocess";
+    constexpr const char* ERR_LOAD_FCN = "Error: could not get the address of {}.\n";
     class CompilerAPIContainer {
     public:
         explicit CompilerAPIContainer();
