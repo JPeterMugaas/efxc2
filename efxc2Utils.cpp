@@ -355,7 +355,7 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
 			terminate_function = true;
 		}
 	}
-	_free_locale(locale);   //-V586
+	_free_locale(locale);  
 	std::string result = "";
 	if (terminate_function == false) {
 		result = str->data();
@@ -394,11 +394,11 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
 		if (err != 0) {
 			std::cerr << "_mbstowcs_s_l failed.";
 			print_errno_value(err);
-			_free_locale(locale);   //-V586
+			_free_locale(locale);   
 			throw efxc2Exception::Win32APIFailure();
 		}
 	}
-	_free_locale(locale);   //-V586
+	_free_locale(locale);  
 	std::wstring result = L"";
 	if (terminate_function == false) {
 		result = wstr;

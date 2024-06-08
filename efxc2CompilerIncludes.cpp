@@ -20,7 +20,7 @@ namespace efxc2CompilerIncludes {
 	static void TrimTrailingWhiteSpace(const char* buf, std::uintmax_t* fileSize) {
 		size_t tmp = *fileSize;
 		for (size_t i = *fileSize; i > 0; --i) {
-			if (buf[i - 1] >= 32) {   //-V2563 //-V3539
+			if (buf[i - 1] >= 32) {  //-V3539 //-V2563
 				break;
 			}
 			else {
@@ -102,7 +102,9 @@ namespace efxc2CompilerIncludes {
 		   define the E_FAIL constant with a U suffix. */
 		auto result = E_FAIL;  //-V3515 //-V2523
 		if (!input_parent_path.empty()) {
-			TryInputFile = input_parent_path /= Filename;  //-V2561 //-V3538
+			TryInputFile = input_parent_path;
+			TryInputFile += std::filesystem::path::preferred_separator;
+			TryInputFile += Filename;
 			if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
 				*ppData = buf;
 				/* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
@@ -117,8 +119,10 @@ namespace efxc2CompilerIncludes {
 			result = S_OK;
 		}
 		if (result == E_FAIL) {   //-V3515 //-V2523
-			for (std::filesystem::path& currentDir : dirs) {
-				TryInputFile = currentDir /= Filename; //-V2561 //-V3538
+			for (std::filesystem::path const& currentDir : dirs) {
+				TryInputFile = currentDir;
+				TryInputFile += std::filesystem::path::preferred_separator;
+				TryInputFile += Filename;
 				if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
 					*ppData = buf;
 					/* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */

@@ -20,7 +20,7 @@ namespace efxc2Console {
         "[38;5;210m";
     const std::string term_printLtReset = "\x1b"
         "[1;00";
-    class Console { //-V802
+    class Console { 
     public:
         
 #ifdef _WIN32
@@ -75,10 +75,10 @@ namespace efxc2Console {
         }
     private:
 #ifdef _WIN32
-        HANDLE std_error = nullptr; //-V122
         DWORD stderr_orig_console_mode = 0;
-        HANDLE std_output = nullptr; //-V122
         DWORD stdout_orig_console_mode = 0;
+        HANDLE std_error = nullptr;   //-V122_NOPTR
+        HANDLE std_output = nullptr;   //-V122_NOPTR     
 #endif
         bool IsStdErrAConsole() const {
 #ifdef _WIN32
