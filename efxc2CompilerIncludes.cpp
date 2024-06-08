@@ -66,70 +66,77 @@ namespace efxc2CompilerIncludes {
 		LPCSTR pFileName,
 		LPCVOID pParentData,
 		LPCVOID* ppData, UINT* pBytes) {
+		auto result = E_FAIL;  //-V3515 //-V2523
 		*ppData = nullptr;
 		*pBytes = 0;
 		std::filesystem::path Filename = std::string(pFileName);
 		char* buf = nullptr;
 		std::uintmax_t fileSize = 0;
-		if (verbose && debug) {
-			std::cout << "Called CompilerIncludes::Open(\n";
-			switch (IncludeType) {
-			case D3D_INCLUDE_LOCAL: // #include "FILE"
-				std::cout << "\tIncludeType: D3D_INCLUDE_LOCAL\n";
-				break;
-			case D3D_INCLUDE_SYSTEM: // #include <FILE>
-				std::cout << "\tIncludeType: D3D_INCLUDE_SYSTEM\n";
-				break;
-				/* D3D10_INCLUDE_LOCAL is an alias for D3D_INCLUDE_LOCAL.
-				   D3D10_INCLUDE_SYSTEM is an alias for D3D_INCLUDE_SYSTEM  */
-			default:;
-				break;
-			}
+		try {
+
+			if (verbose && debug) {
+				std::cout << "Called CompilerIncludes::Open(\n";
+				switch (IncludeType) {
+				case D3D_INCLUDE_LOCAL: // #include "FILE"
+					std::cout << "\tIncludeType: D3D_INCLUDE_LOCAL\n";
+					break;
+				case D3D_INCLUDE_SYSTEM: // #include <FILE>
+					std::cout << "\tIncludeType: D3D_INCLUDE_SYSTEM\n";
+					break;
+					/* D3D10_INCLUDE_LOCAL is an alias for D3D_INCLUDE_LOCAL.
+					   D3D10_INCLUDE_SYSTEM is an alias for D3D_INCLUDE_SYSTEM  */
+				default:;
+					break;
+				}
 #ifdef _WIN32
-			std::wcout << std::format(L"\tpFileName: {}\n", Filename.native());
+				std::wcout << std::format(L"\tpFileName: {}\n", Filename.native());
 #else
-			std::cout << std::format("\tpFileName {}\n", Filename.native());
+				std::cout << std::format("\tpFileName {}\n", Filename.native());
 #endif
-			if (pParentData != nullptr) {
-				std::cout << "\tpParentData: *****)\n";
+				if (pParentData != nullptr) {
+					std::cout << "\tpParentData: *****)\n";
+				}
+				else {
+					std::cout << "\tpParentData: nullptr)\n";
+				}
 			}
-			else {
-				std::cout << "\tpParentData: nullptr)\n";
-			}
-		}
-		std::filesystem::path TryInputFile = "";
-		/* In this function, we have to disable V3515 because the Win32 API headers did not
-		   define the E_FAIL constant with a U suffix. */
-		auto result = E_FAIL;  //-V3515 //-V2523
-		if (!input_parent_path.empty()) {
-			TryInputFile = input_parent_path;
-			TryInputFile += std::filesystem::path::preferred_separator;
-			TryInputFile += Filename;
-			if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
-				*ppData = buf;
-				/* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
-				*pBytes = (UINT)fileSize;  //-V2005 //-V2533
-				result = S_OK;
-			}
-		}
-		if ((result == E_FAIL) && (LoadFile(Filename, verbose, &buf, &fileSize))) {  //-V3515 //-V2523
-			*ppData = buf;
-			/* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
-			*pBytes = (UINT)fileSize;  //-V2005 //-V2533
-			result = S_OK;
-		}
-		if (result == E_FAIL) {   //-V3515 //-V2523
-			for (std::filesystem::path const& currentDir : dirs) {
-				TryInputFile = currentDir;
+			std::filesystem::path TryInputFile = "";
+			/* In this function, we have to disable V3515 because the Win32 API headers did not
+			   define the E_FAIL constant with a U suffix. */
+			
+			if (!input_parent_path.empty()) {
+				TryInputFile = input_parent_path;
 				TryInputFile += std::filesystem::path::preferred_separator;
 				TryInputFile += Filename;
 				if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
 					*ppData = buf;
 					/* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
-					*pBytes = (UINT)fileSize;  //-V2005 //-V2533
+					*pBytes = static_cast<UINT>(fileSize);
 					result = S_OK;
 				}
 			}
+			if ((result == E_FAIL) && (LoadFile(Filename, verbose, &buf, &fileSize))) {  //-V3515 //-V2523
+				*ppData = buf;
+				/* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
+				*pBytes = static_cast<UINT>(fileSize);
+				result = S_OK;
+			}
+			if (result == E_FAIL) {   //-V3515 //-V2523
+				for (std::filesystem::path const& currentDir : dirs) {
+					TryInputFile = currentDir;
+					TryInputFile += std::filesystem::path::preferred_separator;
+					TryInputFile += Filename;
+					if (LoadFile(TryInputFile, verbose, &buf, &fileSize)) {
+						*ppData = buf;
+						/* These is deliberately a UINT because of an API limitation in this .DLL inheritance callback. */
+						*pBytes = static_cast<UINT>(fileSize);
+						result = S_OK;
+					}
+				}
+			}
+		}
+		catch (...) {
+			result = E_FAIL; //-V3515 //-V2523
 		}
 		return result;
 	}

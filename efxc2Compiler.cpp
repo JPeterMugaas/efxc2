@@ -471,9 +471,8 @@ void efxc2Compiler::Compiler::SetPDBFileName(_In_ const std::string_view _fileNa
 
 	header->Flags = 0;
 	// declared length does not include the null terminator:
-	// The typcast to uint16_t is deliberate because that struct stores a 16 bit value
-	// so let's mark this as a false positive.
-	header->NameLength = (uint16_t)(fileNameLen - 1);  //-V2005 //-V2533
+	// The typcast to uint16_t is deliberate because that struct stores a 16 bit value,
+	header->NameLength = static_cast<uint16_t>(fileNameLen - 1);
 	// but the null terminator is expected to be present:
 	for (size_t i = 0; i < fileNameLen; i++) {
 		pNameBlobContent[sizeof(ShaderDebugName) + i] = _fileName[i];
