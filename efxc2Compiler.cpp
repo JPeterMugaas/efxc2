@@ -18,7 +18,7 @@ void efxc2Compiler::Compiler::Preprocess() {
 		efxc2Utils::print_no_input_file();
 		throw efxc2Exception::NoInputFile();
 	}
-	size_t SourceLen = SourceCode->size();  //-	V2571 //-V3546 //-V2571
+	size_t SourceLen = SourceCode->size(); 
 	auto  includeDirs = params.get_includeDirs();
 	std::string _inputFile = params.get_inputFile();
 	const char* inputFile = _inputFile.c_str();
@@ -113,7 +113,7 @@ void efxc2Compiler::Compiler::Compile() {
 		efxc2Utils::print_no_input_file();
 		throw efxc2Exception::NoInputFile();
 	}
-	size_t SourceLen = SourceCode->size();  //-V2571 //-V3546
+	size_t SourceLen = SourceCode->size(); 
 	auto eflags = params.get_eflags();
 	auto sflags = params.get_sflags();
 	auto secondary_flags = params.get_secondary_flags();

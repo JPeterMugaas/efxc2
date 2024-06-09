@@ -320,7 +320,7 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
 		terminate_function = true;
 	}
 	if (terminate_function == false) {
-		err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale); //-V2563 //-	V3539 //-V3539 //-V2571 //-V3546
+		err = _wcstombs_s_l(&nbytes, nullptr, 0, wstr.c_str(), wstr.length() + 1, locale); 
 		if (err != 0) {
 			_free_locale(locale);
 			efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
@@ -341,7 +341,7 @@ std::string efxc2Utils::wstring_to_utf8(std::wstring const& wstr)
 		str->resize(nbytes + 1);
 		str->data()[nbytes] = '\0'; //-V2563 //-V3539
 		/* The locale still is not freed.  */
-		err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(), wstr.length() + 1, locale); //-V774 //-V2563 //-V3539 //-V2571 //-V3546
+		err = _wcstombs_s_l(&nbytes, str->data(), str->size(), wstr.c_str(), wstr.length() + 1, locale); 
 		if (err != 0) {
 			efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 			console.std_err_pink();
@@ -375,7 +375,7 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
 		terminate_function = true;
 	}
 	if (terminate_function == false) {
-		err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale); //-V2563  //-V3539	 //-V2571 //-V3546
+		err = _mbstowcs_s_l(&nchars, nullptr, 0, str.c_str(), str.length() + 1, locale); 
 		if (err != 0) {
 			_free_locale(locale);
 			std::cerr << "_mbstowcs_s_l failed.";
@@ -391,7 +391,7 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
 	auto* wstr = std::bit_cast<wchar_t*>(_wstr->data());
 	wstr[nchars] = L'\0';   //-V3539 //-V2563
 	if (terminate_function == false) {
-		err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale);  //-V774  //-V2563 //-V3539 //-V2571 //-V3546
+		err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale); 
 		if (err != 0) {
 			std::cerr << "_mbstowcs_s_l failed.";
 			print_errno_value(err);

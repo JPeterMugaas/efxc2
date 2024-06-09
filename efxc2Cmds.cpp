@@ -562,12 +562,13 @@ bool  efxc2Cmds::parseCompilerOnlyCall(
 	efxc2CompilerParams::CompilerParams& params) {
 	bool terminate_routine = false;
 	bool result = false;
-	if (!index || *index >= args.size()) {
+	if (index == nullptr || *index >= args.size()) {
 		terminate_routine = true;
 	}
 	efxc2Utils::M_STRING argument;
 	size_t arg_idx = 0;
 	if (terminate_routine == false) {
+		/* Disable warning V1004 because we checked the pointer for nullptr.*/
 		argument = args[*index];  //-V1004
 		if (argument[0] == '-' || argument[0] == '/') {
 			arg_idx++;
@@ -599,12 +600,14 @@ bool efxc2Cmds::parseCompilerFileCall(
 	efxc2Files::Files& files) {
 	bool terminate_routine = false;
 	bool result = false;
-	if (!index || *index >= args.size()) {
-		terminate_routine = true;
-	}
+
 	efxc2Utils::M_STRING argumentOption = efxc2Utils::M_STRING_INIT;
 	efxc2Utils::M_STRING_VIEW argument;
 	size_t arg_idx = 0;
+	if (index == nullptr || *index >= args.size()) {
+		terminate_routine = true;
+	}
+	/* Disable warning V1004 because we checked the pointer for nullptr.*/
 	if (terminate_routine == false) {
 		argument = args[*index];  //-V1004
 		if (argument[0] == '-' || argument[0] == '/') {
@@ -619,10 +622,10 @@ bool efxc2Cmds::parseCompilerFileCall(
 	}
 	if (terminate_routine == false) {
 		for (CompileFileEntry currentEntry : g_CompilerFileCall) {
-			if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) { //-V2571 //V3546 //-V3546
+			if (argument.compare(arg_idx, currentEntry.Param.size(), currentEntry.Param) != 0) { 
 				continue;
 			}
-			arg_idx += currentEntry.Param.size(); //-V2571 //V3546 //-V3546
+			arg_idx += currentEntry.Param.size(); 
 			if (arg_idx >= argument.size()) {
 				*index += 1;
 				efxc2Utils::checkForMissingArg(currentEntry.Param, *index, args);
@@ -662,7 +665,7 @@ bool efxc2Cmds::parseIgnoredOptions(
 			terminate_routine = true;
 		}
 		if (terminate_routine == false) {
-			if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); //-V2571 //V3546 //-V3546
+			if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); 
 				std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end()) {
 				option_ignored(argument, params);
 				result = true;
@@ -694,7 +697,7 @@ bool efxc2Cmds::parseNotSupportedOptions(
 			terminate_routine = true;
 		}
 		if (terminate_routine == false) {
-			if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); //-V2571 //V3546 //-V3546
+			if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
 				std::ranges::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
 				efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 				console.std_err_pink();
