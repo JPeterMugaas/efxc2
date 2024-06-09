@@ -405,8 +405,12 @@ std::string efxc2Compiler::Compiler::GetPDBFileName() {
 		efxc2Utils::print_hresult_error(hr);
 		throw efxc2Exception::Win32HLSLFailure();
 	}
-	auto pDebugNameData = std::bit_cast<ShaderDebugName*>(pPDBName->GetBufferPointer());
-	auto pName = std::bit_cast<char*>(&pDebugNameData[1]);  //-V2563 //-V3539
+	char* pName = std::bit_cast<char*>(pPDBName->GetBufferPointer());
+	/* Skip over reserved feild - uint_16 and length field uint_16*/
+	++pName;
+	++pName;
+	++pName;
+	++pName;
 	if (params.get_verbose()) {
 		std::cout << std::format(".PDB Data Name: {}\n", pName);
 	}
@@ -417,7 +421,7 @@ void efxc2Compiler::Compiler::EmbedPrivateData() {
 	auto const* compiledString = std::bit_cast<unsigned char*>(compilerOutput->GetBufferPointer());
 	size_t compiledLen = compilerOutput->GetBufferSize();
 	auto private_data = params.get_PrivateData();
-	size_t private_data_size = private_data->size();  //-V2571 //-V3546
+	size_t private_data_size = private_data->size();  
 	if (params.get_verbose() && params.get_debug()) {
 		std::cout << "Calling D3DSetBlobPart(\n";
 		std::cout << "\t compiledString,\n";
