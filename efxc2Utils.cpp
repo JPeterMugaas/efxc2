@@ -155,15 +155,16 @@ void efxc2Utils::print_help_screen() {
 void efxc2Utils::WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
 	_In_ const std::string_view variableName,
 	_In_ const int outputHex) {
-	auto* outString = std::bit_cast<unsigned char*>(data->GetBufferPointer());
 	size_t len = data->GetBufferSize();
 	f << std::format("const BYTE {}[] =\n{{\n", variableName);
+	auto p = std::bit_cast<unsigned char*>(data->GetBufferPointer());
 	for (size_t i = 0; i < len; i++) {
+		++p;
 		if (outputHex) {
-			f << std::format(" 0x{:>02x}", outString[i]);  //-V3539 //-V2563
+			f << std::format(" 0x{:02x}", *p);
 		}
 		else {
-			f << std::format("{:>4}", outString[i]);   //-V3539 //-V2563
+			f << std::format("{:>4}", *p);  
 		}
 		if (i != len - 1) {
 			f << ",";
