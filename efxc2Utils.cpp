@@ -159,7 +159,6 @@ void efxc2Utils::WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
 	f << std::format("const BYTE {}[] =\n{{\n", variableName);
 	auto p = std::bit_cast<unsigned char*>(data->GetBufferPointer());
 	for (size_t i = 0; i < len; i++) {
-		++p;
 		if (outputHex) {
 			f << std::format(" 0x{:02x}", *p);
 		}
@@ -172,6 +171,7 @@ void efxc2Utils::WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
 		if ((i % 6 == 5) && (i != len - 1)) {
 			f << "\n";
 		}
+		++p;
 	}
 	f << "\n};\n";
 	return;
