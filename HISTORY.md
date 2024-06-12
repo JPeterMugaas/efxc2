@@ -5,6 +5,22 @@ https://github.com/JPeterMugaas/efxc2
 Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2/releases)
 
 ## Release History
+### Jun 12, 2024
+* Specifically check for C\+\+20 formatting library. Some compilers do not include that in their C++20 support.
+* Change back to typedef's from using because the "using" syntax is not portable.
+* efxc2Exception.cpp and efxc2Console.cpp - guard in case "#pragma once" does not work.
+* efxc2Utils.cpp - remove an unused variable in "readall"
+* efxc2Console - make Shutdown a const function.
+* Clarify what we require with C++20 support in the README.md file.
+* Fix README.md grammatical error.
+* Remove an empty IFDEF.
+* Make API function names char const and pass them to GetProcAddress as well as the fail code.
+* Fix a few things that PVS-Studio found.  Feilds can be reordered to save memory.  Having an equals sign mid expression can cause confusion.
+* convert some size_t conversions to static_cast Thanks to PVS-Studio for pointing out the issue.
+* Fix hexidecimal 0-padding. 
+* Fixed PVS-Studio warnings V3539 and 2563 concerning arithmetic in pointer operations.
+* Simplify Compiler::GetPDBFileName. Thanks to PVS-Studio for pointing out the issue with it.
+
 ### May 21, 2024
 * Add instructions for installing efxc2 in Cygwin.
 * EFXC2_BUILD_STATIC now works for MSYS2 and Cygwin.
