@@ -57,6 +57,15 @@
 #include <wchar.h>
 #endif
 
+#ifdef USE_FMT_LIBRARY
+#ifdef _MSC_VER
+#pragma comment(lib, "fmtd.lib")
+#endif
+#if defined(__BORLANDC__)
+#pragma comment(lib, "fmtd.lib")
+#endif
+#endif
+
 extern "C" {
 #ifndef D3D_COMPILE_STANDARD_FILE_INCLUDE
 #define D3D_COMPILE_STANDARD_FILE_INCLUDE ((ID3DInclude*)(UINT_PTR)1)
