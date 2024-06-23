@@ -19,9 +19,9 @@ void efxc2Files::Files::LoadInputFile(efxc2CompilerParams::CompilerParams& param
 		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
-		std::wcerr << std::format(L"Can not open {}", inputFile.native());
+		std::wcerr << M_FORMAT(L"Can not open {}", inputFile.native());
 #else
-		std::cerr << std::format("Can not open {}", inputFile.native());
+		std::cerr << M_FORMAT("Can not open {}", inputFile.native());
 #endif
 		console.std_err_reset();
 		throw efxc2Exception::FileReadError();
@@ -41,9 +41,9 @@ void efxc2Files::Files::LoadPrivateDataFile(efxc2CompilerParams::CompilerParams&
 		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
-		std::wcerr << std::format(L"Can not open {}", privateDataFile.native());
+		std::wcerr << M_FORMAT(L"Can not open {}", privateDataFile.native());
 #else
-		std::cerr << std::format("Can not open {}", privateDataFile.native());
+		std::cerr << M_FORMAT("Can not open {}", privateDataFile.native());
 #endif
 		console.std_err_reset();
 		throw efxc2Exception::FileReadError();
@@ -60,9 +60,9 @@ void efxc2Files::Files::WriteDisassembly(efxc2Compiler::Compiler& compiler, cons
 		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
-		std::wcerr << std::format(L"Can not open {}", DisassemblyFile.native());
+		std::wcerr << M_FORMAT(L"Can not open {}", DisassemblyFile.native());
 #else
-		std::cerr << std::format("Can not open {}", DisassemblyFile.native());
+		std::cerr << M_FORMAT("Can not open {}", DisassemblyFile.native());
 #endif
 		console.std_err_reset();
 		throw efxc2Exception::FileOpenWriteError();
@@ -72,9 +72,9 @@ void efxc2Files::Files::WriteDisassembly(efxc2Compiler::Compiler& compiler, cons
 	f.close();
 	if (params.get_verbose()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile.native());
+		std::wcout << M_FORMAT(L"Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile.native());
 #else
-		std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile.native());
+		std::cout << M_FORMAT("Wrote {} bytes of shader output to {}\n", outputLen, DisassemblyFile.native());
 #endif
 	}
 	return;
@@ -87,9 +87,9 @@ void efxc2Files::Files::WriteIncludeFile(efxc2Compiler::Compiler& compiler, cons
 		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
-		std::wcerr << std::format(L"Can not open {}", IncludeFile.native());
+		std::wcerr << M_FORMAT(L"Can not open {}", IncludeFile.native());
 #else
-		std::cerr << std::format("Can not open {}", IncludeFile.native());
+		std::cerr << M_FORMAT("Can not open {}", IncludeFile.native());
 #endif
 		console.std_err_reset();
 		throw efxc2Exception::FileOpenWriteError();
@@ -99,9 +99,9 @@ void efxc2Files::Files::WriteIncludeFile(efxc2Compiler::Compiler& compiler, cons
 	f.close();
 	if (params.get_verbose()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile.native());
+		std::wcout << M_FORMAT(L"Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile.native());
 #else
-		std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile.native());
+		std::cout << M_FORMAT("Wrote {} bytes of shader output to {}\n", outputLen, IncludeFile.native());
 #endif
 	}
 	return;
@@ -114,9 +114,9 @@ void efxc2Files::Files::WriteObjectFile(efxc2Compiler::Compiler& compiler, const
 		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 	    console.std_err_pink();
 #ifdef _WIN32
-		std::wcerr << std::format(L"Can not open {}", ObjectFile.native());
+		std::wcerr << M_FORMAT(L"Can not open {}", ObjectFile.native());
 #else
-		std::cerr << std::format("Can not open {}", ObjectFile.native());
+		std::cerr << M_FORMAT("Can not open {}", ObjectFile.native());
 #endif
 		console.std_err_reset();
 		throw efxc2Exception::FileOpenWriteError();
@@ -126,9 +126,9 @@ void efxc2Files::Files::WriteObjectFile(efxc2Compiler::Compiler& compiler, const
 	f.close();
 	if (params.get_verbose()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());
+		std::wcout << M_FORMAT(L"Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());
 #else
-		std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());
+		std::cout << M_FORMAT("Wrote {} bytes of shader output to {}\n", outputLen, ObjectFile.native());
 #endif
 	}
 	return;
@@ -141,9 +141,9 @@ void efxc2Files::Files::WritePreprocessFile(efxc2Compiler::Compiler& compiler, c
 		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
-		std::wcerr << std::format(L"Can not open {}", preprocessFile.native());
+		std::wcerr << M_FORMAT(L"Can not open {}", preprocessFile.native());
 #else
-		std::cerr << std::format("Can not open {}", preprocessFile.native());
+		std::cerr << M_FORMAT("Can not open {}", preprocessFile.native());
 #endif
 		console.std_err_reset();
 		throw efxc2Exception::FileOpenWriteError();
@@ -153,9 +153,9 @@ void efxc2Files::Files::WritePreprocessFile(efxc2Compiler::Compiler& compiler, c
 	f.close();
 	if (params.get_verbose()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());
+		std::wcout << M_FORMAT(L"Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());
 #else
-		std::cout << std::format("Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());
+		std::cout << M_FORMAT("Wrote {} bytes of shader output to {}\n", outputLen, preprocessFile.native());
 #endif
 	}
 	return;
@@ -199,9 +199,9 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
 			efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 			console.std_err_pink();
 #ifdef _WIN32
-			std::wcerr << std::format(L"Can not open {}", pdbFile.native());
+			std::wcerr << M_FORMAT(L"Can not open {}", pdbFile.native());
 #else
-			std::cerr << std::format("Can not open {}", pdbFile.native());
+			std::cerr << M_FORMAT("Can not open {}", pdbFile.native());
 #endif
 			console.std_err_reset();
 			throw efxc2Exception::FileOpenWriteError();
@@ -211,9 +211,9 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
 		f.close();
 		if (params.get_verbose()) {
 #ifdef _WIN32
-			std::wcout << format(L"Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile.native());
+			std::wcout << M_FORMAT(L"Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile.native());
 #else
-			std::cout << std::format("Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile.native());
+			std::cout << M_FORMAT("Wrote {} bytes of .PDB data to {}\n", outputLen, pdbFile.native());
 #endif
 		}
 	}

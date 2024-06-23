@@ -107,10 +107,10 @@ void efxc2Utils::print_hresult_error(const HRESULT hr) {
 #pragma warning(pop)
 #endif
 	(void)LocalFree(messageBuffer);
-	std::cerr << std::format("Windows Error Message: {}\n", message);
-	std::cout << std::format("Windows Error Message: {}\n", message);
-	std::cout << std::format("Error Code: {:#08x}\n", hr);
-	std::cout << std::format("Error Name: {}\n", HResultName(hr));
+	std::cerr << M_FORMAT("Windows Error Message: {}\n", message);
+	std::cout << M_FORMAT("Windows Error Message: {}\n", message);
+	std::cout << M_FORMAT("Error Code: {:#08x}\n", hr);
+	std::cout << M_FORMAT("Error Name: {}\n", HResultName(hr));
 	console.std_err_reset();
 	console.std_out_reset();
 	return;
@@ -137,7 +137,7 @@ void efxc2Utils::print_windows_error() {
 #pragma warning(push)
 #pragma warning(disable:4477)
 #endif /* _MSC_VER */
-	std::wcerr << std::format(L"Windows error: {}\n", strErrorMessage);
+	std::wcerr << M_FORMAT(L"Windows error: {}\n", strErrorMessage);
 #if defined(_MSC_VER)
 # pragma warning(pop)
 #endif /* _MSC_VER */
@@ -156,14 +156,14 @@ void efxc2Utils::WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
 	_In_ const std::string_view variableName,
 	_In_ const int outputHex) {
 	size_t len = data->GetBufferSize();
-	f << std::format("const BYTE {}[] =\n{{\n", variableName);
+	f << M_FORMAT("const BYTE {}[] =\n{{\n", variableName);
 	auto p = std::bit_cast<unsigned char*>(data->GetBufferPointer());
 	for (size_t i = 0; i < len; i++) {
 		if (outputHex) {
-			f << std::format(" 0x{:02x}", *p);
+			f << M_FORMAT(" 0x{:02x}", *p);
 		}
 		else {
-			f << std::format("{:>4}", *p);  
+			f << M_FORMAT("{:>4}", *p);  
 		}
 		if (i != len - 1) {
 			f << ",";
@@ -204,9 +204,9 @@ void efxc2Utils::checkForMissingArg(M_STRING_VIEW option, _In_ size_t index, con
 		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
-		std::wcerr << std::format(L"Error: missing required argument for option {}\n", option);
+		std::wcerr << M_FORMAT(L"Error: missing required argument for option {}\n", option);
 #else
-		std::cerr << std::format("Error: missing required argument for option {}\n", option);
+		std::cerr << M_FORMAT("Error: missing required argument for option {}\n", option);
 #endif
 		console.std_err_reset();
 		throw efxc2Exception::MissingArgument();

@@ -39,9 +39,9 @@ namespace efxc2CompilerIncludes {
 		if (ec.value() == 0) {
 			if (verbose) {
 #ifdef _WIN32
-				std::wcout << std::format(L"Found {}\n", currentFile.native());
+				std::wcout << M_FORMAT(L"Found {}\n", currentFile.native());
 #else
-				std::cout << std::format("Found {}\n", currentFile.native());
+				std::cout << M_FORMAT("Found {}\n", currentFile.native());
 #endif
 			}
 			*buf = new char[*fileSize];  //-V2511
@@ -89,9 +89,9 @@ namespace efxc2CompilerIncludes {
 					break;
 				}
 #ifdef _WIN32
-				std::wcout << std::format(L"\tpFileName: {}\n", Filename.native());
+				std::wcout << M_FORMAT(L"\tpFileName: {}\n", Filename.native());
 #else
-				std::cout << std::format("\tpFileName {}\n", Filename.native());
+				std::cout << M_FORMAT("\tpFileName {}\n", Filename.native());
 #endif
 				if (pParentData != nullptr) {
 					std::cout << "\tpParentData: *****)\n";

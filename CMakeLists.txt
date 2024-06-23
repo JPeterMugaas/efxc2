@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.12.244)
+set(EFXC2_VERSION 0.0.12.245)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -25,6 +25,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 message(STATUS "Check for C++20 formatting library")
+set(USE_FMT_LIBRARY OFF)
 file(WRITE
   ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
   "#include <iostream>\r\n"
@@ -43,7 +44,8 @@ if (FORMAT_SUPPORTED)
     message(STATUS "Check for C++20 formatting library  - done")
 else()
     message(STATUS "Check for C++20 formatting library  - not found")
-    message(FATAL_ERROR "C++20 formatting is required.  Please upgrade your compiler.")
+    find_package(fmt REQUIRED)
+    set(USE_FMT_LIBRARY ON)
 endif()
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -94,6 +96,10 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_executable(fxc ${EXEC_SOURCES})
 set_target_properties(fxc PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR})
 target_compile_definitions(fxc PRIVATE _UNICODE UNICODE)
+
+if (USE_FMT_LIBRARY)
+target_link_libraries(fxc fmt::fmt)
+endif()
 
 if(EFXC2_BUILD_STATIC)
   IF (WIN32)

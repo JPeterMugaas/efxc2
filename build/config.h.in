@@ -3,4 +3,11 @@
 #define PROGRAM_DESCRIPTION "@PROJECT_DESCRIPTION@"
 #define PROGRAM_VERSION "@PROJECT_VERSION@"
 #define PROGRAM_COPYRIGHT "@PROJECT_COPYRIGHT@"
+
+#cmakedefine USE_FMT_LIBRARY
+#ifdef USE_FMT_LIBRARY
+#define M_FORMAT fmt::format
+#else
+#define M_FORMAT std::format
+#endif
 #endif   /*CONFIG_H_INCLUDED*/

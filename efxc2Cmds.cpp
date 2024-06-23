@@ -48,9 +48,9 @@ void efxc2Cmds::FindDebug(const efxc2Utils::M_CMD_PARAMS& args, efxc2CompilerPar
 void efxc2Cmds::option_ignored(_In_ const efxc2Utils::M_STRING_VIEW Opt, _In_ const efxc2CompilerParams::CompilerParams& params) {
 	if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"Option {} ignored", Opt);
+		std::wcout << M_FORMAT(L"Option {} ignored", Opt);
 #else
-		std::cout << std::format("Option {} ignored", Opt);
+		std::cout << M_FORMAT("Option {} ignored", Opt);
 #endif
 	}
 	return;
@@ -82,9 +82,9 @@ void efxc2Cmds::parseInputFile(_In_ const efxc2Utils::M_STRING_VIEW parameter, e
 		files.set_inputFile(inputFile);
 		if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-			std::wcout << std::format(L"input file: {}\n", inputFile);
+			std::wcout << M_FORMAT(L"input file: {}\n", inputFile);
 #else
-			std::cout << std::format("input file: {}\n", inputFile);
+			std::cout << M_FORMAT("input file: {}\n", inputFile);
 #endif
 		}
 		files.LoadInputFile(params);
@@ -123,7 +123,7 @@ void efxc2Cmds::cmd_D(efxc2CompilerParams::CompilerParams& params, _In_ const ef
 #endif
 	params.add_define(defineOption);
 	if (params.get_verbose() && params.get_debug()) {
-		std::cout << std::format("option -D with arg {}\n", defineOption);
+		std::cout << M_FORMAT("option -D with arg {}\n", defineOption);
 	}
 }
 
@@ -135,7 +135,7 @@ void efxc2Cmds::cmd_E(efxc2CompilerParams::CompilerParams& params, _In_ const ef
 #endif
 	params.set_entryPoint(entryPoint);
 	if (params.get_verbose() && params.get_debug()) {
-		std::cout << std::format("option -E (Entry Point) with arg {}'\n", entryPoint);
+		std::cout << M_FORMAT("option -E (Entry Point) with arg {}'\n", entryPoint);
 	}
 	return;
 }
@@ -157,9 +157,9 @@ void efxc2Cmds::cmd_Fc(efxc2CompilerParams::CompilerParams& params, efxc2Files::
 	params.set_commands(cmd);
 	if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"option -Fc (assembly code) with arg {}\n", assemblyCodeFile);
+		std::wcout << M_FORMAT(L"option -Fc (assembly code) with arg {}\n", assemblyCodeFile);
 #else
-		std::cout << std::format("option -Fc (assembly code) with arg {}\n", assemblyCodeFile);
+		std::cout << M_FORMAT("option -Fc (assembly code) with arg {}\n", assemblyCodeFile);
 #endif
 	}
 	return;
@@ -174,9 +174,9 @@ void efxc2Cmds::cmd_Fd(efxc2CompilerParams::CompilerParams& params, efxc2Files::
 
 	if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"option -Fd (.PDB) with arg {}\n", pdbFile);
+		std::wcout << M_FORMAT(L"option -Fd (.PDB) with arg {}\n", pdbFile);
 #else
-		std::cout << std::format("option -Fd (.PDB) with arg {}\n", pdbFile);
+		std::cout << M_FORMAT("option -Fd (.PDB) with arg {}\n", pdbFile);
 #endif
 	}
 	return;
@@ -189,9 +189,9 @@ void efxc2Cmds::cmd_Fh(efxc2CompilerParams::CompilerParams& params, efxc2Files::
 	params.set_commands(cmd);
 	if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"option -Fh (Output File) with arg {}\n", outputFile);
+		std::wcout << M_FORMAT(L"option -Fh (Output File) with arg {}\n", outputFile);
 #else
-		std::cout << std::format("option -Fh (Output File) with arg {}\n", outputFile);
+		std::cout << M_FORMAT("option -Fh (Output File) with arg {}\n", outputFile);
 #endif
 	}
 	return;
@@ -204,9 +204,9 @@ void efxc2Cmds::cmd_Fo(efxc2CompilerParams::CompilerParams& params, efxc2Files::
 	params.set_commands(cmd);
 	if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"option -FO (Output File) with arg {}\n", outputFile);
+		std::wcout << M_FORMAT(L"option -FO (Output File) with arg {}\n", outputFile);
 #else
-		std::cout << std::format("option -FO (Output File) with arg {}\n", outputFile);
+		std::cout << M_FORMAT("option -FO (Output File) with arg {}\n", outputFile);
 #endif
 	}
 	return;
@@ -285,9 +285,9 @@ void efxc2Cmds::cmd_Gpp(efxc2CompilerParams::CompilerParams& params) {
 void efxc2Cmds::cmd_I(efxc2CompilerParams::CompilerParams& params, _In_ const efxc2Utils::M_STRING_VIEW _includeDir) {
 	if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"option -I (Shader Include Dir) with arg {}\n", _includeDir);
+		std::wcout << M_FORMAT(L"option -I (Shader Include Dir) with arg {}\n", _includeDir);
 #else
-		std::cout << std::format("option -I (Shader Include Dir) with arg {}\n", _includeDir);
+		std::cout << M_FORMAT("option -I (Shader Include Dir) with arg {}\n", _includeDir);
 #endif
 	}
 	params.get_includeDirs()->AddIncludeDir(_includeDir);
@@ -389,9 +389,9 @@ void efxc2Cmds::cmd_P(efxc2CompilerParams::CompilerParams& params, efxc2Files::F
 	params.set_commands(cmd);
 	if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"option -P (Output File) with arg {}\n", outputFile);
+		std::wcout << M_FORMAT(L"option -P (Output File) with arg {}\n", outputFile);
 #else
-		std::cout << std::format("option -P (Output File) with arg {}\n", outputFile);
+		std::cout << M_FORMAT("option -P (Output File) with arg {}\n", outputFile);
 #endif
 	}
 	return;
@@ -451,9 +451,9 @@ void efxc2Cmds::cmd_setprivate(efxc2CompilerParams::CompilerParams& params, efxc
 	files.set_privateDataFile(inputfile);
 	if (params.get_verbose() && params.get_debug()) {
 #ifdef _WIN32
-		std::wcout << std::format(L"option -setprivate (Input File) with arg {}\n", inputfile);
+		std::wcout << M_FORMAT(L"option -setprivate (Input File) with arg {}\n", inputfile);
 #else
-		std::cout << std::format("option -setprivate (Input File) with arg {}\n", inputfile);
+		std::cout << M_FORMAT("option -setprivate (Input File) with arg {}\n", inputfile);
 #endif
 	}
 	files.LoadPrivateDataFile(params);
@@ -467,7 +467,7 @@ void efxc2Cmds::cmd_T(efxc2CompilerParams::CompilerParams& params, _In_ const ef
 	std::string model = { _model.data(), _model.size() };
 #endif
 	if (params.get_verbose() && params.get_debug()) {
-		std::cout << std::format("option -T (Shader Model/Profile) with arg {}\n", model);
+		std::cout << M_FORMAT("option -T (Shader Model/Profile) with arg {}\n", model);
 	}
 	params.set_model(model);
 	return;
@@ -490,7 +490,7 @@ void efxc2Cmds::cmd_Vn(efxc2CompilerParams::CompilerParams& params, _In_ const e
 	std::string variableName = { _variableName.data(), _variableName.size() };
 #endif
 	if (params.get_verbose() && params.get_debug()) {
-		std::cout << std::format("option -Vn (Variable Name) with arg {}'\n", variableName);
+		std::cout << M_FORMAT("option -Vn (Variable Name) with arg {}'\n", variableName);
 	}
 	params.set_variableName(variableName);
 	return;
@@ -702,9 +702,9 @@ bool efxc2Cmds::parseNotSupportedOptions(
 				efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 				console.std_err_pink();
 #ifdef _WIN32
-				std::wcerr << std::format(L"option -{} not supported", argument);
+				std::wcerr << M_FORMAT(L"option -{} not supported", argument);
 #else
-				std::cerr << std::format("option -{} not supported", argument);
+				std::cerr << M_FORMAT("option -{} not supported", argument);
 #endif
 				std::cout << efxc2Utils::print_unsupported_arg_help();
 				console.std_err_reset();

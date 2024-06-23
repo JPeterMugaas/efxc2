@@ -51,14 +51,14 @@ void efxc2Compiler::Compiler::Preprocess() {
 		}
 		std::cout << "\",\n";
 		/**/
-		std::cout << std::format("\t {},\n", SourceLen);
-		std::cout << std::format("\t {}, \n", inputFile);
+		std::cout << M_FORMAT("\t {},\n", SourceLen);
+		std::cout << M_FORMAT("\t {}, \n", inputFile);
 		/* print defines */
 		std::cout << "\t";
 
 		(void)std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
 			if (i.Name != nullptr && i.Definition != nullptr) {
-				std::cout << std::format(" {}={}", i.Name, i.Definition);
+				std::cout << M_FORMAT(" {}={}", i.Name, i.Definition);
 			}});
 		std::cout << ",\n";
 		/* done printing defines */
@@ -93,12 +93,12 @@ void efxc2Compiler::Compiler::Preprocess() {
 		console.std_out_pink();
 		if (errors) {
 			auto* error = std::bit_cast<char*>(errors->GetBufferPointer());
-			std::cout << std::format("Got an error while preprocessing:\n{}\n", error);
+			std::cout << M_FORMAT("Got an error while preprocessing:\n{}\n", error);
 			(void)errors->Release();
-			std::cout << std::format("Error Code: {:#08x}", hr);
+			std::cout << M_FORMAT("Error Code: {:#08x}", hr);
 		}
 		else {
-			std::cout << std::format("Got an error {:#08x} while preprocessing, but no error message from the function.\n", hr);
+			std::cout << M_FORMAT("Got an error {:#08x} while preprocessing, but no error message from the function.\n", hr);
 			efxc2Utils::print_hresult_error(hr);
 		}
 		console.std_err_reset();
@@ -154,27 +154,27 @@ void efxc2Compiler::Compiler::Compile() {
 		}
 		std::cout << "\",\n";
 		/**/
-		std::cout << std::format("\t {},\n", SourceLen);
-		std::cout << std::format("\t {}, \n", inputFile);
+		std::cout << M_FORMAT("\t {},\n", SourceLen);
+		std::cout << M_FORMAT("\t {}, \n", inputFile);
 		/* print defines */
 		std::cout << "\t";
 		(void)std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
 			if (i.Name != nullptr && i.Definition != nullptr) {
-				std::cout << std::format(" {}={}", i.Name, i.Definition);
+				std::cout << M_FORMAT(" {}={}", i.Name, i.Definition);
 			}});
 		std::cout << ",\n";
 		/* done printing defines */
 		std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
 		if (entryPoint == nullptr) {
-			std::cout << std::format("\t nullptr,\n");
+			std::cout << M_FORMAT("\t nullptr,\n");
 		}
 		else {
-			std::cout << std::format("\t {},\n", entryPoint);
+			std::cout << M_FORMAT("\t {},\n", entryPoint);
 		}
-		std::cout << std::format("\t {},\n", model);
-		std::cout << std::format("\t {:#08x},\n", sflags);
-		std::cout << std::format("\t {:#08x},\n", eflags);
-		std::cout << std::format("\t {:#08x},\n", secondary_flags);
+		std::cout << M_FORMAT("\t {},\n", model);
+		std::cout << M_FORMAT("\t {:#08x},\n", sflags);
+		std::cout << M_FORMAT("\t {:#08x},\n", eflags);
+		std::cout << M_FORMAT("\t {:#08x},\n", secondary_flags);
 		std::cout << "\t nullptr,\n";
 		std::cout << "\t 0,\n";
 		std::cout << "\t &CompilerOutput,\n";
@@ -222,12 +222,12 @@ void efxc2Compiler::Compiler::Compile() {
 		std::cerr << "Compile error";
 		if (errors) {
 			auto* error = std::bit_cast<char*>(errors->GetBufferPointer());
-			std::cout << std::format("Got an error while compiling:\n{}\n", error);
+			std::cout << M_FORMAT("Got an error while compiling:\n{}\n", error);
 			(void)errors->Release();
-			std::cout << std::format("Error Code: {:#08x}", hr);
+			std::cout << M_FORMAT("Error Code: {:#08x}", hr);
 		}
 		else {
-			std::cout << std::format("Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
+			std::cout << M_FORMAT("Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
 			efxc2Utils::print_hresult_error(hr);
 		}
 		console.std_err_reset();
@@ -246,8 +246,8 @@ void efxc2Compiler::Compiler::Disassemble() {
 	if (params.get_verbose() && params.get_debug()) {
 		std::cout << "Calling D3DDisassemble(\n";
 		std::cout << "\t compiledString,\n";
-		std::cout << std::format("\t {},\n", compiledLen);
-		std::cout << std::format("\t {:#08x},\n", disassembly_flags);
+		std::cout << M_FORMAT("\t {},\n", compiledLen);
+		std::cout << M_FORMAT("\t {:#08x},\n", disassembly_flags);
 		std::cout << "\t nullptr, \n";
 		std::cout << "\t nullptr, \n";
 		std::cout << "\t &disassemlyCodeBlob);\n";
@@ -283,8 +283,8 @@ void efxc2Compiler::Compiler::StripShader() {
 		if (params.get_verbose() && params.get_debug()) {
 			std::cout << "Calling D3DStripShader(\n";
 			std::cout << "\t compiledString,\n";
-			std::cout << std::format("\t {},\n", compilerOutput->GetBufferSize());
-			std::cout << std::format("\t {:#08x},\n", strip_flags);
+			std::cout << M_FORMAT("\t {},\n", compilerOutput->GetBufferSize());
+			std::cout << M_FORMAT("\t {:#08x},\n", strip_flags);
 			std::cout << "\t &strippedBlob);\n";
 		}
 		/*
@@ -385,9 +385,9 @@ std::string efxc2Compiler::Compiler::GetPDBFileName() {
 	if (params.get_verbose() && params.get_debug()) {
 		std::cout << "Calling D3DGetBlobPart(\n";
 		std::cout << "\t compiledString,\n";
-		std::cout << std::format("\t {},\n", compiledLen);
+		std::cout << M_FORMAT("\t {},\n", compiledLen);
 		std::cout << "\t D3D_BLOB_DEBUG_NAME,\n";
-		std::cout << std::format("\t {:#08x},\n", 9);
+		std::cout << M_FORMAT("\t {:#08x},\n", 9);
 		std::cout << "\t & pPDBName); \n";
 	}
 	auto ptr = api.get_ptr_D3DGetBlobPart();
@@ -412,7 +412,7 @@ std::string efxc2Compiler::Compiler::GetPDBFileName() {
 	++pName;
 	++pName;
 	if (params.get_verbose()) {
-		std::cout << std::format(".PDB Data Name: {}\n", pName);
+		std::cout << M_FORMAT(".PDB Data Name: {}\n", pName);
 	}
 	return pName;
 }
@@ -425,11 +425,11 @@ void efxc2Compiler::Compiler::EmbedPrivateData() {
 	if (params.get_verbose() && params.get_debug()) {
 		std::cout << "Calling D3DSetBlobPart(\n";
 		std::cout << "\t compiledString,\n";
-		std::cout << std::format("\t {},\n", compiledLen);
+		std::cout << M_FORMAT("\t {},\n", compiledLen);
 		std::cout << "\t D3D_BLOB_PRIVATE_DATA,\n";
-		std::cout << std::format("\t {:#08x},\n", 0);
+		std::cout << M_FORMAT("\t {:#08x},\n", 0);
 		std::cout << "\t pNameBlobContent,\n";
-		std::cout << std::format("\t {},\n", private_data_size);
+		std::cout << M_FORMAT("\t {},\n", private_data_size);
 		std::cout << "\t &compilerOutput);\n";
 	}
 	HRESULT hr;
@@ -488,11 +488,11 @@ void efxc2Compiler::Compiler::SetPDBFileName(_In_ const std::string_view _fileNa
 	if (params.get_verbose() && params.get_debug()) {
 		std::cout << "Calling D3DSetBlobPart(\n";
 		std::cout << "\t compiledString,\n";
-		std::cout << std::format("\t {},\n", compiledLen);
+		std::cout << M_FORMAT("\t {},\n", compiledLen);
 		std::cout << "\t D3D_BLOB_DEBUG_NAME,\n";
-		std::cout << std::format("\t {:#08x},\n", 0);
+		std::cout << M_FORMAT("\t {:#08x},\n", 0);
 		std::cout << "\t pNameBlobContent,\n";
-		std::cout << std::format("\t {},\n", nameBlobPartSize);
+		std::cout << M_FORMAT("\t {},\n", nameBlobPartSize);
 		std::cout << "\t &pShaderWithNewName);\n";
 	}
 	HRESULT hr;
@@ -525,9 +525,9 @@ size_t efxc2Compiler::Compiler::WritePDBFile(std::ofstream& f) {
 	if (params.get_verbose() && params.get_debug()) {
 		std::cout << "Calling D3DGetBlobPart(\n";
 		std::cout << "\t compiledString,\n";
-		std::cout << std::format("\t {},\n", compiledLen);
+		std::cout << M_FORMAT("\t {},\n", compiledLen);
 		std::cout << "\t D3D_BLOB_PDB,\n";
-		std::cout << std::format("\t {:#08x},\n", 0);
+		std::cout << M_FORMAT("\t {:#08x},\n", 0);
 		std::cout << "\t &PDBData);\n";
 	}
 	auto ptr = api.get_ptr_D3DGetBlobPart();
