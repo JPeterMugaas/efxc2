@@ -12,6 +12,12 @@
 #include "efxc2Exception.h"
 #include "efxc2Console.h"
 
+void efxc2Compiler::print_D3D_SHADER_MACRO(D3D_SHADER_MACRO i) {
+	if (i.Name != nullptr && i.Definition != nullptr) {
+		std::cout << M_FORMAT(" {}={}", i.Name, i.Definition);
+	}
+}
+
 void efxc2Compiler::Compiler::Preprocess() {
 	auto SourceCode = params.get_SourceCode();
 	if (SourceCode == nullptr) {
@@ -56,10 +62,7 @@ void efxc2Compiler::Compiler::Preprocess() {
 		/* print defines */
 		std::cout << "\t";
 
-		(void)std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
-			if (i.Name != nullptr && i.Definition != nullptr) {
-				std::cout << M_FORMAT(" {}={}", i.Name, i.Definition);
-			}});
+		(void)std::ranges::for_each(defines->begin(), defines->end(), print_D3D_SHADER_MACRO);
 		std::cout << ",\n";
 		/* done printing defines */
 		std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
@@ -158,10 +161,7 @@ void efxc2Compiler::Compiler::Compile() {
 		std::cout << M_FORMAT("\t {}, \n", inputFile);
 		/* print defines */
 		std::cout << "\t";
-		(void)std::ranges::for_each(defines->begin(), defines->end(), [](D3D_SHADER_MACRO i) {
-			if (i.Name != nullptr && i.Definition != nullptr) {
-				std::cout << M_FORMAT(" {}={}", i.Name, i.Definition);
-			}});
+		(void)std::ranges::for_each(defines->begin(), defines->end(), print_D3D_SHADER_MACRO);
 		std::cout << ",\n";
 		/* done printing defines */
 		std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
