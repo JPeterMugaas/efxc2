@@ -1,6 +1,6 @@
 # efxc2
 
-efxc2 is an enhanced version of fxc2 that compiles High-Level Shader Language (.HLSL) files into DirectX11 shaders fusing the 
+efxc2 is an enhanced version of fxc2 that compiles High-Level Shader Language (.HLSL) files into DirectX11 shaders using the 
 d3dcompiler_47.dll [Application Programming Interface (API)](https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/).
 
 The original fxc2 program is described as "A wine-runnable version of Microsofts Shader Compiler fxc" and 
