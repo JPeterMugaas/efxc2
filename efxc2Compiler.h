@@ -51,6 +51,7 @@ namespace efxc2Compiler {
 		ID3D11Module* pLibraryModule = nullptr;  //-V122_NOPTR
 		ID3DBlob* LinkedBlob = nullptr;  //-V122_NOPTR
 	};
+	void print_D3D_SHADER_MACRO(D3D_SHADER_MACRO i);
 }
 
 #endif /* EFXC2COMPILER_H_INCLUDED */

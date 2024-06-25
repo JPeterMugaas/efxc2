@@ -62,7 +62,7 @@ void efxc2Compiler::Compiler::Preprocess() {
 		/* print defines */
 		std::cout << "\t";
 
-		(void)std::ranges::for_each(defines->begin(), defines->end(), print_D3D_SHADER_MACRO);
+		(void)std::ranges::for_each(defines->begin(),defines->end(), print_D3D_SHADER_MACRO);
 		std::cout << ",\n";
 		/* done printing defines */
 		std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
