@@ -33,9 +33,7 @@
 #ifdef USE_FMT_LIBRARY
 #include <fmt/core.h>
 #include <fmt/format.h>
-#ifdef _WIN32
 #include <fmt/xchar.h>
-#endif
 #else
 #include <format>
 #endif

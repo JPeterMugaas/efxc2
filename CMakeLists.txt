@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.12.246)
+set(EFXC2_VERSION 0.0.12.247)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -43,38 +43,52 @@ try_compile(FORMAT_SUPPORTED
 if (FORMAT_SUPPORTED)
     message(STATUS "Check for C++20 formatting library  - no external library required.")
 else()
-    
-    find_package(fmt)
-    file(WRITE
-      ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
-     "#include <iostream>\r\n"
-     "#include <fmt/core.h>\r\n"
-     "#include <fmt/format.h>\r\n"
-     "\r\n"
-     "#ifdef _MSC_VER"
-     "#pragma comment(lib, \"fmtd.lib\")\r\n"
-     "#endif\r\n"
-     "#if defined(__BORLANDC__)\r\n"
-     "#pragma comment(lib, \"fmtd.lib\")\r\n"
-     "#endif\r\n"
-     "\r\n"
-     "int main()\r\n"
-     "{\r\n"
-    "    std::cout << fmt::format(\"Hello {}\", \"world\");\r\n"
-    "    return 0;\r\n"
-    "}")
-   try_compile(FORMAT_SUPPORTED
-     ${CMAKE_BINARY_DIR}
-     ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
-     LINK_LIBRARIES fmt::fmt
-     OUTPUT_VARIABLE OUTPUT)
-     if (FORMAT_SUPPORTED)
+    if (MSVC)
+       message(STATUS "downloading \{fmt\}")
+       include(FetchContent)
+
+       FetchContent_Declare(
+          fmt
+          GIT_REPOSITORY https://github.com/fmtlib/fmt
+          GIT_TAG        e69e5f977d458f2650bb346dadf2ad30c5320281) # 10.2.1
+       FetchContent_MakeAvailable(fmt)
+       set(USE_FMT_LIBRARY ON)
+       set(FORMAT_SUPPORTED ON)
+    else()
+       find_package(fmt QUIET)
+       if (fmt_FOUND)
+          file(WRITE
+             ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
+            "#include <iostream>\r\n"
+            "#include <fmt/core.h>\r\n"
+            "#include <fmt/format.h>\r\n"
+            "\r\n"
+            "#ifdef _MSC_VER\r\n"
+            "#pragma comment(lib, \"fmtd.lib\")\r\n"
+            "#endif\r\n"
+            "#if defined(__BORLANDC__)\r\n"
+            "#pragma comment(lib, \"fmtd.lib\")\r\n"
+            "#endif\r\n"
+            "\r\n"
+            "int main()\r\n"
+            "{\r\n"
+            "    std::cout << fmt::format(\"Hello {}\", \"world\");\r\n"
+            "    return 0;\r\n"
+            "}")
+          try_compile(FORMAT_SUPPORTED
+            ${CMAKE_BINARY_DIR}
+            ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
+            LINK_LIBRARIES fmt::fmt
+            OUTPUT_VARIABLE OUTPUT)
+       endif()
+    endif()
+    if (FORMAT_SUPPORTED)
        message(STATUS "Check for C++20 formatting library  - \{fmt\} library")
        set(USE_FMT_LIBRARY ON)
-     else()
+    else()
        message(STATUS "Check for C++20 formatting library  - not found")
        message(FATAL_ERROR "\{fmt\} library required.")
-     endif()
+    endif()
 endif()
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
