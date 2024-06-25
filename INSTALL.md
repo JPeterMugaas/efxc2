@@ -2,10 +2,9 @@
 
 ## Requirements
 
-A properly installed compiler that supports [C++20](https://isocpp.org/std/the-standard) including [Text Formatting](https://en.cppreference.com/w/cpp/utility/format/format) such as:
-
-* [Clang](http://www.clang.org) 17.0.0 or greater
-* [GCC](https://gcc.gnu.org/) 13.1.0 or greater
+A properly install compiler that supports the [C++20 Standard](https://isocpp.org/std/the-standard) such as:
+* [Clang](http://www.clang.org) 14.0.0 or greater
+* [GCC](https://gcc.gnu.org/) 11.0.0 or greater
 * [Intel® oneAPI DPC++/C++ Compiler](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compiler.html#gs.6foy5x) 2022.2.1 or greater
 * [Visual Studio](https://visualstudio.microsoft.com/) 2019 version 16.11.2 or greater
 
@@ -13,6 +12,8 @@ as well as [CMake](https://cmake.org/).  You will often need a build system for 
 
 * [Ninja](https://ninja-build.org/)
 * [GNU Make](https://www.gnu.org/software/make/)
+
+If your RTL does not support [std::format](https://en.cppreference.com/w/cpp/utility/format/format), you will also need the [\{fmt} library](https://fmt.dev/latest/index.html). 
 
 ## [Mingw-w64](https://www.mingw-w64.org/) under [MSYS2](https://www.msys2.org/)
 
@@ -38,7 +39,7 @@ enter `makepkg` to build efxc2.
 
 ## [Cygwin](https://www.cygwin.com/)
 
-Unfortunately, the Cygwin release version of GCC is 11.4.0 so you need to install a test version of GNU GCC from the Cygwin setup utility.
+For Cygwin, if you are using GCC 11.4.0, you will require the fmt library.  If you are using a test version of GNU GCC from the Cygwin setup utility, no extra library is required.
 
 1. To compile this program for Cygwin, make a directory for building the files then enter:
 ```
