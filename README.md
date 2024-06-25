@@ -1,16 +1,14 @@
 # efxc2
 
-efxc2 is an enhanced version of fxc2.  The original fxc2 program 
-is described as "A wine-runnable version of Microsofts Shader Compiler fxc" and 
+efxc2 is an enhanced version of fxc2 that compiles .HLSL files into DirectX11 shaders fusing the 
+d3dcompiler_47.dll [Application Programming Interface (API)](https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/).
+
+The original fxc2 program is described as "A wine-runnable version of Microsofts Shader Compiler fxc" and 
 is available at [https://github.com/mozilla/fxc2](https://github.com/mozilla/fxc2).  Unfortunately,
 fxc2 does not appear to be maintained and I have encountered
-quite a few issues using that program. I needed a High-Level Shader Language (HLSL) compiler that
-was open-source.  So I made my own modifications to the original fxc2 source-code including a pull request, [https://github.com/mozilla/fxc2/pull/3](https://github.com/mozilla/fxc2/pull/3) into my own enhanced program (efxc2).
-
-This program works by using the d3dcompiler_47.dll included in Windows 
-using the Application Programing Interface (API) as described by:
-
-[https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/](https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/)
+quite a few issues using that program.  So I made my own modifications to the original fxc2 source-code 
+including a pull request, [https://github.com/mozilla/fxc2/pull/3](https://github.com/mozilla/fxc2/pull/3) into my own 
+enhanced program (efxc2).
 
 ## Usage:
 
