@@ -666,7 +666,7 @@ bool efxc2Cmds::parseIgnoredOptions(
 		}
 		if (terminate_routine == false) {
 			if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos); 
-				std::ranges::find(g_IgnoredOptions.begin(), g_IgnoredOptions.end(), toFind) != g_IgnoredOptions.end()) {
+				std::ranges::find(g_IgnoredOptions, toFind) != g_IgnoredOptions.end()) {
 				option_ignored(argument, params);
 				result = true;
 			}
@@ -698,7 +698,7 @@ bool efxc2Cmds::parseNotSupportedOptions(
 		}
 		if (terminate_routine == false) {
 			if (efxc2Utils::M_STRING_VIEW toFind = argument.substr(arg_idx, std::string::npos);
-				std::ranges::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
+				std::ranges::find(g_NotSupportedArgs, toFind) != g_NotSupportedArgs.end()) {
 				efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
 				console.std_err_pink();
 #ifdef _WIN32
