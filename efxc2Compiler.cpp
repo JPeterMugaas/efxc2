@@ -470,7 +470,7 @@ void efxc2Compiler::Compiler::SetPDBFileName(_In_ const std::string_view _fileNa
 	std::vector<char> pNameBlobContent;
 	pNameBlobContent.resize(nameBlobPartSize + sizeof(ShaderDebugName));
 	// Ensure bytes after name are indeed zeroes:
-	std::ranges::fill(pNameBlobContent.begin(), pNameBlobContent.end(), 0);
+	(void)std::ranges::fill(pNameBlobContent, 0);
 	auto* header = std::bit_cast<ShaderDebugName*>(&pNameBlobContent[0]);
 
 	header->Flags = 0;
