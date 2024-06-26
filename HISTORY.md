@@ -5,6 +5,11 @@ https://github.com/JPeterMugaas/efxc2
 Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2/releases)
 
 ## Release History
+### Jun 26, 2024
+* Make efxc2 depend upon the [\{fmt\} library](https://fmt.dev/) if [std::format](https://en.cppreference.com/w/cpp/utility/format/format) 
+is not supported.  This should allow some slightly older compilers to build efxc2.  They just have to support other stuff in the C++ Standard.
+* Make associated adjustments in the source-code and CMakeLists.txt file.
+
 ### Jun 12, 2024
 * Specifically check for C\+\+20 formatting library. Some compilers do not include that in their C++20 support.
 * Change back to typedef's from using because the "using" syntax is not portable.
