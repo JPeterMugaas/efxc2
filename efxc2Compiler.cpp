@@ -18,6 +18,21 @@ void efxc2Compiler::print_D3D_SHADER_MACRO(D3D_SHADER_MACRO i) {
 	}
 }
 
+void SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::vector<D3D_SHADER_MACRO>& defines) {
+	D3D_SHADER_MACRO _def = { nullptr, nullptr };
+
+	auto insert_def = [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
+		_def.Definition = a.Definition.c_str();
+		_def.Name = a.Name.c_str();
+		(void)defines.insert(defines.end(), _def); };
+
+	(void)std::ranges::for_each(_defines->begin(), _defines->end(), insert_def);
+
+	_def.Definition = nullptr;
+	_def.Name = nullptr;
+	(void)defines.insert(defines.end(), _def);
+}
+
 void efxc2Compiler::Compiler::Preprocess() {
 	auto SourceCode = params.get_SourceCode();
 	if (SourceCode == nullptr) {
@@ -31,18 +46,9 @@ void efxc2Compiler::Compiler::Preprocess() {
 
 	auto _defines = params.get_defines();
 	auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
-	D3D_SHADER_MACRO _def = { nullptr, nullptr };
 
-	auto insert_def = [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
-		_def.Definition = a.Definition.c_str();
-		_def.Name = a.Name.c_str();
-		(void)defines->insert(defines->end(), _def); };
+	SetupDefines(_defines, *defines);
 
-	(void)std::ranges::for_each(_defines->begin(), _defines->end(), insert_def);
-
-	_def.Definition = nullptr;
-	_def.Name = nullptr;
-	(void)defines->insert(defines->end(), _def);
 	ID3DBlob* errors = nullptr;
 	if (params.get_verbose() && params.get_debug()) {
 		std::cout << "Calling D3DPreprocess(\n";
@@ -136,15 +142,8 @@ void efxc2Compiler::Compiler::Compile() {
 	auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
 	D3D_SHADER_MACRO _def = { nullptr, nullptr };
 
-	auto insert_def = [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
-		_def.Definition = a.Definition.c_str();
-		_def.Name = a.Name.c_str();
-		(void)defines->insert(defines->end(), _def); };
+	SetupDefines(_defines, *defines);
 
-	(void)std::ranges::for_each(_defines->begin(), _defines->end(), insert_def);
-	_def.Definition = nullptr;
-	_def.Name = nullptr;
-	(void)defines->insert(defines->end(), _def);
 	ID3DBlob* errors = nullptr;
 	if (params.get_verbose() && params.get_debug()) {
 		std::cout << "Calling D3DCompile2(\n";
