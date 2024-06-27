@@ -33,11 +33,13 @@ void efxc2Compiler::Compiler::Preprocess() {
 	auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
 	D3D_SHADER_MACRO _def = { nullptr, nullptr };
 
-	(void)std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
+	auto insert_def = [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
 		_def.Definition = a.Definition.c_str();
 		_def.Name = a.Name.c_str();
-		(void)defines->insert(defines->end(), _def);
-		});
+		(void)defines->insert(defines->end(), _def); };
+
+	(void)std::ranges::for_each(_defines->begin(), _defines->end(), insert_def);
+
 	_def.Definition = nullptr;
 	_def.Name = nullptr;
 	(void)defines->insert(defines->end(), _def);
@@ -133,11 +135,13 @@ void efxc2Compiler::Compiler::Compile() {
 	auto _defines = params.get_defines();
 	auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
 	D3D_SHADER_MACRO _def = { nullptr, nullptr };
-	(void)std::ranges::for_each(_defines->begin(), _defines->end(), [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
+
+	auto insert_def = [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
 		_def.Definition = a.Definition.c_str();
 		_def.Name = a.Name.c_str();
-		(void)defines->insert(defines->end(), _def);
-		});
+		(void)defines->insert(defines->end(), _def); };
+
+	(void)std::ranges::for_each(_defines->begin(), _defines->end(), insert_def);
 	_def.Definition = nullptr;
 	_def.Name = nullptr;
 	(void)defines->insert(defines->end(), _def);
