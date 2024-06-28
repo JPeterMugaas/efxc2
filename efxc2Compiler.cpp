@@ -18,7 +18,7 @@ void efxc2Compiler::print_D3D_SHADER_MACRO(D3D_SHADER_MACRO i) {
     }
 }
 
-void SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::vector<D3D_SHADER_MACRO>& defines) {
+void efxc2Compiler::SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::vector<D3D_SHADER_MACRO>& defines) {
     D3D_SHADER_MACRO _def = { nullptr, nullptr };
 
     auto insert_def = [&_def, &defines](efxc2Utils::CompilerDefine const& a) {
@@ -31,6 +31,20 @@ void SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::vector<D3D_SHADE
     _def.Definition = nullptr;
     _def.Name = nullptr;
     (void)defines.insert(defines.end(), _def);
+}
+
+void efxc2Compiler::print_source_code_sample(efxc2Utils::M_BUFFER const& SourceCode) {
+    std::cout << "\t \"";
+    for (size_t i = 0; i < SourceCode->size(); ++i) {
+        if (i < 41) {
+            std::cout << SourceCode->at(i);
+        }
+        else {
+            std::cout << "...";
+            break;
+        }
+    }
+    std::cout << "\",\n";
 }
 
 void efxc2Compiler::Compiler::Preprocess() {
@@ -52,19 +66,7 @@ void efxc2Compiler::Compiler::Preprocess() {
     ID3DBlob* errors = nullptr;
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DPreprocess(\n";
-        /* Source Code sample*/
-        std::cout << "\t \"";
-        for (size_t i = 0; i < SourceCode->size(); ++i) {
-            if (i < 41) {
-                std::cout << SourceCode->at(i);
-            }
-            else {
-                std::cout << "...";
-                break;
-            }
-        }
-        std::cout << "\",\n";
-        /**/
+        print_source_code_sample(SourceCode);
         std::cout << M_FORMAT("\t {},\n", SourceLen);
         std::cout << M_FORMAT("\t {}, \n", inputFile);
         /* print defines */
@@ -147,19 +149,7 @@ void efxc2Compiler::Compiler::Compile() {
     ID3DBlob* errors = nullptr;
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DCompile2(\n";
-        /* Source Code sample*/
-        std::cout << "\t \"";
-        for (size_t i = 0; i < SourceCode->size(); ++i) {
-            if (i < 41) {
-                std::cout << SourceCode->at(i);
-            }
-            else {
-                std::cout << "...";
-                break;
-            }
-        }
-        std::cout << "\",\n";
-        /**/
+        print_source_code_sample(SourceCode);
         std::cout << M_FORMAT("\t {},\n", SourceLen);
         std::cout << M_FORMAT("\t {}, \n", inputFile);
         /* print defines */
