@@ -33,6 +33,12 @@ void efxc2Compiler::SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::v
     (void)defines.insert(defines.end(), _def);
 }
 
+void efxc2Compiler::print_defines(std::vector<D3D_SHADER_MACRO> const& defines) {
+    std::cout << "\t";
+    (void)std::ranges::for_each(defines, print_D3D_SHADER_MACRO);
+    std::cout << ",\n";
+}
+
 void efxc2Compiler::print_source_code_sample(efxc2Utils::M_BUFFER const& SourceCode) {
     std::cout << "\t \"";
     for (size_t i = 0; i < SourceCode->size(); ++i) {
@@ -69,12 +75,7 @@ void efxc2Compiler::Compiler::Preprocess() {
         print_source_code_sample(SourceCode);
         std::cout << M_FORMAT("\t {},\n", SourceLen);
         std::cout << M_FORMAT("\t {}, \n", inputFile);
-        /* print defines */
-        std::cout << "\t";
-
-        (void)std::ranges::for_each(defines->begin(),defines->end(), print_D3D_SHADER_MACRO);
-        std::cout << ",\n";
-        /* done printing defines */
+        print_defines(*defines.get());
         std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
         std::cout << "\t &CompilerOutput,\n";
         std::cout << "\t &errors);\n";
@@ -142,7 +143,6 @@ void efxc2Compiler::Compiler::Compile() {
     const char* inputFile = _inputFile.c_str();
     auto _defines = params.get_defines();
     auto defines = std::make_unique<std::vector<D3D_SHADER_MACRO>>();
-    D3D_SHADER_MACRO _def = { nullptr, nullptr };
 
     SetupDefines(_defines, *defines);
 
@@ -152,11 +152,7 @@ void efxc2Compiler::Compiler::Compile() {
         print_source_code_sample(SourceCode);
         std::cout << M_FORMAT("\t {},\n", SourceLen);
         std::cout << M_FORMAT("\t {}, \n", inputFile);
-        /* print defines */
-        std::cout << "\t";
-        (void)std::ranges::for_each(defines->begin(), defines->end(), print_D3D_SHADER_MACRO);
-        std::cout << ",\n";
-        /* done printing defines */
+        print_defines( *defines.get() );
         std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
         if (entryPoint == nullptr) {
             std::cout << M_FORMAT("\t nullptr,\n");

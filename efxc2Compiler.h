@@ -52,6 +52,7 @@ namespace efxc2Compiler {
 		ID3DBlob* LinkedBlob = nullptr;  //-V122_NOPTR
 	};
 	void print_D3D_SHADER_MACRO(D3D_SHADER_MACRO i);
+	void print_defines(std::vector<D3D_SHADER_MACRO> const& defines);
 	void print_source_code_sample(efxc2Utils::M_BUFFER const& SourceCode);
 	void SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::vector<D3D_SHADER_MACRO>& defines);
 }
