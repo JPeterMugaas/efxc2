@@ -21,11 +21,7 @@
 #pragma warning(pop)
 #endif /* _MSC_VER */
 
-#if defined(__BORLANDC__)
-#include "borland-config.h"
-#else
 #include "config.h"
-#endif
 #include <d3dcompiler.h>
 #include <d3dcommon.h>
 #include <algorithm>
