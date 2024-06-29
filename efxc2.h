@@ -56,11 +56,8 @@
 #endif
 
 #ifdef USE_FMT_LIBRARY
-#ifdef _MSC_VER
-#pragma comment(lib, "fmtd.lib")
-#endif
-#if defined(__BORLANDC__)
-#pragma comment(lib, "fmtd.lib")
+#if ( _MSC_VER ) || defined(__BORLANDC__)
+#pragma comment(lib, "fmt")
 #endif
 #endif
 
