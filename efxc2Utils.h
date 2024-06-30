@@ -28,8 +28,8 @@ namespace efxc2Utils {
 	template <class T2, class T1>
 	T2 cpp11_bit_cast(T1 t1) {
 		static_assert(sizeof(T1) == sizeof(T2), "Types must match sizes");
-		static_assert(std::is_pod<T1>::value, "Requires POD input");
-		static_assert(std::is_pod<T2>::value, "Requires POD output");
+		static_assert(std::is_pod<T1>(), "Requires POD input");
+		static_assert(std::is_pod<T2>(), "Requires POD output");
 
 		T2 t2;
 		std::memcpy(std::addressof(t2), std::addressof(t1), sizeof(T1));
