@@ -18,6 +18,28 @@
 namespace efxc2Utils {
 	using M_BUFFER = std::shared_ptr<std::vector<char>>;
 
+#ifndef RANGES_SUPPORTED
+#define	M_FOR_EACH  std::for_each
+#else
+#define M_FOR_EACH  std::ranges::for_each
+#endif
+
+#ifndef BIT_CAST_SUPPORTED
+	template <class T2, class T1>
+	T2 cpp11_bit_cast(T1 t1) {
+		static_assert(sizeof(T1) == sizeof(T2), "Types must match sizes");
+		static_assert(std::is_pod<T1>::value, "Requires POD input");
+		static_assert(std::is_pod<T2>::value, "Requires POD output");
+
+		T2 t2;
+		std::memcpy(std::addressof(t2), std::addressof(t1), sizeof(T1));
+		return t2;
+	}
+#define M_BIT_CAST bit_cast
+#else
+#define M_BIT_CAST std::bit_cast
+#endif
+
 #ifdef _WIN32
 	using M_CMD_PARAMS = std::vector<std::wstring>;
 	using M_STRING = std::wstring;

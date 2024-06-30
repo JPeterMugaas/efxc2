@@ -26,7 +26,7 @@ void efxc2Compiler::SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::v
         _def.Name = a.Name.c_str();
         (void)defines.insert(defines.end(), _def); };
 
-    (void)std::ranges::for_each(_defines->begin(), _defines->end(), insert_def);
+    (void)M_FOR_EACH(_defines->begin(), _defines->end(), insert_def);
 
     _def.Definition = nullptr;
     _def.Name = nullptr;
@@ -35,7 +35,7 @@ void efxc2Compiler::SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::v
 
 void efxc2Compiler::print_defines(std::vector<D3D_SHADER_MACRO> const& defines) {
     std::cout << "\t";
-    (void)std::ranges::for_each(defines, print_D3D_SHADER_MACRO);
+    (void)M_FOR_EACH(defines, print_D3D_SHADER_MACRO);
     std::cout << ",\n";
 }
 
@@ -106,7 +106,7 @@ void efxc2Compiler::Compiler::Preprocess() {
         std::cerr << "Preprocess error";
         console.std_out_pink();
         if (errors) {
-            auto* error = std::bit_cast<char*>(errors->GetBufferPointer());
+            auto* error = M_BIT_CAST<char*>(errors->GetBufferPointer());
             std::cout << M_FORMAT("Got an error while preprocessing:\n{}\n", error);
             (void)errors->Release();
             std::cout << M_FORMAT("Error Code: {:#08x}", hr);
@@ -210,7 +210,7 @@ void efxc2Compiler::Compiler::Compile() {
         console.std_out_pink();
         std::cerr << "Compile error";
         if (errors) {
-            auto* error = std::bit_cast<char*>(errors->GetBufferPointer());
+            auto* error = M_BIT_CAST<char*>(errors->GetBufferPointer());
             std::cout << M_FORMAT("Got an error while compiling:\n{}\n", error);
             (void)errors->Release();
             std::cout << M_FORMAT("Error Code: {:#08x}", hr);
@@ -227,7 +227,7 @@ void efxc2Compiler::Compiler::Compile() {
 }
 
 void efxc2Compiler::Compiler::Disassemble() {
-    auto const* compiledString = std::bit_cast<unsigned char*>(compilerOutput->GetBufferPointer());
+    auto const* compiledString = M_BIT_CAST<unsigned char*>(compilerOutput->GetBufferPointer());
     size_t compiledLen = compilerOutput->GetBufferSize();
     auto disassembly_flags = params.get_disassembly_flags();
     HRESULT hr = 0;
@@ -288,7 +288,7 @@ void efxc2Compiler::Compiler::StripShader() {
 #pragma warning( push )
 #pragma warning( disable : 6387)
 #endif
-        auto const* compiledString = std::bit_cast<char*>(compilerOutput->GetBufferPointer());
+        auto const* compiledString = M_BIT_CAST<char*>(compilerOutput->GetBufferPointer());
         size_t compiledLen = compilerOutput->GetBufferSize();
         HRESULT hr = 0;
         auto ptr = api.get_ptr_D3DStripShader();
@@ -309,7 +309,7 @@ size_t efxc2Compiler::Compiler::WriteAssemblyCode(std::ofstream& f) {
     size_t outputLen = 0;
 
     if (disassemblyCodeBlob != nullptr) {
-        outputString = std::bit_cast<char*>(disassemblyCodeBlob->GetBufferPointer());
+        outputString = M_BIT_CAST<char*>(disassemblyCodeBlob->GetBufferPointer());
         outputLen = disassemblyCodeBlob->GetBufferSize();
         (void)f.write(outputString, outputLen);
     }
@@ -341,11 +341,11 @@ size_t efxc2Compiler::Compiler::WriteObjectFile(std::ofstream& f) {
     char const* outputString;
     size_t outputLen = 0;
     if (strippedBlob == nullptr) {
-        outputString = std::bit_cast<char*>(compilerOutput->GetBufferPointer());
+        outputString = M_BIT_CAST<char*>(compilerOutput->GetBufferPointer());
         outputLen = compilerOutput->GetBufferSize();
     }
     else {
-        outputString = std::bit_cast<char*>(strippedBlob->GetBufferPointer());
+        outputString = M_BIT_CAST<char*>(strippedBlob->GetBufferPointer());
         outputLen = strippedBlob->GetBufferSize();
     }
     (void)f.write(outputString, outputLen);
@@ -353,7 +353,7 @@ size_t efxc2Compiler::Compiler::WriteObjectFile(std::ofstream& f) {
 }
 
 size_t efxc2Compiler::Compiler::WritePreprocessFile(std::ofstream& f) {
-    const char* outputString = std::bit_cast<char*>(pPreprocessOutput->GetBufferPointer());
+    const char* outputString = M_BIT_CAST<char*>(pPreprocessOutput->GetBufferPointer());
     size_t outputLen = pPreprocessOutput->GetBufferSize();
     (void)f.write(outputString, outputLen);
     return outputLen;
@@ -367,7 +367,7 @@ std::string efxc2Compiler::Compiler::GetPDBFileName() {
 
     */
 
-    auto const* compiledString = std::bit_cast<unsigned char*>(compilerOutput->GetBufferPointer());
+    auto const* compiledString = M_BIT_CAST<unsigned char*>(compilerOutput->GetBufferPointer());
     size_t compiledLen = compilerOutput->GetBufferSize();
     HRESULT hr = 0;
     /*Get filename*/
@@ -394,7 +394,7 @@ std::string efxc2Compiler::Compiler::GetPDBFileName() {
         efxc2Utils::print_hresult_error(hr);
         throw efxc2Exception::Win32HLSLFailure();
     }
-    char* pName = std::bit_cast<char*>(pPDBName->GetBufferPointer());
+    char* pName = M_BIT_CAST<char*>(pPDBName->GetBufferPointer());
     /* Skip over reserved feild - uint_16 and length field uint_16*/
     for (int i = 0; i <= 3; i++) {
       ++pName;
@@ -406,7 +406,7 @@ std::string efxc2Compiler::Compiler::GetPDBFileName() {
 }
 
 void efxc2Compiler::Compiler::EmbedPrivateData() {
-    auto const* compiledString = std::bit_cast<unsigned char*>(compilerOutput->GetBufferPointer());
+    auto const* compiledString = M_BIT_CAST<unsigned char*>(compilerOutput->GetBufferPointer());
     size_t compiledLen = compilerOutput->GetBufferSize();
     auto private_data = params.get_PrivateData();
     size_t private_data_size = private_data->size();  
@@ -459,7 +459,7 @@ void efxc2Compiler::Compiler::SetPDBFileName(_In_ const std::string_view _fileNa
     pNameBlobContent.resize(nameBlobPartSize + sizeof(ShaderDebugName));
     // Ensure bytes after name are indeed zeroes:
     (void)std::ranges::fill(pNameBlobContent, 0);
-    auto* header = std::bit_cast<ShaderDebugName*>(&pNameBlobContent[0]);
+    auto* header = M_BIT_CAST<ShaderDebugName*>(&pNameBlobContent[0]);
 
     header->Flags = 0;
     // declared length does not include the null terminator:
@@ -470,7 +470,7 @@ void efxc2Compiler::Compiler::SetPDBFileName(_In_ const std::string_view _fileNa
         pNameBlobContent[sizeof(ShaderDebugName) + i] = _fileName[i];
     }
 
-    auto const* compiledString = std::bit_cast<unsigned char*>(compilerOutput->GetBufferPointer());
+    auto const* compiledString = M_BIT_CAST<unsigned char*>(compilerOutput->GetBufferPointer());
     size_t compiledLen = compilerOutput->GetBufferSize();
 
     if (params.get_verbose() && params.get_debug()) {
@@ -508,7 +508,7 @@ size_t efxc2Compiler::Compiler::WritePDBFile(std::ofstream& f) {
     ID3DBlob* PDBData = nullptr;
     char const* compiledString = nullptr;
     size_t compiledLen = 0;
-    compiledString = std::bit_cast<char*>(compilerOutput->GetBufferPointer());
+    compiledString = M_BIT_CAST<char*>(compilerOutput->GetBufferPointer());
     compiledLen = compilerOutput->GetBufferSize();
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DGetBlobPart(\n";
@@ -532,7 +532,7 @@ size_t efxc2Compiler::Compiler::WritePDBFile(std::ofstream& f) {
         efxc2Utils::print_hresult_error(hr);
         throw efxc2Exception::Win32HLSLFailure();
     }
-    auto outputString = std::bit_cast<char*>(PDBData->GetBufferPointer());
+    auto outputString = M_BIT_CAST<char*>(PDBData->GetBufferPointer());
     size_t outputLen = PDBData->GetBufferSize();
     (void)f.write(outputString, outputLen);
     return compiledLen;

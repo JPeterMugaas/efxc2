@@ -152,7 +152,7 @@ namespace efxc2CompilerIncludes {
 				std::cout << "\tpData: nullptr\n";
 			}
 		}
-		auto buf = std::bit_cast<char*>(pData);
+		auto buf = M_BIT_CAST<char*>(pData);
 		delete[] buf;  //-V2511
 		return S_OK;
 	}

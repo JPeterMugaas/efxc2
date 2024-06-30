@@ -97,7 +97,7 @@ void efxc2Utils::print_hresult_error(const HRESULT hr) {
 	console.std_out_pink();
 	LPSTR messageBuffer = nullptr;
 	size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), std::bit_cast<char*>(&messageBuffer), 0, nullptr);
+		nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), M_BIT_CAST<char*>(&messageBuffer), 0, nullptr);
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(suppress : 6387)
@@ -129,7 +129,7 @@ void efxc2Utils::print_windows_error() {
 		nullptr,
 		dLastError,
 		0,
-		std::bit_cast<wchar_t*>(&strErrorMessage),
+		M_BIT_CAST<wchar_t*>(&strErrorMessage),
 		0,
 		nullptr);
 
@@ -157,7 +157,7 @@ void efxc2Utils::WriteByteArrayConst(_In_ std::ofstream& f, ID3DBlob* data,
 	_In_ const int outputHex) {
 	size_t len = data->GetBufferSize();
 	f << M_FORMAT("const BYTE {}[] =\n{{\n", variableName);
-	auto p = std::bit_cast<unsigned char*>(data->GetBufferPointer());
+	auto p = M_BIT_CAST<unsigned char*>(data->GetBufferPointer());
 	for (size_t i = 0; i < len; i++) {
 		if (outputHex) {
 			f << M_FORMAT(" 0x{:02x}", *p);
@@ -388,7 +388,7 @@ std::wstring efxc2Utils::utf8_to_wstring(std::string const& str)
 	}
 	auto _wstr = std::make_unique<std::vector<char>>();
 	_wstr->resize((nchars + 1) * sizeof(wchar_t));
-	auto* wstr = std::bit_cast<wchar_t*>(_wstr->data());
+	auto* wstr = M_BIT_CAST<wchar_t*>(_wstr->data());
 	wstr[nchars] = L'\0';   //-V3539 //-V2563
 	if (terminate_function == false) {
 		err = _mbstowcs_s_l(&nchars, wstr, nchars, str.c_str(), str.length() + 1, locale); 

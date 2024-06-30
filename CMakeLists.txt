@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.13.259)
+set(EFXC2_VERSION 0.0.13.261)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -34,8 +34,59 @@ list(APPEND CMAKE_MODULE_PATH "${EFXC2_FMT_PATH}/lib/cmake")
 list(APPEND CMAKE_INCLUDE_PATH "${EFXC2_FMT_PATH}/include")
 list(APPEND CMAKE_LIBRARY_PATH "${EFXC2_FMT_PATH}/lib")
 
-message(STATUS "Check for C++20 formatting library")
+message(STATUS "Check for C++20 std::bit_cast support")
+file(WRITE
+  ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
+  "#include <iostream>\r\n"
+  "#include <string>\r\n"
+  "#include <bit>\r\n"
+    "\r\n"
+    "int main()\r\n"
+    "{\r\n"
+    "int number = -1;\r\n"
+    "std::cout << std::to_string(std::bit_cast<unsigned int>(number));\r\n"
+    "return 0;\r\n"
+    "}\r\n")
+try_compile(BIT_CAST_SUPPORTED
+  ${CMAKE_BINARY_DIR}
+  ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
+  OUTPUT_VARIABLE OUTPUT)
+if (BIT_CAST_SUPPORTED)
+    message(STATUS "Check for C++20 std::bit_cast support - yes")
+else()
+    message(STATUS "Check for C++20 std::bit_cast support - no")
+endif()
+
+
+message(STATUS "Check for C++20 std::ranges support")
+file(WRITE
+  ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
+  "#include <algorithm>\r\n"
+  "#include <iostream>\r\n"
+  "#include <ranges>\r\n"
+  "#include <vector>\r\n"
+  "\r\n"
+  "int main()\r\n"
+  "{\r\n"
+  "std::vector<int> numbers = { 1, 2, 3, 4, 5, 6 };\r\n"
+  "\r\n"
+  "auto print = [](const int& n) { std::cout << n << ' '; };\r\n"
+  "\r\n"
+  "std::ranges::for_each (numbers.begin(), numbers.end(), print);\r\n"
+  "return 0;\r\n"
+  "}\r\n")
+try_compile(RANGES_SUPPORTED
+  ${CMAKE_BINARY_DIR}
+  ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
+  OUTPUT_VARIABLE OUTPUT)
+if (RANGES_SUPPORTED)
+    message(STATUS "Check for C++20 std::ranges support - yes")
+else()
+    message(STATUS "Check for C++20 std::ranges support - no")
+endif()
+
 set(USE_FMT_LIBRARY OFF)
+message(STATUS "Check for C++20 formatting library")
 file(WRITE
   ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
   "#include <iostream>\r\n"
