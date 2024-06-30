@@ -35,7 +35,7 @@ namespace efxc2Utils {
 		std::memcpy(std::addressof(t2), std::addressof(t1), sizeof(T1));
 		return t2;
 	}
-#define M_BIT_CAST bit_cast
+#define M_BIT_CAST efxc2Utils::cpp11_bit_cast
 #else
 #define M_BIT_CAST std::bit_cast
 #endif
