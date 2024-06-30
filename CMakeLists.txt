@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.13.258)
+set(EFXC2_VERSION 0.0.13.259)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -24,6 +24,16 @@ set(PROJECT_COPYRIGHT "Copyright (c) 2024 ${PROJECT_COMPANY}")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+option(EFXC2_FMT_PATH "{fmt} path" "")
+option(EFXC2_BUILD_STATIC "Build with static libraries." ON)
+option(EFXC2_USE_PVS_STUDIO "Enable analysis with PVS-Studio" OFF)
+option(EFXC2_USE_ALL_RULES "Use all rules with PVS-Editor" OFF)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${EFXC2_FMT_PATH}/lib/cmake")
+list(APPEND CMAKE_INCLUDE_PATH "${EFXC2_FMT_PATH}/include")
+list(APPEND CMAKE_LIBRARY_PATH "${EFXC2_FMT_PATH}/lib")
+
 message(STATUS "Check for C++20 formatting library")
 set(USE_FMT_LIBRARY OFF)
 file(WRITE
@@ -57,29 +67,7 @@ else()
     else()
        find_package(fmt QUIET)
        if (fmt_FOUND)
-          file(WRITE
-             ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
-            "#include <iostream>\r\n"
-            "#include <fmt/core.h>\r\n"
-            "#include <fmt/format.h>\r\n"
-            "\r\n"
-            "#ifdef _MSC_VER\r\n"
-            "#pragma comment(lib, \"fmtd.lib\")\r\n"
-            "#endif\r\n"
-            "#if defined(__BORLANDC__)\r\n"
-            "#pragma comment(lib, \"fmtd.lib\")\r\n"
-            "#endif\r\n"
-            "\r\n"
-            "int main()\r\n"
-            "{\r\n"
-            "    std::cout << fmt::format(\"Hello {}\", \"world\");\r\n"
-            "    return 0;\r\n"
-            "}")
-          try_compile(FORMAT_SUPPORTED
-            ${CMAKE_BINARY_DIR}
-            ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
-            LINK_LIBRARIES fmt::fmt
-            OUTPUT_VARIABLE OUTPUT)
+         set(FORMAT_SUPPORTED ON)
        endif()
     endif()
     if (FORMAT_SUPPORTED)
@@ -92,10 +80,6 @@ else()
 endif()
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-option(EFXC2_BUILD_STATIC "Build with static libraries." ON)
-option(EFXC2_USE_PVS_STUDIO "Enable analysis with PVS-Studio" OFF)
-option(EFXC2_USE_ALL_RULES "Use all rules with PVS-Editor" OFF)
 
 set(EXEC_SOURCES efxc2.cpp
                  efxc2Cmds.h
