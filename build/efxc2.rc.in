@@ -1,116 +1,51 @@
-// Microsoft Visual C++ generated resource script.
 //
-
-#define APSTUDIO_READONLY_SYMBOLS
-/////////////////////////////////////////////////////////////////////////////
+// Include the necessary resources
 //
-// Generated from the TEXTINCLUDE 2 resource.
+#include <winver.h>
+#include <ntdef.h>
+
+#ifdef RC_INVOKED
+
 //
-#define IDC_STATIC -1
-#include <winresrc.h>
-
-
-
-/////////////////////////////////////////////////////////////////////////////
-#undef APSTUDIO_READONLY_SYMBOLS
-
-/////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-
-/////////////////////////////////////////////////////////////////////////////
+// Set up debug information
 //
-// Icon
-//
+#define VER_DBG 0
 
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_MAIN_ICON           ICON                    "efxc2.ico"
-
-IDR_RT_MANIFEST1        RT_MANIFEST            "settings.manifest"
-
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE 
-BEGIN
-    "resource.h\0"
-END
-
-2 TEXTINCLUDE 
-BEGIN
-    "#define IDC_STATIC -1\r\n"
-    "#include <winresrc.h>\r\n"
-    "\r\n"
-    "\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE 
-BEGIN
-    "\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Version
-//
+// ------- version info -------------------------------------------------------
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION @_RC_VER@
- PRODUCTVERSION @_RC_VER@
- FILEFLAGSMASK 0x3fL
-#ifdef _DEBUG
- FILEFLAGS 0x1L
-#else
- FILEFLAGS 0x0L
-#endif
- FILEOS 0x40004L
- FILETYPE 0x1L
- FILESUBTYPE 0x0L
+FILEVERSION             @_RC_VER@
+PRODUCTVERSION          @_RC_VER@
+FILEFLAGSMASK           0x3fL
+FILEFLAGS 0x0L
+FILEOS                  0x40004L
+FILETYPE                0x1L
+FILESUBTYPE             0x0L
 BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "040904b0"
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "@PROJECT_COMPANY@"
-            VALUE "FileDescription", "@PROJECT_DESCRIPTION@"
-            VALUE "FileVersion", "@PROJECT_VERSION@"
-            VALUE "InternalName", "@PROJECT_NAME@@CMAKE_EXECUTABLE_SUFFIX@"
-            VALUE "LegalCopyright", "@PROJECT_COPYRIGHT@"
-            VALUE "OriginalFilename", "@PROJECT_NAME@@CMAKE_EXECUTABLE_SUFFIX@"
-            VALUE "ProductName", "@PROJECT_NAME@"
-            VALUE "ProductVersion", "@PROJECT_VERSION@"
+		VALUE "Comments",         ""
+		VALUE "CompanyName",      "@PROJECT_COMPANY@"
+		VALUE "FileDescription",  "@PROJECT_DESCRIPTION@"
+		VALUE "FileVersion",      "@PROJECT_VERSION@"
+		VALUE "InternalName",     "@PROJECT_NAME@@CMAKE_EXECUTABLE_SUFFIX@"
+		VALUE "LegalCopyright",   "@PROJECT_COPYRIGHT@"
+		VALUE "OriginalFilename", "@PROJECT_NAME@@CMAKE_EXECUTABLE_SUFFIX@"
+		VALUE "ProductName",      "@PROJECT_NAME@"
+		VALUE "ProductVersion",	  "@PROJECT_VERSION@"
         END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x409, 1200
-    END
+	END
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x0409,1200
+	END
 END
 
-#endif    // English (United States) resources
-/////////////////////////////////////////////////////////////////////////////
+// ------- icon ---------------------------------------------------------------
+IDI_MAIN_ICON           ICON                    "efxc2.ico"
 
-
-
-#ifndef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 3 resource.
-//
-
-
-/////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
-
+// ------- manifest -----------------------------------------------------------
+IDR_RT_MANIFEST1        RT_MANIFEST            "settings.manifest"
+#endif
