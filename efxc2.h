@@ -59,9 +59,6 @@
 #if ( _MSC_VER )
 #pragma comment(lib, "fmt")
 #endif
-/*#if defined(__BORLANDC__)
-#pragma comment(lib, "libfmt.a")
-#endif */
 #endif
 
 extern "C" {
