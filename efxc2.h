@@ -56,9 +56,12 @@
 #endif
 
 #ifdef USE_FMT_LIBRARY
-#if ( _MSC_VER ) || defined(__BORLANDC__)
+#if ( _MSC_VER )
 #pragma comment(lib, "fmt")
 #endif
+/*#if defined(__BORLANDC__)
+#pragma comment(lib, "libfmt.a")
+#endif */
 #endif
 
 extern "C" {
