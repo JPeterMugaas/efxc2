@@ -93,7 +93,7 @@ efxc2CompilerAPIContainer::CompilerAPIContainer::CompilerAPIContainer() {
 		efxc2Utils::print_windows_error();
 		throw efxc2Exception::Win32APIFailure();
 	}
-	ptr_D3DPreprocess = std::bit_cast<gD3DPreprocessp>(GetProcAddress(h, FCN_D3DPreprocess));
+	ptr_D3DPreprocess = M_BIT_CAST<gD3DPreprocessp>(GetProcAddress(h, FCN_D3DPreprocess));
 	if (ptr_D3DPreprocess == nullptr) {
 		console.PinkOutput();
 		std::cerr << M_FORMAT(ERR_LOAD_FCN, FCN_D3DPreprocess);
