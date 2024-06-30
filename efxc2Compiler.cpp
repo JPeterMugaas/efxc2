@@ -35,7 +35,7 @@ void efxc2Compiler::SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::v
 
 void efxc2Compiler::print_defines(std::vector<D3D_SHADER_MACRO> const& defines) {
     std::cout << "\t";
-    (void)M_FOR_EACH(defines, print_D3D_SHADER_MACRO);
+    (void)M_FOR_EACH(defines.begin(), defines.end(), print_D3D_SHADER_MACRO);
     std::cout << ",\n";
 }
 
