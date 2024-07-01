@@ -72,6 +72,22 @@ void efxc2Compiler::print_compiler_error(std::string op, ID3DBlob* errors, HRESU
     console.std_out_reset();
 }
 
+void efxc2Compiler::print_compiler_params_begin(efxc2Utils::M_BUFFER SourceCode,
+    size_t SourceLen,
+    const char* inputFile,
+    std::vector<D3D_SHADER_MACRO> const& defines) {
+    print_source_code_sample(SourceCode);
+    std::cout << M_FORMAT("\t {},\n", SourceLen);
+    std::cout << M_FORMAT("\t {}, \n", inputFile);
+    print_defines(defines);
+    std::cout << "\t includeDirs,\n";
+}
+
+void efxc2Compiler::print_compiler_params_end() {
+    std::cout << "\t &CompilerOutput,\n";
+    std::cout << "\t &errors);\n";
+}
+
 void efxc2Compiler::Compiler::Preprocess() {
     auto SourceCode = params.get_SourceCode();
     if (SourceCode == nullptr) {
@@ -91,13 +107,8 @@ void efxc2Compiler::Compiler::Preprocess() {
     ID3DBlob* errors = nullptr;
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DPreprocess(\n";
-        print_source_code_sample(SourceCode);
-        std::cout << M_FORMAT("\t {},\n", SourceLen);
-        std::cout << M_FORMAT("\t {}, \n", inputFile);
-        print_defines(*defines.get());
-        std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
-        std::cout << "\t &CompilerOutput,\n";
-        std::cout << "\t &errors);\n";
+        print_compiler_params_begin(SourceCode, SourceLen, inputFile, *defines.get());
+        print_compiler_params_end();
     }
     /*
     HRESULT D3DPreprocess(
@@ -153,11 +164,7 @@ void efxc2Compiler::Compiler::Compile() {
     ID3DBlob* errors = nullptr;
     if (params.get_verbose() && params.get_debug()) {
         std::cout << "Calling D3DCompile2(\n";
-        print_source_code_sample(SourceCode);
-        std::cout << M_FORMAT("\t {},\n", SourceLen);
-        std::cout << M_FORMAT("\t {}, \n", inputFile);
-        print_defines( *defines.get() );
-        std::cout << "\t D3D_COMPILE_STANDARD_FILE_INCLUDE,\n";
+        print_compiler_params_begin(SourceCode, SourceLen, inputFile, *defines.get());
         if (entryPoint == nullptr) {
             std::cout << M_FORMAT("\t nullptr,\n");
         }
@@ -170,8 +177,7 @@ void efxc2Compiler::Compiler::Compile() {
         std::cout << M_FORMAT("\t {:#08x},\n", secondary_flags);
         std::cout << "\t nullptr,\n";
         std::cout << "\t 0,\n";
-        std::cout << "\t &CompilerOutput,\n";
-        std::cout << "\t &errors);\n";
+        print_compiler_params_end();
     }
     /*
     HRESULT D3DCompile2(

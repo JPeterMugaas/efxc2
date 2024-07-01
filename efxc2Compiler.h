@@ -57,6 +57,11 @@ namespace efxc2Compiler {
 	void SetupDefines(efxc2Utils::M_COMPILER_DEFINES _defines, std::vector<D3D_SHADER_MACRO>& defines);
 	void print_compiler_error(std::string op, ID3DBlob* errors, HRESULT hr);
 
+	void print_compiler_params_begin(efxc2Utils::M_BUFFER SourceCode,
+		size_t SourceLen,
+		const char* inputFile,
+		std::vector<D3D_SHADER_MACRO> const& defines);
+	void print_compiler_params_end();
 }
 
 #endif /* EFXC2COMPILER_H_INCLUDED */
