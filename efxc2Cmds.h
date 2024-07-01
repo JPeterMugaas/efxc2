@@ -191,27 +191,33 @@ namespace efxc2Cmds {
 	constexpr const char* M_ZSS = "Zss";
 #endif /* _WIN32 */
 
+	/*flag var names*/
+constexpr auto M_SFLAGS_VAR = "sflags";
+constexpr auto M_EFLAGS_VAR = "eflags";
+constexpr auto M_STRIP_FLAGS_VAR = "strip_flags";
+constexpr auto M_DISASM_FLAGS_VAR = "disassembly_flags";
+
 	/*Parameter Descriptions*/
 #ifdef _WIN32
-#define M_E_DESCR          L"Entry Point"
-#define M_FC_DESCR         L"Assembly Code"
-#define M_FD_DESCR         L".PDB"
-#define M_FH_DESCR         L"Header File"
-#define M_FO_DESCR         L"Object File"
-#define M_I_DESCR          L"Include Dir"
-#define M_P_DESCR          L"Preprocessed Output"
-#define M_SETPRIVATE_DESCR L"Private Data"
-#define M_T_DESCR          L"Shader Model/Profile"
+constexpr auto M_E_DESCR = L"Entry Point";
+constexpr auto M_FC_DESCR = L"Assembly Code";
+constexpr auto M_FD_DESCR = L".PDB";
+constexpr auto M_FH_DESCR = L"Header File";
+constexpr auto M_FO_DESCR = L"Object File";
+constexpr auto M_I_DESCR = L"Include Dir";
+constexpr auto M_P_DESCR = L"Preprocessed Output";
+constexpr auto M_SETPRIVATE_DESCR = L"Private Data";
+constexpr auto M_T_DESCR = L"Shader Model/Profile";
 #else
-#define M_E_DESCR          "Entry Point"
-#define M_FC_DESCR         "Assembly Code"
-#define M_FD_DESCR         ".PDB"
-#define M_FH_DESCR         "Header File"
-#define M_FO_DESCR         "Object File"
-#define M_I_DESCR          "Include Dir"
-#define M_P_DESCR          "Preprocessor Output"
-#define M_SETPRIVATE_DESCR "Private Data"
-#define M_T_DESCR          "Shader Model/Profile"
+constexpr auto M_E_DESCR = "Entry Point";
+constexpr auto M_FC_DESCR = "Assembly Code";
+constexpr auto M_FD_DESCR = ".PDB";
+constexpr auto M_FH_DESCR = "Header File";
+constexpr auto M_FO_DESCR = "Object File";
+constexpr auto M_I_DESCR = "Include Dir";
+constexpr auto M_P_DESCR = "Preprocessor Output";
+constexpr auto M_SETPRIVATE_DESCR = "Private Data";
+constexpr auto M_T_DESCR = "Shader Model/Profile";
 #endif
 
 	using gCompilerFilep = void(efxc2CompilerParams::CompilerParams&, efxc2Files::Files&, const efxc2Utils::M_STRING_VIEW);
@@ -237,7 +243,12 @@ namespace efxc2Cmds {
 		efxc2CompilerParams::CompilerParams& params,
 		efxc2Files::Files& files);
 
-	void print_string_parameter(efxc2CompilerParams::CompilerParams& ComParams,
+	void print_flag_parameter(const efxc2CompilerParams::CompilerParams& ComParams,
+		const std::string_view cmdParam,
+		const std::string_view AFlagsVar,
+		const std::string_view AflagName);
+
+	void print_string_parameter(_In_ const efxc2CompilerParams::CompilerParams& ComParams,
 		const efxc2Utils::M_STRING_VIEW cmdParam,
 		const efxc2Utils::M_STRING_VIEW ADesc,
 		_In_ const efxc2Utils::M_STRING_VIEW fileName);
