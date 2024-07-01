@@ -139,7 +139,7 @@ namespace efxc2Cmds {
 	constexpr const char* M_DEBUG = "debug";
 	constexpr const char* M_DECOMPRESS = "decompress";
 	constexpr const char* M_DUMPBIN = "dumpbin";
-	constexpr const char* M_E = "E";
+	constexpr const char* M_E_ = "E";
 	constexpr const char* M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES = "enable_unbounded_descriptor_tables";
 	constexpr const char* M_FC = "Fc";
 	constexpr const char* M_FD = "Fd";
