@@ -77,7 +77,8 @@ namespace efxc2Cmds {
 	constexpr const wchar_t* M_DEBUG = L"debug";
 	constexpr const wchar_t* M_DECOMPRESS = L"decompress";
 	constexpr const wchar_t* M_DUMPBIN = L"dumpbin";
-	constexpr const wchar_t* M_E = L"E";
+	/*This has to be M_E_ instead of M_E as that conflicts with a constant in math.h*/
+	constexpr const wchar_t* M_E_ = L"E";
 	constexpr const wchar_t* M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES = L"enable_unbounded_descriptor_tables";
 	constexpr const wchar_t* M_FC = L"Fc";
 	constexpr const wchar_t* M_FD = L"Fd";

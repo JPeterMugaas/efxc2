@@ -140,7 +140,7 @@ void efxc2Cmds::cmd_D(efxc2CompilerParams::CompilerParams& params, _In_ const ef
     std::string defineOption = { _defineOption.data(), _defineOption.size() };
 #endif
     params.add_define(defineOption);
-    print_string_parameter(params, M_D, M_FH_DESCR, defineOption);
+    print_string_parameter(params, M_D, M_FH_DESCR, _defineOption);
 }
 
 void efxc2Cmds::cmd_E(efxc2CompilerParams::CompilerParams& params, _In_ const efxc2Utils::M_STRING_VIEW _entryPoint) {
@@ -150,7 +150,7 @@ void efxc2Cmds::cmd_E(efxc2CompilerParams::CompilerParams& params, _In_ const ef
     std::string entryPoint = { _entryPoint.data(), _entryPoint.size() };
 #endif
     params.set_entryPoint(entryPoint);
-    print_string_parameter(params, M_E, M_E_DESCR, _entryPoint);
+    print_string_parameter(params, M_E_, M_E_DESCR, _entryPoint);
     return;
 }
 
@@ -418,7 +418,7 @@ void efxc2Cmds::cmd_Vn(efxc2CompilerParams::CompilerParams& params, _In_ const e
     std::string variableName = { _variableName.data(), _variableName.size() };
 #endif
     params.set_variableName(variableName);
-    print_string_parameter(params, M_VN, M_P_DESCR, variableName);
+    print_string_parameter(params, M_VN, M_P_DESCR, _variableName);
     return;
 }
 

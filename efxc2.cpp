@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 				efxc2Cmds::cmd_D(params, temp);
 				continue;
 			}
-			else if (efxc2Utils::parseOpt(efxc2Cmds::M_E, args, &index, &temp)) {
+			else if (efxc2Utils::parseOpt(efxc2Cmds::M_E_, args, &index, &temp)) {
 				efxc2Cmds::cmd_E(params, temp);
 				continue;
 			}
