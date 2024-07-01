@@ -53,6 +53,25 @@ void efxc2Compiler::print_source_code_sample(efxc2Utils::M_BUFFER const& SourceC
     std::cout << "\",\n";
 }
 
+void efxc2Compiler::print_compiler_error(std::string op, ID3DBlob* errors, HRESULT hr) {
+    efxc2Console::Console console = efxc2Console::console;
+    console.std_err_pink();
+    std::cerr << M_FORMAT("{} error",op);
+    console.std_out_pink();
+    if (errors) {
+        auto* error = M_BIT_CAST<char*>(errors->GetBufferPointer());
+        std::cout << M_FORMAT("Got an error while {}:\n{}\n", error,op);
+        (void)errors->Release();
+        std::cout << M_FORMAT("Error Code: {:#08x}", hr);
+    }
+    else {
+        std::cout << M_FORMAT("Got an error {:#08x} while preprocessing, but no error message from the function.\n", hr);
+        efxc2Utils::print_hresult_error(hr);
+    }
+    console.std_err_reset();
+    console.std_out_reset();
+}
+
 void efxc2Compiler::Compiler::Preprocess() {
     auto SourceCode = params.get_SourceCode();
     if (SourceCode == nullptr) {
@@ -101,22 +120,7 @@ void efxc2Compiler::Compiler::Preprocess() {
         &pPreprocessOutput,
         &errors);
     if (FAILED(hr)) {
-        efxc2Console::Console console = efxc2Console::console;
-        console.std_err_pink();
-        std::cerr << "Preprocess error";
-        console.std_out_pink();
-        if (errors) {
-            auto* error = M_BIT_CAST<char*>(errors->GetBufferPointer());
-            std::cout << M_FORMAT("Got an error while preprocessing:\n{}\n", error);
-            (void)errors->Release();
-            std::cout << M_FORMAT("Error Code: {:#08x}", hr);
-        }
-        else {
-            std::cout << M_FORMAT("Got an error {:#08x} while preprocessing, but no error message from the function.\n", hr);
-            efxc2Utils::print_hresult_error(hr);
-        }
-        console.std_err_reset();
-        console.std_out_reset();
+        print_compiler_error("preprocessing", errors, hr);
         throw efxc2Exception::PreprocessError();
     }
 }
@@ -205,22 +209,7 @@ void efxc2Compiler::Compiler::Compile() {
         &errors
     );
     if (FAILED(hr)) {
-        efxc2Console::Console console = efxc2Console::console;
-        console.std_err_pink();
-        console.std_out_pink();
-        std::cerr << "Compile error";
-        if (errors) {
-            auto* error = M_BIT_CAST<char*>(errors->GetBufferPointer());
-            std::cout << M_FORMAT("Got an error while compiling:\n{}\n", error);
-            (void)errors->Release();
-            std::cout << M_FORMAT("Error Code: {:#08x}", hr);
-        }
-        else {
-            std::cout << M_FORMAT("Got an error {:#08x} while compiling, but no error message from the function.\n", hr);
-            efxc2Utils::print_hresult_error(hr);
-        }
-        console.std_err_reset();
-        console.std_out_reset();
+        print_compiler_error("compiling", errors, hr);
         throw efxc2Exception::CompileError();
     }
     return;
