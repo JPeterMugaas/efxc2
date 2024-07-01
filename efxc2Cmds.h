@@ -77,7 +77,7 @@ namespace efxc2Cmds {
 	constexpr const wchar_t* M_DEBUG = L"debug";
 	constexpr const wchar_t* M_DECOMPRESS = L"decompress";
 	constexpr const wchar_t* M_DUMPBIN = L"dumpbin";
-	constexpr const wchar_t* M_E_ = L"E";
+	constexpr const wchar_t* M_E = L"E";
 	constexpr const wchar_t* M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES = L"enable_unbounded_descriptor_tables";
 	constexpr const wchar_t* M_FC = L"Fc";
 	constexpr const wchar_t* M_FD = L"Fd";
@@ -138,7 +138,7 @@ namespace efxc2Cmds {
 	constexpr const char* M_DEBUG = "debug";
 	constexpr const char* M_DECOMPRESS = "decompress";
 	constexpr const char* M_DUMPBIN = "dumpbin";
-	constexpr const char* M_E_ = "E";
+	constexpr const char* M_E = "E";
 	constexpr const char* M_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES = "enable_unbounded_descriptor_tables";
 	constexpr const char* M_FC = "Fc";
 	constexpr const char* M_FD = "Fd";
@@ -191,6 +191,29 @@ namespace efxc2Cmds {
 	constexpr const char* M_ZSS = "Zss";
 #endif /* _WIN32 */
 
+	/*Parameter Descriptions*/
+#ifdef _WIN32
+#define M_E_DESCR          L"Entry Point"
+#define M_FC_DESCR         L"Assembly Code"
+#define M_FD_DESCR         L".PDB"
+#define M_FH_DESCR         L"Header File"
+#define M_FO_DESCR         L"Object File"
+#define M_I_DESCR          L"Include Dir"
+#define M_P_DESCR          L"Preprocesed Output"
+#define M_SETPRIVATE_DESCR L"Private Data"
+#define M_T_DESCR          L"Shader Model/Profile"
+#else
+#define M_E_DESCR          "Entry Point"
+#define M_FC_DESCR         "Assembly Code"
+#define M_FD_DESCR         ".PDB"
+#define M_FH_DESCR         "Header File"
+#define M_FO_DESCR         "Object File"
+#define M_I_DESCR          "Include Dir"
+#define M_P_DESCR          "Preprocessor Output"
+#define M_SETPRIVATE_DESCR "Private Data"
+#define M_T_DESCR          "Shader Model/Profile"
+#endif
+
 	using gCompilerFilep = void(efxc2CompilerParams::CompilerParams&, efxc2Files::Files&, const efxc2Utils::M_STRING_VIEW);
 	struct CompileFileEntry {
 		const efxc2Utils::M_STRING Param;
@@ -213,6 +236,11 @@ namespace efxc2Cmds {
 		_Inout_	size_t* index,
 		efxc2CompilerParams::CompilerParams& params,
 		efxc2Files::Files& files);
+
+	void print_string_parameter(efxc2CompilerParams::CompilerParams& ComParams,
+		const efxc2Utils::M_STRING_VIEW cmdParam,
+		const efxc2Utils::M_STRING_VIEW ADesc,
+		_In_ const efxc2Utils::M_STRING_VIEW fileName);
 
 	using gCompilerp = void(efxc2CompilerParams::CompilerParams&);
 	struct CompilerOnlyEntry {
