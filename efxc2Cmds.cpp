@@ -344,12 +344,10 @@ void efxc2Cmds::cmd_P(efxc2CompilerParams::CompilerParams& params, efxc2Files::F
 }
 
 void efxc2Cmds::cmd_Qstrip_debug(efxc2CompilerParams::CompilerParams& params) {
-    if (params.get_verbose() && params.get_debug()) {
-        std::cout << "option -Qstrip_debug strip_flags | D3DCOMPILER_STRIP_DEBUG_INFO\n";
-    }
     UINT strip_flags = params.get_strip_flags();
     strip_flags = strip_flags | D3DCOMPILER_STRIP_DEBUG_INFO;
     params.set_strip_flags(strip_flags);
+    print_flag_parameter(params, "Qstrip_debug", M_STRIP_FLAGS_VAR, "D3DCOMPILER_STRIP_DEBUG_INFO");
     return;
 }
 
