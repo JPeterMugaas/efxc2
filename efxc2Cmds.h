@@ -199,7 +199,7 @@ namespace efxc2Cmds {
 #define M_FH_DESCR         L"Header File"
 #define M_FO_DESCR         L"Object File"
 #define M_I_DESCR          L"Include Dir"
-#define M_P_DESCR          L"Preprocesed Output"
+#define M_P_DESCR          L"Preprocessed Output"
 #define M_SETPRIVATE_DESCR L"Private Data"
 #define M_T_DESCR          L"Shader Model/Profile"
 #else
