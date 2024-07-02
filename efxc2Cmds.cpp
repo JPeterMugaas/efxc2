@@ -45,9 +45,9 @@ void efxc2Cmds::FindDebug(const efxc2Utils::M_CMD_PARAMS& args, efxc2CompilerPar
     return;
 }
 
-void efxc2Cmds::print_string_parameter(const efxc2CompilerParams::CompilerParams& ComParams,
-    const efxc2Utils::M_STRING_VIEW cmdParam,
-    const efxc2Utils::M_STRING_VIEW ADesc,
+void efxc2Cmds::print_string_parameter(_In_ const efxc2CompilerParams::CompilerParams& ComParams,
+    _In_ const efxc2Utils::M_STRING_VIEW cmdParam,
+    _In_ const efxc2Utils::M_STRING_VIEW ADesc,
     _In_ const efxc2Utils::M_STRING_VIEW fileName) {
     if (ComParams.get_verbose() && ComParams.get_debug()) {
 #ifdef _WIN32
@@ -58,12 +58,12 @@ void efxc2Cmds::print_string_parameter(const efxc2CompilerParams::CompilerParams
     }
 }
 
-void efxc2Cmds::print_flag_parameter(const efxc2CompilerParams::CompilerParams& ComParams,
-      const std::string_view cmdParam,
-      const std::string_view AFlagsVar,
-      const std::string_view AflagName) {
+void efxc2Cmds::print_flag_parameter(_In_ const efxc2CompilerParams::CompilerParams& ComParams,
+    _In_ const std::string_view cmdParam,
+    _In_ const std::string_view AFlagsVar,
+    _In_ const std::string_view AflagName) {
     if (ComParams.get_verbose() && ComParams.get_debug()) {
-        std::cout << M_FORMAT("option -{} {} | {}", cmdParam, AFlagsVar, AflagName);
+        std::cout << M_FORMAT("option -{} {} | {}\n", cmdParam, AFlagsVar, AflagName);
     }
 }
 

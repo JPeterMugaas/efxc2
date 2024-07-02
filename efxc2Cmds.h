@@ -244,15 +244,16 @@ constexpr auto M_T_DESCR = "Shader Model/Profile";
 		efxc2CompilerParams::CompilerParams& params,
 		efxc2Files::Files& files);
 
-	void print_flag_parameter(const efxc2CompilerParams::CompilerParams& ComParams,
-		const std::string_view cmdParam,
-		const std::string_view AFlagsVar,
-		const std::string_view AflagName);
+	void print_flag_parameter(_In_ const efxc2CompilerParams::CompilerParams& ComParams,
+		_In_ const std::string_view cmdParam,
+		_In_ const std::string_view AFlagsVar,
+		_In_ const std::string_view AflagName);
 
 	void print_string_parameter(_In_ const efxc2CompilerParams::CompilerParams& ComParams,
-		const efxc2Utils::M_STRING_VIEW cmdParam,
-		const efxc2Utils::M_STRING_VIEW ADesc,
+		_In_ const efxc2Utils::M_STRING_VIEW cmdParam,
+		_In_ const efxc2Utils::M_STRING_VIEW ADesc,
 		_In_ const efxc2Utils::M_STRING_VIEW fileName);
+
 
 	using gCompilerp = void(efxc2CompilerParams::CompilerParams&);
 	struct CompilerOnlyEntry {
