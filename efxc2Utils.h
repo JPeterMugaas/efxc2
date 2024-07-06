@@ -32,7 +32,7 @@ namespace efxc2Utils {
 		static_assert(std::is_pod<T2>(), "Requires POD output");
 
 		T2 t2;
-		std::memcpy(std::addressof(t2), std::addressof(t1), sizeof(T1));
+		(void)std::memcpy(std::addressof(t2), std::addressof(t1), sizeof(T1));
 		return t2;
 	}
 #define M_BIT_CAST efxc2Utils::cpp11_bit_cast
