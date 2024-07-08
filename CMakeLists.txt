@@ -95,8 +95,8 @@ file(WRITE
   "int main()\r\n"
   "{\r\n"
   "    std::cout << std::format(\"Hello {}\", \"world\");\r\n"
-  "    return 0;"
-  "}")
+  "    return 0;\r\n"
+  "}\r\n")
 try_compile(FORMAT_SUPPORTED
   ${CMAKE_BINARY_DIR}
   ${CMAKE_BINARY_DIR}/CMakeTmp/testCCompiler.cpp
