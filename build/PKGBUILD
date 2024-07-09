@@ -29,7 +29,7 @@ provides=("${MINGW_PACKAGE_PREFIX}-${_realname}-git")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}-git"
            "${MINGW_PACKAGE_PREFIX}-fxc2")
 replaces=("${MINGW_PACKAGE_PREFIX}-${_realname}-git")
-pkgver=0.0.10.225
+pkgver=0.0.13.271
 pkgrel=1
 pkgdesc="Enhanced version of fxc2 (mingw-w64)"
 arch=('any')

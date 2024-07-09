@@ -38,8 +38,10 @@ if (PVS_STUDIO_AS_SCRIPT)
                     OUTPUT_VARIABLE output
                     ERROR_VARIABLE error)
 
-    if (result AND NOT output MATCHES "^No compilation units were found\\.")
-        message(FATAL_ERROR "PVS-Studio exited with non-zero code.\nStdout:\n${output}\nStderr:\n${error}\n")
+
+    SET (IGNORED_RETURN_CODES 0;7)                
+    if (NOT result IN_LIST IGNORED_RETURN_CODES AND NOT output MATCHES "^No compilation units were found\\.")
+        message(FATAL_ERROR "PVS-Studio exited with code ${result}.\nStdout:\n${output}\nStderr:\n${error}\n")
     endif()
 
     return()
@@ -344,15 +346,11 @@ function (pvs_studio_add_target)
 
     set(PATHS)
 
-    if (CMAKE_HOST_WIN32 OR CYGWIN OR MSYS)
-        if(CMAKE_HOST_WIN32)
-          # The registry value is only read when you do some cache operation on it.
-          # https://stackoverflow.com/questions/1762201/reading-registry-values-with-cmake
-          GET_FILENAME_COMPONENT(ROOT "[HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\ProgramVerificationSystems\\PVS-Studio;installDir]" ABSOLUTE CACHE)
-        else()
-          # for some reason, set(ROOT "$ENV{${ROOT}}/PVS-Studio") did not work
-          set(ROOT "$ENV{ProgramFiles\(x86\)}/PVS-Studio")
-        endif()		
+    if (CMAKE_HOST_WIN32)
+        # The registry value is only read when you do some cache operation on it.
+        # https://stackoverflow.com/questions/1762201/reading-registry-values-with-cmake
+        GET_FILENAME_COMPONENT(ROOT "[HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\ProgramVerificationSystems\\PVS-Studio;installDir]" ABSOLUTE CACHE)
+
         if (EXISTS "${ROOT}")
            set(PATHS "${ROOT}")
         else()
