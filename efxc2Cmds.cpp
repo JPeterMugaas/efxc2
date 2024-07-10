@@ -91,11 +91,10 @@ void efxc2Cmds::parseInputFile(_In_ const efxc2Utils::M_STRING_VIEW parameter, e
         if (params.get_verbose() && params.get_debug()) {
             std::cout << "Parse input file name\n";
         }
-        efxc2Utils::M_STRING inputFile = efxc2Utils::M_STRING_INIT;
+        efxc2Utils::M_STRING inputFile = parameter.data();
 #ifdef _WIN32
         std::string c_inputFile = "";
 #endif
-        inputFile = parameter;
 #ifdef _WIN32
         efxc2Utils::FixupFileName(inputFile);
         c_inputFile = efxc2Utils::wstring_to_utf8(inputFile);
@@ -619,7 +618,7 @@ bool efxc2Cmds::parseNotSupportedOptions(
 #else
                 std::find(g_NotSupportedArgs.begin(), g_NotSupportedArgs.end(), toFind) != g_NotSupportedArgs.end()) {
 #endif
-                efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+                efxc2Console::Console console = efxc2Console::console; 
                 console.std_err_pink();
 #ifdef _WIN32
                 std::wcerr << M_FORMAT(L"option -{} not supported", argument);

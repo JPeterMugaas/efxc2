@@ -19,9 +19,9 @@
 the wmain -Municode entry-point*/
 
 #ifdef _WIN32
-int wmain(int argc, wchar_t* argv[]) {
+int wmain(int argc, const wchar_t* argv[]) {
 #else  /* _WIN32 */
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
 #endif /* _WIN32 */
 	efxc2Console::Console console;
 	console.Initialize();

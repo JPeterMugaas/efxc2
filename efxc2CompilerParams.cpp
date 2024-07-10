@@ -33,7 +33,7 @@ void efxc2CompilerParams::CompilerParams::add_define(const std::string_view defi
 
 void efxc2CompilerParams::CompilerParams::LoadSourceCode(std::ifstream& f) {
 	if (efxc2Utils::readAll(f, SourceCode) == false) {
-		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+		efxc2Console::Console console = efxc2Console::console; 
 		console.std_err_pink();
 		std::cerr << "Error reading file." << std::endl;
 		console.std_err_reset();
@@ -43,7 +43,7 @@ void efxc2CompilerParams::CompilerParams::LoadSourceCode(std::ifstream& f) {
 
 void efxc2CompilerParams::CompilerParams::LoadPrivateData(std::ifstream& f) {
 	if (efxc2Utils::readAll(f, PrivateData) == false) {
-		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+		efxc2Console::Console console = efxc2Console::console;
 		console.std_err_pink();
 		std::cerr << "Error reading file." << std::endl;
 		console.std_err_reset();

@@ -26,7 +26,9 @@
 #include <d3dcommon.h>
 #include <algorithm>
 #include <array>
+#ifdef BIT_CAST_SUPPORTED
 #include <bit>
+#endif
 #include <cassert>
 #include <errno.h>
 #include <exception>

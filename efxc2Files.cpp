@@ -16,7 +16,7 @@ void efxc2Files::Files::LoadInputFile(efxc2CompilerParams::CompilerParams& param
 	std::filesystem::path _path = inputFile;
 	(void)f.open(_path);
 	if (!f.is_open()) {
-		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+		efxc2Console::Console console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
 		std::wcerr << M_FORMAT(L"Can not open {}", inputFile.native());
@@ -38,7 +38,7 @@ void efxc2Files::Files::LoadPrivateDataFile(efxc2CompilerParams::CompilerParams&
 	std::filesystem::path _path = privateDataFile;
 	(void)f.open(_path);
 	if (!f.is_open()) {
-		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+		efxc2Console::Console console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
 		std::wcerr << M_FORMAT(L"Can not open {}", privateDataFile.native());
@@ -57,7 +57,7 @@ void efxc2Files::Files::WriteDisassembly(efxc2Compiler::Compiler& compiler, cons
 	std::ofstream f;
 	f = std::ofstream(std::filesystem::path(DisassemblyFile), std::ios::out);
 	if (!f.is_open()) {
-		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+		efxc2Console::Console console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
 		std::wcerr << M_FORMAT(L"Can not open {}", DisassemblyFile.native());
@@ -84,7 +84,7 @@ void efxc2Files::Files::WriteIncludeFile(efxc2Compiler::Compiler& compiler, cons
 	std::ofstream f;
 	f = std::ofstream(std::filesystem::path(IncludeFile), std::ios::out);
 	if (!f.is_open()) {
-		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+		efxc2Console::Console console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
 		std::wcerr << M_FORMAT(L"Can not open {}", IncludeFile.native());
@@ -111,7 +111,7 @@ void efxc2Files::Files::WriteObjectFile(efxc2Compiler::Compiler& compiler, const
 	std::ofstream f;
 	f = std::ofstream(std::filesystem::path(ObjectFile), std::ios::out | std::ios::binary);
 	if (!f.is_open())  {
-		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+		efxc2Console::Console console = efxc2Console::console;
 	    console.std_err_pink();
 #ifdef _WIN32
 		std::wcerr << M_FORMAT(L"Can not open {}", ObjectFile.native());
@@ -138,7 +138,7 @@ void efxc2Files::Files::WritePreprocessFile(efxc2Compiler::Compiler& compiler, c
 	std::ofstream f;
 	f = std::ofstream(std::filesystem::path(preprocessFile), std::ios::out | std::ios::binary);
 	if (!f.is_open()) {
-		efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+		efxc2Console::Console console = efxc2Console::console;
 		console.std_err_pink();
 #ifdef _WIN32
 		std::wcerr << M_FORMAT(L"Can not open {}", preprocessFile.native());
@@ -196,7 +196,7 @@ void efxc2Files::Files::WritePDBFile(efxc2Compiler::Compiler& compiler, const ef
 		std::ofstream f;
 		f = std::ofstream(pdbFile, std::ios::out | std::ios::binary);
 		if (!f) {
-			efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+			efxc2Console::Console console = efxc2Console::console;
 			console.std_err_pink();
 #ifdef _WIN32
 			std::wcerr << M_FORMAT(L"Can not open {}", pdbFile.native());

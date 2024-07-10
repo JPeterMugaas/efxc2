@@ -20,7 +20,7 @@ void efxc2CompilerTasks::CompilerTasks(efxc2Compiler::Compiler & compiler, efxc2
 #endif
 	if ((params.get_commands() & efxc2Utils::CMD_PREPROCESS_FILE) == efxc2Utils::CMD_PREPROCESS_FILE) {
 		if (params.get_commands() != efxc2Utils::CMD_PREPROCESS_FILE) {
-			efxc2Console::Console console = efxc2Console::console; console = efxc2Console::console;
+			efxc2Console::Console console = efxc2Console::console;
 			console.std_err_pink();
 			std::cerr << "The /P option may only be used with the /D and /I parameters.";
 			console.std_err_reset();

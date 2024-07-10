@@ -37,7 +37,6 @@ namespace efxc2CompilerAPIContainer {
         gD3DPreprocessp get_ptr_D3DPreprocess() const { return ptr_D3DPreprocess; }
         gD3DCreateFunctionLinkingGraphp get_ptr_D3DCreateFunctionLinkingGraph() const { return ptr_D3DCreateFunctionLinkingGraph; }
     private:
-        HMODULE get_h() const { return h; }
         /*these need to be marked as will not serialize. */
         HMODULE          h;  //-V122_NOPTR
         pD3DCompile2g    ptr_D3DCompile2;  //-V122_NOPTR
