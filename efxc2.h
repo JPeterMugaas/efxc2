@@ -43,7 +43,9 @@
 #include <filesystem>
 #include <iostream>
 #include <memory>
+#ifdef RANGES_SUPPORTED
 #include <ranges>
+#endif
 #include <stdlib.h>
 #include <string>
 #include <string.h>
