@@ -9,11 +9,11 @@ Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2
 * Remove duplicate code that sets up an array for the compiler includes.
 * Make 4 consecutive inc statements into a for loop.
 * Remove some more duplicate code. Thanks to PVS-Studio for pointing out the new procedure needs to be in a namespace.
-* Fix typo in prragm and don't assume file-extension when linking.
+* Fix typo in program and don't assume file-extension when linking.
 * New variable - EFXC2_FMT_PATH - specify path for FMT. This path works like this EFXC2_FMT_PAT/lib, EFXC2_FMT_PATH/lib/cmake, and EFXC2_FMT_PATH/include.
 * Make this program more configurable for compilers with incomplete Standard C++20 library support.
 * Simplify .rc building.
-* Refactored compiling/preprocessing error handling to remove some duplicate code.
+* Re-factored compiling/preprocessing error handling to remove some duplicate code.
 * added void efxc2Compiler::print_compiler_params_begin and void efxc2Compiler::print_compiler_params_end to refactor some debug output.
 * Fix PVS Studio warning about an unused return value.
 * Add note about the potential conflict that I avoid by naming a macro M_E_ instead of M_E.
