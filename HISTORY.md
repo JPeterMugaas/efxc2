@@ -5,6 +5,8 @@ https://github.com/JPeterMugaas/efxc2
 Release available for download on [GitHub](https://github.com/JPeterMugaas/efxc2/releases)
 
 ## Release History
+### Oct 27, 2024
+* Merge Pull Request #1 - cmake: add option to use vendored fmt on command
 ### July 12, 2024
 * Remove duplicate code that sets up an array for the compiler includes.
 * Make 4 consecutive inc statements into a for loop.

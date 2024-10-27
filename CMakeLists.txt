@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.21)
 
-set(EFXC2_VERSION 0.0.14.278)
+set(EFXC2_VERSION 0.0.14.279)
 project (efxc2 VERSION ${EFXC2_VERSION}
   DESCRIPTION "Enhanced fxc2"
   HOMEPAGE_URL "https://github.com/JPeterMugaas/efxc2"
@@ -29,7 +29,6 @@ option(EFXC2_FMT_PATH "{fmt} path" "")
 option(EFXC2_BUILD_STATIC "Build with static libraries." ON)
 option(EFXC2_USE_PVS_STUDIO "Enable analysis with PVS-Studio" OFF)
 option(EFXC2_USE_ALL_RULES "Use all rules with PVS-Editor" OFF)
-option(EFXC2_FORMAT_VENDORED "Use vendored fmt" ${MSVC})
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${EFXC2_FMT_PATH}/lib/cmake")
 list(APPEND CMAKE_INCLUDE_PATH "${EFXC2_FMT_PATH}/include")
@@ -105,7 +104,7 @@ try_compile(FORMAT_SUPPORTED
 if (FORMAT_SUPPORTED)
     message(STATUS "Check for C++20 formatting library  - no external library required.")
 else()
-    if (EFXC2_FORMAT_VENDORED)
+    if (MSVC)
        message(STATUS "downloading \{fmt\}")
        include(FetchContent)
 
